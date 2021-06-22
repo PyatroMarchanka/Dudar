@@ -6,34 +6,31 @@ import { MidiFileInput } from './MidiFileInput';
 import { MidiPlayer } from './MidiPlayer';
 import styled from 'styled-components';
 import { Part } from 'tone';
+import { Bagpipe } from '../Bagpipe';
+import { playMidi } from '../../utils/midiUtils';
+import { Hole } from '../../interfaces';
+
+const holes: Hole[] = [
+  { isOpen: true, note: 'G' },
+  { isOpen: true, note: 'A' },
+  { isOpen: true, note: 'B' },
+  { isOpen: true, note: 'C' },
+  { isOpen: true, note: 'D' },
+  { isOpen: true, note: 'E' },
+  { isOpen: true, note: 'F' },
+  { isOpen: true, note: 'G' },
+];
 
 const synth = new Tone.Synth().toDestination();
 interface Props {}
 
 export const Controls = ({}: Props) => {
   const [midi, setMidi] = useState<Midi | null>(null);
-  const [part, setPart] = useState<Part | null>(null);
+  const [activeNote, setActiveNote] = useState<{ note: string; octave: number } | null>(null);
+
   useEffect(() => {
     Tone.Transport.start();
   }, []);
-
-  const playMidi = () => {
-    Tone.Transport.start();
-
-    const now = Tone.now() + 1;
-    let delay = 0;
-    midi?.tracks?.[0].notes.forEach((note: Note) => {
-      Tone.Transport.schedule((time) => {
-        synth.triggerAttackRelease(note.pitch + note.octave, note.duration, time);
-      }, now + delay);
-
-      delay += note.duration;
-    });
-  };
-
-  const pause = () => {
-    Tone.Transport.cancel();
-  };
 
   const stop = () => {
     Tone.Transport.stop();
@@ -42,7 +39,11 @@ export const Controls = ({}: Props) => {
   return (
     <Container>
       <MidiFileInput setMidi={setMidi} />
-      <MidiPlayer stop={stop} playMidi={playMidi} />
+      <MidiPlayer
+        stop={stop}
+        playMidi={() => playMidi(midi!, (note, octave) => setActiveNote({ note, octave }))}
+      />
+      <Bagpipe holes={holes} activeNote={activeNote} />
     </Container>
   );
 };
