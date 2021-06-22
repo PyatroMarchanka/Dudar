@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { MidiFileInput } from './components/MidiFileInput';
+import { Controls } from './components/Controls';
+import { MidiFileInput } from './components/Controls/MidiFileInput';
 
 function App() {
   return (
     <div>
-      <MidiFileInput />
+      <Controls />
     </div>
   );
 }
