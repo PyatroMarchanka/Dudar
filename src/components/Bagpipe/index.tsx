@@ -5,10 +5,11 @@ import { Hole } from '../../interfaces';
 interface HoleProps {
   isOpen: boolean;
   className: string;
+  note: string;
 }
 
-export const HoleComponent = ({ isOpen, className }: HoleProps) => {
-  return <HoleWrapper className={className} isOpen={isOpen} />;
+export const HoleComponent = ({ isOpen, className, note }: HoleProps) => {
+  return <HoleWrapper className={className}>{isOpen ? note : null}</HoleWrapper>;
 };
 
 interface Props {
@@ -21,7 +22,11 @@ export const Bagpipe = ({ holes, activeNote }: Props) => {
     <Container>
       <Holes>
         {holes.map((hole, i) => (
-          <HoleComponent className={`hole-${i + 1}`} isOpen={hole.note === activeNote?.note} />
+          <HoleComponent
+            note={hole.note}
+            className={`hole hole-${i + 1} ${hole.note === activeNote?.note ? 'active' : ''}`}
+            isOpen={hole.note === activeNote?.note}
+          />
         ))}
       </Holes>
       <BagpipeImage src='images/bagpipe.png' alt='bagpipe' />
@@ -30,6 +35,8 @@ export const Bagpipe = ({ holes, activeNote }: Props) => {
 };
 
 const Container = styled.div`
+  margin-top: 50px;
+  margin-left: auto;
   position: relative;
 `;
 
@@ -38,13 +45,21 @@ const BagpipeImage = styled.img`
   width: auto;
 `;
 
-const HoleWrapper = styled.div<{ isOpen: boolean }>`
+const HoleWrapper = styled.div`
   width: 20px;
   height: 20px;
-  background-color: ${({ isOpen }) => (isOpen ? 'white' : 'black')};
+  background-color: black;
   border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
 
   position: absolute;
+
+  &.active {
+    background-color: white;
+  }
 `;
 
 const Holes = styled.div`

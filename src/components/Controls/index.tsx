@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Midi, Track } from '@tonejs/midi';
-import { Note } from '@tonejs/midi/dist/Note';
+import { Midi } from '@tonejs/midi';
 import * as Tone from 'tone';
 import { MidiFileInput } from './MidiFileInput';
 import { MidiPlayer } from './MidiPlayer';
 import styled from 'styled-components';
-import { Part } from 'tone';
 import { Bagpipe } from '../Bagpipe';
 import { playMidi } from '../../utils/midiUtils';
 import { Hole } from '../../interfaces';
@@ -21,7 +19,6 @@ const holes: Hole[] = [
   { isOpen: true, note: 'G' },
 ];
 
-const synth = new Tone.Synth().toDestination();
 interface Props {}
 
 export const Controls = ({}: Props) => {
@@ -38,14 +35,22 @@ export const Controls = ({}: Props) => {
 
   return (
     <Container>
-      <MidiFileInput setMidi={setMidi} />
-      <MidiPlayer
-        stop={stop}
-        playMidi={() => playMidi(midi!, (note, octave) => setActiveNote({ note, octave }))}
-      />
+      <Inputs>
+        <MidiFileInput setMidi={setMidi} />
+        {midi && (
+          <MidiPlayer
+            stop={stop}
+            playMidi={() => playMidi(midi!, (note, octave) => setActiveNote({ note, octave }))}
+          />
+        )}
+      </Inputs>
       <Bagpipe holes={holes} activeNote={activeNote} />
     </Container>
   );
 };
 
 const Container = styled.div``;
+const Inputs = styled.div`
+  display: flex;
+  align-items: center;
+`;

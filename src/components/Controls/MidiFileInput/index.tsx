@@ -3,6 +3,8 @@ import { Midi, Track } from '@tonejs/midi';
 import { Note } from '@tonejs/midi/dist/Note';
 import * as Tone from 'tone';
 
+import styled from 'styled-components';
+
 interface Props {
   setMidi: (midi: Midi) => void;
 }
@@ -28,7 +30,16 @@ export const MidiFileInput = ({ setMidi }: Props) => {
 
   return (
     <div>
-      <input type='file' id='filereader' />
+      <Input type='file' id='filereader' />
     </div>
   );
 };
+
+const Input = styled.input`
+  color: #6c5f2e;
+  font-size: 1em;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border: 2px solid #6c5f2e;
+  border-radius: 3px;
+`;
