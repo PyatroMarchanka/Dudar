@@ -1,7 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { Bagpipe } from './components/Bagpipe';
+import React from 'react';
 import { Controls } from './components/Controls';
-import { MidiFileInput } from './components/Controls/MidiFileInput';
 
 function App() {
   return (

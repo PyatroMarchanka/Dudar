@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Hole } from '../../interfaces';
+import { SharpNotes } from '../../interfaces';
+import { BagpipeNotes, BagpipeType } from '../../utils/bagpipesUtils';
 
 interface HoleProps {
   isOpen: boolean;
@@ -13,19 +14,21 @@ export const HoleComponent = ({ isOpen, className, note }: HoleProps) => {
 };
 
 interface Props {
-  holes: Hole[];
+  bagpipe: BagpipeNotes;
   activeNote: { note: string; octave: number } | null;
 }
 
-export const Bagpipe = ({ holes, activeNote }: Props) => {
+export const Bagpipe = ({ bagpipe, activeNote }: Props) => {
+  const notes = [bagpipe.entry, ...bagpipe.main].filter(Boolean) as SharpNotes[];
+
   return (
     <Container>
       <Holes>
-        {holes.map((hole, i) => (
+        {notes.map((note, i) => (
           <HoleComponent
-            note={hole.note}
-            className={`hole hole-${i + 1} ${hole.note === activeNote?.note ? 'active' : ''}`}
-            isOpen={hole.note === activeNote?.note}
+            note={note}
+            className={`hole hole-${i + 1} ${note === activeNote?.note ? 'active' : ''}`}
+            isOpen={note === activeNote?.note}
           />
         ))}
       </Holes>

@@ -1,19 +1,10 @@
-export interface Hole {
-  note: string;
-  isOpen: boolean;
-}
+import { AllNotes } from './../dataset/notes';
 
 export enum Modes {
   Mixolidian = 'mixolidian',
   Ionian = 'ionian',
   Eolian = 'eolian',
   Dorian = 'dorian',
-}
-
-export interface BagpipeType {
-  mode: Modes;
-  tone: Notes;
-  holesCount: number;
 }
 
 export type Notes =
@@ -40,11 +31,6 @@ type SharpMap = {
   [key: string]: Notes;
 };
 
-export interface BagpipeNotes {
-  main: Notes[];
-  entry?: Notes;
-}
-
 export const convertToSharp = (note: Notes) => {
   const map: SharpMap = {
     Bb: 'A#',
@@ -56,3 +42,12 @@ export const convertToSharp = (note: Notes) => {
 
   return note in map ? map[note as keyof SharpMap] : note;
 };
+
+export function transposeNote(note: SharpNotes, step: number): SharpNotes {
+  let indexOfNote = AllNotes.indexOf(note);
+  if (step < 0) {
+    step = AllNotes.length - step;
+  }
+
+  return AllNotes[(indexOfNote + step) % AllNotes.length];
+}

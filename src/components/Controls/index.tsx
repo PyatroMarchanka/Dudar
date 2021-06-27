@@ -6,18 +6,19 @@ import { MidiPlayer } from './MidiPlayer';
 import styled from 'styled-components';
 import { Bagpipe } from '../Bagpipe';
 import { playMidi } from '../../utils/midiUtils';
-import { Hole } from '../../interfaces';
+import { Modes } from '../../interfaces';
+import { getBagpipeData } from '../../utils/bagpipesUtils';
 
-const holes: Hole[] = [
-  { isOpen: true, note: 'G' },
-  { isOpen: true, note: 'A' },
-  { isOpen: true, note: 'B' },
-  { isOpen: true, note: 'C' },
-  { isOpen: true, note: 'D' },
-  { isOpen: true, note: 'E' },
-  { isOpen: true, note: 'F' },
-  { isOpen: true, note: 'G' },
-];
+// const holes: Hole[] = [
+//   { isOpen: true, note: 'G' },
+//   { isOpen: true, note: 'A' },
+//   { isOpen: true, note: 'B' },
+//   { isOpen: true, note: 'C' },
+//   { isOpen: true, note: 'D' },
+//   { isOpen: true, note: 'E' },
+//   { isOpen: true, note: 'F' },
+//   { isOpen: true, note: 'G' },
+// ];
 
 interface Props {}
 
@@ -39,12 +40,15 @@ export const Controls = ({}: Props) => {
         <MidiFileInput setMidi={setMidi} />
         {midi && (
           <MidiPlayer
-            stop={stop}
+            stop={() => {
+              stop();
+              setActiveNote(null);
+            }}
             playMidi={() => playMidi(midi!, (note, octave) => setActiveNote({ note, octave }))}
           />
         )}
       </Inputs>
-      <Bagpipe holes={holes} activeNote={activeNote} />
+      <Bagpipe bagpipe={getBagpipeData(Modes.Mixolidian, 'G')} activeNote={activeNote} />
     </Container>
   );
 };
