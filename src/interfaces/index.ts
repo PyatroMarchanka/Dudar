@@ -31,7 +31,7 @@ type SharpMap = {
   [key: string]: Notes;
 };
 
-export const convertToSharp = (note: Notes) => {
+export const convertToSharp = (note: Notes): SharpNotes => {
   const map: SharpMap = {
     Bb: 'A#',
     Db: 'C#',
@@ -40,7 +40,7 @@ export const convertToSharp = (note: Notes) => {
     Ab: 'G#',
   };
 
-  return note in map ? map[note as keyof SharpMap] : note;
+  return (note in map ? map[note as keyof SharpMap] : note) as SharpNotes;
 };
 
 export function transposeNote(note: SharpNotes, step: number): SharpNotes {
@@ -51,3 +51,9 @@ export function transposeNote(note: SharpNotes, step: number): SharpNotes {
 
   return AllNotes[(indexOfNote + step) % AllNotes.length];
 }
+
+export const convertMidiPitchToNote = (midiPitch: number) => {
+  const note = midiPitch % 12;
+  const octave = Math.floor(midiPitch / 12) - 1;
+  return { note: AllNotes[note], octave };
+};

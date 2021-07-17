@@ -1,13 +1,12 @@
-import Button from '@material-ui/core/Button';
 import React, { useState } from 'react';
 import { PlayStopButton } from '../../global/PlayStopButton';
 
 interface Props {
   playMidi: () => void;
-  stop: () => void;
+  stop?: () => void;
 }
 
-export const MidiPlayer = ({ playMidi, stop }: Props) => {
+export const PlayStopMidi = ({ playMidi, stop }: Props) => {
   const [isPlaying, setIsPlayed] = useState(false);
 
   const onPlay = () => {
@@ -17,7 +16,9 @@ export const MidiPlayer = ({ playMidi, stop }: Props) => {
 
   const onStop = () => {
     setIsPlayed(false);
-    stop();
+    if (stop) {
+      stop();
+    }
   };
   return (
     <div>

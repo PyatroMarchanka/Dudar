@@ -17,6 +17,8 @@
     "lodash": "^4.17.21",
     "midi-parse": "^0.0.6",
     "midi-parser-js": "^4.0.4",
+    "midi-player-js": "^2.0.14",
+    "midi-sounds-react": "^1.2.54",
     "parse-midi": "^2.0.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

@@ -1,31 +1,33 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Midi, Track } from '@tonejs/midi';
-import { Note } from '@tonejs/midi/dist/Note';
-import * as Tone from 'tone';
+import React, { useEffect } from 'react';
+import { Midi } from '@tonejs/midi';
 
 import styled from 'styled-components';
 
 interface Props {
-  setMidi: (midi: Midi) => void;
+  setMidi: (midi: ArrayBuffer) => void;
 }
 
 export const MidiFileInput = ({ setMidi }: Props) => {
-  const synth = new Tone.Synth().toDestination();
-
   useEffect(() => {
     let source = document.getElementById('filereader') as HTMLInputElement;
 
-    source!.addEventListener('change', () => {
+    const onChange = () => {
       const reader = new FileReader();
       reader.onload = async (e) => {
-        const midi = new Midi(e.target?.result as ArrayBuffer);
-        setMidi(midi);
+        // const midi = new Midi(e.target?.result as ArrayBuffer);
+
+        setMidi(e.target?.result as ArrayBuffer);
       };
 
       if (source?.files?.[0]) {
         reader.readAsArrayBuffer(source?.files?.[0] as any);
       }
-    });
+    };
+    source!.addEventListener('change', onChange);
+
+    return () => {
+      source!.removeEventListener('change', onChange);
+    };
   }, []);
 
   return (

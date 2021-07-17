@@ -1,54 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import { Midi } from '@tonejs/midi';
 import * as Tone from 'tone';
 import { MidiFileInput } from './MidiFileInput';
-import { MidiPlayer } from './MidiPlayer';
 import styled from 'styled-components';
 import { Bagpipe } from '../Bagpipe';
-import { playMidi } from '../../utils/midiUtils';
-import { Modes } from '../../interfaces';
+import { convertMidiPitchToNote, Modes } from '../../interfaces';
 import { getBagpipeData } from '../../utils/bagpipesUtils';
-
-// const holes: Hole[] = [
-//   { isOpen: true, note: 'G' },
-//   { isOpen: true, note: 'A' },
-//   { isOpen: true, note: 'B' },
-//   { isOpen: true, note: 'C' },
-//   { isOpen: true, note: 'D' },
-//   { isOpen: true, note: 'E' },
-//   { isOpen: true, note: 'F' },
-//   { isOpen: true, note: 'G' },
-// ];
+import { PlayStopMidi } from './MidiPlayer';
+import { useMidiPlayer } from '../../utils/useMidiPlayer';
 
 interface Props {}
 
 export const Controls = ({}: Props) => {
-  const [midi, setMidi] = useState<Midi | null>(null);
+  const [midi, setMidi] = useState<ArrayBuffer | null>(null);
   const [activeNote, setActiveNote] = useState<{ note: string; octave: number } | null>(null);
+  console.log('activeNote', activeNote);
+  const handleNote = (midiPitch: number) => {
+    setActiveNote(convertMidiPitchToNote(midiPitch));
+  };
+
+  const { Player: midiPlayer, MPlayer } = useMidiPlayer(handleNote);
 
   useEffect(() => {
-    Tone.Transport.start();
+    Tone.start();
   }, []);
-
-  const stop = () => {
-    Tone.Transport.stop();
-  };
 
   return (
     <Container>
       <Inputs>
         <MidiFileInput setMidi={setMidi} />
-        {midi && (
-          <MidiPlayer
-            stop={() => {
-              stop();
-              setActiveNote(null);
-            }}
-            playMidi={() => playMidi(midi!, (note, octave) => setActiveNote({ note, octave }))}
-          />
-        )}
+        <PlayStopMidi playMidi={() => midiPlayer?.playMidi(midi)} stop={midiPlayer?.stop} />
+        {MPlayer}
       </Inputs>
-      <Bagpipe bagpipe={getBagpipeData(Modes.Mixolidian, 'G')} activeNote={activeNote} />
+      <Bagpipe bagpipe={getBagpipeData(Modes.Mixolidian, 'A')} activeNote={activeNote} />
     </Container>
   );
 };
