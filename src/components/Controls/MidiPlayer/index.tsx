@@ -4,9 +4,10 @@ import { PlayStopButton } from '../../global/PlayStopButton';
 interface Props {
   playMidi: () => void;
   stop?: () => void;
+  disabled: boolean;
 }
 
-export const PlayStopMidi = ({ playMidi, stop }: Props) => {
+export const PlayStopMidi = ({ playMidi, stop, disabled }: Props) => {
   const [isPlaying, setIsPlayed] = useState(false);
 
   const onPlay = () => {
@@ -20,6 +21,11 @@ export const PlayStopMidi = ({ playMidi, stop }: Props) => {
       stop();
     }
   };
+
+  if (disabled) {
+    return null;
+  }
+
   return (
     <div>
       <PlayStopButton isPlaying={isPlaying} handlePlaying={isPlaying ? onStop : onPlay} />

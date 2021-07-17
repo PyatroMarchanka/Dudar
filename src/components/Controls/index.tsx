@@ -7,13 +7,15 @@ import { convertMidiPitchToNote, Modes } from '../../interfaces';
 import { getBagpipeData } from '../../utils/bagpipesUtils';
 import { PlayStopMidi } from './MidiPlayer';
 import { useMidiPlayer } from '../../utils/useMidiPlayer';
+import { Midi } from '@tonejs/midi';
 
 interface Props {}
 
 export const Controls = ({}: Props) => {
   const [midi, setMidi] = useState<ArrayBuffer | null>(null);
+  const [midiData, setMidiData] = useState<Midi | null>(null);
   const [activeNote, setActiveNote] = useState<{ note: string; octave: number } | null>(null);
-  console.log('activeNote', activeNote);
+
   const handleNote = (midiPitch: number) => {
     setActiveNote(convertMidiPitchToNote(midiPitch));
   };
@@ -27,8 +29,12 @@ export const Controls = ({}: Props) => {
   return (
     <Container>
       <Inputs>
-        <MidiFileInput setMidi={setMidi} />
-        <PlayStopMidi playMidi={() => midiPlayer?.playMidi(midi)} stop={midiPlayer?.stop} />
+        <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} />
+        <PlayStopMidi
+          disabled={!midi}
+          playMidi={() => midiPlayer?.playMidi(midi, midiData)}
+          stop={midiPlayer?.stop}
+        />
         {MPlayer}
       </Inputs>
       <Bagpipe bagpipe={getBagpipeData(Modes.Mixolidian, 'A')} activeNote={activeNote} />

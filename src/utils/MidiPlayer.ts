@@ -1,5 +1,6 @@
 import * as Tone from 'tone';
 import MidiPlayerLib from 'midi-player-js';
+import { Midi } from '@tonejs/midi';
 
 export type MidiNoteHandler = (note: number) => void;
 
@@ -10,7 +11,9 @@ Player.on('playing', function (currentTick: any) {});
 Player.on('midiEvent', function (event: any) {});
 Player.on('endOfFile', function () {});
 
-export const bagpipeInstr = [1166];
+const bagpipeChanter = 1166;
+const drone = 725;
+export const bagpipeInstr = [bagpipeChanter, drone];
 
 export class MidiPlayer {
   playRef: any;
@@ -23,6 +26,7 @@ export class MidiPlayer {
     if (this.playRef.current) {
       this.playRef.current?.setBand256(-5);
       this.playRef.current?.setBand512(-5);
+      // this.playRef.current?.setInstrumentVolume(drone, 0.5);
     }
   }
 
@@ -30,25 +34,31 @@ export class MidiPlayer {
     console.log('initPlayer');
     Player.on('midiEvent', (event: any) => {
       if (event.name === 'Note on') {
-        this.playNote(event.noteNumber, 1);
+        this.playNote(event.noteNumber, 0.5);
         handleNote(event.noteNumber);
       }
     });
   };
 
-  playNote = (note: number, dur: number) => {
-    // console.log('note', note);
-    this.playRef.current?.cancelQueue();
-    this.playRef.current?.playChordNow(1166, [note], dur - 0.005);
+  playDrone = (note: number, dur: number) => {
+    console.log('playDrone', note, dur);
+    this.playRef.current?.playChordNow(drone, [note], dur);
   };
 
-  playMidi = (midi: ArrayBuffer | null) => {
+  playNote = (note: number, dur: number) => {
+    // console.log('note', note);
+    // this.playRef.current?.cancelQueue();
+    this.playRef.current?.playChordNow(bagpipeChanter, [note], dur - 0.005);
+  };
+
+  playMidi = (midi: ArrayBuffer | null, midiData: Midi | null) => {
     if (!midi) {
       return;
     }
 
     Player.loadArrayBuffer(midi);
     Player.play();
+    this.playDrone(46, midiData ? midiData.duration : 0);
   };
 
   stop = () => {

@@ -5,18 +5,19 @@ import styled from 'styled-components';
 
 interface Props {
   setMidi: (midi: ArrayBuffer) => void;
+  setMidiData: (midi: Midi) => void;
 }
 
-export const MidiFileInput = ({ setMidi }: Props) => {
+export const MidiFileInput = ({ setMidi, setMidiData }: Props) => {
   useEffect(() => {
     let source = document.getElementById('filereader') as HTMLInputElement;
 
     const onChange = () => {
       const reader = new FileReader();
       reader.onload = async (e) => {
-        // const midi = new Midi(e.target?.result as ArrayBuffer);
-
+        const midi = new Midi(e.target?.result as ArrayBuffer);
         setMidi(e.target?.result as ArrayBuffer);
+        setMidiData(midi);
       };
 
       if (source?.files?.[0]) {
