@@ -1,6 +1,5 @@
 import { Modes } from "../interfaces";
 import { BagpipeType, Bagpipes } from "../utils/bagpipesUtils";
-console.log("test");
 
 export const bagpipes: BagpipeType[] = [
   {
