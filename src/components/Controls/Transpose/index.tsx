@@ -4,7 +4,7 @@ import { SetTransposeType } from "../../../utils/MidiPlayer";
 
 interface Props {
   setTranspose?: SetTransposeType;
-  label: string;
+  label?: string;
 }
 
 export default ({ setTranspose, label = "Transpose sound" }: Props) => {
