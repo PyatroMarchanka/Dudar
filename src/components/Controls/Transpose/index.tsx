@@ -4,9 +4,10 @@ import { SetTransposeType } from "../../../utils/MidiPlayer";
 
 interface Props {
   setTranspose?: SetTransposeType;
+  label: string;
 }
 
-export default ({ setTranspose }: Props) => {
+export default ({ setTranspose, label = "Transpose sound" }: Props) => {
   const [value, setValue] = useState(0);
   const options = new Array(24)
     .fill(undefined)
@@ -14,7 +15,7 @@ export default ({ setTranspose }: Props) => {
 
   return (
     <div>
-      <h4>Transpose</h4>
+      <h4>{label}</h4>
       <Select
         value={value}
         onChange={(e) => {
