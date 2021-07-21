@@ -7,6 +7,7 @@ import { getBagpipeData } from "../../utils/bagpipesUtils";
 import { PlayStopMidi } from "./MidiPlayer";
 import { useMidiPlayer } from "../../utils/useMidiPlayer";
 import { Midi } from "@tonejs/midi";
+import Transpose from "./Transpose";
 
 interface Props {}
 
@@ -27,6 +28,8 @@ export const Controls = ({}: Props) => {
   const getTestMidi = async () => {
     const file = await fetch("/midi/Highland_Laddie.midi");
     const buffer = await file.arrayBuffer();
+    const midi = new Midi(buffer);
+    setMidiData(midi);
     setMidi(buffer);
   };
 
@@ -43,6 +46,7 @@ export const Controls = ({}: Props) => {
           playMidi={() => midiPlayer?.playMidi(midi, midiData)}
           stop={midiPlayer?.stop}
         />
+        <Transpose setTranspose={midiPlayer?.setTranspose} />
         {MPlayer}
       </Inputs>
       <Bagpipe
