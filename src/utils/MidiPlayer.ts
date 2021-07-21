@@ -9,7 +9,9 @@ var Player = new MidiPlayerLib.Player(function (event: any) {});
 Player.on("fileLoaded", function () {});
 Player.on("playing", function (currentTick: any) {});
 Player.on("midiEvent", function (event: any) {});
-Player.on("endOfFile", function () {});
+Player.on("endOfFile", function () {
+  Player.stop();
+});
 (Player as any).setTempo(140);
 
 const bagpipeChanter = 1166;
