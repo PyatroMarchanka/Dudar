@@ -8,25 +8,33 @@ import { PlayStopMidi } from "./MidiPlayer";
 import { useMidiPlayer } from "../../utils/useMidiPlayer";
 import { Midi } from "@tonejs/midi";
 import Transpose from "./Transpose";
+import SongList from "../SongList";
 
 interface Props {}
 
 export const Controls = ({}: Props) => {
   const [midi, setMidi] = useState<ArrayBuffer | null>(null);
   const [midiData, setMidiData] = useState<Midi | null>(null);
+  const [songList, setSongList] = useState<string[]>([]);
+  const [activeSong, setActiveSong] = useState<string | null>(null);
   const [activeNote, setActiveNote] = useState<{
     note: string;
     octave: number;
   } | null>(null);
-
   const handleNote = (midiPitch: number) => {
     setActiveNote(convertMidiPitchToNote(midiPitch));
   };
 
   const { Player: midiPlayer, MPlayer } = useMidiPlayer(handleNote);
 
-  const getTestMidi = async () => {
-    const file = await fetch("/midi/Highland_Laddie.midi");
+  const getSongList = async () => {
+    const file = await fetch("/midi/list.json");
+    const list = await file.json();
+    setSongList(list);
+  };
+
+  const loadMidiSong = async (fileName: string) => {
+    const file = await fetch(`/midi/${fileName}`);
     const buffer = await file.arrayBuffer();
     const midi = new Midi(buffer);
     setMidiData(midi);
@@ -34,31 +42,43 @@ export const Controls = ({}: Props) => {
   };
 
   useEffect(() => {
-    getTestMidi();
+    getSongList();
   }, []);
 
+  useEffect(() => {
+    if (activeSong) {
+      loadMidiSong(activeSong);
+    }
+  }, [activeSong]);
+
   return (
-    <Container>
-      <Inputs>
-        <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} />
-        <PlayStopMidi
-          disabled={!midi}
-          playMidi={() => midiPlayer?.playMidi(midi, midiData)}
-          stop={midiPlayer?.stop}
-        />
-        <Transpose setTranspose={midiPlayer?.setTranspose} />
-        {MPlayer}
-      </Inputs>
-      <Bagpipe
-        bagpipe={getBagpipeData(Modes.Mixolidian, "A")}
-        activeNote={activeNote}
-      />
-    </Container>
+    <div>
+      <h3>{activeSong?.split(".midi").join("")}</h3>
+      <Container>
+        <Inputs>
+          {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
+          <Bagpipe
+            bagpipe={getBagpipeData(Modes.Mixolidian, "A")}
+            activeNote={activeNote}
+          />
+          <PlayStopMidi
+            disabled={!midi}
+            playMidi={() => midiPlayer?.playMidi(midi, midiData)}
+            stop={midiPlayer?.stop}
+          />
+          <Transpose setTranspose={midiPlayer?.setTranspose} />
+          {MPlayer}
+        </Inputs>
+        <SongList list={songList} setActiveSong={setActiveSong} />
+      </Container>
+    </div>
   );
 };
 
-const Container = styled.div``;
-const Inputs = styled.div`
+const Container = styled.div`
   display: flex;
-  align-items: center;
+  justify-content: space-between;
+`;
+const Inputs = styled.div`
+  /* display: flex; */
 `;
