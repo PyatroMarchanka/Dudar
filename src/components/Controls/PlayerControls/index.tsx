@@ -1,5 +1,5 @@
-import { Slider, Typography } from "@material-ui/core";
 import React, { useContext, useState } from "react";
+import { Slider } from "@material-ui/core";
 import styled from "styled-components";
 import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
@@ -14,8 +14,6 @@ export const PlayerControls = ({ player }: Props) => {
     state: { midiData, midi, progress },
     setProgress,
   } = useContext(store);
-  const [tempo, setTempo] = useState(120);
-  console.log("progress", progress);
   const [isPlaying, setIsPlayed] = useState(false);
 
   const onPlay = () => {
@@ -38,22 +36,6 @@ export const PlayerControls = ({ player }: Props) => {
         isPlaying={isPlaying}
         handlePlaying={isPlaying ? onStop : onPlay}
       />
-      <Typography>Tempo</Typography>
-      <Slider
-        className="volume-slider"
-        onChange={(e, value) => {
-          setTempo(value as number);
-          player?.setTempo(value as number);
-        }}
-        value={tempo}
-        defaultValue={tempo}
-        aria-labelledby="discrete-slider"
-        valueLabelDisplay="auto"
-        step={1}
-        min={60}
-        max={180}
-      />
-      <Typography>Progress</Typography>
       <Slider
         className="volume-slider"
         onChange={(e, value) => {
@@ -73,6 +55,9 @@ export const PlayerControls = ({ player }: Props) => {
 };
 
 const Container = styled.div`
+  display: flex;
+  align-items: center;
+
   .MuiSlider-root {
     width: 200px;
   }

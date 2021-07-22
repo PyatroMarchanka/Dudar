@@ -3,12 +3,13 @@ import styled from "styled-components";
 import { Bagpipe } from "../Bagpipe";
 import { convertMidiPitchToNote, Modes } from "../../interfaces";
 import { getBagpipeData } from "../../utils/bagpipesUtils";
-import { PlayerControls } from "./MidiPlayer";
+import { PlayerControls } from "./PlayerControls";
 import { useMidiPlayer } from "../../utils/useMidiPlayer";
 import Transpose from "./Transpose";
 import SongList from "../SongList";
 import { store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
+import { TempoSlider } from "./TempoSlider";
 
 export const Dudar = () => {
   const {
@@ -33,26 +34,32 @@ export const Dudar = () => {
   useLoadSong();
 
   return (
-    <div>
+    <Container>
       <Header>
         <h3>{activeSong?.split(".midi").join("") || "No song selected"}</h3>
         <Inputs>
           <PlayerControls player={midiPlayer} />
-          <SongList />
+          <Column>
+            <SongList />
+            <TempoSlider player={midiPlayer} />
+          </Column>
         </Inputs>
+
         <Transpose setTranspose={midiPlayer?.setTranspose} />
       </Header>
-      <Container>
+      <BagpipeContainer>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
         <Bagpipe
           bagpipe={getBagpipeData(Modes.Mixolidian, "A")}
           activeNote={activeNote}
         />
-      </Container>
+      </BagpipeContainer>
       {MPlayer}
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div``;
 
 const Header = styled.div`
   h3 {
@@ -63,11 +70,14 @@ const Header = styled.div`
   border-bottom: 1px solid black;
 `;
 
-const Container = styled.div`
+const Column = styled.div``;
+
+const BagpipeContainer = styled.div`
   display: flex;
   justify-content: center;
 `;
 const Inputs = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;

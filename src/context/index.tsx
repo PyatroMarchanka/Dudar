@@ -63,7 +63,6 @@ const ContextProvider = ({ children }: any) => {
       case "SET_PROGRESS":
         const progressValue = 100 - action.payload;
         if (state.progress !== progressValue) {
-          console.log("action.payload", progressValue);
           return {
             ...state,
             progress: progressValue,
