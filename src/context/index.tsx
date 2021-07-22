@@ -26,7 +26,7 @@ const initialState: State = {
   midiData: null,
   midi: null,
   progress: 0,
-  activeSong: noSongsLabel,
+  activeSong: "Scotland.midi" || noSongsLabel,
   tempo: 240,
 };
 
