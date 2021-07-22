@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   bagpipeInstr,
   MidiNoteHandler,
@@ -8,11 +8,15 @@ import {
 // @ts-ignore
 import MIDISounds from "midi-sounds-react";
 import styled from "styled-components";
+import { store } from "../context";
 
 export const useMidiPlayer = (
   handleNote: MidiNoteHandler,
   handleProgress: PlaybackProgressHandler
 ) => {
+  const {
+    state: { tempo },
+  } = useContext(store);
   const [midiPlayer, setMidiPlayer] = useState<MidiPlayer | null>(null);
 
   const playerRef = useRef(null);
@@ -28,7 +32,7 @@ export const useMidiPlayer = (
   );
 
   useEffect(() => {
-    const player = new MidiPlayer(playerRef, 120);
+    const player = new MidiPlayer(playerRef, tempo);
     player.initPlayer(handleNote, handleProgress);
     setMidiPlayer(player);
   }, []);

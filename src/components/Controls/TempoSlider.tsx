@@ -7,7 +7,8 @@ import {
   Slider,
   Typography,
 } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { store } from "../../context";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 
 interface Props {
@@ -23,9 +24,17 @@ const useStyles = makeStyles(() =>
 );
 
 export const TempoSlider = ({ player }: Props) => {
+  const {
+    state: { tempo },
+    setTempo,
+  } = useContext(store);
+
   const classes = useStyles();
-  const [tempo, setTempo] = useState(120);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    player?.setTempo(tempo);
+  }, [player]);
 
   return (
     <>

@@ -57,9 +57,10 @@ export const PlayerControls = ({ player }: Props) => {
 const Container = styled.div`
   display: flex;
   align-items: center;
+  width: 100%;
 
   .MuiSlider-root {
-    width: 200px;
+    width: 300px;
   }
   .MuiSlider-rail {
     background-color: #c9b6b6;

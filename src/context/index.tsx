@@ -2,22 +2,32 @@ import { Midi } from "@tonejs/midi";
 import React, { createContext, useReducer } from "react";
 
 interface Action {
-  type: "SET_MIDI" | "SET_MIDI_DATA" | "SET_ACTIVE_SONG" | "SET_PROGRESS";
+  type:
+    | "SET_MIDI"
+    | "SET_MIDI_DATA"
+    | "SET_ACTIVE_SONG"
+    | "SET_PROGRESS"
+    | "SET_TEMPO";
 
   payload?: any;
 }
 
+export const noSongsLabel = "No song selected";
+
 interface State {
   midiData: Midi | null;
   midi: ArrayBuffer | null;
-  activeSong?: string | undefined;
+  activeSong: string | undefined;
   progress?: number;
+  tempo: number;
 }
 
 const initialState: State = {
   midiData: null,
   midi: null,
   progress: 0,
+  activeSong: noSongsLabel,
+  tempo: 120,
 };
 
 interface Context {
@@ -27,6 +37,7 @@ interface Context {
   setMidiData: (midi: Midi) => void;
   setActiveSong: (fileName: string) => void;
   setProgress: (percent: number) => void;
+  setTempo: (bpm: number) => void;
 }
 
 const store = createContext<Context>({
@@ -36,6 +47,7 @@ const store = createContext<Context>({
   setMidiData: (midi: Midi) => {},
   setActiveSong: (fileName: string) => {},
   setProgress: (percent: number) => {},
+  setTempo: (bpm: number) => {},
 });
 const { Provider } = store;
 
@@ -71,6 +83,12 @@ const ContextProvider = ({ children }: any) => {
           return state;
         }
 
+      case "SET_TEMPO":
+        return {
+          ...state,
+          tempo: action.payload,
+        };
+
       default:
         return state;
     }
@@ -91,6 +109,10 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_PROGRESS", payload: percent });
   };
 
+  const setTempo = (bpm: number) => {
+    dispatch({ type: "SET_TEMPO", payload: bpm });
+  };
+
   return (
     <Provider
       value={{
@@ -100,6 +122,7 @@ const ContextProvider = ({ children }: any) => {
         setMidiData,
         setActiveSong,
         setProgress,
+        setTempo,
       }}
     >
       {children}

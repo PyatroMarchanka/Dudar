@@ -7,7 +7,7 @@ import { PlayerControls } from "./PlayerControls";
 import { useMidiPlayer } from "../../utils/useMidiPlayer";
 import Transpose from "./Transpose";
 import SongList from "../SongList";
-import { store } from "../../context";
+import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
 import { TempoSlider } from "./TempoSlider";
 
@@ -36,16 +36,17 @@ export const Dudar = () => {
   return (
     <Container>
       <Header>
-        <h3>{activeSong?.split(".midi").join("") || "No song selected"}</h3>
+        <h3>{activeSong?.split(".midi").join("") || noSongsLabel}</h3>
         <Inputs>
           <PlayerControls player={midiPlayer} />
+        </Inputs>
+        <Inputs>
+          <Transpose setTranspose={midiPlayer?.setTranspose} />
           <Column>
             <SongList />
             <TempoSlider player={midiPlayer} />
           </Column>
         </Inputs>
-
-        <Transpose setTranspose={midiPlayer?.setTranspose} />
       </Header>
       <BagpipeContainer>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
@@ -78,6 +79,7 @@ const BagpipeContainer = styled.div`
 `;
 const Inputs = styled.div`
   display: flex;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
 `;

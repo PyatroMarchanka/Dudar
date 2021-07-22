@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
-import { store } from "../../context";
+import { noSongsLabel, store } from "../../context";
 import { useSongList } from "../../hooks/useSongLIst";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -53,8 +53,7 @@ export default () => {
         <DialogContent className={classes.content}>
           <Select
             className={classes.select}
-            // open={open}
-            value={activeSong}
+            value={activeSong || ""}
             onChange={(e) => {
               setActiveSong(e.target.value as string);
               setOpen(false);
@@ -62,8 +61,9 @@ export default () => {
             labelId="demo-dialog-select-label"
             id="demo-dialog-select"
             input={<Input />}
+            defaultValue={activeSong}
           >
-            <MenuItem value="">
+            <MenuItem value={noSongsLabel}>
               <em>None</em>
             </MenuItem>
             {songList.map((filename) => (
@@ -72,12 +72,6 @@ export default () => {
               </MenuItem>
             ))}
           </Select>
-          {/* <form className={classes.container}>
-            <FormControl className={classes.formControl}>
-              <InputLabel id="demo-dialog-select-label">None</InputLabel>
-              
-            </FormControl>
-          </form> */}
         </DialogContent>
       </Dialog>
     </>

@@ -13,7 +13,6 @@ Player.on("midiEvent", function (event: any) {});
 Player.on("endOfFile", function () {
   Player.stop();
 });
-(Player as any).setTempo(140);
 
 const bagpipeChanter = 1166;
 const drone = 731;
@@ -52,11 +51,17 @@ export class MidiPlayer {
       if (event.name === "Note on") {
         this.keyDown(event.noteNumber, event.noteNumber);
         handleNote(event.noteNumber);
+        console.log("Player.tempo", Player.tempo);
       }
 
       if (event.name === "Note off") {
         this.keyUp(event.noteNumber);
       }
+    });
+
+    Player.on("endOfFile", () => {
+      this.stop();
+      handleProgress(0);
     });
   };
 
@@ -100,9 +105,10 @@ export class MidiPlayer {
   };
 
   setTempo = (bpm: number) => {
-    console.log("setTempo");
-    Player.tempo = bpm;
-    (Player as any).setTempo(bpm);
+    console.log("setTempo", bpm);
+    Player.tempo = Math.floor(bpm / 4);
+    (Player as any).setTempo(Math.floor(bpm / 4));
+    this.bpm = bpm;
   };
 
   playDrone = (note: number) => {
