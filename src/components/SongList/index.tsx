@@ -19,11 +19,21 @@ import { useSongList } from "../../hooks/useSongLIst";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    container: {},
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 300,
+    container: {
+      width: 200,
+      display: "flex",
+      justifyContent: "center",
     },
+    content: {
+      width: 300,
+      display: "flex",
+      margin: 0,
+      justifyContent: "flex-start",
+    },
+    select: {
+      width: "100%",
+    },
+    formControl: {},
   })
 );
 
@@ -40,41 +50,36 @@ export default () => {
     <>
       <Button onClick={() => setOpen(true)}>Songs</Button>
       <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Select song</DialogTitle>
-        <DialogContent>
-          <form className={classes.container}>
+        <DialogContent className={classes.content}>
+          <Select
+            className={classes.select}
+            // open={open}
+            value={activeSong}
+            onChange={(e) => {
+              setActiveSong(e.target.value as string);
+              setOpen(false);
+            }}
+            labelId="demo-dialog-select-label"
+            id="demo-dialog-select"
+            input={<Input />}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            {songList.map((filename) => (
+              <MenuItem value={filename}>
+                {filename.split(".midi").join("")}
+              </MenuItem>
+            ))}
+          </Select>
+          {/* <form className={classes.container}>
             <FormControl className={classes.formControl}>
               <InputLabel id="demo-dialog-select-label">None</InputLabel>
-              <Select
-                value={activeSong}
-                onChange={(e) => {
-                  setActiveSong(e.target.value as string);
-                  setOpen(false);
-                }}
-                labelId="demo-dialog-select-label"
-                id="demo-dialog-select"
-                input={<Input />}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                {songList.map((filename) => (
-                  <MenuItem value={filename}>
-                    {filename.split(".midi").join("")}
-                  </MenuItem>
-                ))}
-              </Select>
+              
             </FormControl>
-          </form>
+          </form> */}
         </DialogContent>
       </Dialog>
-      {/* <List>
-        {songList.map((filename) => (
-          <ListItem onClick={() => setActiveSong(filename)}>
-            {filename.split(".midi").join("")}
-          </ListItem>
-        ))}
-      </List> */}
     </>
   );
 };

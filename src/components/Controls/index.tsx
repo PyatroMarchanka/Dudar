@@ -13,7 +13,6 @@ import { useLoadSong } from "../../hooks/useLoadSong";
 export const Dudar = () => {
   const {
     state: { activeSong },
-    setActiveSong,
   } = useContext(store);
 
   const [activeNote, setActiveNote] = useState<{
