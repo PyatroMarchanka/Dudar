@@ -27,7 +27,7 @@ const initialState: State = {
   midi: null,
   progress: 0,
   activeSong: noSongsLabel,
-  tempo: 120,
+  tempo: 240,
 };
 
 interface Context {

@@ -79,18 +79,3 @@ export default () => {
     </>
   );
 };
-
-const List = styled.div`
-  padding: 20px;
-  height: 100vh;
-  overflow-y: auto;
-`;
-
-const ListItem = styled.h4`
-  text-decoration: underline;
-
-  &:hover {
-    text-decoration-color: aliceblue;
-    cursor: pointer;
-  }
-`;
