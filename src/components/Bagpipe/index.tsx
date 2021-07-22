@@ -1,7 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import { SharpNotes } from '../../interfaces';
-import { BagpipeNotes } from '../../utils/bagpipesUtils';
+import React from "react";
+import styled from "styled-components";
+import { SharpNotes } from "../../interfaces";
+import { BagpipeNotes } from "../../utils/bagpipesUtils";
 
 interface HoleProps {
   isOpen: boolean;
@@ -10,7 +10,9 @@ interface HoleProps {
 }
 
 export const HoleComponent = ({ isOpen, className, note }: HoleProps) => {
-  return <HoleWrapper className={className}>{isOpen ? note : null}</HoleWrapper>;
+  return (
+    <HoleWrapper className={className}>{isOpen ? note : null}</HoleWrapper>
+  );
 };
 
 interface Props {
@@ -19,7 +21,9 @@ interface Props {
 }
 
 export const Bagpipe = ({ bagpipe, activeNote }: Props) => {
-  const notes = [bagpipe.entry, ...bagpipe.main].filter(Boolean) as SharpNotes[];
+  const notes = [bagpipe.entry, ...bagpipe.main].filter(
+    Boolean
+  ) as SharpNotes[];
 
   return (
     <Container>
@@ -27,19 +31,20 @@ export const Bagpipe = ({ bagpipe, activeNote }: Props) => {
         {notes.map((note, i) => (
           <HoleComponent
             note={note}
-            className={`hole hole-${i + 1} ${note === activeNote?.note ? 'active' : ''}`}
+            className={`hole hole-${i + 1} ${
+              note === activeNote?.note ? "active" : ""
+            }`}
             isOpen={note === activeNote?.note}
           />
         ))}
       </Holes>
-      <BagpipeImage src='images/bagpipe.png' alt='bagpipe' />
+      <BagpipeImage src="images/bagpipe.png" alt="bagpipe" />
     </Container>
   );
 };
 
 const Container = styled.div`
-  margin-top: 50px;
-  margin-left: auto;
+  margin-top: 10px;
   position: relative;
 `;
 

@@ -3,19 +3,16 @@ import styled from "styled-components";
 import { Bagpipe } from "../Bagpipe";
 import { convertMidiPitchToNote, Modes } from "../../interfaces";
 import { getBagpipeData } from "../../utils/bagpipesUtils";
-import { PlayStopMidi } from "./MidiPlayer";
+import { PlayerControls } from "./MidiPlayer";
 import { useMidiPlayer } from "../../utils/useMidiPlayer";
 import Transpose from "./Transpose";
 import SongList from "../SongList";
 import { store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
-import { useSongList } from "../../hooks/useSongLIst";
 
-interface Props {}
-
-export const Controls = ({}: Props) => {
+export const Dudar = () => {
   const {
-    state: { midi, midiData, activeSong },
+    state: { activeSong },
     setActiveSong,
   } = useContext(store);
 
@@ -30,37 +27,44 @@ export const Controls = ({}: Props) => {
 
   const { Player: midiPlayer, MPlayer } = useMidiPlayer(handleNote);
 
-  const { songList } = useSongList();
   useLoadSong();
 
   return (
     <div>
-      <h3>{activeSong?.split(".midi").join("")}</h3>
-      <Container>
+      <Header>
+        <h3>{activeSong?.split(".midi").join("") || "No song selected"}</h3>
         <Inputs>
-          {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
-          <PlayStopMidi
-            disabled={!midi}
-            playMidi={() => midiPlayer?.playMidi(midi, midiData)}
-            stop={midiPlayer?.stop}
-          />
-          <Bagpipe
-            bagpipe={getBagpipeData(Modes.Mixolidian, "A")}
-            activeNote={activeNote}
-          />
-          <Transpose setTranspose={midiPlayer?.setTranspose} />
-          {MPlayer}
+          <PlayerControls player={midiPlayer} />
+          <SongList />
         </Inputs>
-        <SongList list={songList} setActiveSong={setActiveSong} />
+        <Transpose setTranspose={midiPlayer?.setTranspose} />
+      </Header>
+      <Container>
+        {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
+        <Bagpipe
+          bagpipe={getBagpipeData(Modes.Mixolidian, "A")}
+          activeNote={activeNote}
+        />
       </Container>
+      {MPlayer}
     </div>
   );
 };
 
+const Header = styled.div`
+  h3 {
+    text-align: center;
+    margin: 0;
+  }
+  padding: 5px 0;
+  border-bottom: 1px solid black;
+`;
+
 const Container = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 `;
 const Inputs = styled.div`
-  /* display: flex; */
+  display: flex;
+  justify-content: space-between;
 `;

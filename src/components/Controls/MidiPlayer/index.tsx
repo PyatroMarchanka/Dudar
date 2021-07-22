@@ -1,34 +1,38 @@
-import React, { useState } from 'react';
-import { PlayStopButton } from '../../global/PlayStopButton';
+import React, { useContext, useState } from "react";
+import { store } from "../../../context";
+import { MidiPlayer } from "../../../utils/MidiPlayer";
+import { PlayStopButton } from "../../global/PlayStopButton";
 
 interface Props {
-  playMidi: () => void;
-  stop?: () => void;
-  disabled: boolean;
+  player: MidiPlayer | null;
 }
 
-export const PlayStopMidi = ({ playMidi, stop, disabled }: Props) => {
+export const PlayerControls = ({ player }: Props) => {
+  const {
+    state: { midiData, midi },
+  } = useContext(store);
   const [isPlaying, setIsPlayed] = useState(false);
 
   const onPlay = () => {
     setIsPlayed(true);
-    playMidi();
+    player?.playMidi(midi, midiData);
   };
 
   const onStop = () => {
     setIsPlayed(false);
-    if (stop) {
-      stop();
-    }
+    player?.stop();
   };
 
-  if (disabled) {
+  if (!midi) {
     return null;
   }
 
   return (
     <div>
-      <PlayStopButton isPlaying={isPlaying} handlePlaying={isPlaying ? onStop : onPlay} />
+      <PlayStopButton
+        isPlaying={isPlaying}
+        handlePlaying={isPlaying ? onStop : onPlay}
+      />
     </div>
   );
 };
