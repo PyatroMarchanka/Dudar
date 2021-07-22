@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
-import { Controls } from './components/Controls';
+import React, { useEffect } from "react";
+import { Controls } from "./components/Controls";
+import { ContextProvider } from "./context";
 const navigatorObj: any = navigator;
 
 function App() {
   return (
-    <div>
+    <ContextProvider>
       <Controls />
-    </div>
+    </ContextProvider>
   );
 }
 

@@ -1,5 +1,5 @@
+import { MenuItem, Select } from "@material-ui/core";
 import React, { useState } from "react";
-import styled from "styled-components";
 import { SetTransposeType } from "../../../utils/MidiPlayer";
 
 interface Props {
@@ -8,15 +8,15 @@ interface Props {
 }
 
 export default ({ setTranspose, label = "Transpose sound" }: Props) => {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState<number>(0);
   const options = new Array(24)
     .fill(undefined)
     .map((_, i) => ({ value: i - 12, label: i - 12 }));
 
   return (
     <div>
-      <h4>{label}</h4>
       <Select
+        id="demo-simple-select"
         value={value}
         onChange={(e) => {
           setTranspose && setTranspose(Number(e.target.value));
@@ -24,11 +24,11 @@ export default ({ setTranspose, label = "Transpose sound" }: Props) => {
         }}
       >
         {options.map((option) => (
-          <option value={option.value}>{option.label}</option>
+          <MenuItem
+            value={option.value}
+          >{`Transpose: ${option.label} semitones`}</MenuItem>
         ))}
       </Select>
     </div>
   );
 };
-
-const Select = styled.select``;
