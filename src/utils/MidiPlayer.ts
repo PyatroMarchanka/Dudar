@@ -2,6 +2,7 @@ import MidiPlayerLib from "midi-player-js";
 import { Midi } from "@tonejs/midi";
 
 export type MidiNoteHandler = (note: number) => void;
+export type PlaybackProgressHandler = (percent: number) => void;
 export type SetTransposeType = (num: number) => void;
 
 var Player = new MidiPlayerLib.Player(function (event: any) {});
@@ -24,6 +25,7 @@ export class MidiPlayer {
   midiData: Midi | null = null;
   envelopes: any[];
   transpose: number = 0;
+  droneNote: number = 46;
 
   constructor(playRef: any, bpm: number) {
     this.playRef = playRef;
@@ -37,13 +39,18 @@ export class MidiPlayer {
     }
   }
 
-  initPlayer = (handleNote: MidiNoteHandler) => {
+  initPlayer = (
+    handleNote: MidiNoteHandler,
+    handleProgress: PlaybackProgressHandler
+  ) => {
     console.log("initPlayer");
+    Player.on("playing", function (currentTick: any) {
+      handleProgress(Player.getSongPercentRemaining());
+    });
 
     Player.on("midiEvent", (event: any) => {
       if (event.name === "Note on") {
         this.keyDown(event.noteNumber, event.noteNumber);
-
         handleNote(event.noteNumber);
       }
 
@@ -78,12 +85,24 @@ export class MidiPlayer {
     }
   }
 
+  setProgress = (percent: number) => {
+    Player.skipToPercent(percent).play();
+    this.envelopes.forEach((env) => env && env.cancel());
+    this.playDrone(this.droneNote);
+  };
+
   setTranspose: SetTransposeType = (num: number) => {
     this.transpose = num;
   };
 
   setMidiData = (midi: Midi) => {
     this.midiData = midi;
+  };
+
+  setTempo = (bpm: number) => {
+    console.log("setTempo");
+    Player.tempo = bpm;
+    (Player as any).setTempo(bpm);
   };
 
   playDrone = (note: number) => {
@@ -97,7 +116,7 @@ export class MidiPlayer {
 
     Player.loadArrayBuffer(midi);
     Player.play();
-    this.playDrone(46);
+    this.playDrone(this.droneNote);
   };
 
   stop = () => {

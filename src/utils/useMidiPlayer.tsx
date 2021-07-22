@@ -1,23 +1,35 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { bagpipeInstr, MidiNoteHandler, MidiPlayer } from './MidiPlayer';
+import React, { useEffect, useRef, useState } from "react";
+import {
+  bagpipeInstr,
+  MidiNoteHandler,
+  MidiPlayer,
+  PlaybackProgressHandler,
+} from "./MidiPlayer";
 // @ts-ignore
-import MIDISounds from 'midi-sounds-react';
-import styled from 'styled-components';
+import MIDISounds from "midi-sounds-react";
+import styled from "styled-components";
 
-export const useMidiPlayer = (handleNote: MidiNoteHandler) => {
+export const useMidiPlayer = (
+  handleNote: MidiNoteHandler,
+  handleProgress: PlaybackProgressHandler
+) => {
   const [midiPlayer, setMidiPlayer] = useState<MidiPlayer | null>(null);
 
   const playerRef = useRef(null);
 
   const MPlayer = (
     <Container>
-      <MIDISounds ref={playerRef} appElementName='root' instruments={bagpipeInstr} />
+      <MIDISounds
+        ref={playerRef}
+        appElementName="root"
+        instruments={bagpipeInstr}
+      />
     </Container>
   );
 
   useEffect(() => {
     const player = new MidiPlayer(playerRef, 120);
-    player.initPlayer(handleNote);
+    player.initPlayer(handleNote, handleProgress);
     setMidiPlayer(player);
   }, []);
 

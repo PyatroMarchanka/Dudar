@@ -2,7 +2,7 @@ import { Midi } from "@tonejs/midi";
 import React, { createContext, useReducer } from "react";
 
 interface Action {
-  type: "SET_MIDI" | "SET_MIDI_DATA" | "SET_ACTIVE_SONG";
+  type: "SET_MIDI" | "SET_MIDI_DATA" | "SET_ACTIVE_SONG" | "SET_PROGRESS";
 
   payload?: any;
 }
@@ -11,11 +11,13 @@ interface State {
   midiData: Midi | null;
   midi: ArrayBuffer | null;
   activeSong?: string | undefined;
+  progress?: number;
 }
 
 const initialState: State = {
   midiData: null,
   midi: null,
+  progress: 0,
 };
 
 interface Context {
@@ -24,6 +26,7 @@ interface Context {
   setMidi: (midi: ArrayBuffer) => void;
   setMidiData: (midi: Midi) => void;
   setActiveSong: (fileName: string) => void;
+  setProgress: (percent: number) => void;
 }
 
 const store = createContext<Context>({
@@ -32,6 +35,7 @@ const store = createContext<Context>({
   setMidi: (midi: ArrayBuffer) => {},
   setMidiData: (midi: Midi) => {},
   setActiveSong: (fileName: string) => {},
+  setProgress: (percent: number) => {},
 });
 const { Provider } = store;
 
@@ -56,6 +60,18 @@ const ContextProvider = ({ children }: any) => {
           activeSong: action.payload,
         };
 
+      case "SET_PROGRESS":
+        const progressValue = 100 - action.payload;
+        if (state.progress !== progressValue) {
+          console.log("action.payload", progressValue);
+          return {
+            ...state,
+            progress: progressValue,
+          };
+        } else {
+          return state;
+        }
+
       default:
         return state;
     }
@@ -72,8 +88,21 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_ACTIVE_SONG", payload: fileName });
   };
 
+  const setProgress = (percent: number) => {
+    dispatch({ type: "SET_PROGRESS", payload: percent });
+  };
+
   return (
-    <Provider value={{ state, dispatch, setMidi, setMidiData, setActiveSong }}>
+    <Provider
+      value={{
+        state,
+        dispatch,
+        setMidi,
+        setMidiData,
+        setActiveSong,
+        setProgress,
+      }}
+    >
       {children}
     </Provider>
   );

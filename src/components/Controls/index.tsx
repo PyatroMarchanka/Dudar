@@ -13,6 +13,7 @@ import { useLoadSong } from "../../hooks/useLoadSong";
 export const Dudar = () => {
   const {
     state: { activeSong },
+    setProgress,
   } = useContext(store);
 
   const [activeNote, setActiveNote] = useState<{
@@ -24,7 +25,10 @@ export const Dudar = () => {
     setActiveNote(convertMidiPitchToNote(midiPitch));
   };
 
-  const { Player: midiPlayer, MPlayer } = useMidiPlayer(handleNote);
+  const { Player: midiPlayer, MPlayer } = useMidiPlayer(
+    handleNote,
+    setProgress
+  );
 
   useLoadSong();
 
