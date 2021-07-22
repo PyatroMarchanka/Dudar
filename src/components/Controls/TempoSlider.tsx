@@ -38,10 +38,12 @@ export const TempoSlider = ({ player }: Props) => {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>Tempo</Button>
+      <Button variant="outlined" onClick={() => setOpen(true)}>
+        Tempo
+      </Button>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent className={classes.container}>
-          <Typography>Tempo</Typography>
+          <Typography>Tempo {tempo / 2} bpm</Typography>
           <Slider
             className="volume-slider"
             onChange={(e, value) => {
@@ -51,10 +53,9 @@ export const TempoSlider = ({ player }: Props) => {
             value={tempo}
             defaultValue={tempo}
             aria-labelledby="discrete-slider"
-            valueLabelDisplay="auto"
-            step={1}
+            step={2}
             min={60}
-            max={220}
+            max={300}
           />
         </DialogContent>
       </Dialog>

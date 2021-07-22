@@ -48,7 +48,9 @@ export default () => {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>Songs</Button>
+      <Button variant="outlined" onClick={() => setOpen(true)}>
+        Songs
+      </Button>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent className={classes.content}>
           <Select
