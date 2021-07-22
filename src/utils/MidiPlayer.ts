@@ -105,9 +105,12 @@ export class MidiPlayer {
   };
 
   setTempo = (bpm: number) => {
-    Player.tempo = Math.floor(bpm / 3);
-    (Player as any).setTempo(Math.floor(bpm / 3));
-    this.bpm = bpm;
+    const curentTempo = Player.tempo;
+    if (curentTempo !== bpm) {
+      Player.tempo = Math.floor(bpm / 3);
+      (Player as any).setTempo(Math.floor(bpm / 3));
+      this.bpm = bpm;
+    }
   };
 
   playDrone = (note: number) => {
