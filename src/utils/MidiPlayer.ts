@@ -51,7 +51,7 @@ export class MidiPlayer {
       if (event.name === "Note on") {
         this.keyDown(event.noteNumber, event.noteNumber);
         handleNote(event.noteNumber);
-        console.log("Player.tempo", Player.tempo);
+        this.setTempo(this.bpm);
       }
 
       if (event.name === "Note off") {
@@ -105,9 +105,8 @@ export class MidiPlayer {
   };
 
   setTempo = (bpm: number) => {
-    console.log("setTempo", bpm);
-    Player.tempo = Math.floor(bpm / 4);
-    (Player as any).setTempo(Math.floor(bpm / 4));
+    Player.tempo = Math.floor(bpm / 3);
+    (Player as any).setTempo(Math.floor(bpm / 3));
     this.bpm = bpm;
   };
 

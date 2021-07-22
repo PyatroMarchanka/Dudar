@@ -54,7 +54,7 @@ export const TempoSlider = ({ player }: Props) => {
             valueLabelDisplay="auto"
             step={1}
             min={60}
-            max={180}
+            max={220}
           />
         </DialogContent>
       </Dialog>
