@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSpring, animated } from "react-spring";
 
 import { useNotesMoving } from "../../hooks/useNotesMoving";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { Note } from "./Note";
+import { store } from "../../context";
 
 interface Props {
   player: MidiPlayer | null;
@@ -14,16 +15,19 @@ interface Props {
 export default ({ player, activeEvent }: Props) => {
   const [index, setIndex] = useState(0);
   const { nextNotes, setTick, tick } = useNotesMoving(index);
+  const {
+    state: { showPianoRoll },
+  } = useContext(store);
 
   const styles = useSpring({
     transform: `translateX(${-Math.floor(tick / 3)}px)`,
   });
 
   useEffect(() => {
-    if (player) {
+    if (player && showPianoRoll) {
       player.handleNotesMoving = setTick;
     }
-  }, [player]);
+  }, [player, showPianoRoll]);
 
   useEffect(() => {
     setIndex(index + 1);
