@@ -10,6 +10,7 @@ import SongList from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
 import { TempoSlider } from "./TempoSlider";
+import Notes from "../Notes";
 
 export const Dudar = () => {
   const {
@@ -55,6 +56,7 @@ export const Dudar = () => {
           activeNote={activeNote}
         />
       </BagpipeContainer>
+      <Notes player={midiPlayer} />
       {MPlayer}
     </Container>
   );

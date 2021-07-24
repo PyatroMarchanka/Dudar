@@ -3,6 +3,7 @@ import { Midi } from "@tonejs/midi";
 
 export type MidiNoteHandler = (note: number) => void;
 export type PlaybackProgressHandler = (percent: number) => void;
+export type NotesMovingHandler = (tick: number) => void;
 export type SetTransposeType = (num: number) => void;
 
 var Player = new MidiPlayerLib.Player(function (event: any) {});
@@ -25,6 +26,7 @@ export class MidiPlayer {
   envelopes: any[];
   transpose: number = 0;
   droneNote: number = 46;
+  handleNotesMoving?: NotesMovingHandler;
 
   constructor(playRef: any, bpm: number) {
     this.playRef = playRef;
@@ -43,8 +45,12 @@ export class MidiPlayer {
     handleProgress: PlaybackProgressHandler
   ) => {
     console.log("initPlayer");
-    Player.on("playing", function (currentTick: any) {
+    Player.on("playing", (currentTick: any) => {
       handleProgress(Player.getSongPercentRemaining());
+
+      if (this.handleNotesMoving) {
+        this.handleNotesMoving(currentTick);
+      }
     });
 
     Player.on("midiEvent", (event: any) => {
@@ -121,7 +127,7 @@ export class MidiPlayer {
     if (!midi) {
       return;
     }
-
+    console.log("midiData", midiData?.tracks[0].notes);
     Player.loadArrayBuffer(midi);
     Player.play();
     this.playDrone(this.droneNote);
