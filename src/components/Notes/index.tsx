@@ -1,26 +1,24 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components";
 import { useSpring, animated } from "react-spring";
 
 import { useNotesMoving } from "../../hooks/useNotesMoving";
 import { MidiPlayer } from "../../utils/MidiPlayer";
-import { Note } from "./Note";
+import { multCoefficient, Note } from "./Note";
 import { store } from "../../context";
 
 interface Props {
   player: MidiPlayer | null;
-  activeEvent: any;
 }
 
-export default ({ player, activeEvent }: Props) => {
-  const [index, setIndex] = useState(0);
-  const { nextNotes, setTick, tick } = useNotesMoving(index);
+export default ({ player }: Props) => {
+  const { nextNotes, setTick, tick } = useNotesMoving();
   const {
     state: { showPianoRoll },
   } = useContext(store);
 
   const styles = useSpring({
-    transform: `translateX(${-Math.floor(tick / 3)}px)`,
+    transform: `translateX(${-Math.floor(tick / multCoefficient)}px)`,
   });
 
   useEffect(() => {
@@ -28,10 +26,6 @@ export default ({ player, activeEvent }: Props) => {
       player.handleNotesMoving = setTick;
     }
   }, [player, showPianoRoll]);
-
-  useEffect(() => {
-    setIndex(index + 1);
-  }, [activeEvent]);
 
   return (
     <Container className="notes-bricks">
@@ -52,7 +46,7 @@ export default ({ player, activeEvent }: Props) => {
 const Container = styled.div`
   width: 100%;
   position: relative;
-  overflow-x: auto;
+  overflow-x: hidden;
   .note {
     position: absolute;
   }

@@ -2,7 +2,7 @@ import { Note } from "@tonejs/midi/dist/Note";
 import { useContext, useEffect, useState } from "react";
 import { store } from "../context";
 
-export const useNotesMoving = (index: number) => {
+export const useNotesMoving = () => {
   const {
     state: { midiData },
   } = useContext(store);

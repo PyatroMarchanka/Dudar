@@ -25,13 +25,9 @@ export const Dudar = () => {
     note: string;
     octave: number;
   } | null>(null);
-  const [activeEvent, setActiveEvent] = useState<any>(null);
 
   const handleNote = (event: any) => {
     setActiveNote(convertMidiPitchToNote(event.noteNumber));
-    if (event.track === 1) {
-      setActiveEvent(event);
-    }
   };
 
   const { Player: midiPlayer, MPlayer } = useMidiPlayer(
@@ -68,9 +64,7 @@ export const Dudar = () => {
           bagpipe={getBagpipeData(Modes.Mixolidian, "A")}
           activeNote={activeNote}
         />
-        {showPianoRoll && (
-          <Notes activeEvent={activeEvent} player={midiPlayer} />
-        )}
+        {showPianoRoll && <Notes player={midiPlayer} />}
       </BagpipeContainer>
 
       {MPlayer}

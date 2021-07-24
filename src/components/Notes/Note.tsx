@@ -27,24 +27,28 @@ export const Note = ({ note, className }: Props) => {
         width={note.durationTicks}
         note={(note.pitch + note.octave) as any}
         noteTick={note.ticks}
-      >
-        {note.pitch + note.octave}
-      </NoteComponent>
+      />
     </div>
   );
 };
+
+export const multCoefficient = 4;
+const minWidth = 40;
 
 const NoteComponent = styled.div<{
   width: number;
   note: keyof typeof NotesMap;
   noteTick: number;
 }>`
+  height: 18px;
   background-color: #b8720a;
   color: white;
   text-transform: uppercase;
   border-radius: 4px;
   padding: 5px;
-  visibility: ${({ width }) => (width > 40 ? "visible" : "hidden")};
-  width: ${({ width }) => Math.floor(width / 3)}px;
-  transform: translateX(${({ noteTick }) => Math.floor(noteTick / 3)}px);
+  visibility: ${({ width }) => (width > minWidth ? "visible" : "hidden")};
+  width: ${({ width }) => Math.floor(width / multCoefficient)}px;
+  transform: translateX(
+    ${({ noteTick }) => Math.floor(noteTick / multCoefficient)}px
+  );
 `;

@@ -28,7 +28,7 @@ const initialState: State = {
   midiData: null,
   midi: null,
   progress: 0,
-  activeSong: "Scotland.midi" || noSongsLabel,
+  activeSong: "Paddys.midi" || noSongsLabel,
   tempo: 240,
   showPianoRoll: true,
 };

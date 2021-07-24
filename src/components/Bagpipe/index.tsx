@@ -10,9 +10,7 @@ interface HoleProps {
 }
 
 export const HoleComponent = ({ isOpen, className, note }: HoleProps) => {
-  return (
-    <HoleWrapper className={className}>{isOpen ? note : null}</HoleWrapper>
-  );
+  return <HoleWrapper className={className} />;
 };
 
 interface Props {
