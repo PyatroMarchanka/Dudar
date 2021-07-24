@@ -12,6 +12,7 @@ import { useLoadSong } from "../../hooks/useLoadSong";
 import { TempoSlider } from "./TempoSlider";
 import Notes from "../Notes";
 import { Button } from "@material-ui/core";
+import { mediaQueries } from "../../constants/style";
 
 export const Dudar = () => {
   const {
@@ -89,9 +90,11 @@ const Header = styled.div`
 `;
 
 const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  @media (max-width: ${mediaQueries.mobile}) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
 `;
 
 const BagpipeContainer = styled.div`
