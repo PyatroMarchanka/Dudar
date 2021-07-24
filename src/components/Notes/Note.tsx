@@ -1,5 +1,4 @@
 import React from "react";
-import { useSpring, animated } from "react-spring";
 import { Note as NoteType } from "@tonejs/midi/dist/Note";
 import styled from "styled-components";
 
@@ -22,12 +21,7 @@ enum NotesMap {
 }
 
 export const Note = ({ note, className }: Props) => {
-  //   const styles = useSpring({
-  //     transform: `translateX(${-Math.floor((note.ticks - tick) / 3)}px)`,
-  //   });
-
   return (
-    // <animated.div className={`${className} note`} style={styles}>
     <div className={`${className} note`}>
       <NoteComponent
         width={note.durationTicks}
@@ -37,7 +31,6 @@ export const Note = ({ note, className }: Props) => {
         {note.pitch + note.octave}
       </NoteComponent>
     </div>
-    // </animated.div>
   );
 };
 
