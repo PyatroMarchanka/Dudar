@@ -11,18 +11,18 @@ interface Props {
 
 export const PlayerControls = ({ player }: Props) => {
   const {
-    state: { midiData, midi, progress },
+    state: { midiData, midi, progress, isPlaying },
     setProgress,
+    setIsPlaying,
   } = useContext(store);
-  const [isPlaying, setIsPlayed] = useState(false);
 
   const onPlay = () => {
-    setIsPlayed(true);
+    setIsPlaying(true);
     player?.playMidi(midi, midiData);
   };
 
   const onStop = () => {
-    setIsPlayed(false);
+    setIsPlaying(false);
     player?.stop();
   };
 

@@ -14,7 +14,7 @@ interface Props {
 export default ({ player }: Props) => {
   const { nextNotes, setTick, tick } = useNotesMoving();
   const {
-    state: { showPianoRoll },
+    state: { showPianoRoll, isPlaying },
   } = useContext(store);
 
   const styles = useSpring({
@@ -28,7 +28,7 @@ export default ({ player }: Props) => {
   }, [player, showPianoRoll]);
 
   return (
-    <Container className="notes-bricks">
+    <Container className="notes-bricks" isPlaying={isPlaying}>
       <animated.div style={styles}>
         {nextNotes?.map((note, i) => (
           <Note
@@ -43,10 +43,10 @@ export default ({ player }: Props) => {
   );
 };
 
-const Container = styled.div`
+const Container = styled.div<{ isPlaying: boolean }>`
   width: 100%;
   position: relative;
-  overflow-x: hidden;
+  overflow-x: ${({ isPlaying }) => (isPlaying ? "hidden" : "hidden")};
   .note {
     position: absolute;
   }

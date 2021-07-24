@@ -8,7 +8,8 @@ interface Action {
     | "SET_ACTIVE_SONG"
     | "SET_PROGRESS"
     | "SET_TEMPO"
-    | "SET_SHOW_PIANO_ROLL";
+    | "SET_SHOW_PIANO_ROLL"
+    | "SET_IS_PLAYING";
 
   payload?: any;
 }
@@ -22,6 +23,7 @@ interface State {
   progress?: number;
   tempo: number;
   showPianoRoll: boolean;
+  isPlaying: boolean;
 }
 
 const initialState: State = {
@@ -31,6 +33,7 @@ const initialState: State = {
   activeSong: "Paddys.midi" || noSongsLabel,
   tempo: 240,
   showPianoRoll: true,
+  isPlaying: false,
 };
 
 interface Context {
@@ -42,6 +45,7 @@ interface Context {
   setProgress: (percent: number) => void;
   setTempo: (bpm: number) => void;
   togglePianoRoll: (value: boolean) => void;
+  setIsPlaying: (bool: boolean) => void;
 }
 
 const store = createContext<Context>({
@@ -53,6 +57,7 @@ const store = createContext<Context>({
   setProgress: (percent: number) => {},
   setTempo: (bpm: number) => {},
   togglePianoRoll: (value: boolean) => {},
+  setIsPlaying: (bool: boolean) => {},
 });
 const { Provider } = store;
 
@@ -100,6 +105,12 @@ const ContextProvider = ({ children }: any) => {
           showPianoRoll: action.payload,
         };
 
+      case "SET_IS_PLAYING":
+        return {
+          ...state,
+          isPlaying: action.payload,
+        };
+
       default:
         return state;
     }
@@ -128,6 +139,10 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_SHOW_PIANO_ROLL", payload: bool });
   };
 
+  const setIsPlaying = (bool: boolean) => {
+    dispatch({ type: "SET_IS_PLAYING", payload: bool });
+  };
+
   return (
     <Provider
       value={{
@@ -139,6 +154,7 @@ const ContextProvider = ({ children }: any) => {
         setProgress,
         setTempo,
         togglePianoRoll,
+        setIsPlaying,
       }}
     >
       {children}
