@@ -34,7 +34,7 @@ export default ({ player }: Props) => {
           <Note
             key={`${note.pitch[0] + note.octave}-${i}`}
             note={note}
-            tick={tick}
+            // tick={tick}
             className={note.pitch[0] + note.octave}
           />
         ))}

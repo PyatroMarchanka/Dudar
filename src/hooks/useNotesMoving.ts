@@ -11,7 +11,7 @@ export const useNotesMoving = () => {
   const [nextNotes, setNextNotes] = useState<Note[] | undefined>([]);
 
   useEffect(() => {
-    setNextNotes(midiData?.tracks[0].notes);
+    setNextNotes(midiData?.tracks[0].notes.slice(0, 40));
   }, [midiData]);
 
   return {

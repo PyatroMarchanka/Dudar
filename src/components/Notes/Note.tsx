@@ -3,7 +3,7 @@ import { Note as NoteType } from "@tonejs/midi/dist/Note";
 import styled from "styled-components";
 
 interface Props {
-  tick: number;
+  //   tick: number;
   note: NoteType;
   className: string;
 }

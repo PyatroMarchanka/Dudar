@@ -33,7 +33,7 @@ export const TempoSlider = ({ player }: Props) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    player?.setTempo(tempo);
+    player?.checkTempo(tempo);
   }, [player]);
 
   return (
@@ -48,7 +48,7 @@ export const TempoSlider = ({ player }: Props) => {
             className="volume-slider"
             onChange={(e, value) => {
               setTempo(value as number);
-              player?.setTempo(value as number);
+              player?.checkTempo(value as number);
             }}
             value={tempo}
             defaultValue={tempo}
