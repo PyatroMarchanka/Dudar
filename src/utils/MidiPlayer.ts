@@ -47,16 +47,15 @@ export class MidiPlayer {
     console.log("initPlayer");
     Player.on("playing", (currentTick: any) => {
       handleProgress(Player.getSongPercentRemaining());
-
       if (this.handleNotesMoving) {
-        this.handleNotesMoving(currentTick);
+        this.handleNotesMoving(currentTick.tick);
       }
     });
 
     Player.on("midiEvent", (event: any) => {
       if (event.name === "Note on") {
         this.keyDown(event.noteNumber, event.noteNumber);
-        handleNote(event.noteNumber);
+        handleNote(event);
         this.setTempo(this.bpm);
       }
 
@@ -127,7 +126,7 @@ export class MidiPlayer {
     if (!midi) {
       return;
     }
-    console.log("midiData", midiData?.tracks[0].notes);
+
     Player.loadArrayBuffer(midi);
     Player.play();
     this.playDrone(this.droneNote);

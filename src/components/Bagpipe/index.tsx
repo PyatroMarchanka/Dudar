@@ -107,7 +107,7 @@ const Holes = styled.div`
   }
 
   .hole-8 {
-    top: 84px;
-    left: 20px;
+    top: 55px;
+    left: 90px;
   }
 `;

@@ -7,7 +7,8 @@ interface Action {
     | "SET_MIDI_DATA"
     | "SET_ACTIVE_SONG"
     | "SET_PROGRESS"
-    | "SET_TEMPO";
+    | "SET_TEMPO"
+    | "SET_SHOW_PIANO_ROLL";
 
   payload?: any;
 }
@@ -20,6 +21,7 @@ interface State {
   activeSong: string | undefined;
   progress?: number;
   tempo: number;
+  showPianoRoll: boolean;
 }
 
 const initialState: State = {
@@ -28,6 +30,7 @@ const initialState: State = {
   progress: 0,
   activeSong: "Scotland.midi" || noSongsLabel,
   tempo: 240,
+  showPianoRoll: true,
 };
 
 interface Context {
@@ -38,6 +41,7 @@ interface Context {
   setActiveSong: (fileName: string) => void;
   setProgress: (percent: number) => void;
   setTempo: (bpm: number) => void;
+  togglePianoRoll: (value: boolean) => void;
 }
 
 const store = createContext<Context>({
@@ -48,6 +52,7 @@ const store = createContext<Context>({
   setActiveSong: (fileName: string) => {},
   setProgress: (percent: number) => {},
   setTempo: (bpm: number) => {},
+  togglePianoRoll: (value: boolean) => {},
 });
 const { Provider } = store;
 
@@ -89,6 +94,12 @@ const ContextProvider = ({ children }: any) => {
           tempo: action.payload,
         };
 
+      case "SET_SHOW_PIANO_ROLL":
+        return {
+          ...state,
+          showPianoRoll: action.payload,
+        };
+
       default:
         return state;
     }
@@ -113,6 +124,10 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_TEMPO", payload: bpm });
   };
 
+  const togglePianoRoll = (bool: boolean) => {
+    dispatch({ type: "SET_SHOW_PIANO_ROLL", payload: bool });
+  };
+
   return (
     <Provider
       value={{
@@ -123,6 +138,7 @@ const ContextProvider = ({ children }: any) => {
         setActiveSong,
         setProgress,
         setTempo,
+        togglePianoRoll,
       }}
     >
       {children}

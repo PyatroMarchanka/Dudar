@@ -11,20 +11,26 @@ import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
 import { TempoSlider } from "./TempoSlider";
 import Notes from "../Notes";
+import { Button } from "@material-ui/core";
 
 export const Dudar = () => {
   const {
-    state: { activeSong },
+    state: { activeSong, showPianoRoll },
     setProgress,
+    togglePianoRoll,
   } = useContext(store);
 
   const [activeNote, setActiveNote] = useState<{
     note: string;
     octave: number;
   } | null>(null);
+  const [activeEvent, setActiveEvent] = useState<any>(null);
 
-  const handleNote = (midiPitch: number) => {
-    setActiveNote(convertMidiPitchToNote(midiPitch));
+  const handleNote = (event: any) => {
+    setActiveNote(convertMidiPitchToNote(event.noteNumber));
+    if (event.track === 1) {
+      setActiveEvent(event);
+    }
   };
 
   const { Player: midiPlayer, MPlayer } = useMidiPlayer(
@@ -46,6 +52,12 @@ export const Dudar = () => {
           <Column>
             <SongList />
             <TempoSlider player={midiPlayer} />
+            <Button
+              variant="outlined"
+              onClick={() => togglePianoRoll(!showPianoRoll)}
+            >
+              {showPianoRoll ? "Hide piano roll" : "Show piano roll"}
+            </Button>
           </Column>
         </Inputs>
       </Header>
@@ -55,8 +67,11 @@ export const Dudar = () => {
           bagpipe={getBagpipeData(Modes.Mixolidian, "A")}
           activeNote={activeNote}
         />
+        {showPianoRoll && (
+          <Notes activeEvent={activeEvent} player={midiPlayer} />
+        )}
       </BagpipeContainer>
-      <Notes player={midiPlayer} />
+
       {MPlayer}
     </Container>
   );
@@ -73,12 +88,20 @@ const Header = styled.div`
   border-bottom: 1px solid black;
 `;
 
-const Column = styled.div``;
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+`;
 
 const BagpipeContainer = styled.div`
   display: flex;
-  justify-content: center;
+  position: relative;
+  .notes-bricks {
+    transform: translate(-59px, 0);
+  }
 `;
+
 const Inputs = styled.div`
   display: flex;
   width: 100%;
