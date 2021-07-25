@@ -22,13 +22,13 @@ enum NotesMap {
 
 export const Note = ({ note, className }: Props) => {
   return (
-    <div className={`${className} note`}>
+    <Container className={`${className} note`}>
       <NoteComponent
         width={note.durationTicks}
         note={(note.pitch + note.octave) as any}
         noteTick={note.ticks}
       />
-    </div>
+    </Container>
   );
 };
 
@@ -51,4 +51,12 @@ const NoteComponent = styled.div<{
   transform: translateX(
     ${({ noteTick }) => Math.floor(noteTick / multCoefficient)}px
   );
+`;
+
+const Container = styled.div`
+  &.active {
+    ${NoteComponent} {
+      background-color: #52514f;
+    }
+  }
 `;

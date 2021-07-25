@@ -48,7 +48,9 @@ export default ({ player }: Props) => {
             key={`${note.pitch[0] + note.octave}-${i}`}
             note={note}
             // tick={tick}
-            className={note.pitch[0] + note.octave}
+            className={
+              note.pitch[0] + note.octave + (tick > note.ticks ? " active" : "")
+            }
           />
         ))}
         {nextToNextNotes?.map((note, i) => (
