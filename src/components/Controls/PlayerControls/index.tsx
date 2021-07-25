@@ -14,7 +14,7 @@ interface Props {
 
 export const PlayerControls = ({ player }: Props) => {
   const {
-    state: { midiData, midi, progress, isPlaying },
+    state: { midi, progress, isPlaying },
     setProgress,
     setIsPlaying,
   } = useContext(store);

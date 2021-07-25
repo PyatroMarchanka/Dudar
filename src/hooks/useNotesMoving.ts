@@ -1,3 +1,4 @@
+import { Midi } from "@tonejs/midi";
 import { Note } from "@tonejs/midi/dist/Note";
 import { useContext, useEffect, useState } from "react";
 import { store } from "../context";
@@ -25,7 +26,6 @@ const getNotesChunks = (notes: Note[]) => {
 export const useNotesMoving = () => {
   const {
     state: { midiData, isPlaying, progress },
-    setPauseTick,
   } = useContext(store);
 
   const [chunkedNotes, setChunkedNotes] = useState<Note[][]>([]);
@@ -57,10 +57,10 @@ export const useNotesMoving = () => {
       setNextToNextNotes(chunkedNotes[currentChunkIndex + 2] || []);
       setCurrentChunkIndex(currentChunkIndex + 1);
     }
-  }, [tick]);
+  }, [tick, isPlaying]);
 
   useEffect(() => {
-    if (midiData) {
+    if (midiData && isPlaying) {
       const notes = midiData?.tracks[0].notes;
       const chunks = getNotesChunks(notes);
       setChunkedNotes(chunks);

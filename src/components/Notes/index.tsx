@@ -6,6 +6,8 @@ import { useNotesMoving } from "../../hooks/useNotesMoving";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { multCoefficient, Note } from "./Note";
 import { store } from "../../context";
+import { theme } from "../../utils/theme";
+import { mediaQueries } from "../../constants/style";
 
 interface Props {
   player: MidiPlayer | null;
@@ -29,6 +31,17 @@ export default ({ player }: Props) => {
 
   return (
     <Container className="notes-bricks" isPlaying={isPlaying}>
+      <NotesLines>
+        <div className="note A4 line" />
+        <div className="note G4 line" />
+        <div className="note F4 line" />
+        <div className="note E4 line" />
+        <div className="note D4 line" />
+        <div className="note C4 line" />
+        <div className="note B3 line" />
+        <div className="note A3 line" />
+        <div className="note G3 line" />
+      </NotesLines>
       <animated.div style={styles}>
         {nextNotes?.map((note, i) => (
           <Note
@@ -50,8 +63,21 @@ export default ({ player }: Props) => {
     </Container>
   );
 };
+const NotesLines = styled.div`
+  .line {
+    position: absolute;
+    height: 18px;
+    width: 1500px;
+    padding: 5px;
+    background-color: ${theme.colors.grey[100]};
+    @media (max-width: ${mediaQueries.mobile}) {
+      width: 500px;
+    }
+  }
+`;
 
 const Container = styled.div<{ isPlaying: boolean }>`
+  z-index: -1;
   width: 100%;
   position: relative;
   overflow-x: ${({ isPlaying }) => (isPlaying ? "hidden" : "hidden")};
@@ -64,7 +90,7 @@ const Container = styled.div<{ isPlaying: boolean }>`
   }
 
   .note.G4 {
-    top: 64px;
+    top: 58px;
   }
 
   .note.F4 {

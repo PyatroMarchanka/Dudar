@@ -41,22 +41,24 @@ export const Dudar = () => {
     <Container>
       <Header>
         <h3>{activeSong?.split(".midi").join("") || noSongsLabel}</h3>
-        <Inputs>
-          <PlayerControls player={midiPlayer} />
-        </Inputs>
-        <Inputs>
-          <Transpose setTranspose={midiPlayer?.setTranspose} />
-          <Column>
-            <SongList />
-            <TempoSlider player={midiPlayer} />
-            <Button
-              variant="outlined"
-              onClick={() => togglePianoRoll(!showPianoRoll)}
-            >
-              {showPianoRoll ? "Hide piano roll" : "Show piano roll"}
-            </Button>
-          </Column>
-        </Inputs>
+        <Row>
+          <Inputs>
+            <PlayerControls player={midiPlayer} />
+          </Inputs>
+          <Inputs>
+            <Column>
+              <Transpose setTranspose={midiPlayer?.setTranspose} />
+              <SongList />
+              <TempoSlider player={midiPlayer} />
+              <Button
+                variant="outlined"
+                onClick={() => togglePianoRoll(!showPianoRoll)}
+              >
+                {showPianoRoll ? "Hide piano roll" : "Show piano roll"}
+              </Button>
+            </Column>
+          </Inputs>
+        </Row>
       </Header>
       <BagpipeContainer className={showPianoRoll ? "" : "center"}>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
@@ -83,7 +85,17 @@ const Header = styled.div`
   border-bottom: 1px solid black;
 `;
 
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
 const Column = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  > button {
+    flex-basis: 50%;
+  }
   @media (max-width: ${mediaQueries.mobile}) {
     display: flex;
     flex-direction: column;
@@ -109,4 +121,8 @@ const Inputs = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
+
+  &:last-child {
+    justify-content: flex-end;
+  }
 `;
