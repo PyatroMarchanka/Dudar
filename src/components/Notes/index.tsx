@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default ({ player }: Props) => {
-  const { nextNotes, setTick, tick } = useNotesMoving();
+  const { nextNotes, nextToNextNotes, setTick, tick } = useNotesMoving();
   const {
     state: { showPianoRoll, isPlaying },
   } = useContext(store);
@@ -33,6 +33,14 @@ export default ({ player }: Props) => {
         {nextNotes?.map((note, i) => (
           <Note
             key={`${note.pitch[0] + note.octave}-${i}`}
+            note={note}
+            // tick={tick}
+            className={note.pitch[0] + note.octave}
+          />
+        ))}
+        {nextToNextNotes?.map((note, i) => (
+          <Note
+            key={`next-${note.pitch[0] + note.octave}-${i}`}
             note={note}
             // tick={tick}
             className={note.pitch[0] + note.octave}
