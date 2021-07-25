@@ -2,7 +2,7 @@ import { Note } from "@tonejs/midi/dist/Note";
 import { useContext, useEffect, useState } from "react";
 import { store } from "../context";
 
-const screenWitdh = 3000;
+const screenWitdh = 4000;
 
 const getNotesChunks = (notes: Note[]) => {
   const result: Note[][] = [[]];
@@ -24,7 +24,8 @@ const getNotesChunks = (notes: Note[]) => {
 
 export const useNotesMoving = () => {
   const {
-    state: { midiData, isPlaying },
+    state: { midiData, isPlaying, progress },
+    setPauseTick,
   } = useContext(store);
 
   const [chunkedNotes, setChunkedNotes] = useState<Note[][]>([]);
@@ -34,6 +35,19 @@ export const useNotesMoving = () => {
   const [nextToNextNotes, setNextToNextNotes] = useState<Note[] | undefined>(
     []
   );
+
+  useEffect(() => {
+    if (!progress || !(progress % 10 === 0)) {
+      return;
+    }
+
+    const newIndex = progress
+      ? Math.floor((chunkedNotes.length * progress) / 100)
+      : 0;
+    setCurrentChunkIndex(newIndex);
+    setNextNotes(chunkedNotes[newIndex] || []);
+    setNextToNextNotes(chunkedNotes[newIndex + 1] || []);
+  }, [progress]);
 
   useEffect(() => {
     const lastNote = nextNotes?.[nextNotes.length - 1];

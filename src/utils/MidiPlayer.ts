@@ -122,18 +122,27 @@ export class MidiPlayer {
     this.keyDown(note, note, drone);
   };
 
-  playMidi = (midi: ArrayBuffer | null, midiData: Midi | null) => {
+  playMidi = (midi: ArrayBuffer | null, progress: number) => {
     if (!midi) {
       return;
     }
 
     Player.loadArrayBuffer(midi);
     Player.play();
+
+    if (progress) {
+      this.setProgress(progress);
+    }
     this.playDrone(this.droneNote);
   };
 
   stop = () => {
     this.playRef.current?.cancelQueue();
     Player.stop();
+  };
+
+  pause = () => {
+    this.playRef.current?.cancelQueue();
+    Player.pause();
   };
 }

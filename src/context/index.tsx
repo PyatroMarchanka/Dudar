@@ -9,7 +9,8 @@ interface Action {
     | "SET_PROGRESS"
     | "SET_TEMPO"
     | "SET_SHOW_PIANO_ROLL"
-    | "SET_IS_PLAYING";
+    | "SET_IS_PLAYING"
+    | "SET_PAUSE_TICK";
 
   payload?: any;
 }
@@ -24,6 +25,7 @@ interface State {
   tempo: number;
   showPianoRoll: boolean;
   isPlaying: boolean;
+  pauseTick: number;
 }
 
 const initialState: State = {
@@ -34,6 +36,7 @@ const initialState: State = {
   tempo: 240,
   showPianoRoll: true,
   isPlaying: false,
+  pauseTick: 0,
 };
 
 interface Context {
@@ -46,6 +49,7 @@ interface Context {
   setTempo: (bpm: number) => void;
   togglePianoRoll: (value: boolean) => void;
   setIsPlaying: (bool: boolean) => void;
+  setPauseTick: (bool: number) => void;
 }
 
 const store = createContext<Context>({
@@ -58,6 +62,7 @@ const store = createContext<Context>({
   setTempo: (bpm: number) => {},
   togglePianoRoll: (value: boolean) => {},
   setIsPlaying: (bool: boolean) => {},
+  setPauseTick: (bool: number) => {},
 });
 const { Provider } = store;
 
@@ -111,6 +116,12 @@ const ContextProvider = ({ children }: any) => {
           isPlaying: action.payload,
         };
 
+      case "SET_PAUSE_TICK":
+        return {
+          ...state,
+          pauseTick: action.payload,
+        };
+
       default:
         return state;
     }
@@ -142,6 +153,9 @@ const ContextProvider = ({ children }: any) => {
   const setIsPlaying = (bool: boolean) => {
     dispatch({ type: "SET_IS_PLAYING", payload: bool });
   };
+  const setPauseTick = (bool: number) => {
+    dispatch({ type: "SET_PAUSE_TICK", payload: bool });
+  };
 
   return (
     <Provider
@@ -155,6 +169,7 @@ const ContextProvider = ({ children }: any) => {
         setTempo,
         togglePianoRoll,
         setIsPlaying,
+        setPauseTick,
       }}
     >
       {children}
