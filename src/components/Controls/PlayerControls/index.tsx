@@ -54,7 +54,7 @@ export const PlayerControls = ({ player }: Props) => {
         handlePlaying={isPlaying ? onStop : onPlay}
       />
       <Slider
-        // disabled={!isPlaying}
+        disabled={!isPlaying}
         className="volume-slider"
         onChange={(e, value) => {
           setProgress(value as number);
