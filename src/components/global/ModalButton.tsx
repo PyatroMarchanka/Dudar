@@ -26,7 +26,7 @@ export const ModalButton = ({ buttonLabel, dialogContent }: Props) => {
 
   return (
     <>
-      <Button variant="outlined" onClick={() => setOpen(true)}>
+      <Button size="small" variant="outlined" onClick={() => setOpen(true)}>
         {buttonLabel}
       </Button>
       <Dialog open={open} onClose={() => setOpen(false)}>

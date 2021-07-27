@@ -51,10 +51,11 @@ export const Dudar = () => {
               <SongList />
               <TempoSlider player={midiPlayer} />
               <Button
+                size="small"
                 variant="outlined"
                 onClick={() => togglePianoRoll(!showPianoRoll)}
               >
-                {showPianoRoll ? "Hide piano roll" : "Show piano roll"}
+                {showPianoRoll ? "Hide notes" : "Show notes"}
               </Button>
             </Column>
           </Inputs>
@@ -88,6 +89,10 @@ const Header = styled.div`
 const Row = styled.div`
   display: flex;
   justify-content: space-between;
+
+  @media (max-width: ${mediaQueries.mobile}) {
+    flex-direction: column;
+  }
 `;
 
 const Column = styled.div`
@@ -97,8 +102,11 @@ const Column = styled.div`
     flex-basis: 50%;
   }
   @media (max-width: ${mediaQueries.mobile}) {
+    > button {
+      flex-basis: 25%;
+    }
+    width: 100%;
     display: flex;
-    flex-direction: column;
     align-items: flex-end;
   }
 `;
@@ -123,6 +131,6 @@ const Inputs = styled.div`
   align-items: center;
 
   &:last-child {
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 `;
