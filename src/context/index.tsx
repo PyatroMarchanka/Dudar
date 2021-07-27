@@ -30,7 +30,7 @@ const initialState: State = {
   midiData: null,
   midi: null,
   progress: 0,
-  activeSong: "Paddys.midi" || noSongsLabel,
+  activeSong: "Scotland.midi" || noSongsLabel,
   tempo: 240,
   showPianoRoll: true,
   isPlaying: false,
