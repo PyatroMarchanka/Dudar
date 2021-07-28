@@ -5,7 +5,8 @@ export const useSongList = () => {
   const getSongList = async () => {
     const file = await fetch("/midi/list.json");
     const list = await file.json();
-    setSongList(list);
+    console.log("list, ", list);
+    setSongList(list.Belarusian || []);
   };
 
   useEffect(() => {

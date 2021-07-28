@@ -10,7 +10,7 @@ export const useLoadSong = () => {
   } = useContext(store);
 
   const loadMidiSong = async (fileName: string) => {
-    const file = await fetch(`/midi/${fileName}`);
+    const file = await fetch(`/midi/bel/${fileName}`);
     const buffer = await file.arrayBuffer();
     const midi = new Midi(buffer);
     setMidiData(midi);
