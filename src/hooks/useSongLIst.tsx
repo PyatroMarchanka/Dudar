@@ -11,7 +11,7 @@ export const useSongList = () => {
   const initialList = Object.keys(allLists)[0];
 
   const getAllList = async () => {
-    const file = await fetch("/midi/list.json");
+    const file = await fetch("midi/list.json");
     const list = await file.json();
 
     setSongList(list[genreList || initialList] || {});
