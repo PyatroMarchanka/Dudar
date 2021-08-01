@@ -10,10 +10,7 @@ export const useLoadSong = () => {
   } = useContext(store);
 
   const loadMidiSong = async (fileName: string) => {
-    console.log(
-      "loadMidiSong",
-      `/midi/${genreList?.toLowerCase()}/${fileName}`
-    );
+    console.log("loadMidiSong", `/midi/${genreList}/${fileName}`);
     const file = await fetch(`/midi/${genreList?.toLowerCase()}/${fileName}`);
     const buffer = await file.arrayBuffer();
     const midi = new Midi(buffer);
