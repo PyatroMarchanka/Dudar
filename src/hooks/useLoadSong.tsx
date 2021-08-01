@@ -16,6 +16,7 @@ export const useLoadSong = () => {
     const midi = new Midi(buffer);
     setMidiData(midi);
     setMidi(buffer);
+    console.log("buffer", buffer);
   };
 
   useEffect(() => {
