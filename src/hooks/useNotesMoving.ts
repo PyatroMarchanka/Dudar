@@ -3,7 +3,7 @@ import { Note } from "@tonejs/midi/dist/Note";
 import { useContext, useEffect, useState } from "react";
 import { store } from "../context";
 
-const screenWitdh = 4000;
+const screenWitdh = 1500;
 
 const getNotesChunks = (notes: Note[]) => {
   const result: Note[][] = [[]];

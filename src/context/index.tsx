@@ -9,7 +9,8 @@ interface Action {
     | "SET_PROGRESS"
     | "SET_TEMPO"
     | "SET_SHOW_PIANO_ROLL"
-    | "SET_IS_PLAYING";
+    | "SET_IS_PLAYING"
+    | "SET_GENRE_LIST";
 
   payload?: any;
 }
@@ -24,6 +25,7 @@ interface State {
   tempo: number;
   showPianoRoll: boolean;
   isPlaying: boolean;
+  genreList?: string;
 }
 
 const initialState: State = {
@@ -31,6 +33,7 @@ const initialState: State = {
   midi: null,
   progress: 0,
   activeSong: noSongsLabel,
+  genreList: "Belarussian",
   tempo: 240,
   showPianoRoll: true,
   isPlaying: false,
@@ -46,6 +49,7 @@ interface Context {
   setTempo: (bpm: number) => void;
   togglePianoRoll: (value: boolean) => void;
   setIsPlaying: (bool: boolean) => void;
+  setGenreList: (list: string) => void;
 }
 
 const store = createContext<Context>({
@@ -58,6 +62,7 @@ const store = createContext<Context>({
   setTempo: (bpm: number) => {},
   togglePianoRoll: (value: boolean) => {},
   setIsPlaying: (bool: boolean) => {},
+  setGenreList: (list: string) => {},
 });
 const { Provider } = store;
 
@@ -111,6 +116,12 @@ const ContextProvider = ({ children }: any) => {
           isPlaying: action.payload,
         };
 
+      case "SET_GENRE_LIST":
+        return {
+          ...state,
+          genreList: action.payload,
+        };
+
       default:
         return state;
     }
@@ -143,6 +154,10 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_IS_PLAYING", payload: bool });
   };
 
+  const setGenreList = (list: string) => {
+    dispatch({ type: "SET_GENRE_LIST", payload: list });
+  };
+
   return (
     <Provider
       value={{
@@ -155,6 +170,7 @@ const ContextProvider = ({ children }: any) => {
         setTempo,
         togglePianoRoll,
         setIsPlaying,
+        setGenreList,
       }}
     >
       {children}

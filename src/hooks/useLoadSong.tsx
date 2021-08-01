@@ -4,13 +4,17 @@ import { store } from "../context";
 
 export const useLoadSong = () => {
   const {
-    state: { activeSong },
+    state: { activeSong, genreList },
     setMidi,
     setMidiData,
   } = useContext(store);
 
   const loadMidiSong = async (fileName: string) => {
-    const file = await fetch(`/midi/schotland/${fileName}`);
+    console.log(
+      "loadMidiSong",
+      `/midi/${genreList?.toLowerCase()}/${fileName}`
+    );
+    const file = await fetch(`/midi/${genreList?.toLowerCase()}/${fileName}`);
     const buffer = await file.arrayBuffer();
     const midi = new Midi(buffer);
     setMidiData(midi);
@@ -21,5 +25,5 @@ export const useLoadSong = () => {
     if (activeSong) {
       loadMidiSong(activeSong);
     }
-  }, [activeSong]);
+  }, [activeSong, genreList]);
 };

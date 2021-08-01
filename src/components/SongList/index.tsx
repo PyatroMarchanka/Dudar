@@ -16,6 +16,7 @@ import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { noSongsLabel, store } from "../../context";
 import { useSongList } from "../../hooks/useSongLIst";
+import { formatMidiFileName } from "../../utils/textUtils";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,12 +40,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default () => {
   const {
-    state: { activeSong },
+    state: { activeSong, genreList },
     setActiveSong,
+    setGenreList,
   } = useContext(store);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const { songList } = useSongList();
+  const { songList, allLists } = useSongList();
+  const genres = Object.keys(allLists);
 
   return (
     <>
@@ -55,25 +58,44 @@ export default () => {
         <DialogContent className={classes.content}>
           <Select
             className={classes.select}
-            value={activeSong || ""}
+            value={genreList || ""}
             onChange={(e) => {
-              setActiveSong(e.target.value as string);
-              setOpen(false);
+              setGenreList(e.target.value as string);
             }}
             labelId="demo-dialog-select-label"
             id="demo-dialog-select"
             input={<Input />}
-            defaultValue={activeSong}
           >
             <MenuItem value={noSongsLabel}>
               <em>None</em>
             </MenuItem>
-            {songList.map((filename) => (
-              <MenuItem value={filename}>
-                {filename.split(".midi").join("")}
-              </MenuItem>
+            {genres.map((genre) => (
+              <MenuItem value={genre}>{genre}</MenuItem>
             ))}
           </Select>
+          {genreList && songList?.length && (
+            <Select
+              className={classes.select}
+              value={activeSong || ""}
+              onChange={(e) => {
+                setActiveSong(e.target.value as string);
+                setOpen(false);
+              }}
+              labelId="demo-dialog-select-label"
+              id="demo-dialog-select"
+              input={<Input />}
+              defaultValue={activeSong}
+            >
+              <MenuItem value={noSongsLabel}>
+                <em>None</em>
+              </MenuItem>
+              {songList?.map((filename) => (
+                <MenuItem value={filename}>
+                  {formatMidiFileName(filename)}
+                </MenuItem>
+              ))}
+            </Select>
+          )}
         </DialogContent>
       </Dialog>
     </>

@@ -13,6 +13,7 @@ import { TempoSlider } from "./TempoSlider";
 import Notes from "../Notes";
 import { Button } from "@material-ui/core";
 import { mediaQueries } from "../../constants/style";
+import { formatMidiFileName } from "../../utils/textUtils";
 
 export const Dudar = () => {
   const {
@@ -40,7 +41,7 @@ export const Dudar = () => {
   return (
     <Container>
       <Header>
-        <h3>{activeSong?.split(".midi").join("") || noSongsLabel}</h3>
+        <h3>{formatMidiFileName(activeSong!) || noSongsLabel}</h3>
         <Row>
           <Inputs>
             <PlayerControls player={midiPlayer} />
