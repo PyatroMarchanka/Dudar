@@ -44,6 +44,8 @@ export const Bagpipe = ({ bagpipe, activeNote }: Props) => {
 const Container = styled.div`
   margin-top: 10px;
   position: relative;
+  width: 30px;
+  transform: translateX(-40px);
 `;
 
 const BagpipeImage = styled.img`

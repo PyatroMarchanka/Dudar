@@ -53,10 +53,10 @@ export const Dudar = () => {
               <TempoSlider player={midiPlayer} />
               <Button
                 size="small"
-                variant="outlined"
+                variant={showPianoRoll ? "outlined" : "text"}
                 onClick={() => togglePianoRoll(!showPianoRoll)}
               >
-                {showPianoRoll ? "Hide notes" : "Show notes"}
+                {"Notes"}
               </Button>
             </Column>
           </Inputs>
@@ -121,7 +121,7 @@ const BagpipeContainer = styled.div`
   }
 
   .notes-bricks {
-    transform: translate(-59px, 0);
+    transform: translate(0px, 0);
   }
 `;
 
