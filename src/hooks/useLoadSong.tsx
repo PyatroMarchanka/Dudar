@@ -11,7 +11,7 @@ export const useLoadSong = () => {
 
   const loadMidiSong = async (fileName: string) => {
     console.log("loadMidiSong", `midi/${genreList}/${fileName}`);
-    const file = await fetch(`midi/${genreList?.toLowerCase()}/${fileName}`);
+    const file = await fetch(`midi/${genreList}/${fileName}`);
     const buffer = await file.arrayBuffer();
     const midi = new Midi(buffer);
     setMidiData(midi);
