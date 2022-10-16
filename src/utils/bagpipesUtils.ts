@@ -1,4 +1,4 @@
-import { Modes, SharpNotes, transposeNote } from '../interfaces/index';
+import { Modes, SharpNotes, transposeNote } from "../interfaces/index";
 
 interface BagpipeNotesSteps {
   main: number[];
@@ -11,9 +11,9 @@ export interface BagpipeNotes {
 }
 
 export enum Bagpipes {
-  BelarussianDuda = 'bel_duda',
-  SpanishGaita = 'spanish_gaita',
-  DeutschDudelsack = 'deutsch_dudelsack',
+  BelarussianDuda = "bel_duda",
+  SpanishGaita = "spanish_gaita",
+  DeutschDudelsack = "deutsch_dudelsack",
 }
 
 export interface BagpipeType {
@@ -55,7 +55,10 @@ const getBagpipeNotesSteps = (mode: Modes): BagpipeNotesSteps => {
   }
 };
 
-const getBagpipeNotes = (tone: SharpNotes, steps: BagpipeNotesSteps): BagpipeNotes => {
+const getBagpipeNotes = (
+  tone: SharpNotes,
+  steps: BagpipeNotesSteps
+): BagpipeNotes => {
   let currentStep = 0;
   const resultNotes = steps.main.map((step) => {
     let note: SharpNotes;
