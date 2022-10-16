@@ -32,15 +32,15 @@ export default ({ player }: Props) => {
   return (
     <Container className="notes-bricks" isPlaying={isPlaying}>
       <NotesLines>
+        <div className="note A5 line" />
+        <div className="note G5 line" />
+        <div className="note F5 line" />
+        <div className="note E5 line" />
+        <div className="note D5 line" />
+        <div className="note C5 line" />
+        <div className="note B4 line" />
         <div className="note A4 line" />
         <div className="note G4 line" />
-        <div className="note F4 line" />
-        <div className="note E4 line" />
-        <div className="note D4 line" />
-        <div className="note C4 line" />
-        <div className="note B3 line" />
-        <div className="note A3 line" />
-        <div className="note G3 line" />
       </NotesLines>
       <animated.div style={styles}>
         {nextNotes?.map((note, i) => (

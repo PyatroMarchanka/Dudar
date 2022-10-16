@@ -45,6 +45,7 @@ const NoteComponent = styled.div<{
   color: white;
   text-transform: uppercase;
   border-radius: 4px;
+  border: 2px solid white;
   padding: 5px;
   visibility: ${({ width }) => (width > minWidth ? "visible" : "hidden")};
   width: ${({ width }) => Math.floor(width / multCoefficient)}px;
