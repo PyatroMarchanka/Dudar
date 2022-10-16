@@ -30,7 +30,11 @@ export const Bagpipe = ({ bagpipe, activeNote }: Props) => {
           <HoleComponent
             note={note}
             className={`hole hole-${i + 1} ${
-              note === activeNote?.note ? "active" : ""
+              note[0] === activeNote?.note[0] &&
+              ((i > 2 && activeNote.octave === 5) ||
+                (i <= 2 && activeNote?.octave === 4))
+                ? "active"
+                : ""
             }`}
             isOpen={note === activeNote?.note}
           />

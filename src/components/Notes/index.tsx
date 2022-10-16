@@ -32,15 +32,15 @@ export default ({ player }: Props) => {
   return (
     <Container className="notes-bricks" isPlaying={isPlaying}>
       <NotesLines>
+        <div className="note A5 line" />
+        <div className="note G5 line" />
+        <div className="note F5 line" />
+        <div className="note E5 line" />
+        <div className="note D5 line" />
+        <div className="note C5 line" />
+        <div className="note B4 line" />
         <div className="note A4 line" />
         <div className="note G4 line" />
-        <div className="note F4 line" />
-        <div className="note E4 line" />
-        <div className="note D4 line" />
-        <div className="note C4 line" />
-        <div className="note B3 line" />
-        <div className="note A3 line" />
-        <div className="note G3 line" />
       </NotesLines>
       <animated.div style={styles}>
         {nextNotes?.map((note, i) => (
@@ -87,39 +87,39 @@ const Container = styled.div<{ isPlaying: boolean }>`
     position: absolute;
   }
 
-  .note.A4 {
+  .note.A5 {
     top: 20px;
   }
 
-  .note.G4 {
+  .note.G5 {
     top: 58px;
   }
 
-  .note.F4 {
+  .note.F5 {
     top: 91px;
   }
 
-  .note.E4 {
+  .note.E5 {
     top: 132px;
   }
 
-  .note.D4 {
+  .note.D5 {
     top: 177px;
   }
 
-  .note.C4 {
+  .note.C5 {
     top: 229px;
   }
 
-  .note.B3 {
+  .note.B4 {
     top: 274px;
   }
 
-  .note.A3 {
+  .note.A4 {
     top: 326px;
   }
 
-  .note.G3 {
+  .note.G4 {
     top: 388px;
   }
 `;
