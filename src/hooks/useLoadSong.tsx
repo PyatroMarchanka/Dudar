@@ -11,11 +11,16 @@ export const useLoadSong = () => {
   } = useContext(store);
 
   const loadMidiSong = async (fileName: string) => {
-    const file = await fetch(`midi/${genreList}/${fileName}`);
-    const buffer = await file.arrayBuffer();
-    const midi = new Midi(buffer);
-    setMidiData(fixMidiDataOctaves(midi));
-    setMidi(buffer);
+    try {
+      console.log(`LoadMidiSong midi/${genreList}/${fileName}`);
+      const file = await fetch(`midi/${genreList}/${fileName}`);
+      const buffer = await file.arrayBuffer();
+      const midi = new Midi(buffer);
+      setMidiData(fixMidiDataOctaves(midi));
+      setMidi(buffer);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
