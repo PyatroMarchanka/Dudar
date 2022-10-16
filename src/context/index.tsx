@@ -135,7 +135,10 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_MIDI_DATA", payload: midi });
   };
   const setActiveSong = (fileName: string) => {
-    dispatch({ type: "SET_ACTIVE_SONG", payload: fileName });
+    dispatch({
+      type: "SET_ACTIVE_SONG",
+      payload: fileName.split("_").join(""),
+    });
   };
 
   const setProgress = (percent: number) => {
