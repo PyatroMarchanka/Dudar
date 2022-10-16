@@ -16,10 +16,9 @@ const getNotesChunks = (notes: Note[]) => {
     } else if (note.ticks > max) {
       min = max;
       max += screenWitdh;
-      result.push([]);
+      result.push([note]);
     }
   });
-
   return result;
 };
 
