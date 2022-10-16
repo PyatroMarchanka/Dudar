@@ -32,7 +32,7 @@ const initialState: State = {
   midiData: null,
   midi: null,
   progress: 0,
-  activeSong: "Krakaviak.mid",
+  activeSong: "Krakaviak.MID",
   genreList: "Belarussian",
   tempo: 240,
   showPianoRoll: true,
