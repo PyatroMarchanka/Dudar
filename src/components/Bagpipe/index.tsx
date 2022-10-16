@@ -23,19 +23,36 @@ export const Bagpipe = ({ bagpipe, activeNote }: Props) => {
     Boolean
   ) as SharpNotes[];
 
+  const checkIsNoteActive = (
+    note: SharpNotes,
+    activeNote: Props["activeNote"],
+    i: number
+  ) => {
+    const isNoteNameSame = note[0] === activeNote?.note[0];
+    const isFifthOctaveSame =
+      (i > 2 && activeNote?.octave === 5) ||
+      (i <= 2 && activeNote?.octave === 4);
+
+    const isFourthOctaveSame =
+      (i > 2 && activeNote?.octave === 4) ||
+      (i <= 2 && activeNote?.octave === 3);
+
+    return isNoteNameSame && (isFifthOctaveSame || isFourthOctaveSame)
+      ? "active"
+      : "";
+  };
+
   return (
     <Container>
       <Holes>
         {notes.map((note, i) => (
           <HoleComponent
             note={note}
-            className={`hole hole-${i + 1} ${
-              note[0] === activeNote?.note[0] &&
-              ((i > 2 && activeNote.octave === 5) ||
-                (i <= 2 && activeNote?.octave === 4))
-                ? "active"
-                : ""
-            }`}
+            className={`hole hole-${i + 1} ${checkIsNoteActive(
+              note,
+              activeNote,
+              i
+            )}`}
             isOpen={note === activeNote?.note}
           />
         ))}
