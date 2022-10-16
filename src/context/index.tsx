@@ -137,7 +137,7 @@ const ContextProvider = ({ children }: any) => {
   const setActiveSong = (fileName: string) => {
     dispatch({
       type: "SET_ACTIVE_SONG",
-      payload: fileName.split("_").join(""),
+      payload: fileName.split("_").join(" "),
     });
   };
 
