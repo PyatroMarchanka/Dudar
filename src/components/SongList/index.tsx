@@ -1,5 +1,6 @@
 import {
   Button,
+  capitalize,
   createStyles,
   Dialog,
   DialogContent,
