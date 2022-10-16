@@ -14,7 +14,7 @@ export const useLoadSong = () => {
     const file = await fetch(`midi/${genreList}/${fileName}`);
     const buffer = await file.arrayBuffer();
     const midi = new Midi(buffer);
-    setMidiData(fixMidiDataOctaves(midi));
+    setMidiData(midi);
     setMidi(buffer);
   };
 
