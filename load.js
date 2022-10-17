@@ -1,10 +1,10 @@
 console.log("Make MIDI Catalog...");
 
 const folders = [
-  { path: "./public/midi/Belarussian", label: "Belarussian" },
-  { path: "./public/midi/Irish", label: "Irish" },
-  { path: "./public/midi/Medieval", label: "Medieval" },
-  { path: "./public/midi/Schotland", label: "Schotland" },
+  { path: "./public/midi/belarussian", label: "belarussian" },
+  { path: "./public/midi/irish", label: "irish" },
+  { path: "./public/midi/medieval", label: "medieval" },
+  { path: "./public/midi/schotland", label: "schotland" },
 ];
 const fs = require("fs");
 
