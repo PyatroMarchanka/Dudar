@@ -4,6 +4,7 @@ const folders = [
   { path: "./public/midi/Belarussian", label: "Belarussian" },
   { path: "./public/midi/Medieval", label: "Medieval" },
   { path: "./public/midi/Schotland", label: "Schotland" },
+  { path: "./public/midi/Irish", label: "Irish" },
 ];
 const fs = require("fs");
 
