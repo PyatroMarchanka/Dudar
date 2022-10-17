@@ -36,7 +36,7 @@ export const Dudar = () => {
     setProgress
   );
 
-  console.log("activeNote", activeNote);
+  // console.log("activeNote", activeNote);
 
   useLoadSong();
 
