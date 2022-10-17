@@ -41,9 +41,10 @@ const NoteComponent = styled.div<{
   noteTick: number;
 }>`
   height: 18px;
+
   background-color: #b8720a;
-  color: white;
-  text-transform: uppercase;
+  color: yellow;
+  text-transform: lowercase;
   border-radius: 4px;
   border: 2px solid white;
   padding: 5px;
