@@ -75,17 +75,11 @@ export const fixMidiDataOctaves = (midiData: Midi): Midi => {
     .map((e) => +e)
     .sort((a: any, b: any) => a - b);
 
-  if (octaves[0] !== 4 && octaves[1] !== 5) {
-    midiData.tracks[0].notes = notes.map((note) => {
-      if (octaves[0] < 4) {
-        note.octave += 1;
-        return note;
-      } else {
-        note.octave -= 1;
-        return note;
-      }
-    });
-  }
+  midiData.tracks[0].notes = notes.map((note) => {
+    note.octave += 4 - octaves[0];
+
+    return note;
+  });
 
   return midiData;
 };
