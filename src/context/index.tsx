@@ -10,7 +10,8 @@ interface Action {
     | "SET_TEMPO"
     | "SET_SHOW_PIANO_ROLL"
     | "SET_IS_PLAYING"
-    | "SET_GENRE_LIST";
+    | "SET_GENRE_LIST"
+    | "SET_ALL_LISTS";
 
   payload?: any;
 }
@@ -26,6 +27,7 @@ interface State {
   showPianoRoll: boolean;
   isPlaying: boolean;
   genreList?: string;
+  allLists: any;
 }
 
 const initialState: State = {
@@ -37,6 +39,7 @@ const initialState: State = {
   tempo: 240,
   showPianoRoll: true,
   isPlaying: false,
+  allLists: {},
 };
 
 interface Context {
@@ -50,6 +53,7 @@ interface Context {
   togglePianoRoll: (value: boolean) => void;
   setIsPlaying: (bool: boolean) => void;
   setGenreList: (list: string) => void;
+  setAllLists: (lists: any) => void;
 }
 
 const store = createContext<Context>({
@@ -63,6 +67,7 @@ const store = createContext<Context>({
   togglePianoRoll: (value: boolean) => {},
   setIsPlaying: (bool: boolean) => {},
   setGenreList: (list: string) => {},
+  setAllLists: (lists: any) => {},
 });
 const { Provider } = store;
 
@@ -122,6 +127,12 @@ const ContextProvider = ({ children }: any) => {
           genreList: action.payload,
         };
 
+      case "SET_ALL_LISTS":
+        return {
+          ...state,
+          allLists: action.payload,
+        };
+
       default:
         return state;
     }
@@ -161,6 +172,10 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_GENRE_LIST", payload: list });
   };
 
+  const setAllLists = (list: any) => {
+    dispatch({ type: "SET_ALL_LISTS", payload: list });
+  };
+
   return (
     <Provider
       value={{
@@ -174,6 +189,7 @@ const ContextProvider = ({ children }: any) => {
         togglePianoRoll,
         setIsPlaying,
         setGenreList,
+        setAllLists,
       }}
     >
       {children}

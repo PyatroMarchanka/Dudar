@@ -4,6 +4,7 @@ import { store } from "../context";
 export const useSongList = () => {
   const {
     state: { genreList },
+    setAllLists: setAllListContext,
   } = useContext(store);
 
   const [songList, setSongList] = useState<string[]>([]);
@@ -17,6 +18,7 @@ export const useSongList = () => {
 
     setSongList(list[genreList || initialList] || {});
     setAllLists(list);
+    setAllListContext(list);
   };
 
   useEffect(() => {
