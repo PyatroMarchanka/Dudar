@@ -43,8 +43,8 @@ const NoteComponent = styled.div<{
   height: 18px;
 
   background-color: #b8720a;
-  color: yellow;
-  text-transform: lowercase;
+  color: white;
+  text-transform: uppercase;
   border-radius: 4px;
   border: 2px solid white;
   padding: 5px;
