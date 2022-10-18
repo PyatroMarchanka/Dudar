@@ -10,16 +10,14 @@ import SongList from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
 import { TempoSlider } from "./TempoSlider";
-import Notes from "../Notes";
-import { Button } from "@material-ui/core";
 import { mediaQueries } from "../../constants/style";
 import { formatMidiFileName } from "../../utils/textUtils";
+import Canvas from "../Canvas";
 
 export const Dudar = () => {
   const {
-    state: { activeSong, showPianoRoll },
+    state: { activeSong },
     setProgress,
-    togglePianoRoll,
   } = useContext(store);
 
   const [activeNote, setActiveNote] = useState<{
@@ -53,13 +51,6 @@ export const Dudar = () => {
               <Transpose setTranspose={midiPlayer?.setTranspose} />
               <SongList />
               <TempoSlider player={midiPlayer} />
-              <Button
-                size="small"
-                variant={showPianoRoll ? "outlined" : "text"}
-                onClick={() => togglePianoRoll(!showPianoRoll)}
-              >
-                {"Notes"}
-              </Button>
             </Column>
           </Inputs>
         </Row>
@@ -70,7 +61,7 @@ export const Dudar = () => {
           bagpipe={getBagpipeData(Modes.Mixolidian, "A")}
           activeNote={activeNote}
         />
-        {showPianoRoll && <Notes player={midiPlayer} />}
+        <Canvas player={midiPlayer} />
       </BagpipeContainer>
 
       {MPlayer}

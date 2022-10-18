@@ -57,7 +57,6 @@ export const Bagpipe = ({ bagpipe, activeNote }: Props) => {
           />
         ))}
       </Holes>
-      <BagpipeImage src="images/bagpipe.png" alt="bagpipe" />
     </Container>
   );
 };
@@ -66,7 +65,6 @@ const Container = styled.div`
   margin-top: 10px;
   position: relative;
   width: 30px;
-  transform: translateX(-40px);
 `;
 
 const BagpipeImage = styled.img`
@@ -128,7 +126,7 @@ const Holes = styled.div`
   }
 
   .hole-8 {
-    top: 55px;
+    top: 45px;
     left: 90px;
   }
 `;

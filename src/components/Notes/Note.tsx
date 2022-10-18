@@ -32,7 +32,7 @@ export const Note = ({ note, className }: Props) => {
   );
 };
 
-export const multCoefficient = 4;
+export const multCoefficient = 6;
 const minWidth = 40;
 
 const NoteComponent = styled.div<{
