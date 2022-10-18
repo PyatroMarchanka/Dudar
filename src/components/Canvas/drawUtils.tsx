@@ -107,7 +107,7 @@ export const drawBagpipe = (ctx: CanvasRenderingContext2D) => {
   const image = new Image();
   image.src = "/images/bagpipe-9-holes.png";
 
-  ctx.fillStyle = "#929292";
+  ctx.fillStyle = "#ffffff";
 
   ctx.fillRect(0, 0, 50, 500);
   ctx.drawImage(image, -30, 8, 136, 500);
