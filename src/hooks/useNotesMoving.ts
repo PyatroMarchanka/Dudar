@@ -51,8 +51,7 @@ export const useNotesMoving = () => {
 
   useEffect(() => {
     const lastNote = nextNotes?.[nextNotes.length - 1];
-
-    if (lastNote?.ticks && lastNote?.ticks < tick - 400) {
+    if (lastNote?.ticks && lastNote?.ticks < tick - lastNote.durationTicks) {
       setNextNotes(chunkedNotes[currentChunkIndex + 1] || []);
       setNextToNextNotes(chunkedNotes[currentChunkIndex + 2] || []);
       setCurrentChunkIndex(currentChunkIndex + 1);
