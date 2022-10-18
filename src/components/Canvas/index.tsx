@@ -35,7 +35,6 @@ export default ({ player }: Props) => {
     const render = () => {
       drawNotes(context as any, tick, nextNotes, nextToNextNotes);
       drawBagpipe(context!);
-
       animationFrameId = window.requestAnimationFrame(render);
     };
 
@@ -49,7 +48,7 @@ export default ({ player }: Props) => {
     <div>
       <CanvasComponent
         height={800}
-        width={500}
+        width={400}
         className="canvas"
         ref={canvasRef}
       />

@@ -57,10 +57,6 @@ export const Dudar = () => {
       </Header>
       <BagpipeContainer className={"center"}>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
-        <Bagpipe
-          bagpipe={getBagpipeData(Modes.Mixolidian, "A")}
-          activeNote={activeNote}
-        />
         <Canvas player={midiPlayer} />
       </BagpipeContainer>
 
