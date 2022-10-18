@@ -69,7 +69,7 @@ const NotesLines = styled.div`
   .line {
     position: absolute;
     height: 18px;
-    width: 1500px;
+    width: 500px;
     padding: 5px;
     background-color: ${theme.colors.grey[100]};
     @media (max-width: ${mediaQueries.mobile}) {
@@ -80,7 +80,7 @@ const NotesLines = styled.div`
 
 const Container = styled.div<{ isPlaying: boolean }>`
   z-index: -1;
-  width: 100%;
+  width: 500px;
   position: relative;
   overflow-x: ${({ isPlaying }) => (isPlaying ? "hidden" : "hidden")};
   .note {

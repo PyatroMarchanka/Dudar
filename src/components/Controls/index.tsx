@@ -64,7 +64,7 @@ export const Dudar = () => {
           </Inputs>
         </Row>
       </Header>
-      <BagpipeContainer className={showPianoRoll ? "" : "center"}>
+      <BagpipeContainer className={"center"}>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
         <Bagpipe
           bagpipe={getBagpipeData(Modes.Mixolidian, "A")}
@@ -132,6 +132,10 @@ const Inputs = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
+
+  &:first-child {
+    justify-content: space-around;
+  }
 
   &:last-child {
     justify-content: flex-start;
