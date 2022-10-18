@@ -42,7 +42,7 @@ export const drawActiveHole = (
 
 export const drawNote = (
   ctx: CanvasRenderingContext2D,
-  note: Notes,
+  note: SharpNotes,
   dur: number,
   start: number,
   tick: number,
@@ -80,7 +80,7 @@ export const draw = (
     nextNotes?.forEach((note) => {
       drawNote(
         ctx,
-        note.pitch as Notes,
+        note.pitch as SharpNotes,
         note.durationTicks,
         note.ticks,
         tick,
@@ -92,7 +92,7 @@ export const draw = (
     nextToNextNotes?.forEach((note) => {
       drawNote(
         ctx,
-        note.pitch as Notes,
+        note.pitch as SharpNotes,
         note.durationTicks,
         note.ticks,
         tick,
