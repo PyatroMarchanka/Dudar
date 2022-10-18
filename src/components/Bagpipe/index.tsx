@@ -44,7 +44,7 @@ export const Bagpipe = ({ bagpipe, activeNote }: Props) => {
 
   return (
     <Container>
-      <Holes>
+      {/* <Holes>
         {notes.map((note, i) => (
           <HoleComponent
             note={note}
@@ -56,7 +56,7 @@ export const Bagpipe = ({ bagpipe, activeNote }: Props) => {
             isOpen={note === activeNote?.note}
           />
         ))}
-      </Holes>
+      </Holes> */}
     </Container>
   );
 };
