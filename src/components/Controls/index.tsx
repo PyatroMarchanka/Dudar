@@ -1,8 +1,6 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
-import { Bagpipe } from "../Bagpipe";
-import { convertMidiPitchToNote, Modes } from "../../interfaces";
-import { getBagpipeData } from "../../utils/bagpipesUtils";
+import { convertMidiPitchToNote, SharpNotes } from "../../interfaces";
 import { PlayerControls } from "./PlayerControls";
 import { useMidiPlayer } from "../../utils/useMidiPlayer";
 import Transpose from "./Transpose";
@@ -21,7 +19,7 @@ export const Dudar = () => {
   } = useContext(store);
 
   const [activeNote, setActiveNote] = useState<{
-    note: string;
+    note: SharpNotes;
     octave: number;
   } | null>(null);
 
@@ -36,7 +34,7 @@ export const Dudar = () => {
 
   // console.log("activeNote", activeNote);
 
-  useLoadSong();
+  const { lowestOctave } = useLoadSong();
 
   return (
     <Container>
@@ -57,7 +55,11 @@ export const Dudar = () => {
       </Header>
       <BagpipeContainer className={"center"}>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
-        <Canvas player={midiPlayer} />
+        <Canvas
+          player={midiPlayer}
+          activeHole={activeNote}
+          lowestOctave={lowestOctave}
+        />
       </BagpipeContainer>
 
       {MPlayer}

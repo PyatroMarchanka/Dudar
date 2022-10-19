@@ -57,12 +57,14 @@ const getHighestNoteInMidi = (midi: Midi) => {
   return highest!;
 };
 
-export const fixMidiDataOctaves = (midiData: Midi): Midi => {
+export const fixMidiDataOctaves = (
+  midiData: Midi
+): { midiData: Midi; lowestOctave: number } => {
   const octavesObject = {} as any;
-  const notes = midiData?.tracks[0].notes;
+  const notes = midiData?.tracks.filter((track) => track.notes.length)[0].notes;
 
   if (!notes) {
-    return midiData;
+    return { midiData, lowestOctave: 4 };
   }
 
   notes.forEach((note) => {
@@ -81,5 +83,5 @@ export const fixMidiDataOctaves = (midiData: Midi): Midi => {
     return note;
   });
 
-  return midiData;
+  return { midiData, lowestOctave: octaves[0] };
 };

@@ -17,27 +17,49 @@ const numbers = {
   },
 };
 
-export const getYposByNote = (note: SharpNotes, octave: number) => {
-  const yPoses = [388, 326, 274, 229, 177, 132, 91, 58, 20];
-  const result = yPoses[(numbers as any)[octave][note[0]]];
+const formatOctave = (octave: number, lowestOctave?: number) => {
+  if (octave === 6) {
+    return undefined;
+  } else if (lowestOctave && lowestOctave === 3) {
+    return ++octave;
+  }
+
+  return octave;
+};
+
+export const getYposByNote = (
+  note: SharpNotes,
+  octave: number,
+  lowestOctave?: number
+) => {
+  const yPoses = [375, 318, 261, 216, 165, 122, 83, 40, 8];
+  const formattedOctave = formatOctave(octave, lowestOctave);
+  if (!formattedOctave) {
+    return;
+  }
+  const result = yPoses[(numbers as any)[formattedOctave][note[0]]];
 
   return result;
 };
 
 export const drawActiveHole = (
   ctx: CanvasRenderingContext2D,
-  activeHole?: { note: SharpNotes; octave: number }
+  lowestOctave: number,
+  activeHole?: { note: SharpNotes; octave: number } | null
 ) => {
   if (!activeHole) {
     return;
   }
 
-  ctx.beginPath();
-  const yPos = getYposByNote(activeHole.note, activeHole?.octave);
-  ctx.strokeStyle = "#fff";
+  const yPos = getYposByNote(activeHole.note, activeHole?.octave, lowestOctave);
 
-  ctx.arc(-30, yPos, 20, 0, 2 * Math.PI);
-  ctx.stroke();
+  if (!yPos) {
+    return;
+  }
+
+  ctx.arc(18, yPos + 15, 10, 0, 2 * Math.PI);
+  ctx.fillStyle = "#fff";
+  ctx.fill();
 };
 
 export const drawNote = (
@@ -49,11 +71,15 @@ export const drawNote = (
   octave: number
 ) => {
   const y = getYposByNote(note, octave);
-  const coefficient = 0.2;
+  if (!y) {
+    return;
+  }
+
+  const coefficient = 0.3;
   const brickhHeight = 30;
 
   const startPos = start * coefficient - tick * coefficient;
-  if (startPos < 30) {
+  if (startPos < 0) {
     ctx.fillStyle = "#b8440a";
   } else {
     ctx.fillStyle = "#b8720a";
@@ -109,6 +135,6 @@ export const drawBagpipe = (ctx: CanvasRenderingContext2D) => {
 
   ctx.fillStyle = "#ffffff";
 
-  ctx.fillRect(0, 0, 50, 500);
-  ctx.drawImage(image, -30, 8, 136, 500);
+  ctx.fillRect(0, 0, 30, 500);
+  ctx.drawImage(image, -50, 0, 136, 500);
 };

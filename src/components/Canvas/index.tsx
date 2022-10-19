@@ -3,15 +3,17 @@ import styled from "styled-components";
 import { mediaQueries } from "../../constants/style";
 import { store } from "../../context";
 import { useNotesMoving } from "../../hooks/useNotesMoving";
-import { Notes } from "../../interfaces";
+import { SharpNotes } from "../../interfaces";
 import { MidiPlayer } from "../../utils/MidiPlayer";
-import { draw as drawNotes, drawBagpipe } from "./drawUtils";
+import { draw as drawNotes, drawActiveHole, drawBagpipe } from "./drawUtils";
 
 type Props = {
   player: MidiPlayer | null;
+  activeHole: { note: SharpNotes; octave: number } | null;
+  lowestOctave: number;
 };
 
-export default ({ player }: Props) => {
+export default ({ player, activeHole, lowestOctave }: Props) => {
   const { nextNotes, nextToNextNotes, setTick, tick } = useNotesMoving();
   const {
     state: { showPianoRoll, isPlaying },
@@ -28,21 +30,23 @@ export default ({ player }: Props) => {
   useEffect(() => {
     let animationFrameId: number;
     const canvas = canvasRef.current;
-    const context = canvas && (canvas as HTMLCanvasElement)!.getContext("2d");
+    const context: CanvasRenderingContext2D | null =
+      canvas && (canvas as HTMLCanvasElement)!.getContext("2d");
     drawBagpipe(context!);
 
     //RENDER
     const render = () => {
       drawNotes(context as any, tick, nextNotes, nextToNextNotes);
       drawBagpipe(context!);
+      drawActiveHole(context!, lowestOctave, activeHole);
+
       animationFrameId = window.requestAnimationFrame(render);
     };
-
     render();
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [drawNotes, drawBagpipe, tick]);
+  }, [drawNotes, drawBagpipe, tick, activeHole, lowestOctave]);
 
   return (
     <div>
