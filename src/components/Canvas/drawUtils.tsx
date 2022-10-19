@@ -17,6 +17,8 @@ const numbers = {
   },
 };
 
+const yPoses = [375, 318, 261, 216, 165, 122, 83, 40, 8];
+
 const formatOctave = (octave: number, lowestOctave?: number) => {
   if (octave === 6) {
     return undefined;
@@ -32,7 +34,6 @@ const getYposByNote = (
   octave: number,
   lowestOctave?: number
 ) => {
-  const yPoses = [375, 318, 261, 216, 165, 122, 83, 40, 8];
   const formattedOctave = formatOctave(octave, lowestOctave);
 
   if (
@@ -141,6 +142,13 @@ export const drawBagpipe = (ctx: CanvasRenderingContext2D) => {
   ctx.drawImage(image, -50, 0, 136, 500);
 };
 
+const drawLines = (ctx: CanvasRenderingContext2D) => {
+  ctx.fillStyle = "#eaeaea";
+  yPoses.forEach((yPos) => {
+    ctx.fillRect(0, yPos, 400, 30);
+  });
+};
+
 export const drawAll = (
   ctx: CanvasRenderingContext2D,
   tick: number,
@@ -150,7 +158,7 @@ export const drawAll = (
   activeHole?: { note: SharpNotes; octave: number } | null
 ) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
+  drawLines(ctx);
   drawNotes(ctx, tick, nextNotes, nextToNextNotes);
   drawBagpipe(ctx!);
   drawActiveHole(ctx!, lowestOctave, activeHole);
