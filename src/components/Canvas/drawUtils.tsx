@@ -1,5 +1,5 @@
 import { Note } from "@tonejs/midi/dist/Note";
-import { Notes, SharpNotes } from "../../interfaces";
+import { SharpNotes } from "../../interfaces";
 
 const numbers = {
   4: {
@@ -27,7 +27,7 @@ const formatOctave = (octave: number, lowestOctave?: number) => {
   return octave;
 };
 
-export const getYposByNote = (
+const getYposByNote = (
   note: SharpNotes,
   octave: number,
   lowestOctave?: number
@@ -96,13 +96,12 @@ export const drawNote = (
   ctx.strokeRect(startPos, y, dur * coefficient, brickhHeight);
 };
 
-export const draw = (
+export const drawNotes = (
   ctx: CanvasRenderingContext2D,
   tick: number,
   nextNotes?: Note[],
   nextToNextNotes?: Note[]
 ) => {
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   ctx.beginPath();
 
   nextNotes &&
@@ -140,4 +139,19 @@ export const drawBagpipe = (ctx: CanvasRenderingContext2D) => {
 
   ctx.fillRect(0, 0, 30, 500);
   ctx.drawImage(image, -50, 0, 136, 500);
+};
+
+export const drawAll = (
+  ctx: CanvasRenderingContext2D,
+  tick: number,
+  lowestOctave: number,
+  nextNotes?: Note[],
+  nextToNextNotes?: Note[],
+  activeHole?: { note: SharpNotes; octave: number } | null
+) => {
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+  drawNotes(ctx, tick, nextNotes, nextToNextNotes);
+  drawBagpipe(ctx!);
+  drawActiveHole(ctx!, lowestOctave, activeHole);
 };

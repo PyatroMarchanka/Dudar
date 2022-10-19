@@ -62,7 +62,6 @@ export const useNotesMoving = () => {
     if (midiData && isPlaying) {
       const tracks = midiData?.tracks.filter((track) => track.notes.length);
       const notes = tracks[0].notes;
-      console.log("notes", notes);
       const chunks = getNotesChunks(notes);
       setChunkedNotes(chunks);
       setNextNotes(chunks[0]);

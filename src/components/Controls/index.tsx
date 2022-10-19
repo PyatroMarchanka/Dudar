@@ -32,8 +32,6 @@ export const Dudar = () => {
     setProgress
   );
 
-  // console.log("activeNote", activeNote);
-
   const { lowestOctave } = useLoadSong();
 
   return (
@@ -47,7 +45,7 @@ export const Dudar = () => {
           <Inputs>
             <Column>
               <Transpose setTranspose={midiPlayer?.setTranspose} />
-              <SongList />
+              <SongList player={midiPlayer} />
               <TempoSlider player={midiPlayer} />
             </Column>
           </Inputs>

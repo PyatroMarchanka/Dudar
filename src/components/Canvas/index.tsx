@@ -5,7 +5,7 @@ import { store } from "../../context";
 import { useNotesMoving } from "../../hooks/useNotesMoving";
 import { SharpNotes } from "../../interfaces";
 import { MidiPlayer } from "../../utils/MidiPlayer";
-import { draw as drawNotes, drawActiveHole, drawBagpipe } from "./drawUtils";
+import { drawBagpipe, drawAll } from "./drawUtils";
 
 type Props = {
   player: MidiPlayer | null;
@@ -16,7 +16,7 @@ type Props = {
 export default ({ player, activeHole, lowestOctave }: Props) => {
   const { nextNotes, nextToNextNotes, setTick, tick } = useNotesMoving();
   const {
-    state: { showPianoRoll, isPlaying },
+    state: { showPianoRoll, isPlaying, activeSong },
   } = useContext(store);
 
   const canvasRef = useRef(null);
@@ -28,6 +28,16 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
   }, [player, showPianoRoll]);
 
   useEffect(() => {
+    const canvas = canvasRef.current;
+    const context: CanvasRenderingContext2D | null =
+      canvas && (canvas as HTMLCanvasElement)!.getContext("2d");
+    console.log("activeSong change");
+    if (!isPlaying) {
+      context!.clearRect(0, 0, context!.canvas.width, context!.canvas.height);
+    }
+  }, [activeSong]);
+
+  useEffect(() => {
     let animationFrameId: number;
     const canvas = canvasRef.current;
     const context: CanvasRenderingContext2D | null =
@@ -36,17 +46,23 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
 
     //RENDER
     const render = () => {
-      drawNotes(context as any, tick, nextNotes, nextToNextNotes);
-      drawBagpipe(context!);
-      drawActiveHole(context!, lowestOctave, activeHole);
+      drawAll(
+        context!,
+        tick,
+        lowestOctave,
+        nextNotes,
+        nextToNextNotes,
+        activeHole
+      );
 
       animationFrameId = window.requestAnimationFrame(render);
     };
     render();
+
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [drawNotes, drawBagpipe, tick, activeHole, lowestOctave]);
+  }, [drawAll, tick, activeHole, lowestOctave]);
 
   return (
     <div>

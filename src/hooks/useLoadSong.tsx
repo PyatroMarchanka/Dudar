@@ -25,13 +25,9 @@ export const useLoadSong = () => {
         return;
       }
 
-      console.log(`Song exists in list \n ${genreList}/${fileName}`);
-
-      console.log(`LoadMidiSong midi/${genreList}/${fileName}`);
       const file = await fetch(`midi/${genreList}/${fileName}`);
       const buffer = await file.arrayBuffer();
       const midi = new Midi(buffer);
-      console.log("midi", midi);
       const { lowestOctave: lowestOctaveFromFile } = fixMidiDataOctaves(midi);
       setLowestOctave(lowestOctaveFromFile);
       setMidiData(midi);
