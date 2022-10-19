@@ -35,7 +35,10 @@ export const getYposByNote = (
   const yPoses = [375, 318, 261, 216, 165, 122, 83, 40, 8];
   const formattedOctave = formatOctave(octave, lowestOctave);
 
-  if (!formattedOctave || !yPoses[(numbers as any)[formattedOctave][note[0]]]) {
+  if (
+    !formattedOctave ||
+    !yPoses[(numbers as any)[formattedOctave]?.[note[0]]]
+  ) {
     return;
   }
   const result = yPoses[(numbers as any)[formattedOctave][note[0]]];
