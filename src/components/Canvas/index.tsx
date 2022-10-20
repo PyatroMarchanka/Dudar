@@ -16,7 +16,7 @@ type Props = {
 export default ({ player, activeHole, lowestOctave }: Props) => {
   const { nextNotes, nextToNextNotes, setTick, tick } = useNotesMoving();
   const {
-    state: { showPianoRoll, isPlaying, activeSong },
+    state: { showPianoRoll, isPlaying, activeSong, isClosedManer },
   } = useContext(store);
 
   const canvasRef = useRef(null);
@@ -31,7 +31,7 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
     const canvas = canvasRef.current;
     const context: CanvasRenderingContext2D | null =
       canvas && (canvas as HTMLCanvasElement)!.getContext("2d");
-    console.log("activeSong change");
+
     if (!isPlaying) {
       context!.clearRect(0, 0, context!.canvas.width, context!.canvas.height);
     }
@@ -52,7 +52,8 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
         lowestOctave,
         nextNotes,
         nextToNextNotes,
-        activeHole
+        activeHole,
+        isClosedManer
       );
 
       animationFrameId = window.requestAnimationFrame(render);

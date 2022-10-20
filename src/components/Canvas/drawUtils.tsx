@@ -170,11 +170,12 @@ export const drawAll = (
   lowestOctave: number,
   nextNotes?: Note[],
   nextToNextNotes?: Note[],
-  activeHole?: { note: SharpNotes; octave: number } | null
+  activeHole?: { note: SharpNotes; octave: number } | null,
+  isClosedManer?: boolean
 ) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   drawLines(ctx);
   drawNotes(ctx, tick, nextNotes, nextToNextNotes);
   drawBagpipe(ctx!);
-  drawActiveHole(ctx!, lowestOctave, activeHole);
+  drawActiveHole(ctx!, lowestOctave, activeHole, isClosedManer);
 };

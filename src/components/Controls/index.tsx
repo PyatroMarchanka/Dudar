@@ -11,6 +11,7 @@ import { TempoSlider } from "./TempoSlider";
 import { mediaQueries } from "../../constants/style";
 import { formatMidiFileName } from "../../utils/textUtils";
 import Canvas from "../Canvas";
+import ManerCheckBox from "./ManerCheckBox";
 
 export const Dudar = () => {
   const {
@@ -47,6 +48,7 @@ export const Dudar = () => {
               <Transpose setTranspose={midiPlayer?.setTranspose} />
               <SongList player={midiPlayer} />
               <TempoSlider player={midiPlayer} />
+              <ManerCheckBox />
             </Column>
           </Inputs>
         </Row>
