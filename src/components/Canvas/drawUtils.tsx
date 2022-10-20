@@ -18,6 +18,7 @@ const numbers = {
 };
 
 const yPoses = [375, 318, 261, 216, 165, 122, 83, 40, 8];
+const yPosesReversed = [375, 318, 261, 216, 165, 122, 83, 40, 8].reverse();
 
 const formatOctave = (octave: number, lowestOctave?: number) => {
   if (octave === 6) {
@@ -42,28 +43,42 @@ const getYposByNote = (
   ) {
     return;
   }
-  const result = yPoses[(numbers as any)[formattedOctave][note[0]]];
+  const yPos = yPoses[(numbers as any)[formattedOctave][note[0]]];
 
-  return result;
+  return {
+    yPosInPx: yPos,
+    position: (numbers as any)[formattedOctave][note[0]],
+  };
 };
 
 export const drawActiveHole = (
   ctx: CanvasRenderingContext2D,
   lowestOctave: number,
-  activeHole?: { note: SharpNotes; octave: number } | null
+  activeHole?: { note: SharpNotes; octave: number } | null,
+  isClosedManer?: boolean
 ) => {
   if (!activeHole) {
     return;
   }
 
   const yPos = getYposByNote(activeHole.note, activeHole?.octave, lowestOctave);
-  if (!yPos) {
+  if (!yPos?.yPosInPx) {
     return;
   }
 
-  ctx.arc(18, yPos + 15, 10, 0, 2 * Math.PI);
-  ctx.fillStyle = "#fff";
-  ctx.fill();
+  if (!isClosedManer) {
+    yPosesReversed.forEach((pos, i) => {
+      if (i <= yPoses.length - yPos.position - 1) {
+        ctx.arc(18, pos + 15, 10, 0, 2 * Math.PI);
+        ctx.fillStyle = "#fff";
+        ctx.fill();
+      }
+    });
+  } else {
+    ctx.arc(18, yPos.yPosInPx + 15, 10, 0, 2 * Math.PI);
+    ctx.fillStyle = "#fff";
+    ctx.fill();
+  }
 };
 
 export const drawNote = (
@@ -75,7 +90,7 @@ export const drawNote = (
   octave: number
 ) => {
   const y = getYposByNote(note, octave);
-  if (!y) {
+  if (!y?.yPosInPx) {
     return;
   }
 
@@ -92,9 +107,9 @@ export const drawNote = (
   ctx.lineWidth = 5;
   ctx.stroke();
 
-  ctx.fillRect(startPos, y, dur * coefficient, brickhHeight);
+  ctx.fillRect(startPos, y.yPosInPx, dur * coefficient, brickhHeight);
 
-  ctx.strokeRect(startPos, y, dur * coefficient, brickhHeight);
+  ctx.strokeRect(startPos, y.yPosInPx, dur * coefficient, brickhHeight);
 };
 
 export const drawNotes = (

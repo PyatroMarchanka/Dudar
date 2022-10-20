@@ -11,7 +11,8 @@ interface Action {
     | "SET_SHOW_PIANO_ROLL"
     | "SET_IS_PLAYING"
     | "SET_GENRE_LIST"
-    | "SET_ALL_LISTS";
+    | "SET_ALL_LISTS"
+    | "SET_IS_CLOSED_MANER";
 
   payload?: any;
 }
@@ -28,6 +29,7 @@ interface State {
   isPlaying: boolean;
   genreList?: string;
   allLists: any;
+  isClosedManer: boolean;
 }
 
 const initialState: State = {
@@ -40,6 +42,7 @@ const initialState: State = {
   showPianoRoll: true,
   isPlaying: false,
   allLists: {},
+  isClosedManer: false,
 };
 
 interface Context {
@@ -54,6 +57,7 @@ interface Context {
   setIsPlaying: (bool: boolean) => void;
   setGenreList: (list: string) => void;
   setAllLists: (lists: any) => void;
+  setIsClosedManer: (bool: boolean) => void;
 }
 
 const store = createContext<Context>({
@@ -68,6 +72,7 @@ const store = createContext<Context>({
   setIsPlaying: (bool: boolean) => {},
   setGenreList: (list: string) => {},
   setAllLists: (lists: any) => {},
+  setIsClosedManer: (bool: boolean) => {},
 });
 const { Provider } = store;
 
@@ -133,6 +138,12 @@ const ContextProvider = ({ children }: any) => {
           allLists: action.payload,
         };
 
+      case "SET_IS_CLOSED_MANER":
+        return {
+          ...state,
+          isClosedManer: action.payload,
+        };
+
       default:
         return state;
     }
@@ -176,6 +187,10 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_ALL_LISTS", payload: list });
   };
 
+  const setIsClosedManer = (bool: boolean) => {
+    dispatch({ type: "SET_IS_CLOSED_MANER", payload: bool });
+  };
+
   return (
     <Provider
       value={{
@@ -190,6 +205,7 @@ const ContextProvider = ({ children }: any) => {
         setIsPlaying,
         setGenreList,
         setAllLists,
+        setIsClosedManer,
       }}
     >
       {children}
