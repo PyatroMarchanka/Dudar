@@ -1,8 +1,6 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
-import { Bagpipe } from "../Bagpipe";
-import { convertMidiPitchToNote, Modes } from "../../interfaces";
-import { getBagpipeData } from "../../utils/bagpipesUtils";
+import { convertMidiPitchToNote, SharpNotes } from "../../interfaces";
 import { PlayerControls } from "./PlayerControls";
 import { useMidiPlayer } from "../../utils/useMidiPlayer";
 import Transpose from "./Transpose";
@@ -10,20 +8,19 @@ import SongList from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
 import { TempoSlider } from "./TempoSlider";
-import Notes from "../Notes";
-import { Button } from "@material-ui/core";
 import { mediaQueries } from "../../constants/style";
 import { formatMidiFileName } from "../../utils/textUtils";
+import Canvas from "../Canvas";
+import ManerCheckBox from "./ManerCheckBox";
 
 export const Dudar = () => {
   const {
-    state: { activeSong, showPianoRoll },
+    state: { activeSong },
     setProgress,
-    togglePianoRoll,
   } = useContext(store);
 
   const [activeNote, setActiveNote] = useState<{
-    note: string;
+    note: SharpNotes;
     octave: number;
   } | null>(null);
 
@@ -36,9 +33,7 @@ export const Dudar = () => {
     setProgress
   );
 
-  console.log("activeNote", activeNote);
-
-  useLoadSong();
+  const { lowestOctave } = useLoadSong();
 
   return (
     <Container>
@@ -51,26 +46,20 @@ export const Dudar = () => {
           <Inputs>
             <Column>
               <Transpose setTranspose={midiPlayer?.setTranspose} />
-              <SongList />
+              <SongList player={midiPlayer} />
               <TempoSlider player={midiPlayer} />
-              <Button
-                size="small"
-                variant={showPianoRoll ? "outlined" : "text"}
-                onClick={() => togglePianoRoll(!showPianoRoll)}
-              >
-                {"Notes"}
-              </Button>
+              <ManerCheckBox />
             </Column>
           </Inputs>
         </Row>
       </Header>
-      <BagpipeContainer className={showPianoRoll ? "" : "center"}>
+      <BagpipeContainer className={"center"}>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
-        <Bagpipe
-          bagpipe={getBagpipeData(Modes.Mixolidian, "A")}
-          activeNote={activeNote}
+        <Canvas
+          player={midiPlayer}
+          activeHole={activeNote}
+          lowestOctave={lowestOctave}
         />
-        {showPianoRoll && <Notes player={midiPlayer} />}
       </BagpipeContainer>
 
       {MPlayer}
@@ -107,6 +96,7 @@ const Column = styled.div`
   @media (max-width: ${mediaQueries.mobile}) {
     > button {
       flex-basis: 25%;
+      height: 60px;
     }
     width: 100%;
     display: flex;
@@ -132,6 +122,10 @@ const Inputs = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
+
+  &:first-child {
+    justify-content: space-around;
+  }
 
   &:last-child {
     justify-content: flex-start;

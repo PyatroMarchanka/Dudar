@@ -1,5 +1,6 @@
 import { MenuItem, Select } from "@material-ui/core";
 import React, { useState } from "react";
+import { transposeNote } from "../../../interfaces";
 import { SetTransposeType } from "../../../utils/MidiPlayer";
 import { ModalButton } from "../../global/ModalButton";
 
@@ -28,9 +29,10 @@ export default ({ setTranspose, label = "Transpose sound" }: Props) => {
             }}
           >
             {options.map((option) => (
-              <MenuItem
-                value={option.value}
-              >{`Transpose: ${option.label} semitones`}</MenuItem>
+              <MenuItem value={option.value}>
+                <b>{transposeNote("A", +option.label)}</b>
+                {` : ${option.label} semitones`}
+              </MenuItem>
             ))}
           </Select>
         </div>

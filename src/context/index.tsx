@@ -10,7 +10,9 @@ interface Action {
     | "SET_TEMPO"
     | "SET_SHOW_PIANO_ROLL"
     | "SET_IS_PLAYING"
-    | "SET_GENRE_LIST";
+    | "SET_GENRE_LIST"
+    | "SET_ALL_LISTS"
+    | "SET_IS_CLOSED_MANER";
 
   payload?: any;
 }
@@ -26,17 +28,21 @@ interface State {
   showPianoRoll: boolean;
   isPlaying: boolean;
   genreList?: string;
+  allLists: any;
+  isClosedManer: boolean;
 }
 
 const initialState: State = {
   midiData: null,
   midi: null,
   progress: 0,
-  activeSong: "Krakaviak.MID",
-  genreList: "Belarussian",
+  activeSong: "Palaestinalied.mid",
+  genreList: "medieval",
   tempo: 240,
   showPianoRoll: true,
   isPlaying: false,
+  allLists: {},
+  isClosedManer: false,
 };
 
 interface Context {
@@ -50,6 +56,8 @@ interface Context {
   togglePianoRoll: (value: boolean) => void;
   setIsPlaying: (bool: boolean) => void;
   setGenreList: (list: string) => void;
+  setAllLists: (lists: any) => void;
+  setIsClosedManer: (bool: boolean) => void;
 }
 
 const store = createContext<Context>({
@@ -63,6 +71,8 @@ const store = createContext<Context>({
   togglePianoRoll: (value: boolean) => {},
   setIsPlaying: (bool: boolean) => {},
   setGenreList: (list: string) => {},
+  setAllLists: (lists: any) => {},
+  setIsClosedManer: (bool: boolean) => {},
 });
 const { Provider } = store;
 
@@ -122,6 +132,18 @@ const ContextProvider = ({ children }: any) => {
           genreList: action.payload,
         };
 
+      case "SET_ALL_LISTS":
+        return {
+          ...state,
+          allLists: action.payload,
+        };
+
+      case "SET_IS_CLOSED_MANER":
+        return {
+          ...state,
+          isClosedManer: action.payload,
+        };
+
       default:
         return state;
     }
@@ -135,7 +157,10 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_MIDI_DATA", payload: midi });
   };
   const setActiveSong = (fileName: string) => {
-    dispatch({ type: "SET_ACTIVE_SONG", payload: fileName });
+    dispatch({
+      type: "SET_ACTIVE_SONG",
+      payload: fileName.split("_").join(" "),
+    });
   };
 
   const setProgress = (percent: number) => {
@@ -158,6 +183,14 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_GENRE_LIST", payload: list });
   };
 
+  const setAllLists = (list: any) => {
+    dispatch({ type: "SET_ALL_LISTS", payload: list });
+  };
+
+  const setIsClosedManer = (bool: boolean) => {
+    dispatch({ type: "SET_IS_CLOSED_MANER", payload: bool });
+  };
+
   return (
     <Provider
       value={{
@@ -171,6 +204,8 @@ const ContextProvider = ({ children }: any) => {
         togglePianoRoll,
         setIsPlaying,
         setGenreList,
+        setAllLists,
+        setIsClosedManer,
       }}
     >
       {children}

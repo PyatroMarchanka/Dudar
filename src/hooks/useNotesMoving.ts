@@ -50,8 +50,7 @@ export const useNotesMoving = () => {
 
   useEffect(() => {
     const lastNote = nextNotes?.[nextNotes.length - 1];
-
-    if (lastNote?.ticks && lastNote?.ticks < tick - 400) {
+    if (lastNote?.ticks && lastNote?.ticks < tick - lastNote.durationTicks) {
       setNextNotes(chunkedNotes[currentChunkIndex + 1] || []);
       setNextToNextNotes(chunkedNotes[currentChunkIndex + 2] || []);
       setCurrentChunkIndex(currentChunkIndex + 1);
@@ -60,7 +59,8 @@ export const useNotesMoving = () => {
 
   useEffect(() => {
     if (midiData && isPlaying) {
-      const notes = midiData?.tracks[0].notes;
+      const tracks = midiData?.tracks.filter((track) => track.notes.length);
+      const notes = tracks[0].notes;
       const chunks = getNotesChunks(notes);
       setChunkedNotes(chunks);
       setNextNotes(chunks[0]);

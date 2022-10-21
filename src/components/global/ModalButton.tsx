@@ -15,7 +15,7 @@ interface Props {
 const useStyles = makeStyles(() =>
   createStyles({
     container: {
-      width: 200,
+      // width: 200,
     },
   })
 );

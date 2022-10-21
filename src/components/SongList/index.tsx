@@ -1,5 +1,6 @@
 import {
   Button,
+  capitalize,
   createStyles,
   Dialog,
   DialogContent,
@@ -13,9 +14,9 @@ import {
   Theme,
 } from "@material-ui/core";
 import React, { useContext, useState } from "react";
-import styled from "styled-components";
 import { noSongsLabel, store } from "../../context";
 import { useSongList } from "../../hooks/useSongLIst";
+import { MidiPlayer } from "../../utils/MidiPlayer";
 import { formatMidiFileName } from "../../utils/textUtils";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -38,12 +39,25 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default () => {
+type Props = {
+  player: MidiPlayer | null;
+};
+
+export default ({ player }: Props) => {
   const {
     state: { activeSong, genreList },
     setActiveSong,
     setGenreList,
+    setIsPlaying,
+    setProgress,
   } = useContext(store);
+
+  const onStop = () => {
+    setIsPlaying(false);
+    player?.stop();
+    setProgress(100);
+  };
+
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const { songList, allLists } = useSongList();
@@ -80,6 +94,7 @@ export default () => {
               onChange={(e) => {
                 setActiveSong(e.target.value as string);
                 setOpen(false);
+                onStop();
               }}
               labelId="demo-dialog-select-label"
               id="demo-dialog-select"

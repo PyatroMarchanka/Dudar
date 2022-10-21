@@ -69,7 +69,7 @@ const NotesLines = styled.div`
   .line {
     position: absolute;
     height: 18px;
-    width: 1500px;
+    width: 500px;
     padding: 5px;
     background-color: ${theme.colors.grey[100]};
     @media (max-width: ${mediaQueries.mobile}) {
@@ -80,45 +80,36 @@ const NotesLines = styled.div`
 
 const Container = styled.div<{ isPlaying: boolean }>`
   z-index: -1;
-  width: 100%;
+  width: 500px;
   position: relative;
   overflow-x: ${({ isPlaying }) => (isPlaying ? "hidden" : "hidden")};
   .note {
     position: absolute;
   }
-
   .note.A5 {
     top: 20px;
   }
-
   .note.G5 {
     top: 58px;
   }
-
   .note.F5 {
     top: 91px;
   }
-
   .note.E5 {
     top: 132px;
   }
-
   .note.D5 {
     top: 177px;
   }
-
   .note.C5 {
     top: 229px;
   }
-
   .note.B4 {
     top: 274px;
   }
-
   .note.A4 {
     top: 326px;
   }
-
   .note.G4 {
     top: 388px;
   }
