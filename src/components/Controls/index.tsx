@@ -61,13 +61,55 @@ export const Dudar = () => {
           lowestOctave={lowestOctave}
         />
       </BagpipeContainer>
-
+      <Link className="last">
+        <a href="https://github.com/PyatroMarchanka/Dudar">
+          <i className="fa fa-github fa_custom"></i>
+          <div>GitHub</div>
+        </a>
+      </Link>
       {MPlayer}
     </Container>
   );
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .last {
+    margin-top: auto;
+  }
+`;
+
+const Link = styled.div`
+  display: flex;
+  justify-content: center;
+
+  > a {
+    display: flex;
+    justify-content: center;
+    width: 100px;
+    padding: 5px;
+    justify-content: center;
+    border: 1px solid black;
+    border-radius: 4px;
+    background-color: #c9c9c9bf;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    color: black;
+    text-decoration: none;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  i {
+    display: flex;
+    margin-right: 5px;
+  }
+`;
 
 const Header = styled.div`
   h3 {
