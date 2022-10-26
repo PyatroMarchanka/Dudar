@@ -12008,6 +12008,11 @@
   dependencies:
     "is-plain-obj" "^1.0.0"
 
+"soundtouchjs@^0.1.30":
+  "integrity" "sha512-qc1kMCPQ+SH8tmoPwVSpVInGAE4XFyQ5uZLm1rLyGjwD+MT2ZdBWHWureyq2akDBYBE81GI0I0FdLCNBf86zDQ=="
+  "resolved" "https://registry.npmjs.org/soundtouchjs/-/soundtouchjs-0.1.30.tgz"
+  "version" "0.1.30"
+
 "source-list-map@^2.0.0":
   "integrity" "sha512-qnQ7gVMxGNxsiL4lEuJwe/To8UnK7fAnmbGEEH8RpLouuKbeEm0lhbQVFIrNSuB+G7tVrAlVsZgETT5nljf+Iw=="
   "resolved" "https://registry.npmjs.org/source-list-map/-/source-list-map-2.0.1.tgz"
