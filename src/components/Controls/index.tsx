@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { convertMidiPitchToNote, SharpNotes } from "../../interfaces";
 import { PlayerControls } from "./PlayerControls";
@@ -12,6 +12,8 @@ import { mediaQueries } from "../../constants/style";
 import { formatMidiFileName } from "../../utils/textUtils";
 import Canvas from "../Canvas";
 import ManerCheckBox from "./ManerCheckBox";
+import { usePitchedSound } from "../../hooks/usePitchedSound";
+import { PlayStopButton } from "../global/PlayStopButton";
 
 export const Dudar = () => {
   const {
@@ -35,14 +37,20 @@ export const Dudar = () => {
 
   const { lowestOctave } = useLoadSong();
 
+  const { play, song, shifter, stop, isPlaying } = usePitchedSound();
+
   return (
     <Container>
       <Header>
         <h3>{formatMidiFileName(activeSong!) || noSongsLabel}</h3>
         <Row>
           <Inputs>
-            <PlayerControls player={midiPlayer} />
+            <PlayerControls player={midiPlayer} play={play} stop={stop} />
           </Inputs>
+          <PlayStopButton
+            isPlaying={isPlaying}
+            handlePlaying={isPlaying ? stop : play}
+          />
           <Inputs>
             <Column>
               <Transpose setTranspose={midiPlayer?.setTranspose} />

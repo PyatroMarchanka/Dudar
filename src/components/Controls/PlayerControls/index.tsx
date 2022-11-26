@@ -10,9 +10,11 @@ import { theme } from "../../../utils/theme";
 
 interface Props {
   player: MidiPlayer | null;
+  play: () => void;
+  stop: () => void;
 }
 
-export const PlayerControls = ({ player }: Props) => {
+export const PlayerControls = ({ player, play, stop }: Props) => {
   const {
     state: { midi, progress, isPlaying },
     setProgress,
@@ -21,12 +23,15 @@ export const PlayerControls = ({ player }: Props) => {
 
   const onPlay = () => {
     setIsPlaying(true);
+
     player?.playMidi(midi, progress || 0);
+    play();
   };
 
   const onStop = () => {
     setIsPlaying(false);
     player?.stop();
+    stop();
     setProgress(100);
   };
 
