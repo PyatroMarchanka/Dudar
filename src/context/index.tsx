@@ -12,6 +12,7 @@ interface Action {
     | "SET_IS_PLAYING"
     | "SET_GENRE_LIST"
     | "SET_ALL_LISTS"
+    | "SET_SIZE"
     | "SET_IS_CLOSED_MANER";
 
   payload?: any;
@@ -30,6 +31,7 @@ interface State {
   genreList?: string;
   allLists: any;
   isClosedManer: boolean;
+  screenSize: { width: number; height: number };
 }
 
 const initialState: State = {
@@ -43,6 +45,7 @@ const initialState: State = {
   isPlaying: false,
   allLists: {},
   isClosedManer: false,
+  screenSize: { width: 400, height: 500 },
 };
 
 interface Context {
@@ -58,6 +61,7 @@ interface Context {
   setGenreList: (list: string) => void;
   setAllLists: (lists: any) => void;
   setIsClosedManer: (bool: boolean) => void;
+  setScreenSize: (size: { width: number; height: number }) => void;
 }
 
 const store = createContext<Context>({
@@ -73,6 +77,7 @@ const store = createContext<Context>({
   setGenreList: (list: string) => {},
   setAllLists: (lists: any) => {},
   setIsClosedManer: (bool: boolean) => {},
+  setScreenSize: (size: { width: number; height: number }) => {},
 });
 const { Provider } = store;
 
@@ -138,6 +143,15 @@ const ContextProvider = ({ children }: any) => {
           allLists: action.payload,
         };
 
+      case "SET_SIZE":
+        return {
+          ...state,
+          screenSize: {
+            width: action.payload.width,
+            height: action.payload.height,
+          },
+        };
+
       case "SET_IS_CLOSED_MANER":
         return {
           ...state,
@@ -191,6 +205,10 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_IS_CLOSED_MANER", payload: bool });
   };
 
+  const setScreenSize = (size: { width: number; height: number }) => {
+    dispatch({ type: "SET_SIZE", payload: size });
+  };
+
   return (
     <Provider
       value={{
@@ -206,6 +224,7 @@ const ContextProvider = ({ children }: any) => {
         setGenreList,
         setAllLists,
         setIsClosedManer,
+        setScreenSize,
       }}
     >
       {children}

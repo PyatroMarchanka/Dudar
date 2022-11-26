@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { convertMidiPitchToNote, SharpNotes } from "../../interfaces";
 import { PlayerControls } from "./PlayerControls";
@@ -17,6 +17,7 @@ export const Dudar = () => {
   const {
     state: { activeSong },
     setProgress,
+    setScreenSize,
   } = useContext(store);
 
   const [activeNote, setActiveNote] = useState<{
@@ -34,6 +35,19 @@ export const Dudar = () => {
   );
 
   const { lowestOctave } = useLoadSong();
+
+  const setDimensions = () => {
+    const height = window.innerHeight;
+    const width = window.innerWidth;
+
+    setScreenSize({ width, height });
+  };
+
+  useEffect(() => {
+    setDimensions();
+    window.addEventListener("resize", setDimensions);
+    return () => window.removeEventListener("resize", setDimensions);
+  }, []);
 
   return (
     <Container>

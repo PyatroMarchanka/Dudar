@@ -16,7 +16,7 @@ type Props = {
 export default ({ player, activeHole, lowestOctave }: Props) => {
   const { nextNotes, nextToNextNotes, setTick, tick } = useNotesMoving();
   const {
-    state: { showPianoRoll, isPlaying, activeSong, isClosedManer },
+    state: { showPianoRoll, isPlaying, activeSong, isClosedManer, screenSize },
   } = useContext(store);
 
   const canvasRef = useRef(null);
@@ -68,8 +68,8 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
   return (
     <div>
       <CanvasComponent
-        height={500}
-        width={400}
+        height={screenSize.height}
+        width={screenSize.width}
         className="canvas"
         ref={canvasRef}
       />

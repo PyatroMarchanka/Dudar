@@ -1,4 +1,5 @@
 import { Note } from "@tonejs/midi/dist/Note";
+import { mediaQueries } from "../../constants/style";
 import { SharpNotes } from "../../interfaces";
 
 const numbers = {
@@ -16,6 +17,8 @@ const numbers = {
     A: 8,
   },
 };
+const coefficient = 0.9;
+const coeff = (num: number) => num * coefficient;
 
 const yPoses = [375, 318, 261, 216, 165, 122, 83, 40, 8];
 const yPosesReversed = [375, 318, 261, 216, 165, 122, 83, 40, 8].reverse();
@@ -160,7 +163,7 @@ export const drawBagpipe = (ctx: CanvasRenderingContext2D) => {
 const drawLines = (ctx: CanvasRenderingContext2D) => {
   ctx.fillStyle = "#eaeaea";
   yPoses.forEach((yPos) => {
-    ctx.fillRect(0, yPos, 400, 30);
+    ctx.fillRect(0, yPos, window.innerWidth, 30);
   });
 };
 
