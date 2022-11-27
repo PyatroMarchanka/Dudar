@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { convertMidiPitchToNote, SharpNotes } from "../../interfaces";
 import { PlayerControls } from "./PlayerControls";
 import { useMidiPlayer } from "../../utils/useMidiPlayer";
@@ -51,6 +51,7 @@ export const Dudar = () => {
 
   return (
     <Container>
+      <GlobalStyle />
       <Header>
         <h3>{formatMidiFileName(activeSong!) || noSongsLabel}</h3>
         <Row>
@@ -85,6 +86,12 @@ export const Dudar = () => {
     </Container>
   );
 };
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0;
+  }
+`;
 
 const Container = styled.div`
   display: flex;
