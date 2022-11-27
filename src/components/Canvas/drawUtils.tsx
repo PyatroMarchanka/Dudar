@@ -21,29 +21,31 @@ const coefficient = 0.8;
 const coeff = (num: number) => num * coefficient;
 
 const yPoses = [
-  coeff(375),
-  coeff(318),
-  coeff(261),
-  coeff(216),
-  coeff(165),
-  coeff(122),
-  coeff(83),
-  coeff(40),
+  coeff(281),
+  coeff(252),
+  coeff(223),
+  coeff(194),
+  coeff(143),
+  coeff(114),
+  coeff(84),
+  coeff(44),
   coeff(8),
 ];
 const yPosesReversed = [
-  coeff(375),
-  coeff(318),
-  coeff(261),
-  coeff(216),
-  coeff(165),
-  coeff(122),
-  coeff(83),
-  coeff(40),
+  coeff(281),
+  coeff(252),
+  coeff(223),
+  coeff(194),
+  coeff(143),
+  coeff(114),
+  coeff(84),
+  coeff(44),
   coeff(8),
 ].reverse();
 
-const brickhHeight = coeff(25);
+const brickhHeight = coeff(22);
+const holeRadius = coeff(10);
+const notesScale = 0.3;
 
 const formatOctave = (octave: number, lowestOctave?: number) => {
   if (octave === 6) {
@@ -90,20 +92,19 @@ export const drawActiveHole = (
   if (!yPos?.yPosInPx) {
     return;
   }
-  const radius = coeff(10);
-  const margin = coeff(15);
+  const margin = coeff(11);
 
   if (!isClosedManer) {
     yPosesReversed.forEach((pos, i) => {
       if (i <= yPoses.length - yPos.position - 1) {
-        ctx.arc(18, pos + margin, radius, 0, 2 * Math.PI);
-        ctx.fillStyle = "#fff";
+        ctx.arc(12, pos + margin, holeRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = "#000000";
         ctx.fill();
       }
     });
   } else {
-    ctx.arc(18, yPos.yPosInPx + margin, radius, 0, 2 * Math.PI);
-    ctx.fillStyle = "#fff";
+    ctx.arc(18, yPos.yPosInPx + margin, holeRadius, 0, 2 * Math.PI);
+    ctx.fillStyle = "#000000000";
     ctx.fill();
   }
 };
@@ -121,9 +122,7 @@ export const drawNote = (
     return;
   }
 
-  const coefficient = 0.3;
-
-  const startPos = start * coefficient - tick * coefficient;
+  const startPos = start * notesScale - tick * notesScale;
   if (startPos < 0) {
     ctx.fillStyle = "#b8440a";
   } else {
@@ -133,9 +132,9 @@ export const drawNote = (
   ctx.lineWidth = coeff(5);
   ctx.stroke();
 
-  ctx.fillRect(startPos, y.yPosInPx, dur * coefficient, brickhHeight);
+  ctx.fillRect(startPos, y.yPosInPx, dur * notesScale, brickhHeight);
 
-  ctx.strokeRect(startPos, y.yPosInPx, dur * coefficient, brickhHeight);
+  ctx.strokeRect(startPos, y.yPosInPx, dur * notesScale, brickhHeight);
 };
 
 export const drawNotes = (
@@ -173,14 +172,16 @@ export const drawNotes = (
   ctx.fill();
 };
 
+const imageScale = 30 / 275;
+const width = coeff(40);
+
 export const drawBagpipe = (ctx: CanvasRenderingContext2D) => {
   const image = new Image();
   image.src = "/images/half-duda-mono-30px-275px.png";
 
   ctx.fillStyle = "#ffffff";
-  const coefficient = 30 / 275;
-  const width = coeff(40);
-  const height = width / coefficient;
+
+  const height = width / imageScale;
   ctx.drawImage(image, 0, 0, width, height);
 };
 
