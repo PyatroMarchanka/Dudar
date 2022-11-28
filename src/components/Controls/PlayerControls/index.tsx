@@ -6,11 +6,29 @@ import { MidiPlayer } from "../../../utils/MidiPlayer";
 import { PlayStopButton } from "../../global/PlayStopButton";
 import PauseIcon from "@material-ui/icons/Pause";
 import { Icon } from "../../global/Icon";
-import { theme } from "../../../utils/theme";
+import { mainColors, theme } from "../../../utils/theme";
+import { createTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
 
 interface Props {
   player: MidiPlayer | null;
 }
+
+const muiTheme = createTheme({
+  overrides: {
+    MuiSlider: {
+      thumb: {
+        color: mainColors.yellow,
+      },
+      track: {
+        color: mainColors.greyColor,
+      },
+      rail: {
+        color: "black",
+      },
+    },
+  },
+});
 
 export const PlayerControls = ({ player }: Props) => {
   const {
@@ -53,21 +71,23 @@ export const PlayerControls = ({ player }: Props) => {
         isPlaying={isPlaying}
         handlePlaying={isPlaying ? onStop : onPlay}
       />
-      <Slider
-        disabled={!isPlaying}
-        className="volume-slider"
-        onChange={(e, value) => {
-          setProgress(value as number);
-          player?.setProgress(value as number);
-        }}
-        value={progress}
-        defaultValue={progress || 0}
-        aria-labelledby="discrete-slider"
-        valueLabelDisplay="auto"
-        step={10}
-        min={0}
-        max={100}
-      />
+      <ThemeProvider theme={muiTheme}>
+        <Slider
+          disabled={!isPlaying}
+          className="volume-slider"
+          onChange={(e, value) => {
+            setProgress(value as number);
+            player?.setProgress(value as number);
+          }}
+          value={progress}
+          defaultValue={progress || 0}
+          aria-labelledby="discrete-slider"
+          valueLabelDisplay="auto"
+          step={10}
+          min={0}
+          max={100}
+        />
+      </ThemeProvider>
     </Container>
   );
 };
