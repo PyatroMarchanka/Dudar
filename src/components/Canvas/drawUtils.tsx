@@ -1,6 +1,7 @@
 import { Note } from "@tonejs/midi/dist/Note";
 import { mediaQueries } from "../../constants/style";
 import { SharpNotes } from "../../interfaces";
+import { mainColors } from "../../utils/theme";
 
 const numbers = {
   4: {
@@ -44,7 +45,7 @@ const yPosesReversed = [
 ].reverse();
 
 const brickhHeight = coeff(22);
-const holeRadius = coeff(10);
+const holeRadius = coeff(5);
 const notesScale = 0.3;
 
 const formatOctave = (octave: number, lowestOctave?: number) => {
@@ -98,13 +99,13 @@ export const drawActiveHole = (
     yPosesReversed.forEach((pos, i) => {
       if (i <= yPoses.length - yPos.position - 1) {
         ctx.arc(12, pos + margin, holeRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = "#000000";
+        ctx.fillStyle = mainColors.greyColor;
         ctx.fill();
       }
     });
   } else {
     ctx.arc(18, yPos.yPosInPx + margin, holeRadius, 0, 2 * Math.PI);
-    ctx.fillStyle = "#000000000";
+    ctx.fillStyle = mainColors.greyColor;
     ctx.fill();
   }
 };
@@ -124,9 +125,9 @@ export const drawNote = (
 
   const startPos = start * notesScale - tick * notesScale;
   if (startPos < 0) {
-    ctx.fillStyle = "#b8440a";
+    ctx.fillStyle = mainColors.yellow;
   } else {
-    ctx.fillStyle = "#b8720a";
+    ctx.fillStyle = "#5a5a5a";
   }
   ctx.strokeStyle = "#ffffff";
   ctx.lineWidth = coeff(5);
