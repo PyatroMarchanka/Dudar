@@ -47,6 +47,7 @@ const yPosesReversed = [
 const brickhHeight = coeff(22);
 const holeRadius = coeff(5);
 const notesScale = 0.3;
+const holeLeftMargin = 12;
 
 const formatOctave = (octave: number, lowestOctave?: number) => {
   if (octave === 6) {
@@ -97,14 +98,14 @@ export const drawActiveHole = (
 
   if (!isClosedManer) {
     yPosesReversed.forEach((pos, i) => {
-      if (i <= yPoses.length - yPos.position - 1) {
-        ctx.arc(12, pos + margin, holeRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = mainColors.greyColor;
+      if (i <= yPoses.length - yPos.position - 1 && i >= 1) {
+        ctx.arc(holeLeftMargin, pos + margin, holeRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = i > 0 ? mainColors.greyColor : "#8d4444";
         ctx.fill();
       }
     });
   } else {
-    ctx.arc(18, yPos.yPosInPx + margin, holeRadius, 0, 2 * Math.PI);
+    ctx.arc(holeLeftMargin, yPos.yPosInPx + margin, holeRadius, 0, 2 * Math.PI);
     ctx.fillStyle = mainColors.greyColor;
     ctx.fill();
   }
