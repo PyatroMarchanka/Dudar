@@ -16,6 +16,7 @@ export default ({ setTranspose, label = "Transpose sound" }: Props) => {
     .fill(undefined)
     .map((_, i) => ({ value: i - 12, label: i - 12 }));
   const selectClasses = useSelectStyles();
+  console.log(transposeNote("A", -9));
   return (
     <ModalButton
       buttonLabel={"Transpose"}

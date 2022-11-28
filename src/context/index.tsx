@@ -38,7 +38,7 @@ const initialState: State = {
   midiData: null,
   midi: null,
   progress: 0,
-  activeSong: "Palaestinalied.mid",
+  activeSong: "Saltarello.mid",
   genreList: "medieval",
   tempo: 240,
   showPianoRoll: true,
