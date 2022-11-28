@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { transposeNote } from "../../../interfaces";
 import { SetTransposeType } from "../../../utils/MidiPlayer";
 import { ModalButton } from "../../global/ModalButton";
+import { useSelectStyles } from "../../global/selectStyles";
 
 interface Props {
   setTranspose?: SetTransposeType;
@@ -14,7 +15,7 @@ export default ({ setTranspose, label = "Transpose sound" }: Props) => {
   const options = new Array(24)
     .fill(undefined)
     .map((_, i) => ({ value: i - 12, label: i - 12 }));
-
+  const selectClasses = useSelectStyles();
   return (
     <ModalButton
       buttonLabel={"Transpose"}
@@ -22,6 +23,7 @@ export default ({ setTranspose, label = "Transpose sound" }: Props) => {
         <div>
           <Select
             id="demo-simple-select"
+            className={selectClasses.select}
             value={value}
             onChange={(e) => {
               setTranspose && setTranspose(Number(e.target.value));

@@ -18,6 +18,7 @@ import { noSongsLabel, store } from "../../context";
 import { useSongList } from "../../hooks/useSongLIst";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { formatMidiFileName } from "../../utils/textUtils";
+import { useSelectStyles } from "../global/selectStyles";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,10 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: 0,
       justifyContent: "flex-start",
     },
-    select: {
-      width: "100%",
-    },
-    formControl: {},
   })
 );
 
@@ -59,6 +56,7 @@ export default ({ player }: Props) => {
   };
 
   const classes = useStyles();
+  const selectClasses = useSelectStyles();
   const [open, setOpen] = useState(false);
   const { songList, allLists } = useSongList();
   const genres = Object.keys(allLists);
@@ -71,7 +69,7 @@ export default ({ player }: Props) => {
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent className={classes.content}>
           <Select
-            className={classes.select}
+            className={selectClasses.select}
             value={genreList || ""}
             onChange={(e) => {
               setGenreList(e.target.value as string);
@@ -89,7 +87,7 @@ export default ({ player }: Props) => {
           </Select>
           {genreList && songList?.length && (
             <Select
-              className={classes.select}
+              className={selectClasses.select}
               value={activeSong || ""}
               onChange={(e) => {
                 setActiveSong(e.target.value as string);
