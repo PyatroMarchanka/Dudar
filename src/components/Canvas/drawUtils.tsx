@@ -32,7 +32,17 @@ const yPoses = [
   coeff(44),
   coeff(8),
 ];
-const yPosesReversed = yPoses.reverse();
+const yPosesReversed = [
+  coeff(281),
+  coeff(252),
+  coeff(223),
+  coeff(194),
+  coeff(143),
+  coeff(114),
+  coeff(84),
+  coeff(44),
+  coeff(8),
+].reverse();
 
 const brickhHeight = coeff(22);
 const holeRadius = coeff(5);
