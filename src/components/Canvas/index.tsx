@@ -7,6 +7,8 @@ import { SharpNotes } from "../../interfaces";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { drawBagpipe, drawAll } from "./drawUtils";
 
+const maxCavasWidth = 800;
+
 type Props = {
   player: MidiPlayer | null;
   activeHole: { note: SharpNotes; octave: number } | null;
@@ -69,7 +71,9 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
     <div>
       <CanvasComponent
         height={screenSize.height}
-        width={screenSize.width}
+        width={
+          screenSize.width < maxCavasWidth ? screenSize.width : maxCavasWidth
+        }
         className="canvas"
         ref={canvasRef}
       />
