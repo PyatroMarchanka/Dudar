@@ -32,17 +32,7 @@ const yPoses = [
   coeff(44),
   coeff(8),
 ];
-const yPosesReversed = [
-  coeff(281),
-  coeff(252),
-  coeff(223),
-  coeff(194),
-  coeff(143),
-  coeff(114),
-  coeff(84),
-  coeff(44),
-  coeff(8),
-].reverse();
+const yPosesReversed = yPoses.reverse();
 
 const brickhHeight = coeff(22);
 const holeRadius = coeff(5);
@@ -97,7 +87,9 @@ export const drawActiveHole = (
 
   if (!isClosedManer) {
     yPosesReversed.forEach((pos, i) => {
-      if (i <= yPoses.length - yPos.position - 1) {
+      const isHoleOpen = i <= yPoses.length - yPos.position - 1;
+      const skipfirstHole = i > 0;
+      if (isHoleOpen && skipfirstHole) {
         ctx.arc(12, pos + margin, holeRadius, 0, 2 * Math.PI);
         ctx.fillStyle = mainColors.greyColor;
         ctx.fill();
