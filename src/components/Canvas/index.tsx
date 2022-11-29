@@ -4,6 +4,7 @@ import { mediaQueries } from "../../constants/style";
 import { store } from "../../context";
 import { useNotesMoving } from "../../hooks/useNotesMoving";
 import { SharpNotes } from "../../interfaces";
+import { getBagpipeNotesFromMidi } from "../../utils/bagpipesUtils";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { drawBagpipe, drawAll } from "./drawUtils";
 
@@ -18,7 +19,17 @@ type Props = {
 export default ({ player, activeHole, lowestOctave }: Props) => {
   const { nextNotes, nextToNextNotes, setTick, tick } = useNotesMoving();
   const {
-    state: { showPianoRoll, isPlaying, activeSong, isClosedManer, screenSize },
+    state: {
+      showPianoRoll,
+      isPlaying,
+      activeSong,
+      isClosedManer,
+      screenSize,
+      songNotes,
+      transpose,
+      midiData,
+    },
+    setSongNotes,
   } = useContext(store);
 
   const canvasRef = useRef(null);
@@ -55,7 +66,8 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
         nextNotes,
         nextToNextNotes,
         activeHole,
-        isClosedManer
+        isClosedManer,
+        songNotes
       );
 
       animationFrameId = window.requestAnimationFrame(render);
@@ -65,7 +77,12 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [drawAll, tick, activeHole, lowestOctave]);
+  }, [drawAll, tick, activeHole, lowestOctave, songNotes]);
+
+  useEffect(() => {
+    const bagpipeNotes = getBagpipeNotesFromMidi(midiData!, transpose);
+    setSongNotes(bagpipeNotes);
+  }, [midiData, transpose]);
 
   return (
     <div>

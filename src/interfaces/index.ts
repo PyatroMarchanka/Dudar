@@ -39,20 +39,9 @@ export type SharpNotes =
   | "F#"
   | "G"
   | "G#";
-type SharpMap = {
+
+export type SharpMap = {
   [key: string]: Notes;
-};
-
-export const convertToSharp = (note: Notes): SharpNotes => {
-  const map: SharpMap = {
-    Bb: "A#",
-    Db: "C#",
-    Eb: "D#",
-    Gb: "F#",
-    Ab: "G#",
-  };
-
-  return (note in map ? map[note as keyof SharpMap] : note) as SharpNotes;
 };
 
 export function transposeNote(note: SharpNotes, step: number): SharpNotes {

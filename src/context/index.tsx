@@ -1,5 +1,6 @@
 import { Midi } from "@tonejs/midi";
 import React, { createContext, useReducer } from "react";
+import { SharpNotes } from "../interfaces";
 
 interface Action {
   type:
@@ -13,7 +14,9 @@ interface Action {
     | "SET_GENRE_LIST"
     | "SET_ALL_LISTS"
     | "SET_SIZE"
-    | "SET_IS_CLOSED_MANER";
+    | "SET_TRANSPOSE"
+    | "SET_IS_CLOSED_MANER"
+    | "SET_SONG_NOTES";
 
   payload?: any;
 }
@@ -22,6 +25,7 @@ export const noSongsLabel = "No song selected";
 
 interface State {
   midiData: Midi | null;
+  songNotes: SharpNotes[] | null;
   midi: ArrayBuffer | null;
   activeSong: string | undefined;
   progress?: number;
@@ -32,10 +36,12 @@ interface State {
   allLists: any;
   isClosedManer: boolean;
   screenSize: { width: number; height: number };
+  transpose: number;
 }
 
 const initialState: State = {
   midiData: null,
+  songNotes: null,
   midi: null,
   progress: 0,
   activeSong: "Saltarello.mid",
@@ -46,6 +52,7 @@ const initialState: State = {
   allLists: {},
   isClosedManer: false,
   screenSize: { width: 400, height: 500 },
+  transpose: 0,
 };
 
 interface Context {
@@ -62,6 +69,8 @@ interface Context {
   setAllLists: (lists: any) => void;
   setIsClosedManer: (bool: boolean) => void;
   setScreenSize: (size: { width: number; height: number }) => void;
+  setTranspose: (num: number) => void;
+  setSongNotes: (notes: SharpNotes[]) => void;
 }
 
 const store = createContext<Context>({
@@ -78,6 +87,8 @@ const store = createContext<Context>({
   setAllLists: (lists: any) => {},
   setIsClosedManer: (bool: boolean) => {},
   setScreenSize: (size: { width: number; height: number }) => {},
+  setTranspose: (num: number) => {},
+  setSongNotes: (notes: SharpNotes[]) => {},
 });
 const { Provider } = store;
 
@@ -158,6 +169,18 @@ const ContextProvider = ({ children }: any) => {
           isClosedManer: action.payload,
         };
 
+      case "SET_TRANSPOSE":
+        return {
+          ...state,
+          transpose: action.payload,
+        };
+
+      case "SET_SONG_NOTES":
+        return {
+          ...state,
+          songNotes: action.payload,
+        };
+
       default:
         return state;
     }
@@ -209,6 +232,14 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_SIZE", payload: size });
   };
 
+  const setTranspose = (num: number) => {
+    dispatch({ type: "SET_TRANSPOSE", payload: num });
+  };
+
+  const setSongNotes = (songNotes: SharpNotes[]) => {
+    dispatch({ type: "SET_SONG_NOTES", payload: songNotes });
+  };
+
   return (
     <Provider
       value={{
@@ -225,6 +256,8 @@ const ContextProvider = ({ children }: any) => {
         setAllLists,
         setIsClosedManer,
         setScreenSize,
+        setTranspose,
+        setSongNotes,
       }}
     >
       {children}

@@ -1,4 +1,6 @@
+import { Midi } from "@tonejs/midi";
 import { Modes, SharpNotes, transposeNote } from "../interfaces/index";
+import { convertToSharp, getSongNotesFromMidi } from "./midiUtils";
 
 interface BagpipeNotesSteps {
   main: number[];
@@ -78,4 +80,33 @@ export const getBagpipeData = (mode: Modes, tone: SharpNotes): BagpipeNotes => {
   const steps = getBagpipeNotesSteps(mode);
   const notes = getBagpipeNotes(tone, steps);
   return notes;
+};
+
+const getModeFromMidi = (midi: Midi, transpose: number) => {
+  const songNotes = getSongNotesFromMidi(midi).map(convertToSharp);
+
+  if (songNotes.includes(transposeNote("C#", transpose))) {
+    return songNotes.includes(transposeNote("G", transpose))
+      ? Modes.Mixolidian
+      : Modes.Ionian;
+  }
+
+  if (songNotes.includes(transposeNote("C", transpose))) {
+    return songNotes.includes(transposeNote("F#", transpose))
+      ? Modes.Dorian
+      : Modes.Eolian;
+  }
+
+  return Modes.Dorian;
+};
+
+export const getBagpipeNotesFromMidi = (
+  midi: Midi,
+  transpose: number
+): SharpNotes[] => {
+  const tone = transposeNote("A", transpose);
+  const mode = getModeFromMidi(midi, transpose);
+  const { main: songNotes } = getBagpipeData(mode, tone);
+
+  return [songNotes[songNotes.length - 1], ...songNotes, songNotes[0]];
 };

@@ -1,5 +1,4 @@
 import { Note } from "@tonejs/midi/dist/Note";
-import { mediaQueries } from "../../constants/style";
 import { SharpNotes } from "../../interfaces";
 import { mainColors } from "../../utils/theme";
 
@@ -125,6 +124,7 @@ export const drawNote = (
   }
 
   const startPos = start * notesScale - tick * notesScale;
+
   if (startPos < 0) {
     ctx.fillStyle = mainColors.yellow;
   } else {
@@ -187,10 +187,16 @@ export const drawBagpipe = (ctx: CanvasRenderingContext2D) => {
   ctx.drawImage(image, 0, 0, width, height);
 };
 
-const drawLines = (ctx: CanvasRenderingContext2D) => {
+const drawLines = (ctx: CanvasRenderingContext2D, songNotes: SharpNotes[]) => {
   ctx.fillStyle = "#eaeaea";
   yPoses.forEach((yPos) => {
     ctx.fillRect(0, yPos, window.innerWidth, brickhHeight);
+  });
+
+  ctx.fillStyle = "#000000";
+  yPoses.forEach((yPos, i) => {
+    ctx.font = "15px Arial";
+    songNotes?.[i] && ctx.fillText(songNotes[i], 30, yPos + 14);
   });
 };
 
@@ -201,10 +207,11 @@ export const drawAll = (
   nextNotes?: Note[],
   nextToNextNotes?: Note[],
   activeHole?: { note: SharpNotes; octave: number } | null,
-  isClosedManer?: boolean
+  isClosedManer?: boolean,
+  songNotes?: SharpNotes[] | null
 ) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  drawLines(ctx);
+  drawLines(ctx, songNotes!);
   drawNotes(ctx, tick, nextNotes, nextToNextNotes);
   drawBagpipe(ctx!);
   drawActiveHole(ctx!, lowestOctave, activeHole, isClosedManer);

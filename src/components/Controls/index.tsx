@@ -18,6 +18,7 @@ export const Dudar = () => {
     state: { activeSong },
     setProgress,
     setScreenSize,
+    setTranspose: setTransposeCtx,
   } = useContext(store);
 
   const [activeNote, setActiveNote] = useState<{
@@ -49,6 +50,11 @@ export const Dudar = () => {
     return () => window.removeEventListener("resize", setDimensions);
   }, []);
 
+  const setTranspose = (num: number) => {
+    setTransposeCtx(num);
+    midiPlayer?.setTranspose(num);
+  };
+
   return (
     <Container>
       <GlobalStyle />
@@ -60,7 +66,7 @@ export const Dudar = () => {
           </Inputs>
           <Inputs>
             <Column>
-              <Transpose setTranspose={midiPlayer?.setTranspose} />
+              <Transpose setTranspose={setTranspose} />
               <SongList player={midiPlayer} />
               <TempoSlider player={midiPlayer} />
               <ManerCheckBox />
