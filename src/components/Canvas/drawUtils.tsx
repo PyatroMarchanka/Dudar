@@ -46,7 +46,7 @@ const yPosesReversed = [
 const brickhHeight = coeff(22);
 const holeRadius = coeff(5);
 const notesScale = 0.3;
-const holeLeftMargin = 12;
+const holeLeftMargin = 52;
 
 const formatOctave = (octave: number, lowestOctave?: number) => {
   if (octave === 6) {
@@ -93,18 +93,24 @@ export const drawActiveHole = (
   if (!yPos?.yPosInPx) {
     return;
   }
-  const margin = coeff(11);
+  const topMargin = coeff(11);
 
   if (!isClosedManer) {
     yPosesReversed.forEach((pos, i) => {
       if (i <= yPoses.length - yPos.position - 1 && i >= 1) {
-        ctx.arc(holeLeftMargin, pos + margin, holeRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = i > 0 ? mainColors.greyColor : "#8d4444";
+        ctx.arc(holeLeftMargin, pos + topMargin, holeRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = mainColors.greyColor;
         ctx.fill();
       }
     });
   } else {
-    ctx.arc(holeLeftMargin, yPos.yPosInPx + margin, holeRadius, 0, 2 * Math.PI);
+    ctx.arc(
+      holeLeftMargin,
+      yPos.yPosInPx + topMargin,
+      holeRadius,
+      0,
+      2 * Math.PI
+    );
     ctx.fillStyle = mainColors.greyColor;
     ctx.fill();
   }
@@ -122,10 +128,11 @@ export const drawNote = (
   if (!y?.yPosInPx) {
     return;
   }
+  const brickLeftMargin = 55;
 
-  const startPos = start * notesScale - tick * notesScale;
+  const startPos = start * notesScale - tick * notesScale + brickLeftMargin;
 
-  if (startPos < 0) {
+  if (startPos < brickLeftMargin) {
     ctx.fillStyle = mainColors.yellow;
   } else {
     ctx.fillStyle = "#5a5a5a";
@@ -133,7 +140,6 @@ export const drawNote = (
   ctx.strokeStyle = "#ffffff";
   ctx.lineWidth = coeff(5);
   ctx.stroke();
-
   ctx.fillRect(startPos, y.yPosInPx, dur * notesScale, brickhHeight);
 
   ctx.strokeRect(startPos, y.yPosInPx, dur * notesScale, brickhHeight);
@@ -174,29 +180,38 @@ export const drawNotes = (
   ctx.fill();
 };
 
-const imageScale = 30 / 275;
-const width = coeff(40);
+const imageScale = 145 / 587;
+const width = coeff(90);
 
-export const drawBagpipe = (ctx: CanvasRenderingContext2D) => {
+export const drawBagpipe = (
+  ctx: CanvasRenderingContext2D,
+  songNotes?: SharpNotes[]
+) => {
   const image = new Image();
-  image.src = "/images/half-duda-mono-30px-275px.png";
+  image.src = "/images/bagpipe.png";
 
   ctx.fillStyle = "#ffffff";
 
   const height = width / imageScale;
   ctx.drawImage(image, 0, 0, width, height);
+
+  if (!songNotes) {
+    return;
+  }
+
+  // DRAW NOTES NAMES
+  ctx.fillStyle = "#000000";
+  const textLeftMargin = 6;
+  yPoses.forEach((yPos, i) => {
+    ctx.font = "15px Arial";
+    songNotes?.[i] && ctx.fillText(songNotes[i], textLeftMargin, yPos + 14);
+  });
 };
 
-const drawLines = (ctx: CanvasRenderingContext2D, songNotes: SharpNotes[]) => {
+const drawLines = (ctx: CanvasRenderingContext2D) => {
   ctx.fillStyle = "#eaeaea";
   yPoses.forEach((yPos) => {
     ctx.fillRect(0, yPos, window.innerWidth, brickhHeight);
-  });
-
-  ctx.fillStyle = "#000000";
-  yPoses.forEach((yPos, i) => {
-    ctx.font = "15px Arial";
-    songNotes?.[i] && ctx.fillText(songNotes[i], 30, yPos + 14);
   });
 };
 
@@ -211,8 +226,8 @@ export const drawAll = (
   songNotes?: SharpNotes[] | null
 ) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  drawLines(ctx, songNotes!);
+  drawLines(ctx);
   drawNotes(ctx, tick, nextNotes, nextToNextNotes);
-  drawBagpipe(ctx!);
+  drawBagpipe(ctx!, songNotes!);
   drawActiveHole(ctx!, lowestOctave, activeHole, isClosedManer);
 };
