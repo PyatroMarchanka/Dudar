@@ -10,7 +10,6 @@ function App() {
   useEffect(() => {
     const OS = detectOS();
     setOS(OS);
-    window.screen.orientation.lock("landscape-primary");
   }, []);
 
   return (

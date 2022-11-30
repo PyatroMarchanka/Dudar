@@ -12,6 +12,7 @@ import { mediaQueries } from "../../constants/style";
 import { formatMidiFileName } from "../../utils/textUtils";
 import Canvas from "../Canvas";
 import ManerCheckBox from "./ManerCheckBox";
+import LandscapeAlert from "../global/LandscapeAlert";
 
 export const Dudar = () => {
   const {
@@ -58,6 +59,7 @@ export const Dudar = () => {
   return (
     <Container>
       <GlobalStyle />
+      <LandscapeAlert />
       <Header>
         <h3>{formatMidiFileName(activeSong!) || noSongsLabel}</h3>
         <Row>
