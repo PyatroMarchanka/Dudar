@@ -6,8 +6,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import styled from "styled-components";
-import { mediaQueries } from "../../constants/style";
 import { landscapeAlertId } from "../../constants/localStorage";
+import { Icon } from "./Icon";
 
 export default function LandscapeAlert() {
   const [open, setOpen] = React.useState(true);
@@ -34,6 +34,7 @@ export default function LandscapeAlert() {
       >
         <DialogTitle id="alert-dialog-title">
           {"Rotate your device"}
+          <Icon type="rotate"></Icon>
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
