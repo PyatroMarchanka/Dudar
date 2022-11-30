@@ -34,8 +34,10 @@ export default function LandscapeAlert() {
       >
         <DialogTitle id="alert-dialog-title">
           {"Rotate your device"}
-          <Icon type="rotate"></Icon>
         </DialogTitle>
+        <IconContainer>
+          <Icon className="icon" type="rotate"></Icon>
+        </IconContainer>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             For better experience use landscape mode
@@ -52,3 +54,16 @@ export default function LandscapeAlert() {
 }
 
 const Container = styled.div``;
+
+const IconContainer = styled.div`
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+
+  svg.icon {
+     {
+      width: 100px;
+      height: 100px;
+    }
+  }
+`;

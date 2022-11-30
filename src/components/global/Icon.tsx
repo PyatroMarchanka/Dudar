@@ -201,6 +201,7 @@ export const Icon = styled(
             x="0px"
             y="0px"
             viewBox="0 0 122.88 106.43"
+            className={className}
             // style={{ enableBackground: "new 0 0 122.88 106.43" }}
           >
             <style type="text/css">
