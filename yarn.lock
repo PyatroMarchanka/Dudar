@@ -8799,7 +8799,7 @@
     "braces" "^3.0.2"
     "picomatch" "^2.3.1"
 
-"midi-file@^1.1.2":
+"midi-file@^1.1.2", "midi-file@^1.2.3":
   "integrity" "sha512-JsOv9cajkVkR1gbL9Jvplz6X4lPuyVfcci0kSLzXZ2WKs7TJF72m9U5rmp45/H/1As+96dXY8xgvNLiIfGOU4w=="
   "resolved" "https://registry.npmjs.org/midi-file/-/midi-file-1.2.3.tgz"
   "version" "1.2.3"
