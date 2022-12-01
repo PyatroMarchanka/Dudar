@@ -9,7 +9,11 @@ import styled from "styled-components";
 import { landscapeAlertId } from "../../constants/localStorage";
 import { Icon } from "./Icon";
 
-export default function LandscapeAlert() {
+interface Props {
+  isMobile: boolean;
+}
+
+export default function LandscapeAlert({ isMobile }: Props) {
   const [open, setOpen] = React.useState(true);
 
   const handleClose = () => {
@@ -20,7 +24,7 @@ export default function LandscapeAlert() {
   useEffect(() => {
     const isAlertClosed = localStorage.getItem(landscapeAlertId);
 
-    if (isAlertClosed) {
+    if (isAlertClosed && isMobile) {
       handleClose();
     }
   }, []);

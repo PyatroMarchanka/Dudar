@@ -8,15 +8,16 @@ import SongList from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
 import { TempoSlider } from "./TempoSlider";
-import { mediaQueries } from "../../constants/style";
+import { mediaQueries, numberQueries } from "../../constants/style";
 import { formatMidiFileName } from "../../utils/textUtils";
 import Canvas from "../Canvas";
 import ManerCheckBox from "./ManerCheckBox";
 import LandscapeAlert from "../global/LandscapeAlert";
+import { landscapeAlertId } from "../../constants/localStorage";
 
 export const Dudar = () => {
   const {
-    state: { activeSong },
+    state: { activeSong, screenSize },
     setProgress,
     setScreenSize,
     setTranspose: setTransposeCtx,
@@ -41,6 +42,9 @@ export const Dudar = () => {
   const setDimensions = () => {
     const height = window.innerHeight;
     const width = window.innerWidth;
+    if (width > 600) {
+      localStorage.setItem(landscapeAlertId, "closed");
+    }
 
     setScreenSize({ width, height });
   };
@@ -59,7 +63,7 @@ export const Dudar = () => {
   return (
     <Container>
       <GlobalStyle />
-      <LandscapeAlert />
+      <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} />
       <Header>
         <h3>{formatMidiFileName(activeSong!) || noSongsLabel}</h3>
         <Row>

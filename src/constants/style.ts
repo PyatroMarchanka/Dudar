@@ -20,3 +20,8 @@ export const mediaQueries = {
     iphone4: "480px",
   },
 };
+
+export const numberQueries = {
+  mobile: 600,
+  iPhonePlus: 414,
+};
