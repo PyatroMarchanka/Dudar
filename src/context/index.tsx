@@ -5,6 +5,7 @@ import { SharpNotes } from "../interfaces";
 interface Action {
   type:
     | "SET_MIDI"
+    | "SET_METRONOME"
     | "SET_MIDI_DATA"
     | "SET_ACTIVE_SONG"
     | "SET_PROGRESS"
@@ -27,6 +28,7 @@ interface State {
   midiData: Midi | null;
   songNotes: SharpNotes[] | null;
   midi: ArrayBuffer | null;
+  metronome: boolean;
   activeSong: string | undefined;
   progress?: number;
   tempo: number;
@@ -40,6 +42,7 @@ interface State {
 }
 
 const initialState: State = {
+  metronome: true,
   midiData: null,
   songNotes: null,
   midi: null,
@@ -59,6 +62,7 @@ interface Context {
   state: State;
   dispatch: (action: Action) => void;
   setMidi: (midi: ArrayBuffer) => void;
+  setMetronome: (bool: boolean) => void;
   setMidiData: (midi: Midi) => void;
   setActiveSong: (fileName: string) => void;
   setProgress: (percent: number) => void;
@@ -77,6 +81,7 @@ const store = createContext<Context>({
   state: initialState,
   dispatch: () => {},
   setMidi: (midi: ArrayBuffer) => {},
+  setMetronome: (bool: boolean) => {},
   setMidiData: (midi: Midi) => {},
   setActiveSong: (fileName: string) => {},
   setProgress: (percent: number) => {},
@@ -99,6 +104,12 @@ const ContextProvider = ({ children }: any) => {
         return {
           ...state,
           midi: action.payload,
+        };
+
+      case "SET_METRONOME":
+        return {
+          ...state,
+          metronome: action.payload,
         };
 
       case "SET_MIDI_DATA":
@@ -190,6 +201,10 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_MIDI", payload: midi });
   };
 
+  const setMetronome = (bool: boolean) => {
+    dispatch({ type: "SET_METRONOME", payload: bool });
+  };
+
   const setMidiData = (midi: Midi) => {
     dispatch({ type: "SET_MIDI_DATA", payload: midi });
   };
@@ -258,6 +273,7 @@ const ContextProvider = ({ children }: any) => {
         setScreenSize,
         setTranspose,
         setSongNotes,
+        setMetronome,
       }}
     >
       {children}
