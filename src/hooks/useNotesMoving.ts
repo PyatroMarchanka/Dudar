@@ -11,7 +11,7 @@ const getNotesChunks = (notes: Note[]) => {
   let max = screenWitdh;
 
   notes.forEach((note) => {
-    if (note.ticks > min && note.ticks <= max) {
+    if (note.ticks >= min && note.ticks <= max) {
       result[result.length - 1].push(note);
     } else if (note.ticks > max) {
       min = max;

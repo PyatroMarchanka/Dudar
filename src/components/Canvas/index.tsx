@@ -18,6 +18,13 @@ type Props = {
 
 export default ({ player, activeHole, lowestOctave }: Props) => {
   const { nextNotes, nextToNextNotes, setTick, tick } = useNotesMoving();
+  // console.log(
+  //   "nextNotes",
+  //   nextNotes?.reduce(
+  //     (acc, cur) => acc + " " + (cur.pitch + `${cur.octave}`),
+  //     ""
+  //   )
+  // );
   const {
     state: {
       showPianoRoll,
