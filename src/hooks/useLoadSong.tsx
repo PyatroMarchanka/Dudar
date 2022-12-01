@@ -1,7 +1,7 @@
 import { Midi } from "@tonejs/midi";
 import { useContext, useEffect, useState } from "react";
 import { store } from "../context";
-import { fixMidiDataOctaves } from "../utils/midiUtils";
+import { addMetronome, fixMidiDataOctaves } from "../utils/midiUtils";
 
 export const useLoadSong = () => {
   const {
@@ -27,11 +27,15 @@ export const useLoadSong = () => {
 
       const file = await fetch(`midi/${genreList}/${fileName}`);
       const buffer = await file.arrayBuffer();
-      const midi = new Midi(buffer);
+
+      const songWithMetronome = await addMetronome(buffer);
+
+      const midi = new Midi(songWithMetronome);
+
       const { lowestOctave: lowestOctaveFromFile } = fixMidiDataOctaves(midi);
       setLowestOctave(lowestOctaveFromFile);
       setMidiData(midi);
-      setMidi(buffer);
+      setMidi(songWithMetronome);
     } catch (error) {
       console.log(error);
     }

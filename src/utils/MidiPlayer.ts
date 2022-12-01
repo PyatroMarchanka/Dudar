@@ -16,8 +16,10 @@ Player.on("endOfFile", function () {
 });
 
 const bagpipeChanter = 1166;
+const metronomeTick = 1219;
+
 const drone = 731;
-export const bagpipeInstr = [bagpipeChanter, drone];
+export const bagpipeInstr = [bagpipeChanter, metronomeTick, drone];
 
 export class MidiPlayer {
   playRef: any;
@@ -53,10 +55,14 @@ export class MidiPlayer {
     });
 
     Player.on("midiEvent", (event: any) => {
-      if (event.name === "Note on") {
+      if (event.name === "Note on" && event.noteNumber !== 33) {
         this.keyDown(event.noteNumber, event.noteNumber);
         handleNote(event);
         this.checkTempo(this.bpm);
+      }
+
+      if (event.noteNumber === 33) {
+        this.keyDown(65, 65, metronomeTick, 2);
       }
 
       if (event.name === "Note off") {
@@ -70,9 +76,7 @@ export class MidiPlayer {
     });
   };
 
-  keyDown(note: number, tick: number, instrument = bagpipeChanter) {
-    let volume = 1;
-
+  keyDown(note: number, tick: number, instrument = bagpipeChanter, volume = 1) {
     this.envelopes[tick] = this.playRef.current?.player.queueWaveTable(
       this.playRef.current?.audioContext,
       this.playRef.current?.equalizer.input,
