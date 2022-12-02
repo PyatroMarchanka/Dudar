@@ -28,12 +28,14 @@ export class MidiPlayer {
   envelopes: any[];
   transpose: number = 0;
   droneNote: number = 46;
+  metronom: boolean = true;
   handleNotesMoving?: NotesMovingHandler;
 
-  constructor(playRef: any, bpm: number) {
+  constructor(playRef: any, bpm: number, metronom: boolean) {
     this.playRef = playRef;
     this.bpm = bpm;
     this.envelopes = [];
+    this.metronom = metronom;
 
     if (this.playRef.current) {
       this.playRef.current?.setBand256(-5);
@@ -61,7 +63,7 @@ export class MidiPlayer {
         this.checkTempo(this.bpm);
       }
 
-      if (event.noteNumber === 33) {
+      if (event.noteNumber === 33 && this.metronom) {
         this.keyDown(65, 65, metronomeTick, 2);
       }
 

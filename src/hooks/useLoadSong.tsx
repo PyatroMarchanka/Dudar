@@ -5,7 +5,7 @@ import { addMetronome, fixMidiDataOctaves } from "../utils/midiUtils";
 
 export const useLoadSong = () => {
   const {
-    state: { activeSong, genreList, allLists },
+    state: { activeSong, genreList, allLists, metronome },
     setMidi,
     setMidiData,
   } = useContext(store);
@@ -45,7 +45,7 @@ export const useLoadSong = () => {
     if (activeSong) {
       loadMidiSong(activeSong);
     }
-  }, [activeSong, genreList, allLists]);
+  }, [activeSong, genreList, allLists, metronome]);
 
   return { lowestOctave };
 };

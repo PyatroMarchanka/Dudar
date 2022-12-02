@@ -3,6 +3,7 @@ import {
   createStyles,
   Dialog,
   DialogContent,
+  IconButton,
   makeStyles,
   Slider,
   Typography,
@@ -25,8 +26,9 @@ const useStyles = makeStyles(() =>
 
 export const TempoSlider = ({ player }: Props) => {
   const {
-    state: { tempo },
+    state: { tempo, metronome },
     setTempo,
+    setMetronome,
   } = useContext(store);
 
   const classes = useStyles();
@@ -57,6 +59,13 @@ export const TempoSlider = ({ player }: Props) => {
             min={60}
             max={360}
           />
+          <Button
+            size="small"
+            variant={metronome ? "contained" : "outlined"}
+            onClick={() => setMetronome(!metronome)}
+          >
+            Metronome
+          </Button>
         </DialogContent>
       </Dialog>
     </>
