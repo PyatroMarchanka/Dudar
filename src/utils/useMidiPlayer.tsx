@@ -33,7 +33,8 @@ export const useMidiPlayer = (
   );
 
   const switchIsPlaying = () => {
-    setIsPlaying(isPlaying);
+    console.log("switchIsPlaying", isPlaying);
+    setIsPlaying(false);
   };
 
   useEffect(() => {
