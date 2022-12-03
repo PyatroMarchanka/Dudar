@@ -17,7 +17,7 @@ import { landscapeAlertId } from "../../constants/localStorage";
 
 export const Dudar = () => {
   const {
-    state: { activeSong, screenSize },
+    state: { activeSong, screenSize, transpose },
     setProgress,
     setScreenSize,
     setTranspose: setTransposeCtx,
@@ -49,16 +49,21 @@ export const Dudar = () => {
     setScreenSize({ width, height });
   };
 
-  useEffect(() => {
-    setDimensions();
-    window.addEventListener("resize", setDimensions);
-    return () => window.removeEventListener("resize", setDimensions);
-  }, []);
-
   const setTranspose = (num: number) => {
     setTransposeCtx(num);
     midiPlayer?.setTranspose(num);
   };
+
+  useEffect(() => {
+    setDimensions();
+    window.addEventListener("resize", setDimensions);
+
+    return () => window.removeEventListener("resize", setDimensions);
+  }, []);
+
+  useEffect(() => {
+    setTranspose(transpose);
+  }, [midiPlayer]);
 
   return (
     <Container>
@@ -66,16 +71,16 @@ export const Dudar = () => {
       <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} />
       <Header>
         <h3>{formatMidiFileName(activeSong!) || noSongsLabel}</h3>
-        {/* <Row>
+        <Row>
           <Inputs>
             <Column>
-              <Transpose setTranspose={setTranspose} />
+              <Transpose transpose={transpose} setTranspose={setTranspose} />
               <SongList player={midiPlayer} />
               <TempoSlider player={midiPlayer} />
               <ManerCheckBox />
             </Column>
           </Inputs>
-        </Row> */}
+        </Row>
       </Header>
       <BagpipeContainer className={"center"}>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}

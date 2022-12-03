@@ -25,17 +25,17 @@ const brickhHeight = coeff(22);
 const brickHeightHalf = brickhHeight / 2;
 const lineHeight = 2;
 const holeRadius = coeff(10);
-const holeImageRadius = coeff(35);
+const holeImageRadius = coeff(38);
 const holeImageRadiusHalf = holeImageRadius / 2;
 const notesScale = 0.3;
 const holeLeftMargin = 25;
 const lastHoleLeftMargin = holeLeftMargin - 20;
 
-const noteNameLeftMargin = 32;
+const noteNameLeftMargin = 33;
 const lastNoteNameLeftMargin = lastHoleLeftMargin + 8;
 
 const yPoses = [
-  coeff(580),
+  coeff(600),
   coeff(534),
   coeff(478),
   coeff(422),
@@ -46,7 +46,7 @@ const yPoses = [
   coeff(100),
 ].reverse();
 const yPosesReversed = [
-  coeff(580),
+  coeff(600),
   coeff(534),
   coeff(478),
   coeff(422),
@@ -100,6 +100,9 @@ closedHoleImage.src = "/images/piston_closed.png";
 const backClosedHoleImage = new Image();
 backClosedHoleImage.src = "/images/piston_back_closed.png";
 
+const blowImage = new Image();
+blowImage.src = "/images/blow.png";
+
 export const drawActiveHoles = (
   ctx: CanvasRenderingContext2D,
   lowestOctave: number,
@@ -145,6 +148,7 @@ export const drawActiveHoles = (
   }
 };
 const holes = yPosesReversed.slice(1);
+const blowImageYPos = yPoses[yPoses.length - 1];
 
 const drawClosedNotes = (ctx: CanvasRenderingContext2D) => {
   const topMargin = holeImageRadiusHalf;
@@ -157,11 +161,20 @@ const drawClosedNotes = (ctx: CanvasRenderingContext2D) => {
       holeImageRadius,
       holeImageRadius
     );
+
     // if (i === lastIdx) {
     // } else {
 
     // }
   });
+
+  ctx.drawImage(
+    blowImage,
+    holeLeftMargin,
+    blowImageYPos - 30,
+    holeImageRadius,
+    holeImageRadius
+  );
 };
 
 export const drawNote = (
@@ -229,10 +242,16 @@ export const drawNotes = (
   ctx.fill();
 };
 
+const drawShadow = (ctx: CanvasRenderingContext2D) => {
+  const backgoundImage = new Image();
+  backgoundImage.src = "/images/BG.png";
+  ctx.drawImage(backgoundImage, -10, -60, widthBackground, heightBackground);
+};
+
 const imageScale = 200 / 896;
 const backgroundScale = 414 / 896;
 
-const width = coeff(170);
+const width = coeff(190);
 const height = width / imageScale;
 
 const widthBackground = coeff(400);
@@ -246,7 +265,9 @@ export const drawBagpipe = (
   songNotes?: SharpNotes[]
 ) => {
   ctx.fillStyle = "#ffffff";
-  ctx.drawImage(image, -31, -30, width, height);
+  ctx.fillRect(0, 0, 30, height);
+
+  ctx.drawImage(image, -38, -30, width, height);
 
   if (!songNotes) {
     return;
@@ -265,20 +286,14 @@ const drawNotesNames = (
   const pushedHoleIndex = yPoses.length - 2;
 
   yPoses.forEach((yPos, i) => {
-    ctx.font = "bold 15px Arial";
+    ctx.font = "bold 13px Arial";
     songNotes?.[i] &&
       ctx.fillText(
         songNotes[i],
         i === pushedHoleIndex ? lastNoteNameLeftMargin : noteNameLeftMargin,
-        yPos + 6
+        i === yPoses.length - 1 ? yPos + 25 : yPos + 6
       );
   });
-};
-
-const drawShadow = (ctx: CanvasRenderingContext2D) => {
-  const backgoundImage = new Image();
-  backgoundImage.src = "/images/BG.png";
-  ctx.drawImage(backgoundImage, -10, -40, widthBackground, heightBackground);
 };
 
 const drawLines = (ctx: CanvasRenderingContext2D) => {

@@ -44,15 +44,15 @@ const initialState: State = {
   songNotes: null,
   midi: null,
   progress: 0,
-  activeSong: "Saltarello.mid",
-  genreList: "medieval",
-  tempo: 240,
+  activeSong: "Verabey.mid",
+  genreList: "belarussian",
+  tempo: 200,
   showPianoRoll: true,
   isPlaying: false,
   allLists: {},
   isClosedManer: false,
   screenSize: { width: 400, height: 500 },
-  transpose: 0,
+  transpose: -1,
 };
 
 interface Context {
