@@ -343,5 +343,6 @@ export const theme = {
 
 export const mainColors = {
   yellow: "#ffcc00",
-  greyColor: "#585858",
+  greyColor: "#D6D6D6",
+  red: "#F12425",
 };

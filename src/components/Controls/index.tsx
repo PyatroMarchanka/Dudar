@@ -66,10 +66,7 @@ export const Dudar = () => {
       <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} />
       <Header>
         <h3>{formatMidiFileName(activeSong!) || noSongsLabel}</h3>
-        <Row>
-          <Inputs>
-            <PlayerControls player={midiPlayer} />
-          </Inputs>
+        {/* <Row>
           <Inputs>
             <Column>
               <Transpose setTranspose={setTranspose} />
@@ -78,7 +75,7 @@ export const Dudar = () => {
               <ManerCheckBox />
             </Column>
           </Inputs>
-        </Row>
+        </Row> */}
       </Header>
       <BagpipeContainer className={"center"}>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
@@ -88,6 +85,9 @@ export const Dudar = () => {
           lowestOctave={lowestOctave}
         />
       </BagpipeContainer>
+      <Inputs>
+        <PlayerControls player={midiPlayer} />
+      </Inputs>
       <Link className="last">
         <a href="https://github.com/PyatroMarchanka/Dudar">
           <i className="fa fa-github fa_custom"></i>
@@ -151,7 +151,7 @@ const Header = styled.div`
     margin: 0;
   }
   padding: 5px 0;
-  border-bottom: 1px solid black;
+  /* border-bottom: 1px solid black; */
 `;
 
 const Row = styled.div`
