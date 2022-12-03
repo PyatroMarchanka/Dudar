@@ -136,15 +136,13 @@ export const drawActiveHoles = (
       }
     });
   } else {
-    ctx.arc(
+    ctx.drawImage(
+      activeHoleImage,
       holeLeftMargin,
-      yPos.yPosInPx + topMargin,
-      holeRadius,
-      0,
-      2 * Math.PI
+      yPos.yPosInPx - topMargin,
+      holeImageRadius,
+      holeImageRadius
     );
-    ctx.fillStyle = mainColors.red;
-    ctx.fill();
   }
 };
 const holes = yPosesReversed.slice(1);
