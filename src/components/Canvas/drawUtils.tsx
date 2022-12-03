@@ -312,5 +312,5 @@ export const drawAll = (
   drawNotes(ctx, tick, nextNotes, nextToNextNotes);
   drawBagpipe(ctx!, songNotes!);
   drawActiveHoles(ctx!, lowestOctave, activeHole, isClosedManer);
-  drawNotesNames(ctx!, songNotes!);
+  // drawNotesNames(ctx!, songNotes!);
 };
