@@ -159,11 +159,6 @@ const drawClosedNotes = (ctx: CanvasRenderingContext2D) => {
       holeImageRadius,
       holeImageRadius
     );
-
-    // if (i === lastIdx) {
-    // } else {
-
-    // }
   });
 
   ctx.drawImage(
