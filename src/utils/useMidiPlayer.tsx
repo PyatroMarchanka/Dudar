@@ -33,6 +33,7 @@ export const useMidiPlayer = (
   );
 
   const switchIsPlaying = () => {
+    console.log("switchIsPlaying", isPlaying);
     setIsPlaying(false);
   };
 
