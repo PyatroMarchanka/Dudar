@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogTitle,
   FormControl,
+  IconButton,
   Input,
   InputLabel,
   makeStyles,
@@ -14,10 +15,13 @@ import {
   Theme,
 } from "@material-ui/core";
 import React, { useContext, useState } from "react";
+import styled from "styled-components";
 import { noSongsLabel, store } from "../../context";
 import { useSongList } from "../../hooks/useSongLIst";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { formatMidiFileName } from "../../utils/textUtils";
+import { theme } from "../../utils/theme";
+import { Icon } from "../global/Icon";
 import { useSelectStyles } from "../global/selectStyles";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -62,10 +66,10 @@ export default ({ player }: Props) => {
   const genres = Object.keys(allLists);
 
   return (
-    <>
-      <Button size="small" variant="outlined" onClick={() => setOpen(true)}>
-        Songs
-      </Button>
+    <Container>
+      <IconButton onClick={() => setOpen(true)} className="icon">
+        <Icon type="hamb" fill={theme.colors.black} className="play-icon" />
+      </IconButton>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent className={classes.content}>
           <Select
@@ -111,6 +115,11 @@ export default ({ player }: Props) => {
           )}
         </DialogContent>
       </Dialog>
-    </>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  /* position: absolute;
+  z-index: 12; */
+`;

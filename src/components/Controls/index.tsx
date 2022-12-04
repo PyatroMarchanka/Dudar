@@ -14,6 +14,9 @@ import Canvas from "../Canvas";
 import ManerCheckBox from "./ManerCheckBox";
 import LandscapeAlert from "../global/LandscapeAlert";
 import { landscapeAlertId } from "../../constants/localStorage";
+import { IconButton } from "@material-ui/core";
+import { Icon } from "../global/Icon";
+import { theme } from "../../utils/theme";
 
 export const Dudar = () => {
   const {
@@ -68,10 +71,14 @@ export const Dudar = () => {
   return (
     <Container>
       <GlobalStyle />
+      <SettingsButtons>
+        <SongList player={midiPlayer} />
+        <Transpose transpose={transpose} setTranspose={setTranspose} />
+      </SettingsButtons>
       <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} />
       <Header>
         <h3>{formatMidiFileName(activeSong!) || noSongsLabel}</h3>
-        <Row>
+        {/* <Row>
           <Inputs>
             <Column>
               <Transpose transpose={transpose} setTranspose={setTranspose} />
@@ -80,7 +87,7 @@ export const Dudar = () => {
               <ManerCheckBox />
             </Column>
           </Inputs>
-        </Row>
+        </Row> */}
       </Header>
       <BagpipeContainer className={"center"}>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
@@ -93,12 +100,12 @@ export const Dudar = () => {
       <Inputs>
         <PlayerControls player={midiPlayer} />
       </Inputs>
-      <Link className="last">
+      {/* <Link className="last">
         <a href="https://github.com/PyatroMarchanka/Dudar">
           <i className="fa fa-github fa_custom"></i>
           <div>GitHub</div>
         </a>
-      </Link>
+      </Link> */}
       {MPlayer}
     </Container>
   );
@@ -108,6 +115,14 @@ const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
   }
+`;
+
+const SettingsButtons = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  z-index: 12;
+  width: 100%;
 `;
 
 const Container = styled.div`
@@ -151,6 +166,9 @@ const Link = styled.div`
 `;
 
 const Header = styled.div`
+  position: absolute;
+  z-index: 10;
+  width: 100%;
   h3 {
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;

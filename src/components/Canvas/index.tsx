@@ -94,7 +94,7 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
   return (
     <div>
       <CanvasComponent
-        height={screenSize.height - 200 || 550}
+        height={screenSize.height - 150 || 550}
         width={
           screenSize.width < maxCavasWidth ? screenSize.width : maxCavasWidth
         }

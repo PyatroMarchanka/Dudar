@@ -21,7 +21,7 @@ const coefficient = 0.8;
 const coeff = (num: number) => num * coefficient;
 const step = 18;
 
-const brickhHeight = coeff(22);
+const brickhHeight = coeff(18);
 const brickHeightHalf = brickhHeight / 2;
 const lineHeight = 2;
 const holeRadius = coeff(10);
@@ -189,9 +189,15 @@ export const drawNote = (
   if (startPos < brickLeftMargin) {
     ctx.fillStyle = mainColors.red;
   } else {
-    ctx.fillStyle = mainColors.greyColor;
+    ctx.fillStyle = mainColors.darkerGray;
   }
-
+  // (ctx as any).roundRect(
+  //   startPos,
+  //   y.yPosInPx - brickHeightHalf,
+  //   dur * notesScale,
+  //   brickhHeight,
+  //   5
+  // );
   ctx.fillRect(
     startPos,
     y.yPosInPx - brickHeightHalf,
@@ -247,7 +253,7 @@ const backgroundScale = 414 / 896;
 const width = coeff(190);
 const height = width / imageScale;
 
-const widthBackground = coeff(400);
+const widthBackground = coeff(420);
 const heightBackground = widthBackground / backgroundScale;
 
 const image = new Image();
@@ -260,7 +266,7 @@ export const drawBagpipe = (
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, 30, height);
 
-  ctx.drawImage(image, -38, -30, width, height);
+  ctx.drawImage(image, -38, -27, width, height);
 
   if (!songNotes) {
     return;

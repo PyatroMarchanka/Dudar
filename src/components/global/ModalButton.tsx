@@ -4,8 +4,11 @@ import {
   createStyles,
   Dialog,
   DialogContent,
+  IconButton,
   makeStyles,
 } from "@material-ui/core";
+import { Icon } from "./Icon";
+import { theme } from "../../utils/theme";
 
 interface Props {
   buttonLabel: string;
@@ -26,9 +29,9 @@ export const ModalButton = ({ buttonLabel, dialogContent }: Props) => {
 
   return (
     <>
-      <Button size="small" variant="outlined" onClick={() => setOpen(true)}>
-        {buttonLabel}
-      </Button>
+      <IconButton onClick={() => setOpen(true)} className="icon">
+        <Icon type="settings" fill={theme.colors.black} className="play-icon" />
+      </IconButton>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent className={classes.container}>
           {dialogContent}
