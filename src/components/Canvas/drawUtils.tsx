@@ -89,16 +89,16 @@ const getYposByNote = (
 };
 
 const activeHoleImage = new Image();
-activeHoleImage.src = "/images/piston_open.png";
+activeHoleImage.src = "/images/piston_open.svg";
 
 const backActiveHoleImage = new Image();
-backActiveHoleImage.src = "/images/piston_back_open.png";
+backActiveHoleImage.src = "/images/piston_back_open.svg";
 
 const closedHoleImage = new Image();
-closedHoleImage.src = "/images/piston_closed.png";
+closedHoleImage.src = "/images/piston_closed.svg";
 
 const backClosedHoleImage = new Image();
-backClosedHoleImage.src = "/images/piston_back_closed.png";
+backClosedHoleImage.src = "/images/piston_back_closed.svg";
 
 const blowImage = new Image();
 blowImage.src = "/images/blow.svg";
