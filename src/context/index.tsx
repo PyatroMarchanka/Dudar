@@ -52,7 +52,7 @@ const initialState: State = {
   allLists: {},
   isClosedManer: false,
   screenSize: { width: 400, height: 500 },
-  transpose: 0,
+  transpose: -1,
 };
 
 interface Context {
