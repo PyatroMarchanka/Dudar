@@ -73,7 +73,10 @@ export const Dudar = () => {
       <GlobalStyle />
       <SettingsButtons>
         <SongList player={midiPlayer} />
-        <Transpose transpose={transpose} setTranspose={setTranspose} />
+        <Right>
+          <Transpose transpose={transpose} setTranspose={setTranspose} />
+          <ManerCheckBox />
+        </Right>
       </SettingsButtons>
       <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} />
       <Header>
@@ -114,6 +117,17 @@ export const Dudar = () => {
 const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
+  }
+`;
+
+const Right = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+
+  .maner {
+    margin-top: 50px;
+    padding-left: 20px;
   }
 `;
 

@@ -35,26 +35,27 @@ const noteNameLeftMargin = 33;
 const lastNoteNameLeftMargin = lastHoleLeftMargin + 8;
 
 const yPoses = [
-  coeff(600),
-  coeff(534),
-  coeff(478),
-  coeff(422),
-  coeff(366),
-  coeff(268),
-  coeff(212),
-  coeff(156),
-  coeff(100),
+  coeff(620),
+  coeff(554),
+  coeff(508),
+  coeff(452),
+  coeff(396),
+  coeff(298),
+  coeff(242),
+  coeff(186),
+  coeff(130),
 ].reverse();
+
 const yPosesReversed = [
-  coeff(600),
-  coeff(534),
-  coeff(478),
-  coeff(422),
-  coeff(366),
-  coeff(268),
-  coeff(212),
-  coeff(156),
-  coeff(100),
+  coeff(620),
+  coeff(554),
+  coeff(508),
+  coeff(452),
+  coeff(396),
+  coeff(298),
+  coeff(242),
+  coeff(186),
+  coeff(130),
 ];
 
 const formatOctave = (octave: number, lowestOctave?: number) => {

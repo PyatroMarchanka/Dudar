@@ -347,4 +347,5 @@ export const mainColors = {
   red: "#F12425",
   darkRed: "#A9142F",
   darkerGray: "#6D5353",
+  orange: "#DF7861",
 };
