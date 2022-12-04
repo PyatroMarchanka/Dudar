@@ -33,6 +33,9 @@ export default ({}: Props) => {
 
   return (
     <Container>
+      <div>
+        <p>Fingering manner</p>
+      </div>
       <ButtonGroup
         className={classes.root}
         disableElevation
@@ -40,13 +43,13 @@ export default ({}: Props) => {
         color="primary"
       >
         <Button
-          className={isClosedManer ? "selected" : "non-selected"}
+          className={isClosedManer ? "non-selected" : "selected"}
           onClick={onChange}
         >
           Open
         </Button>
         <Button
-          className={isClosedManer ? "non-selected" : "selected"}
+          className={isClosedManer ? "selected" : "non-selected"}
           onClick={onChange}
         >
           Closed
@@ -57,6 +60,24 @@ export default ({}: Props) => {
 };
 
 const Container = styled.div`
+  display: flex;
+  margin-right: 15px;
+  align-items: center;
+  div {
+    display: flex;
+    margin: 0;
+  }
+
+  p {
+    display: flex;
+    align-items: middle;
+    max-width: 80px;
+    text-align: end;
+    padding-right: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    margin: 0;
+  }
   .MuiButton-containedPrimary.non-selected {
     font-weight: 600;
     text-transform: none;
@@ -66,6 +87,7 @@ const Container = styled.div`
   }
 
   .MuiButton-containedPrimary.selected {
+    font-weight: 600;
     text-transform: none;
     color: #fff;
     background-color: ${mainColors.orange};

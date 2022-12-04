@@ -35,7 +35,7 @@ const noteNameLeftMargin = 33;
 const lastNoteNameLeftMargin = lastHoleLeftMargin + 8;
 
 const yPoses = [
-  coeff(620),
+  coeff(640),
   coeff(554),
   coeff(508),
   coeff(452),
@@ -47,7 +47,7 @@ const yPoses = [
 ].reverse();
 
 const yPosesReversed = [
-  coeff(620),
+  coeff(640),
   coeff(554),
   coeff(508),
   coeff(452),
@@ -165,7 +165,7 @@ const drawClosedNotes = (ctx: CanvasRenderingContext2D) => {
   ctx.drawImage(
     blowImage,
     holeLeftMargin,
-    blowImageYPos - 30,
+    blowImageYPos - 20,
     holeImageRadius,
     holeImageRadius
   );
@@ -291,7 +291,7 @@ const drawNotesNames = (
       ctx.fillText(
         songNotes[i],
         i === pushedHoleIndex ? lastNoteNameLeftMargin : noteNameLeftMargin,
-        i === yPoses.length - 1 ? yPos + 25 : yPos + 6
+        i === yPoses.length - 1 ? yPos + 30 : yPos + 6
       );
   });
 };

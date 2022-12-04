@@ -127,7 +127,7 @@ const Right = styled.div`
 
   .maner {
     margin-top: 50px;
-    padding-left: 20px;
+    margin-right: 20px;
   }
 `;
 
