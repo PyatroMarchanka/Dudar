@@ -101,7 +101,7 @@ const backClosedHoleImage = new Image();
 backClosedHoleImage.src = "/images/piston_back_closed.png";
 
 const blowImage = new Image();
-blowImage.src = "/images/blow.png";
+blowImage.src = "/images/blow.svg";
 
 export const drawActiveHoles = (
   ctx: CanvasRenderingContext2D,

@@ -152,6 +152,7 @@ const Link = styled.div`
 
 const Header = styled.div`
   h3 {
+    font-family: Arial, Helvetica, sans-serif;
     text-align: center;
     margin: 0;
   }
