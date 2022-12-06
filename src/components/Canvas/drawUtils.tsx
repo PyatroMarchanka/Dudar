@@ -19,34 +19,44 @@ const numbers = {
 };
 const coefficient = 0.8;
 const coeff = (num: number) => num * coefficient;
+const step = 18;
+
+const brickhHeight = coeff(18);
+const brickHeightHalf = brickhHeight / 2;
+const lineHeight = 2;
+const holeRadius = coeff(10);
+const holeImageRadius = coeff(38);
+const holeImageRadiusHalf = holeImageRadius / 2;
+const notesScale = 0.3;
+const holeLeftMargin = 25;
+const lastHoleLeftMargin = holeLeftMargin - 20;
+
+const noteNameLeftMargin = 33;
+const lastNoteNameLeftMargin = lastHoleLeftMargin + 8;
 
 const yPoses = [
-  coeff(281),
-  coeff(252),
-  coeff(223),
-  coeff(194),
-  coeff(143),
-  coeff(114),
-  coeff(84),
-  coeff(44),
-  coeff(8),
-];
-const yPosesReversed = [
-  coeff(281),
-  coeff(252),
-  coeff(223),
-  coeff(194),
-  coeff(143),
-  coeff(114),
-  coeff(84),
-  coeff(44),
-  coeff(8),
+  coeff(640),
+  coeff(554),
+  coeff(508),
+  coeff(452),
+  coeff(396),
+  coeff(298),
+  coeff(242),
+  coeff(186),
+  coeff(130),
 ].reverse();
 
-const brickhHeight = coeff(22);
-const holeRadius = coeff(5);
-const notesScale = 0.3;
-const holeLeftMargin = 52;
+const yPosesReversed = [
+  coeff(640),
+  coeff(554),
+  coeff(508),
+  coeff(452),
+  coeff(396),
+  coeff(298),
+  coeff(242),
+  coeff(186),
+  coeff(130),
+];
 
 const formatOctave = (octave: number, lowestOctave?: number) => {
   if (octave === 6) {
@@ -79,7 +89,22 @@ const getYposByNote = (
   };
 };
 
-export const drawActiveHole = (
+const activeHoleImage = new Image();
+activeHoleImage.src = "/images/piston_open.svg";
+
+const backActiveHoleImage = new Image();
+backActiveHoleImage.src = "/images/piston_back_open.svg";
+
+const closedHoleImage = new Image();
+closedHoleImage.src = "/images/piston_closed.svg";
+
+const backClosedHoleImage = new Image();
+backClosedHoleImage.src = "/images/piston_back_closed.svg";
+
+const blowImage = new Image();
+blowImage.src = "/images/blow.svg";
+
+export const drawActiveHoles = (
   ctx: CanvasRenderingContext2D,
   lowestOctave: number,
   activeHole?: { note: SharpNotes; octave: number } | null,
@@ -93,27 +118,57 @@ export const drawActiveHole = (
   if (!yPos?.yPosInPx) {
     return;
   }
-  const topMargin = coeff(11);
+  const topMargin = holeImageRadiusHalf;
 
   if (!isClosedManer) {
     yPosesReversed.forEach((pos, i) => {
       if (i <= yPoses.length - yPos.position - 1 && i >= 1) {
-        ctx.arc(holeLeftMargin, pos + topMargin, holeRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = mainColors.greyColor;
-        ctx.fill();
+        // ctx.arc(holeLeftMargin, pos + topMargin, holeRadius, 0, 2 * Math.PI);
+        // ctx.fillStyle = activeHoleColor;
+        // ctx.fill();
+
+        ctx.drawImage(
+          i === 1 ? backActiveHoleImage : activeHoleImage,
+          i === 1 ? lastHoleLeftMargin : holeLeftMargin,
+          pos - topMargin,
+          holeImageRadius,
+          holeImageRadius
+        );
       }
     });
   } else {
-    ctx.arc(
+    ctx.drawImage(
+      activeHoleImage,
       holeLeftMargin,
-      yPos.yPosInPx + topMargin,
-      holeRadius,
-      0,
-      2 * Math.PI
+      yPos.yPosInPx - topMargin,
+      holeImageRadius,
+      holeImageRadius
     );
-    ctx.fillStyle = mainColors.greyColor;
-    ctx.fill();
   }
+};
+const holes = yPosesReversed.slice(1);
+const blowImageYPos = yPoses[yPoses.length - 1];
+
+const drawClosedNotes = (ctx: CanvasRenderingContext2D) => {
+  const topMargin = holeImageRadiusHalf;
+  const lastIdx = holes.length - 1;
+  holes.forEach((pos, i) => {
+    ctx.drawImage(
+      i === 0 ? backClosedHoleImage : closedHoleImage,
+      i === 0 ? lastHoleLeftMargin : holeLeftMargin,
+      pos - topMargin,
+      holeImageRadius,
+      holeImageRadius
+    );
+  });
+
+  ctx.drawImage(
+    blowImage,
+    holeLeftMargin,
+    blowImageYPos - 20,
+    holeImageRadius,
+    holeImageRadius
+  );
 };
 
 export const drawNote = (
@@ -133,16 +188,23 @@ export const drawNote = (
   const startPos = start * notesScale - tick * notesScale + brickLeftMargin;
 
   if (startPos < brickLeftMargin) {
-    ctx.fillStyle = mainColors.yellow;
+    ctx.fillStyle = mainColors.red;
   } else {
-    ctx.fillStyle = "#5a5a5a";
+    ctx.fillStyle = mainColors.darkerGray;
   }
-  ctx.strokeStyle = "#ffffff";
-  ctx.lineWidth = coeff(5);
-  ctx.stroke();
-  ctx.fillRect(startPos, y.yPosInPx, dur * notesScale, brickhHeight);
-
-  ctx.strokeRect(startPos, y.yPosInPx, dur * notesScale, brickhHeight);
+  // (ctx as any).roundRect(
+  //   startPos,
+  //   y.yPosInPx - brickHeightHalf,
+  //   dur * notesScale,
+  //   brickhHeight,
+  //   5
+  // );
+  ctx.fillRect(
+    startPos,
+    y.yPosInPx - brickHeightHalf,
+    dur * notesScale,
+    brickhHeight
+  );
 };
 
 export const drawNotes = (
@@ -180,38 +242,64 @@ export const drawNotes = (
   ctx.fill();
 };
 
-const imageScale = 145 / 587;
-const width = coeff(90);
+const drawShadow = (ctx: CanvasRenderingContext2D) => {
+  const backgoundImage = new Image();
+  backgoundImage.src = "/images/BG.png";
+  ctx.drawImage(backgoundImage, -10, -60, widthBackground, heightBackground);
+};
+
+const imageScale = 200 / 896;
+const backgroundScale = 414 / 896;
+
+const width = coeff(190);
+const height = width / imageScale;
+
+const widthBackground = coeff(420);
+const heightBackground = widthBackground / backgroundScale;
+
+const image = new Image();
+image.src = "/images/main_pipe.png";
 
 export const drawBagpipe = (
   ctx: CanvasRenderingContext2D,
   songNotes?: SharpNotes[]
 ) => {
-  const image = new Image();
-  image.src = "/images/bagpipe.png";
-
   ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, 30, height);
 
-  const height = width / imageScale;
-  ctx.drawImage(image, 0, 0, width, height);
+  ctx.drawImage(image, -38, -27, width, height);
 
   if (!songNotes) {
     return;
   }
 
+  drawClosedNotes(ctx);
+};
+
+const drawNotesNames = (
+  ctx: CanvasRenderingContext2D,
+  songNotes?: SharpNotes[]
+) => {
   // DRAW NOTES NAMES
-  ctx.fillStyle = "#000000";
-  const textLeftMargin = 6;
+  ctx.fillStyle = "#ffffff";
+
+  const pushedHoleIndex = yPoses.length - 2;
+
   yPoses.forEach((yPos, i) => {
-    ctx.font = "15px Arial";
-    songNotes?.[i] && ctx.fillText(songNotes[i], textLeftMargin, yPos + 14);
+    ctx.font = "bold 13px Arial";
+    songNotes?.[i] &&
+      ctx.fillText(
+        songNotes[i],
+        i === pushedHoleIndex ? lastNoteNameLeftMargin : noteNameLeftMargin,
+        i === yPoses.length - 1 ? yPos + 30 : yPos + 6
+      );
   });
 };
 
 const drawLines = (ctx: CanvasRenderingContext2D) => {
-  ctx.fillStyle = "#eaeaea";
+  ctx.fillStyle = "#D6D6D6";
   yPoses.forEach((yPos) => {
-    ctx.fillRect(0, yPos, window.innerWidth, brickhHeight);
+    ctx.fillRect(0, yPos, window.innerWidth, lineHeight);
   });
 };
 
@@ -226,8 +314,10 @@ export const drawAll = (
   songNotes?: SharpNotes[] | null
 ) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  drawShadow(ctx!);
   drawLines(ctx);
   drawNotes(ctx, tick, nextNotes, nextToNextNotes);
   drawBagpipe(ctx!, songNotes!);
-  drawActiveHole(ctx!, lowestOctave, activeHole, isClosedManer);
+  drawActiveHoles(ctx!, lowestOctave, activeHole, isClosedManer);
+  drawNotesNames(ctx!, songNotes!);
 };

@@ -15,7 +15,8 @@ export const useMidiPlayer = (
   handleProgress: PlaybackProgressHandler
 ) => {
   const {
-    state: { tempo, metronome },
+    state: { tempo, metronome , isPlaying},
+    setIsPlaying,
   } = useContext(store);
   const [midiPlayer, setMidiPlayer] = useState<MidiPlayer | null>(null);
 
@@ -31,9 +32,19 @@ export const useMidiPlayer = (
     </Container>
   );
 
+  const switchIsPlaying = () => {
+    console.log("switchIsPlaying", isPlaying);
+    setIsPlaying(false);
+  };
+
   useEffect(() => {
+<<<<<<< HEAD
     const player = new MidiPlayer(playerRef, tempo, metronome);
     player.initPlayer(handleNote, handleProgress);
+=======
+    const player = new MidiPlayer(playerRef, tempo);
+    player.initPlayer(handleNote, handleProgress, switchIsPlaying);
+>>>>>>> 84609bf39ab5a545eea4967fc552740c7188f70e
     setMidiPlayer(player);
   }, []);
 

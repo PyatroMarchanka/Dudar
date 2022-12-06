@@ -14,10 +14,13 @@ import Canvas from "../Canvas";
 import ManerCheckBox from "./ManerCheckBox";
 import LandscapeAlert from "../global/LandscapeAlert";
 import { landscapeAlertId } from "../../constants/localStorage";
+import { IconButton } from "@material-ui/core";
+import { Icon } from "../global/Icon";
+import { theme } from "../../utils/theme";
 
 export const Dudar = () => {
   const {
-    state: { activeSong, screenSize },
+    state: { activeSong, screenSize, transpose },
     setProgress,
     setScreenSize,
     setTranspose: setTransposeCtx,
@@ -49,36 +52,45 @@ export const Dudar = () => {
     setScreenSize({ width, height });
   };
 
-  useEffect(() => {
-    setDimensions();
-    window.addEventListener("resize", setDimensions);
-    return () => window.removeEventListener("resize", setDimensions);
-  }, []);
-
   const setTranspose = (num: number) => {
     setTransposeCtx(num);
     midiPlayer?.setTranspose(num);
   };
 
+  useEffect(() => {
+    setDimensions();
+    window.addEventListener("resize", setDimensions);
+
+    return () => window.removeEventListener("resize", setDimensions);
+  }, []);
+
+  useEffect(() => {
+    setTranspose(transpose);
+  }, [midiPlayer]);
+
   return (
     <Container>
       <GlobalStyle />
+      <SettingsButtons>
+        <SongList player={midiPlayer} />
+        <Right>
+          <Transpose transpose={transpose} setTranspose={setTranspose} />
+          <ManerCheckBox />
+        </Right>
+      </SettingsButtons>
       <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} />
       <Header>
         <h3>{formatMidiFileName(activeSong!) || noSongsLabel}</h3>
-        <Row>
-          <Inputs>
-            <PlayerControls player={midiPlayer} />
-          </Inputs>
+        {/* <Row>
           <Inputs>
             <Column>
-              <Transpose setTranspose={setTranspose} />
+              <Transpose transpose={transpose} setTranspose={setTranspose} />
               <SongList player={midiPlayer} />
               <TempoSlider player={midiPlayer} />
               <ManerCheckBox />
             </Column>
           </Inputs>
-        </Row>
+        </Row> */}
       </Header>
       <BagpipeContainer className={"center"}>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
@@ -88,12 +100,15 @@ export const Dudar = () => {
           lowestOctave={lowestOctave}
         />
       </BagpipeContainer>
-      <Link className="last">
+      <Inputs>
+        <PlayerControls player={midiPlayer} />
+      </Inputs>
+      {/* <Link className="last">
         <a href="https://github.com/PyatroMarchanka/Dudar">
           <i className="fa fa-github fa_custom"></i>
           <div>GitHub</div>
         </a>
-      </Link>
+      </Link> */}
       {MPlayer}
     </Container>
   );
@@ -103,6 +118,25 @@ const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
   }
+`;
+
+const Right = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+
+  .maner {
+    margin-top: 50px;
+    margin-right: 20px;
+  }
+`;
+
+const SettingsButtons = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  z-index: 12;
+  width: 100%;
 `;
 
 const Container = styled.div`
@@ -146,12 +180,16 @@ const Link = styled.div`
 `;
 
 const Header = styled.div`
+  position: absolute;
+  z-index: 10;
+  width: 100%;
   h3 {
+    font-family: Arial, Helvetica, sans-serif;
     text-align: center;
     margin: 0;
   }
   padding: 5px 0;
-  border-bottom: 1px solid black;
+  /* border-bottom: 1px solid black; */
 `;
 
 const Row = styled.div`

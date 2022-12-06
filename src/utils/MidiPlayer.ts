@@ -46,7 +46,8 @@ export class MidiPlayer {
 
   initPlayer = (
     handleNote: MidiNoteHandler,
-    handleProgress: PlaybackProgressHandler
+    handleProgress: PlaybackProgressHandler,
+    switchIsPlaying: () => void
   ) => {
     console.log("initPlayer");
     Player.on("playing", (currentTick: any) => {
@@ -74,6 +75,7 @@ export class MidiPlayer {
 
     Player.on("endOfFile", () => {
       this.stop();
+      switchIsPlaying();
       handleProgress(0);
     });
   };

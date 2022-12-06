@@ -6,10 +6,10 @@ export const useSelectStyles = makeStyles(() =>
     select: {
       width: "100%",
       "&:before": {
-        borderColor: mainColors.yellow,
+        borderColor: mainColors.darkerGray,
       },
       "&:after": {
-        borderColor: mainColors.yellow,
+        borderColor: mainColors.darkerGray,
       },
     },
   })

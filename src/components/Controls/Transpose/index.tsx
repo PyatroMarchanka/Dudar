@@ -8,10 +8,15 @@ import { useSelectStyles } from "../../global/selectStyles";
 interface Props {
   setTranspose?: SetTransposeType;
   label?: string;
+  transpose: number;
 }
 
-export default ({ setTranspose, label = "Transpose sound" }: Props) => {
-  const [value, setValue] = useState<number>(0);
+export default ({
+  setTranspose,
+  transpose,
+  label = "Transpose sound",
+}: Props) => {
+  const [value, setValue] = useState<number>(transpose);
   const options = new Array(24)
     .fill(undefined)
     .map((_, i) => ({ value: i - 12, label: i - 12 }));
