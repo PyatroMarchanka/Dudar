@@ -77,6 +77,7 @@ export default ({ player }: Props) => {
             value={genreList || ""}
             onChange={(e) => {
               setGenreList(e.target.value as string);
+              setActiveSong(allLists[e.target.value as string]?.[0]);
             }}
             labelId="demo-dialog-select-label"
             id="demo-dialog-select"

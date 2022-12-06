@@ -1,21 +1,26 @@
 import { MenuItem, Select } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { store } from "../../../context";
 import { transposeNote } from "../../../interfaces";
-import { SetTransposeType } from "../../../utils/MidiPlayer";
+import { MidiPlayer } from "../../../utils/MidiPlayer";
 import { ModalButton } from "../../global/ModalButton";
 import { useSelectStyles } from "../../global/selectStyles";
 
 interface Props {
-  setTranspose?: SetTransposeType;
-  label?: string;
-  transpose: number;
+  midiPlayer: MidiPlayer | null;
 }
 
-export default ({
-  setTranspose,
-  transpose,
-  label = "Transpose sound",
-}: Props) => {
+export default ({ midiPlayer }: Props) => {
+  const {
+    state: { transpose },
+    setTranspose: setTransposeCtx,
+  } = useContext(store);
+
+  const setTranspose = (num: number) => {
+    setTransposeCtx(num);
+    midiPlayer?.setTranspose(num);
+  };
+
   const [value, setValue] = useState<number>(transpose);
   const options = new Array(24)
     .fill(undefined)

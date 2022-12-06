@@ -7,16 +7,13 @@ import Transpose from "./Transpose";
 import SongList from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
-import { TempoSlider } from "./TempoSlider";
 import { mediaQueries, numberQueries } from "../../constants/style";
 import { formatMidiFileName } from "../../utils/textUtils";
 import Canvas from "../Canvas";
 import ManerCheckBox from "./ManerCheckBox";
 import LandscapeAlert from "../global/LandscapeAlert";
 import { landscapeAlertId } from "../../constants/localStorage";
-import { IconButton } from "@material-ui/core";
-import { Icon } from "../global/Icon";
-import { theme } from "../../utils/theme";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 export const Dudar = () => {
   const {
@@ -57,6 +54,8 @@ export const Dudar = () => {
     midiPlayer?.setTranspose(num);
   };
 
+  useLocalStorage();
+
   useEffect(() => {
     setDimensions();
     window.addEventListener("resize", setDimensions);
@@ -74,23 +73,13 @@ export const Dudar = () => {
       <SettingsButtons>
         <SongList player={midiPlayer} />
         <Right>
-          <Transpose transpose={transpose} setTranspose={setTranspose} />
+          <Transpose midiPlayer={midiPlayer} />
           <ManerCheckBox />
         </Right>
       </SettingsButtons>
       <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} />
       <Header>
         <h3>{formatMidiFileName(activeSong!) || noSongsLabel}</h3>
-        {/* <Row>
-          <Inputs>
-            <Column>
-              <Transpose transpose={transpose} setTranspose={setTranspose} />
-              <SongList player={midiPlayer} />
-              <TempoSlider player={midiPlayer} />
-              <ManerCheckBox />
-            </Column>
-          </Inputs>
-        </Row> */}
       </Header>
       <BagpipeContainer className={"center"}>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
