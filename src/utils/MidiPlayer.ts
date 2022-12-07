@@ -126,6 +126,10 @@ export class MidiPlayer {
     }
   };
 
+  setMetronome = (metronome: boolean) => {
+    this.metronom = metronome;
+  };
+
   playDrone = (note: number) => {
     this.keyDown(note, note, drone);
   };

@@ -41,11 +41,12 @@ export const TempoSlider = ({ player }: Props) => {
     player?.checkTempo(tempo);
   }, [player]);
 
+  useEffect(() => {
+    player?.setMetronome(metronome);
+  }, [metronome]);
+
   return (
     <Tempo>
-      {/* <Button size="small" variant="outlined" onClick={() => setOpen(true)}>
-        Tempo
-      </Button> */}
       <IconButton
         onClick={() => {
           console.log("onClick");
@@ -56,10 +57,6 @@ export const TempoSlider = ({ player }: Props) => {
         <Icon type="metr_on" fill={theme.colors.black} className="play-icon" />
         <span>{tempo / 2} bpm</span>
       </IconButton>
-      {/* <Tempo onClick={() => setOpen(true)}>
-        <Icon type="metr_off" fill={theme.colors.black} className="play-icon" />
-        <h3>{tempo / 2} BPM</h3>
-      </Tempo> */}
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent className={classes.container}>
           <Typography>Tempo {Math.floor(tempo / 2)} bpm</Typography>
