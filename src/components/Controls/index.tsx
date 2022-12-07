@@ -17,10 +17,9 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 export const Dudar = () => {
   const {
-    state: { activeSong, screenSize, transpose },
+    state: { activeSong, screenSize },
     setProgress,
     setScreenSize,
-    setTranspose: setTransposeCtx,
   } = useContext(store);
 
   const [activeNote, setActiveNote] = useState<{
@@ -49,11 +48,6 @@ export const Dudar = () => {
     setScreenSize({ width, height });
   };
 
-  const setTranspose = (num: number) => {
-    setTransposeCtx(num);
-    midiPlayer?.setTranspose(num);
-  };
-
   useLocalStorage();
 
   useEffect(() => {
@@ -62,10 +56,6 @@ export const Dudar = () => {
 
     return () => window.removeEventListener("resize", setDimensions);
   }, []);
-
-  useEffect(() => {
-    setTranspose(transpose);
-  }, [midiPlayer]);
 
   return (
     <Container>

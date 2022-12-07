@@ -1,5 +1,6 @@
 import { Midi } from "@tonejs/midi";
 import React, { createContext, useReducer } from "react";
+import { getUserDataFromLocal } from "../hooks/useLocalStorage";
 import { SharpNotes } from "../interfaces";
 
 interface Action {
@@ -40,6 +41,7 @@ interface State {
   screenSize: { width: number; height: number };
   transpose: number;
 }
+const userData = getUserDataFromLocal();
 
 const initialState: State = {
   metronome: true,
@@ -47,15 +49,13 @@ const initialState: State = {
   songNotes: null,
   midi: null,
   progress: 0,
-  activeSong: "",
   genreList: "",
-  tempo: 200,
   showPianoRoll: true,
   isPlaying: false,
   allLists: {},
   isClosedManer: false,
   screenSize: { width: 400, height: 500 },
-  transpose: -1,
+  ...userData,
 };
 
 interface Context {

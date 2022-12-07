@@ -1,5 +1,5 @@
 import { MenuItem, Select } from "@material-ui/core";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { store } from "../../../context";
 import { transposeNote } from "../../../interfaces";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
@@ -26,6 +26,10 @@ export default ({ midiPlayer }: Props) => {
     .fill(undefined)
     .map((_, i) => ({ value: i - 12, label: i - 12 }));
   const selectClasses = useSelectStyles();
+
+  useEffect(() => {
+    setTranspose(transpose);
+  }, [midiPlayer]);
 
   return (
     <ModalButton
