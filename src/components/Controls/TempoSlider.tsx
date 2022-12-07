@@ -55,14 +55,14 @@ export const TempoSlider = ({ player }: Props) => {
             className="play-icon"
           />
         </IconButton>
-        <Typography
-          variant="h5"
+        <IconButton
+          className="button"
           onClick={() => {
             setOpen(true);
           }}
         >
-          {tempo / 2} bpm
-        </Typography>
+          <Typography variant="h5">{tempo / 2} bpm</Typography>
+        </IconButton>
       </TempoButtons>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent className={classes.container}>
