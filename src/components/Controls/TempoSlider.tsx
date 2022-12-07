@@ -47,16 +47,23 @@ export const TempoSlider = ({ player }: Props) => {
 
   return (
     <Tempo>
-      <IconButton
-        onClick={() => {
-          console.log("onClick");
-          setOpen(true);
-        }}
-        className="button"
-      >
-        <Icon type="metr_on" fill={theme.colors.black} className="play-icon" />
-        <span>{tempo / 2} bpm</span>
-      </IconButton>
+      <TempoButtons>
+        <IconButton className="button" onClick={() => setMetronome(!metronome)}>
+          <Icon
+            type={metronome ? "metr_on" : "metr_off"}
+            fill={theme.colors.black}
+            className="play-icon"
+          />
+        </IconButton>
+        <Typography
+          variant="h5"
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          {tempo / 2} bpm
+        </Typography>
+      </TempoButtons>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent className={classes.container}>
           <Typography>Tempo {Math.floor(tempo / 2)} bpm</Typography>
@@ -73,18 +80,16 @@ export const TempoSlider = ({ player }: Props) => {
             min={60}
             max={360}
           />
-          <Button
-            size="small"
-            variant={metronome ? "contained" : "outlined"}
-            onClick={() => setMetronome(!metronome)}
-          >
-            Metronome
-          </Button>
         </DialogContent>
       </Dialog>
     </Tempo>
   );
 };
+
+const TempoButtons = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 const Tempo = styled.div`
   display: flex;
