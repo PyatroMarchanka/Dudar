@@ -5,7 +5,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import { formatMidiFileName } from "../../utils/textUtils";
-import { IconButton, List, ListItem } from "@material-ui/core";
+import { capitalize, IconButton, List, ListItem } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { Icon } from "../global/Icon";
 import styled from "styled-components";
@@ -18,6 +18,9 @@ interface Props {
   songsNames: string[];
   setOpen: (bool: boolean) => void;
   onStop: () => void;
+  allLists: {
+    [key: string]: string[];
+  };
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -29,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
     accordionRoot: {
       backgroundColor: mainColors.darkestRed,
       color: "white",
-      fontWeight: "bold",
+      fontWeight: 600,
       fontSize: "20px",
       boxShadow: "none",
     },
@@ -58,11 +61,12 @@ const useStyles = makeStyles((theme: Theme) =>
 export const SongsByGenre = ({
   genreName,
   songsNames,
-
+  allLists,
   setOpen,
   onStop,
 }: Props) => {
   const classes = useStyles();
+  const genres = Object.keys(allLists);
 
   const {
     setActiveSong,
@@ -74,47 +78,62 @@ export const SongsByGenre = ({
       <IconButton className="close" onClick={() => setOpen(false)}>
         <Icon type="material" fill="#fff" Icon={Close} />
       </IconButton>
-      <div className={classes.root}>
-        <Accordion
-          classes={{
-            root: classes.accordionRoot,
-          }}
-        >
-          <AccordionSummary
-            classes={{
-              root: classes.summary,
-              expanded: classes.expanded,
-              content: classes.summary,
-            }}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography className={classes.heading}>{genreName}</Typography>
-          </AccordionSummary>
 
-          <AccordionDetails>
-            <List>
-              {songsNames.map((song) => (
-                <div
-                  className={activeSong === song ? classes.activeSong : ""}
-                  key={song}
-                >
-                  <IconButton
-                    className="songButton"
-                    onClick={() => {
-                      setActiveSong(song);
-                      onStop();
-                    }}
+      {genres.map((genre) => (
+        <div className={classes.root}>
+          <Accordion
+            classes={{
+              root: classes.accordionRoot,
+            }}
+          >
+            <AccordionSummary
+              classes={{
+                root: classes.summary,
+                expanded: classes.expanded,
+                content: classes.summary,
+              }}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography className={classes.heading}>
+                {capitalize(genre)}
+              </Typography>
+            </AccordionSummary>
+
+            <AccordionDetails>
+              <List>
+                {allLists[genre].map((song) => (
+                  <div
+                    className={
+                      activeSong === `${genre}/${song}`
+                        ? classes.activeSong
+                        : ""
+                    }
+                    key={song}
                   >
-                    <Icon type={activeSong === song ? "song-play" : "music"} />
-                    <ListItem>{formatMidiFileName(song)}</ListItem>
-                  </IconButton>
-                </div>
-              ))}
-            </List>
-          </AccordionDetails>
-        </Accordion>
-      </div>
+                    <IconButton
+                      className="songButton"
+                      onClick={() => {
+                        setActiveSong(`${genre}/${song}`);
+                        onStop();
+                      }}
+                    >
+                      <Icon
+                        type={
+                          activeSong === `${genre}/${song}`
+                            ? "song-play"
+                            : "music"
+                        }
+                      />
+                      <ListItem>{formatMidiFileName(song)}</ListItem>
+                    </IconButton>
+                  </div>
+                ))}
+              </List>
+            </AccordionDetails>
+          </Accordion>
+        </div>
+      ))}
     </Content>
   );
 };

@@ -14,18 +14,18 @@ export const useLoadSong = () => {
 
   const loadMidiSong = async (fileName: string) => {
     try {
+      const [genreList, songName] = fileName.split("/");
+
       if (
         Object.keys(allLists).length &&
         genreList &&
-        !allLists[genreList].includes(fileName)
+        !allLists[genreList].includes(songName)
       ) {
-        console.log(
-          `No song with this path in list \n ${genreList}/${fileName}`
-        );
+        console.log(`No song with this path in list \n ${fileName}`);
         return;
       }
 
-      const file = await fetch(`midi/${genreList}/${fileName}`);
+      const file = await fetch(`midi/${fileName}`);
       const buffer = await file.arrayBuffer();
 
       const songWithMetronome = await addMetronome(buffer);

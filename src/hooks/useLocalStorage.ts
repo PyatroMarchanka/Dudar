@@ -11,7 +11,7 @@ export const getUserDataFromLocal = () => {
   const genreName = songData?.[1];
 
   return {
-    activeSong: songFileName || "Verabey.mid",
+    activeSong: songFileName || "belarussian/Verabey.mid",
     genreName: genreName || "belarussian",
     tempo: userTempoData !== null ? +userTempoData : 200,
     transpose: userTransposeData !== null ? +userTransposeData : -1,

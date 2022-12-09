@@ -81,6 +81,7 @@ export default ({ player }: Props) => {
         <SongsByGenre
           genreName={genreList!}
           songsNames={songList}
+          allLists={allLists}
           setOpen={setOpen}
           onStop={onStop}
         />
