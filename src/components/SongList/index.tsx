@@ -1,14 +1,10 @@
 import {
-  Button,
-  capitalize,
   createStyles,
   Dialog,
   DialogContent,
-  DialogTitle,
-  FormControl,
+  Drawer,
   IconButton,
   Input,
-  InputLabel,
   makeStyles,
   MenuItem,
   Select,
@@ -20,25 +16,31 @@ import { noSongsLabel, store } from "../../context";
 import { useSongList } from "../../hooks/useSongLIst";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { formatMidiFileName } from "../../utils/textUtils";
-import { theme } from "../../utils/theme";
+import { mainColors, theme } from "../../utils/theme";
 import { Icon } from "../global/Icon";
 import { useSelectStyles } from "../global/selectStyles";
+import { SongsByGenre } from "./SongsByGenre";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      width: 200,
-      display: "flex",
-      justifyContent: "center",
-    },
-    content: {
-      width: 300,
-      display: "flex",
-      margin: 0,
-      justifyContent: "flex-start",
-    },
-  })
-);
+const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    width: 200,
+    display: "flex",
+    justifyContent: "center",
+  },
+  content: {
+    width: 300,
+    display: "flex",
+    margin: 0,
+    justifyContent: "flex-start",
+  },
+  list: {
+    width: 250,
+  },
+  root: {
+    backgroundColor: mainColors.darkestRed,
+    color: "#fff",
+  },
+}));
 
 type Props = {
   player: MidiPlayer | null;
@@ -64,13 +66,29 @@ export default ({ player }: Props) => {
   const [open, setOpen] = useState(false);
   const { songList, allLists } = useSongList();
   const genres = Object.keys(allLists);
+  console.log("allLists", allLists);
 
   return (
     <Container>
+      <Drawer
+        classes={{
+          paper: classes.root,
+        }}
+        anchor="left"
+        open={open}
+        onClose={() => setOpen(false)}
+      >
+        <SongsByGenre
+          genreName={genreList!}
+          songsNames={songList}
+          setOpen={setOpen}
+          onStop={onStop}
+        />
+      </Drawer>
       <IconButton onClick={() => setOpen(true)} className="icon">
         <Icon type="hamb" fill={theme.colors.black} className="play-icon" />
       </IconButton>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog open={false} onClose={() => setOpen(false)}>
         <DialogContent className={classes.content}>
           <Select
             className={selectClasses.select}
@@ -120,7 +138,4 @@ export default ({ player }: Props) => {
   );
 };
 
-const Container = styled.div`
-  /* position: absolute;
-  z-index: 12; */
-`;
+const Container = styled.div``;
