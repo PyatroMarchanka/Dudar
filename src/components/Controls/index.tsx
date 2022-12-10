@@ -8,7 +8,7 @@ import SongList from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
 import { mediaQueries, numberQueries } from "../../constants/style";
-import { formatMidiFileName } from "../../utils/textUtils";
+import { formatMidiFileNameForTitle } from "../../utils/textUtils";
 import Canvas from "../Canvas";
 import ManerCheckBox from "./ManerCheckBox";
 import LandscapeAlert from "../global/LandscapeAlert";
@@ -62,15 +62,15 @@ export const Dudar = () => {
       <GlobalStyle />
       <SettingsButtons>
         <SongList player={midiPlayer} />
-        <Right>
-          <Transpose midiPlayer={midiPlayer} />
-          <ManerCheckBox />
-        </Right>
+        {/* <Right> */}
+        <Header>
+          <h3>{formatMidiFileNameForTitle(activeSong!) || noSongsLabel}</h3>
+        </Header>
+        <Transpose midiPlayer={midiPlayer} />
+        {/* </Right> */}
       </SettingsButtons>
+      <ManerCheckBox />
       <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} />
-      <Header>
-        <h3>{formatMidiFileName(activeSong!) || noSongsLabel}</h3>
-      </Header>
       <BagpipeContainer className={"center"}>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
         <Canvas
@@ -99,21 +99,12 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const Right = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: end;
-
-  .maner {
-    margin-top: 50px;
-    margin-right: 20px;
-  }
-`;
-
 const SettingsButtons = styled.div`
   position: absolute;
   display: flex;
+  top: 3px;
   justify-content: space-between;
+  align-items: center;
   z-index: 12;
   width: 100%;
 `;
@@ -159,16 +150,16 @@ const Link = styled.div`
 `;
 
 const Header = styled.div`
-  position: absolute;
-  z-index: 10;
   width: 100%;
+  display: flex;
+  justify-content: center;
   h3 {
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
     margin: 0;
+    max-width: 150px;
   }
   padding: 5px 0;
-  /* border-bottom: 1px solid black; */
 `;
 
 const Row = styled.div`

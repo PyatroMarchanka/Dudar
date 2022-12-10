@@ -19,12 +19,10 @@ const numbers = {
 };
 const coefficient = 0.8;
 const coeff = (num: number) => num * coefficient;
-const step = 18;
 
 const brickhHeight = coeff(18);
 const brickHeightHalf = brickhHeight / 2;
 const lineHeight = 2;
-const holeRadius = coeff(10);
 const holeImageRadius = coeff(38);
 const holeImageRadiusHalf = holeImageRadius / 2;
 const notesScale = 0.3;
@@ -151,7 +149,7 @@ const blowImageYPos = yPoses[yPoses.length - 1];
 
 const drawClosedNotes = (ctx: CanvasRenderingContext2D) => {
   const topMargin = holeImageRadiusHalf;
-  const lastIdx = holes.length - 1;
+
   holes.forEach((pos, i) => {
     ctx.drawImage(
       i === 0 ? backClosedHoleImage : closedHoleImage,

@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { IconButton, Slider, Typography } from "@material-ui/core";
+import React, { useContext } from "react";
+import { IconButton, Slider } from "@material-ui/core";
 import styled from "styled-components";
 import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";

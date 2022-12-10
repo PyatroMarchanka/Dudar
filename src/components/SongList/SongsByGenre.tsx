@@ -14,7 +14,6 @@ import { mainColors } from "../../utils/theme";
 import { store } from "../../context";
 
 interface Props {
-  genreName: string;
   songsNames: string[];
   setOpen: (bool: boolean) => void;
   onStop: () => void;
@@ -58,13 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const SongsByGenre = ({
-  genreName,
-  songsNames,
-  allLists,
-  setOpen,
-  onStop,
-}: Props) => {
+export const SongsByGenre = ({ allLists, setOpen, onStop }: Props) => {
   const classes = useStyles();
   const genres = Object.keys(allLists);
 

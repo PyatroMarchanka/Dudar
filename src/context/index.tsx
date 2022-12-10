@@ -13,7 +13,6 @@ interface Action {
     | "SET_TEMPO"
     | "SET_SHOW_PIANO_ROLL"
     | "SET_IS_PLAYING"
-    | "SET_GENRE_LIST"
     | "SET_ALL_LISTS"
     | "SET_SIZE"
     | "SET_TRANSPOSE"
@@ -35,7 +34,6 @@ interface State {
   tempo: number;
   showPianoRoll: boolean;
   isPlaying: boolean;
-  genreList?: string;
   allLists: any;
   isClosedManer: boolean;
   screenSize: { width: number; height: number };
@@ -49,7 +47,6 @@ const initialState: State = {
   songNotes: null,
   midi: null,
   progress: 0,
-  genreList: "",
   showPianoRoll: true,
   isPlaying: false,
   allLists: {},
@@ -69,7 +66,6 @@ interface Context {
   setTempo: (bpm: number) => void;
   togglePianoRoll: (value: boolean) => void;
   setIsPlaying: (bool: boolean) => void;
-  setGenreList: (list: string) => void;
   setAllLists: (lists: any) => void;
   setIsClosedManer: (bool: boolean) => void;
   setScreenSize: (size: { width: number; height: number }) => void;
@@ -88,7 +84,6 @@ const store = createContext<Context>({
   setTempo: (bpm: number) => {},
   togglePianoRoll: (value: boolean) => {},
   setIsPlaying: (bool: boolean) => {},
-  setGenreList: (list: string) => {},
   setAllLists: (lists: any) => {},
   setIsClosedManer: (bool: boolean) => {},
   setScreenSize: (size: { width: number; height: number }) => {},
@@ -151,12 +146,6 @@ const ContextProvider = ({ children }: any) => {
         return {
           ...state,
           isPlaying: action.payload,
-        };
-
-      case "SET_GENRE_LIST":
-        return {
-          ...state,
-          genreList: action.payload,
         };
 
       case "SET_ALL_LISTS":
@@ -231,10 +220,6 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_IS_PLAYING", payload: bool });
   };
 
-  const setGenreList = (list: string) => {
-    dispatch({ type: "SET_GENRE_LIST", payload: list });
-  };
-
   const setAllLists = (list: any) => {
     dispatch({ type: "SET_ALL_LISTS", payload: list });
   };
@@ -267,7 +252,6 @@ const ContextProvider = ({ children }: any) => {
         setTempo,
         togglePianoRoll,
         setIsPlaying,
-        setGenreList,
         setAllLists,
         setIsClosedManer,
         setScreenSize,

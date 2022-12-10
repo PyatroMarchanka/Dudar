@@ -1,19 +1,13 @@
 import React, { useContext } from "react";
-import {
-  Button,
-  FormControlLabel,
-  makeStyles,
-  Switch,
-} from "@material-ui/core";
+import { Button, makeStyles } from "@material-ui/core";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import { CheckBox, CheckBoxOutlined } from "@material-ui/icons";
 import styled from "styled-components";
 import { store } from "../../../context";
 import { mainColors } from "../../../utils/theme";
 
 type Props = {};
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {},
 }));
 
@@ -24,8 +18,6 @@ export default ({}: Props) => {
     state: { isClosedManer },
     setIsClosedManer,
   } = useContext(store);
-
-  const label = isClosedManer ? "closed maner" : "open maner";
 
   const onChange = () => {
     setIsClosedManer(!isClosedManer);
@@ -60,6 +52,10 @@ export default ({}: Props) => {
 };
 
 const Container = styled.div`
+  position: absolute;
+  top: 60px;
+  right: 0px;
+  z-index: 10;
   display: flex;
   margin-right: 15px;
   align-items: center;

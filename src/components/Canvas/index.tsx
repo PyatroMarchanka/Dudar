@@ -18,13 +18,7 @@ type Props = {
 
 export default ({ player, activeHole, lowestOctave }: Props) => {
   const { nextNotes, nextToNextNotes, setTick, tick } = useNotesMoving();
-  // console.log(
-  //   "nextNotes",
-  //   nextNotes?.reduce(
-  //     (acc, cur) => acc + " " + (cur.pitch + `${cur.octave}`),
-  //     ""
-  //   )
-  // );
+
   const {
     state: {
       showPianoRoll,
@@ -106,7 +100,7 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
 };
 
 const CanvasComponent = styled.canvas`
-  margin-top: 3px;
+  margin-top: 5px;
   @media (max-width: ${mediaQueries.mobile}) {
     width: 100%;
   }
