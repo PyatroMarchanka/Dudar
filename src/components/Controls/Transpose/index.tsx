@@ -46,7 +46,7 @@ export default ({ midiPlayer }: Props) => {
             }}
           >
             {options.map((option) => (
-              <MenuItem value={option.value}>
+              <MenuItem key={option.label} value={option.value}>
                 <b>{transposeNote("A", +option.label)}</b>
                 {` : ${option.label} semitones`}
               </MenuItem>

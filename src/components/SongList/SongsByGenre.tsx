@@ -73,7 +73,7 @@ export const SongsByGenre = ({ allLists, setOpen, onStop }: Props) => {
       </IconButton>
 
       {genres.map((genre) => (
-        <div className={classes.root}>
+        <div key={genre} className={classes.root}>
           <Accordion
             classes={{
               root: classes.accordionRoot,
