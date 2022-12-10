@@ -45,7 +45,6 @@ export default ({ player }: Props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const { songList, allLists } = useSongList();
-  console.log("allLists", allLists);
 
   return (
     <Container>

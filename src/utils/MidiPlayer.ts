@@ -115,11 +115,11 @@ export class MidiPlayer {
 
   setMidiData = (midi: Midi) => {
     this.midiData = midi;
+    console.log(" this.midiData", this.midiData);
   };
 
   checkTempo = (bpm: number) => {
-    const curentTempo = Player.tempo;
-    if (curentTempo !== bpm) {
+    if (Player.tempo !== bpm) {
       Player.tempo = Math.floor(bpm / 3);
       (Player as any).setTempo(Math.floor(bpm / 3));
       this.bpm = bpm;
