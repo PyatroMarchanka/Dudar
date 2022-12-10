@@ -88,7 +88,7 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
   return (
     <div>
       <CanvasComponent
-        height={screenSize.height - 150 || 550}
+        height={screenSize.height}
         width={
           screenSize.width < maxCavasWidth ? screenSize.width : maxCavasWidth
         }
@@ -100,7 +100,6 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
 };
 
 const CanvasComponent = styled.canvas`
-  margin-top: 5px;
   @media (max-width: ${mediaQueries.mobile}) {
     width: 100%;
   }

@@ -124,10 +124,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  background-color: ${mainColors.lightestGrey};
+  margin: 0 auto;
 
   .MuiSlider-root {
-    width: 300px;
+    /* width: 100%; */
     height: 3px;
   }
 

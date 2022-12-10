@@ -348,4 +348,5 @@ export const mainColors = {
   darkerGray: "#6D5353",
   orange: "#DF7861",
   darkestRed: "#500702",
+  lightestGrey: "#FCF7F2",
 };

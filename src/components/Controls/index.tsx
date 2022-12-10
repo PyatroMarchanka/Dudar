@@ -14,6 +14,7 @@ import ManerCheckBox from "./ManerCheckBox";
 import LandscapeAlert from "../global/LandscapeAlert";
 import { landscapeAlertId } from "../../constants/localStorage";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { mainColors } from "../../utils/theme";
 
 export const Dudar = () => {
   const {
@@ -113,6 +114,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
+  background-color: ${mainColors.lightestGrey};
 
   .last {
     margin-top: auto;
@@ -202,10 +204,15 @@ const BagpipeContainer = styled.div`
 `;
 
 const Inputs = styled.div`
-  display: flex;
+  position: absolute;
   width: 100%;
+  /* padding: 0 0; */
+  bottom: 0;
+  display: flex;
   justify-content: space-between;
   align-items: center;
+
+  /* background-color: ${mainColors.lightestGrey}; */
 
   &:first-child {
     justify-content: space-around;
