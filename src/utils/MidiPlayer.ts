@@ -2,7 +2,11 @@ import MidiPlayerLib from "midi-player-js";
 import { Midi } from "@tonejs/midi";
 
 export type MidiNoteHandler = (note: number) => void;
-export type PlaybackProgressHandler = (percent: number) => void;
+export type PlaybackProgressHandler = (
+  percent: number,
+  time: number,
+  timeRemaining: number
+) => void;
 export type NotesMovingHandler = (tick: number) => void;
 export type SetTransposeType = (num: number) => void;
 
@@ -51,7 +55,11 @@ export class MidiPlayer {
   ) => {
     console.log("initPlayer");
     Player.on("playing", (currentTick: any) => {
-      handleProgress(Player.getSongPercentRemaining());
+      handleProgress(
+        Player.getSongPercentRemaining(),
+        Player.getSongTime(),
+        Player.getSongTimeRemaining()
+      );
       if (this.handleNotesMoving) {
         this.handleNotesMoving(currentTick.tick);
       }
@@ -76,7 +84,7 @@ export class MidiPlayer {
     Player.on("endOfFile", () => {
       this.stop();
       switchIsPlaying();
-      handleProgress(0);
+      handleProgress(0, Player.getSongTime(), Player.getSongTimeRemaining());
     });
   };
 

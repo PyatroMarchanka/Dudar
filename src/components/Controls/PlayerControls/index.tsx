@@ -10,6 +10,7 @@ import { mainColors, theme } from "../../../utils/theme";
 import { createTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import { TempoSlider } from "../TempoSlider";
+import { secondsToTime } from "../../../utils/textUtils";
 
 interface Props {
   player: MidiPlayer | null;
@@ -40,13 +41,13 @@ export const PlayerControls = ({ player }: Props) => {
 
   const onPlay = () => {
     setIsPlaying(true);
-    player?.playMidi(midi, progress || 0);
+    player?.playMidi(midi, progress?.percent || 0);
   };
 
   const onStop = () => {
     setIsPlaying(false);
     player?.stop();
-    setProgress(100);
+    setProgress(100, 0, 0);
   };
 
   const onPause = () => {
@@ -57,26 +58,35 @@ export const PlayerControls = ({ player }: Props) => {
   if (!midi) {
     return null;
   }
+  const timeRemainig = progress?.timeRemaining
+    ? progress?.timeRemaining
+    : undefined;
+
+  const songTime = progress?.time ? progress?.time : undefined;
 
   return (
     <Container>
-      <ThemeProvider theme={muiTheme}>
-        <Slider
-          disabled={!isPlaying}
-          className="volume-slider"
-          onChange={(e, value) => {
-            setProgress(value as number);
-            player?.setProgress(value as number);
-          }}
-          value={progress}
-          defaultValue={progress || 0}
-          aria-labelledby="discrete-slider"
-          valueLabelDisplay="auto"
-          step={10}
-          min={0}
-          max={100}
-        />
-      </ThemeProvider>
+      <Row>
+        {timeRemainig && <Time>{secondsToTime(timeRemainig)}</Time>}
+        <ThemeProvider theme={muiTheme}>
+          <Slider
+            disabled={!isPlaying}
+            className="volume-slider"
+            onChange={(e, value) => {
+              setProgress(value as number);
+              player?.setProgress(value as number);
+            }}
+            value={progress?.percent}
+            defaultValue={progress?.percent || 0}
+            aria-labelledby="discrete-slider"
+            valueLabelDisplay="auto"
+            step={10}
+            min={0}
+            max={100}
+          />
+        </ThemeProvider>
+        {songTime && <Time>{secondsToTime(songTime)}</Time>}
+      </Row>
       <Buttons>
         <TempoSlider player={player} />
         <PlayStop>
@@ -106,6 +116,19 @@ const Tempo = styled.div`
     font-size: 24px;
     font-weight: 600;
   }
+`;
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+`;
+
+const Time = styled.div`
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 10px;
+  font-family: Arial, Helvetica, sans-serif;
 `;
 
 const PlayStop = styled.div`

@@ -36,12 +36,12 @@ export const useNotesMoving = () => {
   );
 
   useEffect(() => {
-    if (!progress || !(progress % 10 === 0)) {
+    if (!progress || !(progress.percent % 10 === 0)) {
       return;
     }
 
     const newIndex = progress
-      ? Math.floor((chunkedNotes.length * progress) / 100)
+      ? Math.floor((chunkedNotes.length * progress.percent) / 100)
       : 0;
     setCurrentChunkIndex(newIndex);
     setNextNotes(chunkedNotes[newIndex] || []);

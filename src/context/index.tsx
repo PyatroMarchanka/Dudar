@@ -30,7 +30,7 @@ interface State {
   midi: ArrayBuffer | null;
   metronome: boolean;
   activeSong: string | undefined;
-  progress?: number;
+  progress?: { percent: number; time?: number; timeRemaining?: number };
   tempo: number;
   showPianoRoll: boolean;
   isPlaying: boolean;
@@ -46,7 +46,7 @@ const initialState: State = {
   midiData: null,
   songNotes: null,
   midi: null,
-  progress: 0,
+  progress: { percent: 0, time: 0, timeRemaining: 0 },
   showPianoRoll: true,
   isPlaying: false,
   allLists: {},
@@ -62,7 +62,7 @@ interface Context {
   setMetronome: (bool: boolean) => void;
   setMidiData: (midi: Midi) => void;
   setActiveSong: (fileName: string) => void;
-  setProgress: (percent: number) => void;
+  setProgress: (percent: number, time?: number, timeRemaining?: number) => void;
   setTempo: (bpm: number) => void;
   togglePianoRoll: (value: boolean) => void;
   setIsPlaying: (bool: boolean) => void;
@@ -80,7 +80,7 @@ const store = createContext<Context>({
   setMetronome: (bool: boolean) => {},
   setMidiData: (midi: Midi) => {},
   setActiveSong: (fileName: string) => {},
-  setProgress: (percent: number) => {},
+  setProgress: (percent: number, time?: number, timeRemaining?: number) => {},
   setTempo: (bpm: number) => {},
   togglePianoRoll: (value: boolean) => {},
   setIsPlaying: (bool: boolean) => {},
@@ -120,11 +120,16 @@ const ContextProvider = ({ children }: any) => {
         };
 
       case "SET_PROGRESS":
-        const progressValue = 100 - action.payload;
-        if (state.progress !== progressValue) {
+        console.log("action.payload", action.payload);
+        const progressValue = 100 - action.payload.percent;
+        if (state.progress?.percent !== progressValue) {
           return {
             ...state,
-            progress: progressValue,
+            progress: {
+              percent: progressValue,
+              time: action.payload.time,
+              timeRemaining: action.payload.timeRemaining,
+            },
           };
         } else {
           return state;
@@ -204,8 +209,15 @@ const ContextProvider = ({ children }: any) => {
     });
   };
 
-  const setProgress = (percent: number) => {
-    dispatch({ type: "SET_PROGRESS", payload: percent });
+  const setProgress = (
+    percent: number,
+    time?: number,
+    timeRemaining?: number
+  ) => {
+    dispatch({
+      type: "SET_PROGRESS",
+      payload: { percent, time, timeRemaining },
+    });
   };
 
   const setTempo = (bpm: number) => {
