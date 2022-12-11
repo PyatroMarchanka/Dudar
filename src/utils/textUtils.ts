@@ -14,8 +14,13 @@ export const formatMidiFileNameForTitle = (filename: string) => {
     return;
   }
 
-  return filename
-    .split("/")[1]
+  const songName = filename.split("/")[1];
+
+  if (!songName) {
+    return;
+  }
+
+  return songName
     .split(/.midi|.mid|.MID/)
     .join("")
     .split("_")

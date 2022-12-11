@@ -9,8 +9,10 @@ export const getUserDataFromLocal = () => {
   const userTransposeData = localStorage.getItem(userTranspose);
   const songFileName = songData;
 
+  const isSongNameCorrect = !!songData?.split("/")[1];
+
   return {
-    activeSong: songFileName || "belarussian/Verabey.mid",
+    activeSong: isSongNameCorrect ? songFileName : "belarussian/Verabey.mid",
     tempo: userTempoData !== null ? +userTempoData : 200,
     transpose: userTransposeData !== null ? +userTransposeData : -1,
   };
