@@ -120,7 +120,6 @@ const ContextProvider = ({ children }: any) => {
         };
 
       case "SET_PROGRESS":
-        console.log("action.payload", action.payload);
         const progressValue = 100 - action.payload.percent;
         if (state.progress?.percent !== progressValue) {
           return {
