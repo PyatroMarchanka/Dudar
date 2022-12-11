@@ -7,7 +7,7 @@ export const getUserDataFromLocal = () => {
   const songData = localStorage.getItem(lastSongData);
   const userTempoData = localStorage.getItem(userTempo);
   const userTransposeData = localStorage.getItem(userTranspose);
-  const songFileName = songData;
+  const songFileName = songData as string;
 
   const isSongNameCorrect = !!songData?.split("/")[1];
 
