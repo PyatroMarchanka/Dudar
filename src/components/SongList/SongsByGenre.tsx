@@ -25,9 +25,10 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: "100%",
+      width: "90%",
+      marginTop: "20px",
+      marginLeft: "20px",
     },
-
     accordionRoot: {
       backgroundColor: mainColors.darkestRed,
       color: "white",
@@ -35,17 +36,17 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: "20px",
       boxShadow: "none",
     },
-    expanded: {
-      marginTop: "10px",
-      marginBottom: "10px",
-      minHeight: "30px",
-    },
     summary: {
       backgroundColor: mainColors.darkestRed,
       boxShadow: "none",
-      minHeight: "30px",
-      marginTop: "10px",
-      marginBottom: "10px",
+      minHeight: "10px",
+      marginTop: "5px",
+      marginBottom: "5px",
+      "&.Mui-expanded": {
+        marginTop: "5px",
+        minHeight: "10px",
+        marginBottom: "5px",
+      },
     },
     heading: {
       fontWeight: "bold",
@@ -53,7 +54,16 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     activeSong: {
       backgroundColor: mainColors.darkRed,
+      borderRadius: "4px",
     },
+    list: {
+      width: "100%",
+      padding: "0px",
+    },
+    buttonRoot: {
+      padding: "5px",
+    },
+    detailsRoot: { padding: "0px 16px 16px" },
   })
 );
 
@@ -82,7 +92,6 @@ export const SongsByGenre = ({ allLists, setOpen, onStop }: Props) => {
             <AccordionSummary
               classes={{
                 root: classes.summary,
-                expanded: classes.expanded,
                 content: classes.summary,
               }}
               aria-controls="panel1a-content"
@@ -93,8 +102,8 @@ export const SongsByGenre = ({ allLists, setOpen, onStop }: Props) => {
               </Typography>
             </AccordionSummary>
 
-            <AccordionDetails>
-              <List>
+            <AccordionDetails classes={{ root: classes.detailsRoot }}>
+              <List classes={{ padding: classes.list }}>
                 {allLists[genre].map((song) => (
                   <div
                     className={
@@ -105,6 +114,7 @@ export const SongsByGenre = ({ allLists, setOpen, onStop }: Props) => {
                     key={song}
                   >
                     <IconButton
+                      classes={{ root: classes.buttonRoot }}
                       className="songButton"
                       onClick={() => {
                         setActiveSong(`${genre}/${song}`);
