@@ -1,4 +1,10 @@
-import { Drawer, IconButton, makeStyles, Theme } from "@material-ui/core";
+import {
+  Drawer,
+  SwipeableDrawer,
+  IconButton,
+  makeStyles,
+  Theme,
+} from "@material-ui/core";
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { store } from "../../context";
@@ -48,12 +54,13 @@ export default ({ player }: Props) => {
 
   return (
     <Container>
-      <Drawer
+      <SwipeableDrawer
         classes={{
           paper: classes.root,
         }}
         anchor="left"
         open={open}
+        onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
       >
         <SongsByGenre
@@ -62,7 +69,7 @@ export default ({ player }: Props) => {
           setOpen={setOpen}
           onStop={onStop}
         />
-      </Drawer>
+      </SwipeableDrawer>
       <IconButton onClick={() => setOpen(true)} className="icon">
         <Icon type="hamb" fill={theme.colors.black} className="play-icon" />
       </IconButton>
