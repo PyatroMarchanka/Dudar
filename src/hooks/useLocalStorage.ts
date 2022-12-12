@@ -4,15 +4,15 @@ import { lastSongData } from "../constants/localStorage";
 import { store } from "../context";
 
 export const getUserDataFromLocal = () => {
-  const songData = localStorage.getItem(lastSongData)?.split("|");
+  const songData = localStorage.getItem(lastSongData);
   const userTempoData = localStorage.getItem(userTempo);
   const userTransposeData = localStorage.getItem(userTranspose);
-  const songFileName = songData?.[0];
-  const genreName = songData?.[1];
+  const songFileName = songData as string;
+
+  const isSongNameCorrect = !!songData?.split("/")[1];
 
   return {
-    activeSong: songFileName || "Verabey.mid",
-    genreName: genreName || "belarussian",
+    activeSong: isSongNameCorrect ? songFileName : "belarussian/Verabey.mid",
     tempo: userTempoData !== null ? +userTempoData : 200,
     transpose: userTransposeData !== null ? +userTransposeData : -1,
   };
@@ -20,16 +20,15 @@ export const getUserDataFromLocal = () => {
 
 export const useLocalStorage = () => {
   const {
-    state: { activeSong, genreList, tempo, transpose },
+    state: { activeSong, tempo, transpose },
     setActiveSong,
-    setGenreList,
     setTempo,
     setTranspose,
   } = useContext(store);
 
   useEffect(() => {
-    if (activeSong && genreList) {
-      const formattetLastUserSong = `${activeSong}|${genreList}`;
+    if (activeSong) {
+      const formattetLastUserSong = activeSong;
 
       localStorage.setItem(lastSongData, formattetLastUserSong);
     }
@@ -39,21 +38,17 @@ export const useLocalStorage = () => {
     }
 
     if (transpose) {
-      console.log("transpose", transpose);
       localStorage.setItem(userTranspose, `${transpose}`);
     }
-  }, [activeSong, genreList, tempo, transpose]);
+  }, [activeSong, tempo, transpose]);
 
   useEffect(() => {
     const songData = localStorage.getItem(lastSongData)?.split("|");
     const userTempoData = localStorage.getItem(userTempo);
     const userTransposeData = localStorage.getItem(userTranspose);
-    console.log("get userTransposeData", userTransposeData);
     const songFileName = songData?.[0];
-    const genreName = songData?.[1];
 
-    setGenreList(genreName || "belarussian");
-    setActiveSong(songFileName || "Verabey.mid");
+    setActiveSong(songFileName || "belarussian/Verabey.mid");
     setTempo((userTempoData && +userTempoData) || 200);
     setTranspose((userTransposeData !== null && +userTransposeData) || -1);
   }, []);

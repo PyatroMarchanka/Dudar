@@ -2,10 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { store } from "../context";
 
 export const useSongList = () => {
-  const {
-    state: { genreList },
-    setAllLists: setAllListContext,
-  } = useContext(store);
+  const { setAllLists: setAllListContext } = useContext(store);
 
   const [songList, setSongList] = useState<string[]>([]);
   const [allLists, setAllLists] = useState<{ [key: string]: string[] }>({});
@@ -15,14 +12,13 @@ export const useSongList = () => {
     const file = await fetch("midi/list.json");
     const list = await file.json();
 
-    setSongList(list[genreList || initialList] || {});
     setAllLists(list);
     setAllListContext(list);
   };
 
   useEffect(() => {
-    setSongList(allLists[genreList || initialList] || {});
-  }, [genreList, allLists]);
+    setSongList(allLists[initialList] || {});
+  }, [allLists]);
 
   useEffect(() => {
     getAllList();

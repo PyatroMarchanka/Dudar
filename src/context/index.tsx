@@ -13,7 +13,6 @@ interface Action {
     | "SET_TEMPO"
     | "SET_SHOW_PIANO_ROLL"
     | "SET_IS_PLAYING"
-    | "SET_GENRE_LIST"
     | "SET_ALL_LISTS"
     | "SET_SIZE"
     | "SET_TRANSPOSE"
@@ -31,11 +30,10 @@ interface State {
   midi: ArrayBuffer | null;
   metronome: boolean;
   activeSong: string | undefined;
-  progress?: number;
+  progress?: { percent: number; time?: number; timeRemaining?: number };
   tempo: number;
   showPianoRoll: boolean;
   isPlaying: boolean;
-  genreList?: string;
   allLists: any;
   isClosedManer: boolean;
   screenSize: { width: number; height: number };
@@ -48,8 +46,7 @@ const initialState: State = {
   midiData: null,
   songNotes: null,
   midi: null,
-  progress: 0,
-  genreList: "",
+  progress: { percent: 0, time: 0, timeRemaining: 0 },
   showPianoRoll: true,
   isPlaying: false,
   allLists: {},
@@ -65,11 +62,10 @@ interface Context {
   setMetronome: (bool: boolean) => void;
   setMidiData: (midi: Midi) => void;
   setActiveSong: (fileName: string) => void;
-  setProgress: (percent: number) => void;
+  setProgress: (percent: number, time?: number, timeRemaining?: number) => void;
   setTempo: (bpm: number) => void;
   togglePianoRoll: (value: boolean) => void;
   setIsPlaying: (bool: boolean) => void;
-  setGenreList: (list: string) => void;
   setAllLists: (lists: any) => void;
   setIsClosedManer: (bool: boolean) => void;
   setScreenSize: (size: { width: number; height: number }) => void;
@@ -84,11 +80,10 @@ const store = createContext<Context>({
   setMetronome: (bool: boolean) => {},
   setMidiData: (midi: Midi) => {},
   setActiveSong: (fileName: string) => {},
-  setProgress: (percent: number) => {},
+  setProgress: (percent: number, time?: number, timeRemaining?: number) => {},
   setTempo: (bpm: number) => {},
   togglePianoRoll: (value: boolean) => {},
   setIsPlaying: (bool: boolean) => {},
-  setGenreList: (list: string) => {},
   setAllLists: (lists: any) => {},
   setIsClosedManer: (bool: boolean) => {},
   setScreenSize: (size: { width: number; height: number }) => {},
@@ -125,11 +120,15 @@ const ContextProvider = ({ children }: any) => {
         };
 
       case "SET_PROGRESS":
-        const progressValue = 100 - action.payload;
-        if (state.progress !== progressValue) {
+        const progressValue = 100 - action.payload.percent;
+        if (state.progress?.percent !== progressValue) {
           return {
             ...state,
-            progress: progressValue,
+            progress: {
+              percent: progressValue,
+              time: action.payload.time,
+              timeRemaining: action.payload.timeRemaining,
+            },
           };
         } else {
           return state;
@@ -151,12 +150,6 @@ const ContextProvider = ({ children }: any) => {
         return {
           ...state,
           isPlaying: action.payload,
-        };
-
-      case "SET_GENRE_LIST":
-        return {
-          ...state,
-          genreList: action.payload,
         };
 
       case "SET_ALL_LISTS":
@@ -215,8 +208,15 @@ const ContextProvider = ({ children }: any) => {
     });
   };
 
-  const setProgress = (percent: number) => {
-    dispatch({ type: "SET_PROGRESS", payload: percent });
+  const setProgress = (
+    percent: number,
+    time?: number,
+    timeRemaining?: number
+  ) => {
+    dispatch({
+      type: "SET_PROGRESS",
+      payload: { percent, time, timeRemaining },
+    });
   };
 
   const setTempo = (bpm: number) => {
@@ -229,10 +229,6 @@ const ContextProvider = ({ children }: any) => {
 
   const setIsPlaying = (bool: boolean) => {
     dispatch({ type: "SET_IS_PLAYING", payload: bool });
-  };
-
-  const setGenreList = (list: string) => {
-    dispatch({ type: "SET_GENRE_LIST", payload: list });
   };
 
   const setAllLists = (list: any) => {
@@ -267,7 +263,6 @@ const ContextProvider = ({ children }: any) => {
         setTempo,
         togglePianoRoll,
         setIsPlaying,
-        setGenreList,
         setAllLists,
         setIsClosedManer,
         setScreenSize,

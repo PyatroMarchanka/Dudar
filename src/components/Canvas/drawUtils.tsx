@@ -19,12 +19,10 @@ const numbers = {
 };
 const coefficient = 0.8;
 const coeff = (num: number) => num * coefficient;
-const step = 18;
 
 const brickhHeight = coeff(18);
 const brickHeightHalf = brickhHeight / 2;
 const lineHeight = 2;
-const holeRadius = coeff(10);
 const holeImageRadius = coeff(38);
 const holeImageRadiusHalf = holeImageRadius / 2;
 const notesScale = 0.3;
@@ -147,11 +145,13 @@ export const drawActiveHoles = (
   }
 };
 const holes = yPosesReversed.slice(1);
-const blowImageYPos = yPoses[yPoses.length - 1];
+const blowImageYPos = yPoses[yPoses.length - 1] - 20;
+const blowImageLeftMargin = holeLeftMargin + 3;
+const blowImageSize = holeImageRadius - 5;
 
 const drawClosedNotes = (ctx: CanvasRenderingContext2D) => {
   const topMargin = holeImageRadiusHalf;
-  const lastIdx = holes.length - 1;
+
   holes.forEach((pos, i) => {
     ctx.drawImage(
       i === 0 ? backClosedHoleImage : closedHoleImage,
@@ -164,10 +164,10 @@ const drawClosedNotes = (ctx: CanvasRenderingContext2D) => {
 
   ctx.drawImage(
     blowImage,
-    holeLeftMargin,
-    blowImageYPos - 20,
-    holeImageRadius,
-    holeImageRadius
+    blowImageLeftMargin,
+    blowImageYPos,
+    blowImageSize,
+    blowImageSize
   );
 };
 
@@ -245,7 +245,7 @@ export const drawNotes = (
 const drawShadow = (ctx: CanvasRenderingContext2D) => {
   const backgoundImage = new Image();
   backgoundImage.src = "/images/BG.png";
-  ctx.drawImage(backgoundImage, -10, -60, widthBackground, heightBackground);
+  ctx.drawImage(backgoundImage, 0, -50, widthBackground, heightBackground);
 };
 
 const imageScale = 200 / 896;
@@ -254,7 +254,7 @@ const backgroundScale = 414 / 896;
 const width = coeff(190);
 const height = width / imageScale;
 
-const widthBackground = coeff(420);
+const widthBackground = coeff(454);
 const heightBackground = widthBackground / backgroundScale;
 
 const image = new Image();
@@ -264,9 +264,6 @@ export const drawBagpipe = (
   ctx: CanvasRenderingContext2D,
   songNotes?: SharpNotes[]
 ) => {
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, 30, height);
-
   ctx.drawImage(image, -38, -27, width, height);
 
   if (!songNotes) {
