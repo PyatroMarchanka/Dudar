@@ -17,7 +17,8 @@ interface Action {
     | "SET_SIZE"
     | "SET_TRANSPOSE"
     | "SET_IS_CLOSED_MANER"
-    | "SET_SONG_NOTES";
+    | "SET_SONG_NOTES"
+    | "SET_SONG_LENGTH";
 
   payload?: any;
 }
@@ -30,6 +31,7 @@ interface State {
   midi: ArrayBuffer | null;
   metronome: boolean;
   activeSong: string | undefined;
+  songLength?: number;
   progress?: { percent: number; time?: number; timeRemaining?: number };
   tempo: number;
   showPianoRoll: boolean;
@@ -52,6 +54,7 @@ const initialState: State = {
   allLists: {},
   isClosedManer: false,
   screenSize: { width: 400, height: 500 },
+  songLength: 0,
   ...userData,
 };
 
@@ -62,6 +65,7 @@ interface Context {
   setMetronome: (bool: boolean) => void;
   setMidiData: (midi: Midi) => void;
   setActiveSong: (fileName: string) => void;
+  setSongLength: (seconds: number) => void;
   setProgress: (percent: number, time?: number, timeRemaining?: number) => void;
   setTempo: (bpm: number) => void;
   togglePianoRoll: (value: boolean) => void;
@@ -89,6 +93,7 @@ const store = createContext<Context>({
   setScreenSize: (size: { width: number; height: number }) => {},
   setTranspose: (num: number) => {},
   setSongNotes: (notes: SharpNotes[]) => {},
+  setSongLength: (seconds: number) => {},
 });
 const { Provider } = store;
 
@@ -120,7 +125,7 @@ const ContextProvider = ({ children }: any) => {
         };
 
       case "SET_PROGRESS":
-        const progressValue = 100 - action.payload.percent;
+        const progressValue = action.payload.percent;
         if (state.progress?.percent !== progressValue) {
           return {
             ...state,
@@ -132,7 +137,21 @@ const ContextProvider = ({ children }: any) => {
           };
         } else {
           return state;
+          // {
+          //   ...state,
+          //   progress: {
+          //     percent: state.progress.percent,
+          //     time: action.payload.time,
+          //     timeRemaining: action.payload.timeRemaining,
+          //   },
+          // };
         }
+
+      case "SET_SONG_LENGTH":
+        return {
+          ...state,
+          songLength: action.payload,
+        };
 
       case "SET_TEMPO":
         return {
@@ -215,7 +234,7 @@ const ContextProvider = ({ children }: any) => {
   ) => {
     dispatch({
       type: "SET_PROGRESS",
-      payload: { percent, time, timeRemaining },
+      payload: { percent: 100 - percent, time, timeRemaining },
     });
   };
 
@@ -251,6 +270,10 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_SONG_NOTES", payload: songNotes });
   };
 
+  const setSongLength = (songLength: number) => {
+    dispatch({ type: "SET_SONG_LENGTH", payload: songLength });
+  };
+
   return (
     <Provider
       value={{
@@ -269,6 +292,7 @@ const ContextProvider = ({ children }: any) => {
         setTranspose,
         setSongNotes,
         setMetronome,
+        setSongLength,
       }}
     >
       {children}

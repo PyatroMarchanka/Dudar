@@ -82,6 +82,7 @@ export class MidiPlayer {
     });
 
     Player.on("endOfFile", () => {
+      console.log("end of file");
       this.stop();
       switchIsPlaying();
       handleProgress(0, Player.getSongTime(), Player.getSongTimeRemaining());
@@ -111,10 +112,16 @@ export class MidiPlayer {
     }
   }
 
-  setProgress = (percent: number) => {
-    Player.skipToPercent(percent).play();
-    this.envelopes.forEach((env) => env && env.cancel());
-    this.playDrone(this.droneNote);
+  setProgress = (percent: number, isPlaying: boolean) => {
+    console.log("percent", percent);
+    Player.skipToPercent(percent);
+    console.log("isPlaying", isPlaying);
+    if (isPlaying) {
+      Player.play();
+      this.envelopes.forEach((env) => env && env.cancel());
+
+      this.playDrone(this.droneNote);
+    }
   };
 
   setTranspose: SetTransposeType = (num: number) => {
@@ -123,13 +130,12 @@ export class MidiPlayer {
 
   setMidiData = (midi: Midi) => {
     this.midiData = midi;
-    console.log(" this.midiData", this.midiData);
   };
 
   checkTempo = (bpm: number) => {
     if (Player.tempo !== bpm) {
-      Player.tempo = Math.floor(bpm / 3);
-      (Player as any).setTempo(Math.floor(bpm / 3));
+      Player.tempo = Math.floor(bpm / 2);
+      (Player as any).setTempo(Math.floor(bpm / 2));
       this.bpm = bpm;
     }
   };
@@ -151,7 +157,7 @@ export class MidiPlayer {
     Player.play();
 
     if (progress) {
-      this.setProgress(progress);
+      this.setProgress(progress, true);
     }
     this.playDrone(this.droneNote);
   };

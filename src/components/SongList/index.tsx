@@ -1,5 +1,4 @@
 import {
-  Drawer,
   SwipeableDrawer,
   IconButton,
   makeStyles,

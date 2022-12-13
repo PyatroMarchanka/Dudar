@@ -5,9 +5,10 @@ import { addMetronome, fixMidiDataOctaves } from "../utils/midiUtils";
 
 export const useLoadSong = () => {
   const {
-    state: { activeSong, allLists, metronome },
+    state: { activeSong, allLists, metronome, tempo },
     setMidi,
     setMidiData,
+    setSongLength,
   } = useContext(store);
 
   const [lowestOctave, setLowestOctave] = useState(4);
@@ -31,6 +32,17 @@ export const useLoadSong = () => {
       const songWithMetronome = await addMetronome(buffer);
 
       const midi = new Midi(songWithMetronome);
+      midi.header.setTempo(tempo / 2);
+      console.log(
+        "midi.header.ticksToSeconds(midi.durationTicks)",
+        midi.header.ticksToSeconds(midi.durationTicks)
+      );
+      setSongLength(midi.header.ticksToSeconds(midi.durationTicks));
+      // setProgress(
+      //   100,
+      //   midi.header.ticksToSeconds(midi.durationTicks),
+      //   midi.header.ticksToSeconds(midi.durationTicks)
+      // );
 
       const { lowestOctave: lowestOctaveFromFile } = fixMidiDataOctaves(midi);
       setLowestOctave(lowestOctaveFromFile);

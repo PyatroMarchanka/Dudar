@@ -34,7 +34,7 @@ const muiTheme = createTheme({
 
 export const PlayerControls = ({ player }: Props) => {
   const {
-    state: { midi, progress, isPlaying, tempo },
+    state: { midi, progress, isPlaying, songLength },
     setProgress,
     setIsPlaying,
   } = useContext(store);
@@ -58,29 +58,30 @@ export const PlayerControls = ({ player }: Props) => {
   if (!midi) {
     return null;
   }
-  const timeRemainig = progress?.timeRemaining
-    ? progress?.timeRemaining
-    : undefined;
+  const timeRemainig = progress?.timeRemaining ? progress?.timeRemaining : 0;
 
-  const songTime = progress?.time ? progress?.time : undefined;
+  const songTime = songLength ? songLength : undefined;
 
   return (
     <Container>
       <Row>
-        {timeRemainig && <Time>{secondsToTime(timeRemainig)}</Time>}
+        {<Time>{secondsToTime(timeRemainig)}</Time>}
         <ThemeProvider theme={muiTheme}>
           <Slider
-            disabled={!isPlaying}
             className="volume-slider"
             onChange={(e, value) => {
-              setProgress(value as number);
-              player?.setProgress(value as number);
+              if (isPlaying) {
+                setProgress(value as number);
+                player?.setProgress(value as number, isPlaying);
+              } else {
+                setProgress(100 - (value as number));
+              }
             }}
-            value={progress?.percent}
+            value={progress?.percent || 0}
             defaultValue={progress?.percent || 0}
             aria-labelledby="discrete-slider"
             valueLabelDisplay="auto"
-            step={10}
+            step={1}
             min={0}
             max={100}
           />
@@ -134,6 +135,11 @@ const Time = styled.div`
 const PlayStop = styled.div`
   display: flex;
   justify-content: space-between;
+
+  .icon {
+    padding: 0;
+    margin: 12px;
+  }
 `;
 
 const Buttons = styled.div`
