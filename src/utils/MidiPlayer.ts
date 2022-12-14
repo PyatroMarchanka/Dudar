@@ -117,9 +117,7 @@ export class MidiPlayer {
   }
 
   setProgress = (percent: number, isPlaying: boolean) => {
-    console.log("percent", percent);
     Player.skipToPercent(percent);
-    console.log("isPlaying", isPlaying);
     if (isPlaying) {
       Player.play();
       this.envelopes.forEach((env) => env && env.cancel());
