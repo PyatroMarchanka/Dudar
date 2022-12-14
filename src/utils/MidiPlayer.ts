@@ -72,8 +72,12 @@ export class MidiPlayer {
         this.checkTempo(this.bpm);
       }
 
-      if (event.noteNumber === 33 && this.metronom) {
-        this.keyDown(65, 65, metronomeTick, 2);
+      if (
+        event.name === "Note on" &&
+        event.noteNumber === 33 &&
+        this.metronom
+      ) {
+        this.keyDown(65, 65, metronomeTick, 8);
       }
 
       if (event.name === "Note off") {
