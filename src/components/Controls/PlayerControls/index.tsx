@@ -71,7 +71,6 @@ export const PlayerControls = ({ player }: Props) => {
             className="volume-slider"
             onChange={(e, value) => {
               if (isPlaying) {
-                setProgress(value as number);
                 player?.setProgress(value as number, isPlaying);
               } else {
                 setProgress(
