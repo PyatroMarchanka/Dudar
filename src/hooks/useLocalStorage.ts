@@ -13,7 +13,7 @@ export const getUserDataFromLocal = () => {
   return {
     activeSong: isSongNameCorrect ? songFileName : "belarussian/Verabey.mid",
     tempo: userTempoData !== null ? +userTempoData : 200,
-    transpose: userTransposeData !== null ? +userTransposeData : -1,
+    transpose: userTransposeData !== null ? +userTransposeData : 0,
   };
 };
 
@@ -49,6 +49,6 @@ export const useLocalStorage = () => {
 
     setActiveSong(songFileName || "belarussian/Verabey.mid");
     setTempo((userTempoData && +userTempoData) || 200);
-    setTranspose((userTransposeData !== null && +userTransposeData) || -1);
+    setTranspose((userTransposeData !== null && +userTransposeData) || 0);
   }, []);
 };
