@@ -74,7 +74,11 @@ export const PlayerControls = ({ player }: Props) => {
                 setProgress(value as number);
                 player?.setProgress(value as number, isPlaying);
               } else {
-                setProgress(100 - (value as number));
+                setProgress(
+                  100 - (value as number),
+                  songTime!,
+                  (songTime! * (100 - (value as number))) / 100
+                );
               }
             }}
             value={progress?.percent || 0}
