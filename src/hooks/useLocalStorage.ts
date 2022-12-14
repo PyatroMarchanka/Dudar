@@ -8,7 +8,6 @@ export const getUserDataFromLocal = () => {
   const userTempoData = localStorage.getItem(userTempo);
   const userTransposeData = localStorage.getItem(userTranspose);
   const songFileName = songData as string;
-
   const isSongNameCorrect = !!songData?.split("/")[1];
 
   return {
@@ -37,7 +36,7 @@ export const useLocalStorage = () => {
       localStorage.setItem(userTempo, `${tempo}`);
     }
 
-    if (transpose) {
+    if (transpose !== undefined) {
       localStorage.setItem(userTranspose, `${transpose}`);
     }
   }, [activeSong, tempo, transpose]);
