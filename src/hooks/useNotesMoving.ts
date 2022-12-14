@@ -41,7 +41,7 @@ export const useNotesMoving = () => {
     }
 
     const newIndex = progress
-      ? Math.floor((chunkedNotes.length * progress.percent) / 100)
+      ? Math.floor((chunkedNotes.length * (progress.percent - 1)) / 100)
       : 0;
     setCurrentChunkIndex(newIndex);
     setNextNotes(chunkedNotes[newIndex] || []);

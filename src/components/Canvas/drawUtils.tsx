@@ -264,6 +264,9 @@ export const drawBagpipe = (
   ctx: CanvasRenderingContext2D,
   songNotes?: SharpNotes[]
 ) => {
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, 30, height + 100);
+
   ctx.drawImage(image, -38, -27, width, height);
 
   if (!songNotes) {
