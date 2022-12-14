@@ -260,18 +260,11 @@ const heightBackground = widthBackground / backgroundScale;
 const image = new Image();
 image.src = "/images/main_pipe.png";
 
-export const drawBagpipe = (
-  ctx: CanvasRenderingContext2D,
-  songNotes?: SharpNotes[]
-) => {
+export const drawBagpipe = (ctx: CanvasRenderingContext2D) => {
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, 30, height + 100);
 
   ctx.drawImage(image, -38, -27, width, height);
-
-  if (!songNotes) {
-    return;
-  }
 
   drawClosedNotes(ctx);
 };
@@ -317,7 +310,7 @@ export const drawAll = (
   drawShadow(ctx!);
   drawLines(ctx);
   drawNotes(ctx, tick, nextNotes, nextToNextNotes);
-  drawBagpipe(ctx!, songNotes!);
+  drawBagpipe(ctx!);
   drawActiveHoles(ctx!, lowestOctave, activeHole, isClosedManer);
   drawNotesNames(ctx!, songNotes!);
 };
