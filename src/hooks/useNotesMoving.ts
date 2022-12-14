@@ -36,7 +36,7 @@ export const useNotesMoving = () => {
   );
 
   useEffect(() => {
-    if (!progress || !(progress.percent % 10 === 0)) {
+    if (!progress || !(progress.percent % 1 === 0)) {
       return;
     }
 
