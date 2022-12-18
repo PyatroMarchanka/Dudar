@@ -85,16 +85,12 @@ export const getBagpipeData = (mode: Modes, tone: SharpNotes): BagpipeNotes => {
 const getModeFromMidi = (midi: Midi, transpose: number) => {
   const songNotes = getSongNotesFromMidi(midi).map(convertToSharp);
 
-  if (songNotes.includes(transposeNote("C#", transpose))) {
-    return songNotes.includes(transposeNote("G", transpose))
-      ? Modes.Mixolidian
-      : Modes.Ionian;
+  if (songNotes.includes("C#")) {
+    return songNotes.includes("G") ? Modes.Mixolidian : Modes.Ionian;
   }
 
-  if (songNotes.includes(transposeNote("C", transpose))) {
-    return songNotes.includes(transposeNote("F#", transpose))
-      ? Modes.Dorian
-      : Modes.Eolian;
+  if (songNotes.includes("C")) {
+    return songNotes.includes("F#") ? Modes.Dorian : Modes.Eolian;
   }
 
   return Modes.Dorian;
