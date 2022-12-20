@@ -18,7 +18,8 @@ interface Props {
     | "hamb"
     | "settings"
     | "music"
-    | "song-play";
+    | "song-play"
+    | "back";
   className?: string;
   fill?: string;
   disabled?: boolean;
@@ -412,6 +413,24 @@ export const Icon = styled(
             <path
               d="M0.381958 16.9297V1.07024C0.381958 0.464638 1.00666 0.0883359 1.50208 0.395506L14.2916 8.32522C14.7799 8.62798 14.7799 9.37194 14.2916 9.67469L1.50208 17.6044C1.00666 17.9116 0.381958 17.5353 0.381958 16.9297Z"
               fill="white"
+            />
+          </svg>
+        );
+
+      case "back":
+        return (
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M21.4086 4.39738C22.1059 5.00348 22.2001 6.08445 21.619 6.81178L14.2786 16L21.619 25.1882C22.2001 25.9156 22.1059 26.9965 21.4086 27.6026C20.7113 28.2087 19.675 28.1105 19.094 27.3831L10 16L19.094 4.61687C19.675 3.88954 20.7113 3.79127 21.4086 4.39738Z"
+              fill="#1C0606"
             />
           </svg>
         );

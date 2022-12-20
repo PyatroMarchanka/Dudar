@@ -1,20 +1,53 @@
 import { MenuItem, Select } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
+import {
+  SwipeableDrawer,
+  IconButton,
+  makeStyles,
+  Theme,
+} from "@material-ui/core";
 import { store } from "../../../context";
 import { transposeNote } from "../../../interfaces";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
 import { ModalButton } from "../../global/ModalButton";
 import { useSelectStyles } from "../../global/selectStyles";
+import styled from "styled-components";
+import { mainColors, theme } from "../../../utils/theme";
+import { mediaQueries } from "../../../constants/style";
+import { Icon } from "../../global/Icon";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
 }
+
+const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    width: 200,
+    display: "flex",
+    justifyContent: "center",
+  },
+  content: {
+    width: 300,
+    display: "flex",
+    margin: 0,
+    justifyContent: "flex-start",
+  },
+  list: {
+    width: 250,
+  },
+  root: {
+    backgroundColor: mainColors.lightestGrey,
+    color: "#fff",
+  },
+}));
 
 export default ({ midiPlayer }: Props) => {
   const {
     state: { transpose },
     setTranspose: setTransposeCtx,
   } = useContext(store);
+  const [open, setOpen] = useState(false);
+  const classes = useStyles();
 
   const setTranspose = (num: number) => {
     setTransposeCtx(num);
@@ -25,35 +58,53 @@ export default ({ midiPlayer }: Props) => {
   const options = new Array(24)
     .fill(undefined)
     .map((_, i) => ({ value: i - 12, label: i - 12 }));
-  const selectClasses = useSelectStyles();
 
   useEffect(() => {
     setTranspose(transpose);
   }, [midiPlayer]);
 
   return (
-    <ModalButton
-      buttonLabel={"Transpose"}
-      dialogContent={
-        <div>
-          <Select
-            id="demo-simple-select"
-            className={selectClasses.select}
-            value={value}
-            onChange={(e) => {
-              setTranspose && setTranspose(Number(e.target.value));
-              setValue(Number(e.target.value));
-            }}
-          >
-            {options.map((option) => (
-              <MenuItem key={option.label} value={option.value}>
-                <b>{transposeNote("A", +option.label)}</b>
-                {` : ${option.label} semitones`}
-              </MenuItem>
-            ))}
-          </Select>
-        </div>
-      }
-    />
+    <Container>
+      <SwipeableDrawer
+        classes={{
+          paper: classes.root,
+        }}
+        anchor="right"
+        open={open}
+        onOpen={() => setOpen(true)}
+        onClose={() => setOpen(false)}
+      >
+        <Content>
+          <IconButton onClick={() => setOpen(false)} className="close">
+            <Icon type="back" fill={theme.colors.white} className="icon" />
+          </IconButton>
+        </Content>
+      </SwipeableDrawer>
+      <IconButton onClick={() => setOpen(true)} className="settings">
+        <Icon type="settings" fill={theme.colors.black} className="icon" />
+      </IconButton>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  .icon {
+    transform: translate(13px, 0px);
+  }
+`;
+
+const Content = styled.div`
+  @media (max-width: ${mediaQueries.mobile}) {
+    width: 100vw;
+  }
+
+  width: 300px;
+  z-index: 10;
+  .close,
+  .settings {
+    position: absolute;
+    left: 10px;
+    margin-top: 10px;
+    z-index: 100;
+  }
+`;
