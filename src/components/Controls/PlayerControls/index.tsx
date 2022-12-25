@@ -94,7 +94,7 @@ export const PlayerControls = ({ player }: Props) => {
       <Buttons>
         <TempoSlider player={player} />
         <PlayStop>
-          <IconButton onClick={onStop} disabled={!isPlaying} className="icon">
+          <IconButton onClick={onStop} className="icon">
             <Icon
               type="stop"
               fill={theme.colors.black}
