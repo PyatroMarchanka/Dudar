@@ -15,29 +15,17 @@ import styled from "styled-components";
 import { mainColors, theme } from "../../../utils/theme";
 import { mediaQueries } from "../../../constants/style";
 import { Icon } from "../../global/Icon";
+import { MainSettings } from "./MainSettings";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    width: 200,
-    display: "flex",
-    justifyContent: "center",
-  },
-  content: {
-    width: 300,
-    display: "flex",
-    margin: 0,
-    justifyContent: "flex-start",
-  },
-  list: {
-    width: 250,
-  },
   root: {
     backgroundColor: mainColors.lightestGrey,
     color: "#fff",
+    width: "100%",
   },
 }));
 
@@ -46,7 +34,7 @@ export default ({ midiPlayer }: Props) => {
     state: { transpose },
     setTranspose: setTransposeCtx,
   } = useContext(store);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const classes = useStyles();
 
   const setTranspose = (num: number) => {
@@ -78,6 +66,8 @@ export default ({ midiPlayer }: Props) => {
           <IconButton onClick={() => setOpen(false)} className="close">
             <Icon type="back" fill={theme.colors.white} className="icon" />
           </IconButton>
+          <Title>Settings</Title>
+          <MainSettings />
         </Content>
       </SwipeableDrawer>
       <IconButton onClick={() => setOpen(true)} className="settings">
@@ -93,18 +83,25 @@ const Container = styled.div`
   }
 `;
 
+const Title = styled.h3`
+  font-family: Arial, Helvetica, sans-serif;
+  color: black;
+  width: 100%;
+  text-align: center;
+`;
+
 const Content = styled.div`
   @media (max-width: ${mediaQueries.mobile}) {
-    width: 100vw;
+    width: 100%;
   }
 
+  padding: 10px;
   width: 300px;
   z-index: 10;
   .close,
   .settings {
-    position: absolute;
+    position: fixed;
     left: 10px;
-    margin-top: 10px;
     z-index: 100;
   }
 `;

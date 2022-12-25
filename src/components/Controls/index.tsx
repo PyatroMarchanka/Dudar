@@ -3,7 +3,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import { convertMidiPitchToNote, SharpNotes } from "../../interfaces";
 import { PlayerControls } from "./PlayerControls";
 import { useMidiPlayer } from "../../utils/useMidiPlayer";
-import Transpose from "./Transpose";
+import Transpose from "./Settings";
 import SongList from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
