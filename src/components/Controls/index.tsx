@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { convertMidiPitchToNote, SharpNotes } from "../../interfaces";
 import { PlayerControls } from "./PlayerControls";
-import { useMidiPlayer } from "../../utils/useMidiPlayer";
+import { useMidiPlayer } from "../../hooks/useMidiPlayer";
 import Transpose from "./Settings";
 import SongList from "../SongList";
 import { noSongsLabel, store } from "../../context";
