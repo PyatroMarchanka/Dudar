@@ -34,14 +34,16 @@ const muiTheme = createTheme({
 
 export const PlayerControls = ({ player }: Props) => {
   const {
-    state: { midi, progress, isPlaying, songLength },
+    state: { midi, progress, isPlaying, songLength, isPreclick },
     setProgress,
     setIsPlaying,
   } = useContext(store);
 
   const onPlay = () => {
     setIsPlaying(true);
-    player?.playMidi(midi, progress?.percent || 0);
+    const play = isPreclick ? player?.playWithPreclick : player?.playMidi;
+
+    play && play(midi, progress?.percent || 0);
   };
 
   const onStop = () => {
