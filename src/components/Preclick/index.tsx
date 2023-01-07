@@ -99,10 +99,11 @@ const Content = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 20px;
 `;
 
 const ClickNumber = styled.div`
-  font-size: 30px;
+  font-size: 50px;
   font-weight: 500;
   font-family: Arial, Helvetica, sans-serif;
   color: ${mainColors.darkerGray};
@@ -118,4 +119,10 @@ const CircleComponent = styled.div<{ isActive: boolean }>`
 
 const CirclesRow = styled.div`
   display: flex;
+  align-items: center;
+
+  svg,
+  div {
+    margin-right: 12px;
+  }
 `;
