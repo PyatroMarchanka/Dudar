@@ -4,6 +4,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import styled from "styled-components";
 import { mainColors } from "../../utils/theme";
 import { store } from "../../context";
+import { Icon } from "../global/Icon";
 
 interface Props {}
 
@@ -67,12 +68,15 @@ export default ({}: Props) => {
         }}
       >
         <DialogContent>
-          <CirclesRow>
-            Jckwjnd
-            {circles.map((_, i) => {
-              return <Circle key={i} isActive={i === clickIdx} />;
-            })}
-          </CirclesRow>
+          <Content>
+            <ClickNumber>{clickIdx + 1}</ClickNumber>
+            <CirclesRow>
+              <Icon type={clickIdx % 2 === 0 ? "metr-on" : "metr-on-left"} />
+              {circles.map((_, i) => {
+                return <Circle key={i} isActive={i === clickIdx} />;
+              })}
+            </CirclesRow>
+          </Content>
         </DialogContent>
       </Dialog>
     </Container>
@@ -90,14 +94,28 @@ const Container = styled.div`
   }
 `;
 
-const CirclesRow = styled.div`
+const Content = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ClickNumber = styled.div`
+  font-size: 30px;
+  font-weight: 500;
+  font-family: Arial, Helvetica, sans-serif;
+  color: ${mainColors.darkerGray};
 `;
 
 const CircleComponent = styled.div<{ isActive: boolean }>`
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   background-color: ${({ isActive }: { isActive: boolean }) =>
     isActive ? mainColors.darkRed : mainColors.greyColor};
+`;
+
+const CirclesRow = styled.div`
+  display: flex;
 `;

@@ -50,7 +50,7 @@ export const TempoSlider = ({ player }: Props) => {
       <TempoButtons>
         <IconButton className="button" onClick={() => setMetronome(!metronome)}>
           <Icon
-            type={metronome ? "metr_on" : "metr_off"}
+            type={metronome ? "metr-on" : "metr-off"}
             fill={theme.colors.black}
             className="play-icon"
           />
