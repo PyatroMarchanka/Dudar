@@ -57,7 +57,7 @@ const initialState: State = {
   isClosedManer: false,
   screenSize: { width: 400, height: 500 },
   songLength: 0,
-  isPreclick: false,
+  isPreclick: true,
   ...userData,
 };
 

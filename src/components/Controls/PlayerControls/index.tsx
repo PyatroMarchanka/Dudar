@@ -11,6 +11,7 @@ import { createTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import { TempoSlider } from "../TempoSlider";
 import { secondsToTime } from "../../../utils/textUtils";
+import Preclick from "../../Preclick";
 
 interface Props {
   player: MidiPlayer | null;
@@ -43,7 +44,9 @@ export const PlayerControls = ({ player }: Props) => {
     setIsPlaying(true);
     const play = isPreclick ? player?.playWithPreclick : player?.playMidi;
 
-    play && play(midi, progress?.percent || 0);
+    if (play) {
+      play && play(midi, progress?.percent || 0);
+    }
   };
 
   const onStop = () => {
@@ -95,6 +98,7 @@ export const PlayerControls = ({ player }: Props) => {
       </Row>
       <Buttons>
         <TempoSlider player={player} />
+        <Preclick />
         <PlayStop>
           <IconButton onClick={onStop} className="icon">
             <Icon
@@ -113,16 +117,6 @@ export const PlayerControls = ({ player }: Props) => {
     </Container>
   );
 };
-const Tempo = styled.div`
-  display: flex;
-  align-items: center;
-
-  h3 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 24px;
-    font-weight: 600;
-  }
-`;
 
 const Row = styled.div`
   display: flex;

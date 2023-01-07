@@ -166,8 +166,8 @@ export class MidiPlayer {
 
   playWithPreclick = (midi: ArrayBuffer | null, progress: number) => {
     const when = this.playRef?.current?.contextTime();
-    var N = (4 * 60) / this.bpm;
-    var duration4th = N / 2;
+    const N = (4 * 60) / this.bpm;
+    const duration4th = N / 2;
     const dur = duration4th;
 
     const preClickTime = (60 / this.bpm) * 1000 * 8;
