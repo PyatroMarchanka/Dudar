@@ -2,8 +2,7 @@ import { Midi } from "@tonejs/midi";
 import { useContext, useEffect, useState } from "react";
 import { store } from "../context";
 import { addMetronome, fixMidiDataOctaves } from "../utils/midiUtils";
-
-const fallbackSong = "belarusian/Verabey.mid";
+import { fallbackSong } from "./useLocalStorage";
 
 export const useLoadSong = () => {
   const {

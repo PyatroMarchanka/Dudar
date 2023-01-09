@@ -3,6 +3,8 @@ import { useContext, useEffect } from "react";
 import { lastSongData } from "../constants/localStorage";
 import { store } from "../context";
 
+export const fallbackSong = "belarusian/Verabey.mid";
+
 export const getUserDataFromLocal = () => {
   const songData = localStorage.getItem(lastSongData);
   const userTempoData = localStorage.getItem(userTempo);
@@ -11,7 +13,7 @@ export const getUserDataFromLocal = () => {
   const isSongNameCorrect = !!songData?.split("/")[1];
 
   return {
-    activeSong: isSongNameCorrect ? songFileName : "belarusian/Verabey.mid",
+    activeSong: isSongNameCorrect ? songFileName : fallbackSong,
     tempo: userTempoData !== null ? +userTempoData : 200,
     transpose: userTransposeData !== null ? +userTransposeData : 0,
   };
