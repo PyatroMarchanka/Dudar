@@ -11,7 +11,7 @@ export const getUserDataFromLocal = () => {
   const isSongNameCorrect = !!songData?.split("/")[1];
 
   return {
-    activeSong: isSongNameCorrect ? songFileName : "belarussian/Verabey.mid",
+    activeSong: isSongNameCorrect ? songFileName : "belarusian/Verabey.mid",
     tempo: userTempoData !== null ? +userTempoData : 200,
     transpose: userTransposeData !== null ? +userTransposeData : 0,
   };
@@ -47,7 +47,7 @@ export const useLocalStorage = () => {
     const userTransposeData = localStorage.getItem(userTranspose);
     const songFileName = songData?.[0];
 
-    setActiveSong(songFileName || "belarussian/Verabey.mid");
+    setActiveSong(songFileName || "belarusian/Verabey.mid");
     setTempo((userTempoData && +userTempoData) || 200);
     setTranspose((userTransposeData !== null && +userTransposeData) || 0);
   }, []);
