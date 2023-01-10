@@ -1,7 +1,7 @@
 import { Modes } from "../interfaces";
-import { BagpipeType, Bagpipes } from "../utils/bagpipesUtils";
+import { BagpipeConfig, Bagpipes } from "../utils/bagpipesUtils";
 
-export const bagpipes: BagpipeType[] = [
+export const bagpipes: BagpipeConfig[] = [
   {
     mode: Modes.Mixolidian,
     holesCount: 8,

@@ -14,11 +14,13 @@ export interface BagpipeNotes {
 
 export enum Bagpipes {
   BelarusianDuda = "bel_duda",
+  BelarusianTraditionalDuda = "bel_duda_traditional",
   SpanishGaita = "spanish_gaita",
   DeutschDudelsack = "deutsch_dudelsack",
+  SwedishSackpipa = "swedish_sackpipa",
 }
 
-export interface BagpipeType {
+export interface BagpipeConfig {
   type: Bagpipes;
   name: string;
   mode: Modes;
