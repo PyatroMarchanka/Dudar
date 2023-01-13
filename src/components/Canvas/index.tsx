@@ -4,7 +4,7 @@ import { mediaQueries } from "../../constants/style";
 import { store } from "../../context";
 import { useNotesMoving } from "../../hooks/useNotesMoving";
 import { SharpNotes } from "../../interfaces";
-import { getBagpipeNotesFromMidi } from "../../utils/bagpipesUtils";
+import { getBagpipeNotesFromMidi } from "../../dataset/bagpipesUtils";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { drawBagpipe, drawAll } from "./drawUtils";
 

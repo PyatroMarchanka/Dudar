@@ -1,30 +1,14 @@
 import { Midi } from "@tonejs/midi";
-import { Modes, SharpNotes, transposeNote } from "../interfaces/index";
-import { convertToSharp, getSongNotesFromMidi } from "./midiUtils";
-
-interface BagpipeNotesSteps {
-  main: number[];
-  entry?: number;
-}
+import { BagpipeNotesSteps, Modes, SharpNotes } from "../interfaces/index";
+import {
+  convertToSharp,
+  getSongNotesFromMidi,
+  transposeNote,
+} from "../utils/midiUtils";
 
 export interface BagpipeNotes {
   main: SharpNotes[];
   entry?: SharpNotes;
-}
-
-export enum Bagpipes {
-  BelarusianDuda = "bel_duda",
-  BelarusianTraditionalDuda = "bel_duda_traditional",
-  SpanishGaita = "spanish_gaita",
-  DeutschDudelsack = "deutsch_dudelsack",
-  SwedishSackpipa = "swedish_sackpipa",
-}
-
-export interface BagpipeConfig {
-  type: Bagpipes;
-  name: string;
-  mode: Modes;
-  holesCount: number;
 }
 
 const getBagpipeNotesSteps = (mode: Modes): BagpipeNotesSteps => {

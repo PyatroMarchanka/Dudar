@@ -1,6 +1,7 @@
 import { Notes, SharpMap, SharpNotes } from "./../interfaces/index";
 import { Midi } from "@tonejs/midi";
 import { parseMidi, MidiData, writeMidi } from "midi-file";
+import { AllNotes } from "../dataset/notes";
 
 export const convertToSharp = (note: Notes): SharpNotes => {
   const map: SharpMap = {
@@ -117,4 +118,21 @@ export const addMetronome = async (songBuffer: ArrayBuffer) => {
 
   const outputBuffer = Buffer.from(writeMidi(songWithMetronome));
   return toArrayBuffer(outputBuffer);
+};
+
+export function transposeNote(note: SharpNotes, step: number): SharpNotes {
+  let indexOfNote = AllNotes.indexOf(note);
+  if (step < 0) {
+    const index = (indexOfNote + step) % AllNotes.length;
+
+    return AllNotes[index >= 0 ? index : 12 + index];
+  }
+
+  return AllNotes[(indexOfNote + step) % AllNotes.length];
+}
+
+export const convertMidiPitchToNote = (midiPitch: number) => {
+  const note = midiPitch % 12;
+  const octave = Math.floor(midiPitch / 12) - 1;
+  return { note: AllNotes[note], octave };
 };

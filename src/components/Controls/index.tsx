@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
-import { convertMidiPitchToNote, SharpNotes } from "../../interfaces";
+import { SharpNotes } from "../../interfaces";
 import { PlayerControls } from "./PlayerControls";
 import { useMidiPlayer } from "../../utils/useMidiPlayer";
 import Transpose from "./Transpose";
@@ -15,6 +15,7 @@ import LandscapeAlert from "../global/LandscapeAlert";
 import { landscapeAlertId } from "../../constants/localStorage";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { mainColors } from "../../utils/theme";
+import { convertMidiPitchToNote } from "../../utils/midiUtils";
 
 export const Dudar = () => {
   const {
