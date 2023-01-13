@@ -1,8 +1,8 @@
 import { MenuItem, Select } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
 import { store } from "../../../context";
-import { transposeNote } from "../../../interfaces";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
+import { transposeNote } from "../../../utils/midiUtils";
 import { ModalButton } from "../../global/ModalButton";
 import { useSelectStyles } from "../../global/selectStyles";
 

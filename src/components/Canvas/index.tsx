@@ -6,7 +6,7 @@ import { useNotesMoving } from "../../hooks/useNotesMoving";
 import { SharpNotes } from "../../interfaces";
 import { getBagpipeNotesFromMidi } from "../../dataset/bagpipesUtils";
 import { MidiPlayer } from "../../utils/MidiPlayer";
-import { drawBagpipe, drawAll } from "./drawUtils";
+import { drawAll, drawBagpipe } from "./drawUtils";
 
 const maxCavasWidth = 800;
 
