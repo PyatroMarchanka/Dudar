@@ -17,8 +17,8 @@ const numbers = {
     A: 8,
   },
 };
-const sizeCoefficient = 0.8;
-const coeff = (num: number) => num * sizeCoefficient;
+const coefficient = 0.8;
+const coeff = (num: number) => num * coefficient;
 
 const brickhHeight = coeff(18);
 const brickHeightHalf = brickhHeight / 2;
@@ -42,9 +42,19 @@ const yPoses = [
   coeff(242),
   coeff(186),
   coeff(130),
-];
+].reverse();
 
-const yPosesReversed = yPoses.reverse();
+const yPosesReversed = [
+  coeff(640),
+  coeff(554),
+  coeff(508),
+  coeff(452),
+  coeff(396),
+  coeff(298),
+  coeff(242),
+  coeff(186),
+  coeff(130),
+];
 
 const formatOctave = (octave: number, lowestOctave?: number) => {
   if (octave === 6) {
@@ -65,11 +75,11 @@ const getYposByNote = (
 
   if (
     !formattedOctave ||
-    !yPosesReversed[(numbers as any)[formattedOctave]?.[note[0]]]
+    !yPoses[(numbers as any)[formattedOctave]?.[note[0]]]
   ) {
     return;
   }
-  const yPos = yPosesReversed[(numbers as any)[formattedOctave][note[0]]];
+  const yPos = yPoses[(numbers as any)[formattedOctave][note[0]]];
 
   return {
     yPosInPx: yPos,
@@ -109,8 +119,8 @@ export const drawActiveHoles = (
   const topMargin = holeImageRadiusHalf;
 
   if (!isClosedManer) {
-    yPoses.forEach((pos, i) => {
-      if (i <= yPosesReversed.length - yPos.position - 1 && i >= 1) {
+    yPosesReversed.forEach((pos, i) => {
+      if (i <= yPoses.length - yPos.position - 1 && i >= 1) {
         ctx.drawImage(
           i === 1 ? backActiveHoleImage : activeHoleImage,
           i === 1 ? lastHoleLeftMargin : holeLeftMargin,
@@ -130,8 +140,8 @@ export const drawActiveHoles = (
     );
   }
 };
-const holes = yPoses.slice(1);
-const blowImageYPos = yPosesReversed[yPosesReversed.length - 1] - 20;
+const holes = yPosesReversed.slice(1);
+const blowImageYPos = yPoses[yPoses.length - 1] - 20;
 const blowImageLeftMargin = holeLeftMargin + 3;
 const blowImageSize = holeImageRadius - 5;
 
@@ -256,22 +266,22 @@ const drawNotesNames = (
   // DRAW NOTES NAMES
   ctx.fillStyle = "#ffffff";
 
-  const pushedHoleIndex = yPosesReversed.length - 2;
+  const pushedHoleIndex = yPoses.length - 2;
 
-  yPosesReversed.forEach((yPos, i) => {
+  yPoses.forEach((yPos, i) => {
     ctx.font = "bold 13px Arial";
     songNotes?.[i] &&
       ctx.fillText(
         songNotes[i],
         i === pushedHoleIndex ? lastNoteNameLeftMargin : noteNameLeftMargin,
-        i === yPosesReversed.length - 1 ? yPos + 30 : yPos + 6
+        i === yPoses.length - 1 ? yPos + 30 : yPos + 6
       );
   });
 };
 
 const drawLines = (ctx: CanvasRenderingContext2D) => {
   ctx.fillStyle = "#D6D6D6";
-  yPosesReversed.forEach((yPos) => {
+  yPoses.forEach((yPos) => {
     ctx.fillRect(0, yPos, window.innerWidth, lineHeight);
   });
 };
