@@ -17,20 +17,10 @@ export const MainSettings = ({}: Props) => {
         <InstrumentType>
             <TypeItem>
                 <TypeItem__Container>
-                    <Dot></Dot>
-                        <SettingsInscrBig>
-                            Duda in B
-                        </SettingsInscrBig>
-                </TypeItem__Container>
-                    <SettingsInscrSmall>
-                    G maj / E min
-                    </SettingsInscrSmall>
-            </TypeItem>
-            <TypeItem>
-                <TypeItem__Container>
-                    <Dot></Dot>
+                    <RadioButton type="radio" name="radio" id="radio1">
+                    </RadioButton>
                     <SettingsInscrBig>
-                        Duda in A
+                        Duda in B
                     </SettingsInscrBig>
                 </TypeItem__Container>
                 <SettingsInscrSmall>
@@ -39,9 +29,10 @@ export const MainSettings = ({}: Props) => {
             </TypeItem>
             <TypeItem>
                 <TypeItem__Container>
-                    <Dot></Dot>
+                    <RadioButton type="radio" name="radio" id="radio1">
+                    </RadioButton>
                     <SettingsInscrBig>
-                        Duda in G
+                        Duda in B
                     </SettingsInscrBig>
                 </TypeItem__Container>
                 <SettingsInscrSmall>
@@ -50,9 +41,10 @@ export const MainSettings = ({}: Props) => {
             </TypeItem>
             <TypeItem>
                 <TypeItem__Container>
-                    <Dot></Dot>
+                    <RadioButton type="radio" name="radio" id="radio1">
+                    </RadioButton>
                     <SettingsInscrBig>
-                        Duda in F
+                        Duda in B
                     </SettingsInscrBig>
                 </TypeItem__Container>
                 <SettingsInscrSmall>
@@ -61,9 +53,10 @@ export const MainSettings = ({}: Props) => {
             </TypeItem>
             <TypeItem>
                 <TypeItem__Container>
-                    <Dot></Dot>
+                    <RadioButton type="radio" name="radio" id="radio1">
+                    </RadioButton>
                     <SettingsInscrBig>
-                        Duda in E
+                        Duda in B
                     </SettingsInscrBig>
                 </TypeItem__Container>
                 <SettingsInscrSmall>
@@ -72,9 +65,22 @@ export const MainSettings = ({}: Props) => {
             </TypeItem>
             <TypeItem>
                 <TypeItem__Container>
-                    <Dot></Dot>
+                    <RadioButton type="radio" name="radio" id="radio1">
+                    </RadioButton>
                     <SettingsInscrBig>
-                        Duda in D
+                        Duda in B
+                    </SettingsInscrBig>
+                </TypeItem__Container>
+                <SettingsInscrSmall>
+                    G maj / E min
+                </SettingsInscrSmall>
+            </TypeItem>
+            <TypeItem>
+                <TypeItem__Container>
+                    <RadioButton type="radio" name="radio" id="radio1">
+                    </RadioButton>
+                    <SettingsInscrBig>
+                        Duda in B
                     </SettingsInscrBig>
                 </TypeItem__Container>
                 <SettingsInscrSmall>
@@ -91,6 +97,8 @@ export const MainSettings = ({}: Props) => {
     </Container>
   );
 };
+
+
 
 // <div>
 //     <input type="radio" id="duda_b" name="instr_type" value="duda_b"
@@ -124,6 +132,35 @@ export const MainSettings = ({}: Props) => {
 // </div>
 
 const Container = styled.div``;
+
+const RadioButton = styled.input`
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: ${mainColors.lightestGrey};
+  font: inherit;
+  color: currentColor;
+  width: 1.15em;
+  height: 1.15em;
+  border: 0.15em solid ${mainColors.lightGrey};
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  transform: translateY(-0.075em);
+  display: grid;
+  place-content: center;
+      &::before {
+      content: "";
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      transform: scale(0);
+      transition: 120ms transform ease-in-out;
+      box-shadow: inset 1em 1em ${mainColors.darkOrange};;
+    }
+    &:checked::before {
+  transform: scale(1);
+}
+`;
 
 const InstrumentType = styled.div`
     display: flex;
