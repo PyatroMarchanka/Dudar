@@ -3,10 +3,10 @@ import styled from "styled-components";
 import { mediaQueries } from "../../constants/style";
 import { store } from "../../context";
 import { useNotesMoving } from "../../hooks/useNotesMoving";
-import { SharpNotes } from "../../interfaces";
+import { BagpipeTypes, SharpNotes } from "../../interfaces";
 import { getBagpipeNotesFromMidi } from "../../dataset/bagpipesUtils";
 import { MidiPlayer } from "../../utils/MidiPlayer";
-import { drawAll, drawBagpipe } from "./drawUtils";
+import { drawAll } from "../../utils/drawUtils/drawAll";
 
 const maxCavasWidth = 800;
 
@@ -35,6 +35,8 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
 
   const canvasRef = useRef(null);
 
+  const bagpipeType = BagpipeTypes.BelarusianTraditionalDuda;
+
   useEffect(() => {
     if (player && showPianoRoll) {
       player.handleNotesMoving = setTick;
@@ -56,20 +58,21 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
     const canvas = canvasRef.current;
     const context: CanvasRenderingContext2D | null =
       canvas && (canvas as HTMLCanvasElement)!.getContext("2d");
-    drawBagpipe(context!);
+    drawAll(context!, bagpipeType);
 
     //RENDER
     const render = () => {
-      drawAll(
-        context!,
-        tick,
-        lowestOctave,
-        nextNotes,
-        nextToNextNotes,
-        activeHole,
-        isClosedManer,
-        songNotes
-      );
+      // drawAll(
+      //   context!,
+      //   tick,
+      //   lowestOctave,
+      //   nextNotes,
+      //   nextToNextNotes,
+      //   activeHole,
+      //   isClosedManer,
+      //   songNotes
+      // );
+      drawAll(context!, bagpipeType);
 
       animationFrameId = window.requestAnimationFrame(render);
     };

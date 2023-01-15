@@ -1,6 +1,6 @@
 import { Note } from "@tonejs/midi/dist/Note";
 import { SharpNotes } from "../../interfaces";
-import { mainColors } from "../../utils/theme";
+import { mainColors } from "../theme";
 
 const numbers = {
   4: {
