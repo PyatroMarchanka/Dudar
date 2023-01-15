@@ -1,10 +1,5 @@
-import { AllNotes } from "./../dataset/notes";
-
-export enum BagpipeTypes {
-  BelarusianTraditionalDuda = "bd",
-  BelarusianNONTraditionalDuda = "bnd",
-  BelarusianOpenDuda = "bod",
-}
+import { BagpipeImages } from "../dataset/bagpipeImages";
+import { BagpipesImagesProperties } from "../dataset/bagpipesImageProperties";
 
 export enum Modes {
   Mixolidian = "mixolidian",
@@ -46,6 +41,44 @@ export type SharpNotes =
   | "G"
   | "G#";
 
+export type SharpMap = {
+  [key: string]: Notes;
+};
+
+export interface BagpipeNotesSteps {
+  main: number[];
+  entry?: number;
+}
+
+export interface BagpipeNotes {
+  main: SharpNotes[];
+  entry?: SharpNotes;
+}
+
+// ============= NEW CONFIG ===================
+export interface BagpipeConfig {
+  type: BagpipeTypes;
+  name: string;
+  notesMap: BagpipeNotesMap;
+  holesPositions: BagpipeHolesPositions;
+  imagesProperties: BagpipesImagesProperties;
+  images: BagpipeImages;
+}
+
+export type BagpipeNotesMap = {
+  [key: string]: number[];
+};
+export interface Hole {
+  yPos: number;
+  leftMargin: number;
+  diameter: number;
+}
+
+export interface BagpipeHolesPositions {
+  closable: Hole[];
+  blowImage: Hole;
+}
+
 export enum SharpNotesEnum {
   "C4" = "C4",
   "C#4" = "C#4",
@@ -73,27 +106,8 @@ export enum SharpNotesEnum {
   "B5" = "B5",
 }
 
-export type SharpMap = {
-  [key: string]: Notes;
-};
-
-export interface BagpipeConfig {
-  type: BagpipeTypes;
-  name: string;
-  holesCount: number;
-  notesMap?: BagpipeNotesMap;
-}
-
-export type BagpipeNotesMap = {
-  [key: string]: number[];
-};
-
-export interface BagpipeNotesSteps {
-  main: number[];
-  entry?: number;
-}
-
-export interface BagpipeNotes {
-  main: SharpNotes[];
-  entry?: SharpNotes;
+export enum BagpipeTypes {
+  BelarusianTraditionalDuda = "bd",
+  BelarusianNONTraditionalDuda = "bnd",
+  BelarusianOpenDuda = "bod",
 }
