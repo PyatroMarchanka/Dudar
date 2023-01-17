@@ -32,9 +32,9 @@ const drawBlowImage = (
   bagpipeType: BagpipeTypes
 ) => {
   const { holesPositions, images } = bagpipes[bagpipeType];
-  const blowImageYPos = holesPositions.blowImage.yPos;
-  const blowImageLeftMargin = holesPositions.blowImage.leftMargin;
-  const blowImageSize = holesPositions.blowImage.diameter;
+  const blowImageYPos = holesPositions.blowImage!.yPos;
+  const blowImageLeftMargin = holesPositions.blowImage!.leftMargin;
+  const blowImageSize = holesPositions.blowImage!.diameter;
 
   ctx.drawImage(
     images.blowImage,
@@ -66,7 +66,7 @@ export const drawClosedHoles = (
   ctx: CanvasRenderingContext2D,
   bagpipeType: BagpipeTypes
 ) => {
-  const { holesPositions, images } = bagpipes[bagpipeType];
+  const { holesPositions } = bagpipes[bagpipeType];
 
   const holes = holesPositions.closable;
 
@@ -74,7 +74,9 @@ export const drawClosedHoles = (
     drawHole(ctx, bagpipeType, hole, false, i === 0);
   });
 
-  drawBlowImage(ctx, bagpipeType);
+  if (holesPositions.blowImage) {
+    drawBlowImage(ctx, bagpipeType);
+  }
 };
 
 export const drawActiveHoles = (
@@ -85,47 +87,17 @@ export const drawActiveHoles = (
   if (!activeNote) {
     return;
   }
-  const { notesMap, images, holesPositions } = bagpipes[bagpipeType];
-
-  if (activeNote.note + activeNote.octave in notesMap) {
+  const { notesMap, holesPositions } = bagpipes[bagpipeType];
+  const note = activeNote.note + activeNote.octave;
+  if (note in notesMap) {
+    notesMap[note].forEach((holeIdx) => {
+      drawHole(
+        ctx,
+        bagpipeType,
+        holesPositions.closable[holeIdx],
+        true,
+        holeIdx === 0
+      );
+    });
   }
 };
-
-// export const drawActiveHoles = (
-//   ctx: CanvasRenderingContext2D,
-//   lowestOctave: number,
-//   activeHole?: { note: SharpNotes; octave: number } | null,
-//   isClosedManer?: boolean
-// ) => {
-//   if (!activeHole) {
-//     return;
-//   }
-
-//   const yPos = getYposByNote(activeHole.note, activeHole?.octave, lowestOctave);
-//   if (!yPos?.yPosInPx) {
-//     return;
-//   }
-//   const topMargin = holeImageRadiusHalf;
-
-//   if (!isClosedManer) {
-//     yPosesReversed.forEach((pos, i) => {
-//       if (i <= yPoses.length - yPos.position - 1 && i >= 1) {
-//         ctx.drawImage(
-//           i === 1 ? backActiveHoleImage : activeHoleImage,
-//           i === 1 ? lastHoleLeftMargin : holeLeftMargin,
-//           pos - topMargin,
-//           holeImageRadius,
-//           holeImageRadius
-//         );
-//       }
-//     });
-//   } else {
-//     ctx.drawImage(
-//       activeHoleImage,
-//       holeLeftMargin,
-//       yPos.yPosInPx - topMargin,
-//       holeImageRadius,
-//       holeImageRadius
-//     );
-//   }
-// };
