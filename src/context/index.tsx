@@ -1,7 +1,7 @@
 import { Midi } from "@tonejs/midi";
 import React, { createContext, useReducer } from "react";
 import { getUserDataFromLocal } from "../hooks/useLocalStorage";
-import { SharpNotes } from "../interfaces";
+import { BagpipeTypes, SharpNotes } from "../interfaces";
 
 interface Action {
   type:
@@ -16,7 +16,7 @@ interface Action {
     | "SET_ALL_LISTS"
     | "SET_SIZE"
     | "SET_TRANSPOSE"
-    | "SET_IS_CLOSED_MANER"
+    | "SET_BAGPIPE_TYPE"
     | "SET_SONG_NOTES"
     | "SET_SONG_LENGTH";
 
@@ -37,7 +37,7 @@ interface State {
   showPianoRoll: boolean;
   isPlaying: boolean;
   allLists: any;
-  isClosedManer: boolean;
+  bagpipeType: BagpipeTypes;
   screenSize: { width: number; height: number };
   transpose: number;
 }
@@ -52,7 +52,7 @@ const initialState: State = {
   showPianoRoll: true,
   isPlaying: false,
   allLists: {},
-  isClosedManer: false,
+  bagpipeType: BagpipeTypes.BelarusianNONTraditionalDuda,
   screenSize: { width: 400, height: 500 },
   songLength: 0,
   ...userData,
@@ -71,7 +71,7 @@ interface Context {
   togglePianoRoll: (value: boolean) => void;
   setIsPlaying: (bool: boolean) => void;
   setAllLists: (lists: any) => void;
-  setIsClosedManer: (bool: boolean) => void;
+  setBagpipeType: (bagpipeType: BagpipeTypes) => void;
   setScreenSize: (size: { width: number; height: number }) => void;
   setTranspose: (num: number) => void;
   setSongNotes: (notes: SharpNotes[]) => void;
@@ -89,7 +89,7 @@ const store = createContext<Context>({
   togglePianoRoll: (value: boolean) => {},
   setIsPlaying: (bool: boolean) => {},
   setAllLists: (lists: any) => {},
-  setIsClosedManer: (bool: boolean) => {},
+  setBagpipeType: (bagpipeType: BagpipeTypes) => {},
   setScreenSize: (size: { width: number; height: number }) => {},
   setTranspose: (num: number) => {},
   setSongNotes: (notes: SharpNotes[]) => {},
@@ -186,7 +186,7 @@ const ContextProvider = ({ children }: any) => {
           },
         };
 
-      case "SET_IS_CLOSED_MANER":
+      case "SET_BAGPIPE_TYPE":
         return {
           ...state,
           isClosedManer: action.payload,
@@ -254,8 +254,8 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_ALL_LISTS", payload: list });
   };
 
-  const setIsClosedManer = (bool: boolean) => {
-    dispatch({ type: "SET_IS_CLOSED_MANER", payload: bool });
+  const setBagpipeType = (bagpipeType: BagpipeTypes) => {
+    dispatch({ type: "SET_BAGPIPE_TYPE", payload: bagpipeType });
   };
 
   const setScreenSize = (size: { width: number; height: number }) => {
@@ -287,7 +287,7 @@ const ContextProvider = ({ children }: any) => {
         togglePianoRoll,
         setIsPlaying,
         setAllLists,
-        setIsClosedManer,
+        setBagpipeType,
         setScreenSize,
         setTranspose,
         setSongNotes,
