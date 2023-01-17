@@ -13,7 +13,7 @@ export interface BagpipeNotes {
 }
 
 export enum Bagpipes {
-  BelarussianDuda = "bel_duda",
+  BelarusianDuda = "bel_duda",
   SpanishGaita = "spanish_gaita",
   DeutschDudelsack = "deutsch_dudelsack",
 }

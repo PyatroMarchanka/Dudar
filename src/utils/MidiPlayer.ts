@@ -66,22 +66,21 @@ export class MidiPlayer {
     });
 
     Player.on("midiEvent", (event: any) => {
-      if (event.name === "Note on" && event.noteNumber !== 33) {
+      if (
+        event.name === "Note off" ||
+        (event.name === "Note on" && event.velocity === 0)
+      ) {
+        this.keyUp(event.noteNumber);
+      } else if (event.name === "Note on" && event.noteNumber !== 33) {
         this.keyDown(event.noteNumber, event.noteNumber);
         handleNote(event);
         this.checkTempo(this.bpm);
-      }
-
-      if (
+      } else if (
         event.name === "Note on" &&
         event.noteNumber === 33 &&
         this.metronom
       ) {
         this.keyDown(65, 65, metronomeTick, 8);
-      }
-
-      if (event.name === "Note off") {
-        this.keyUp(event.noteNumber);
       }
     });
 
