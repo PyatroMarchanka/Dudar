@@ -4,7 +4,7 @@ import {
   MidiNoteHandler,
   MidiPlayer,
   PlaybackProgressHandler,
-} from "./MidiPlayer";
+} from "../utils/MidiPlayer";
 // @ts-ignore
 import MIDISounds from "midi-sounds-react";
 import styled from "styled-components";
