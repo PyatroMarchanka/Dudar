@@ -28,13 +28,12 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
       songNotes,
       transpose,
       midiData,
+      bagpipeType,
     },
     setSongNotes,
   } = useContext(store);
 
   const canvasRef = useRef(null);
-
-  const bagpipeType = BagpipeTypes.BelarusianNONTraditionalDuda;
 
   useEffect(() => {
     if (player && showPianoRoll) {
@@ -57,7 +56,6 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
     const canvas = canvasRef.current;
     const context: CanvasRenderingContext2D | null =
       canvas && (canvas as HTMLCanvasElement)!.getContext("2d");
-    drawStatic(context!, bagpipeType);
 
     //RENDER
     const render = () => {
@@ -76,7 +74,7 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [drawAll, tick, activeHole, lowestOctave, songNotes]);
+  }, [drawAll, tick, activeHole, lowestOctave, songNotes, bagpipeType]);
 
   useEffect(() => {
     const bagpipeNotes = getBagpipeNotesFromMidi(midiData!, transpose);

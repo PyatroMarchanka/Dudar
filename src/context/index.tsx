@@ -189,7 +189,7 @@ const ContextProvider = ({ children }: any) => {
       case "SET_BAGPIPE_TYPE":
         return {
           ...state,
-          isClosedManer: action.payload,
+          bagpipeType: action.payload,
         };
 
       case "SET_TRANSPOSE":

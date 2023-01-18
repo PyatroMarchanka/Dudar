@@ -1,4 +1,3 @@
-import { MenuItem, Select } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
 import {
   SwipeableDrawer,
@@ -7,10 +6,7 @@ import {
   Theme,
 } from "@material-ui/core";
 import { store } from "../../../context";
-import { transposeNote } from "../../../interfaces";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
-import { ModalButton } from "../../global/ModalButton";
-import { useSelectStyles } from "../../global/selectStyles";
 import styled from "styled-components";
 import { mainColors, theme } from "../../../utils/theme";
 import { mediaQueries } from "../../../constants/style";
@@ -34,7 +30,7 @@ export default ({ midiPlayer }: Props) => {
     state: { transpose },
     setTranspose: setTransposeCtx,
   } = useContext(store);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
 
   const setTranspose = (num: number) => {

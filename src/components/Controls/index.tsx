@@ -71,7 +71,6 @@ export const Dudar = () => {
         <Transpose midiPlayer={midiPlayer} />
         {/* </Right> */}
       </SettingsButtons>
-      <ManerCheckBox />
       <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} />
       <BagpipeContainer className={"center"}>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}

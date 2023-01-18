@@ -20,14 +20,7 @@ const getYposByNote = (
     notesToHoles[note + octave] === holesPositions.closable.length
   ) {
     yPos = holesPositions.blowImage.yPos;
-  } else if (!yPos) {
-    console.log(
-      "no hole for this note: ",
-      note + octave,
-      notesToHoles[note + octave]
-    );
   }
-
   return { yPosInPx: yPos };
 };
 

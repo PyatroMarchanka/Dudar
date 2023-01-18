@@ -43,7 +43,6 @@ const belarusianNONTraditionalHoles: BagpipeHolesPositions = {
 
 const belarusianOpenHoles: BagpipeHolesPositions = {
   closable: [
-    { yPos: 574, leftMargin: 50, diameter: 25 },
     { yPos: 528, leftMargin: 50, diameter: 25 },
     { yPos: 482, leftMargin: 60, diameter: 20 },
     { yPos: 452, leftMargin: 50, diameter: 20 },
