@@ -11,16 +11,9 @@ const getYposByNote = (
   octave: number,
   bagpipeType: BagpipeTypes
 ) => {
-  const { notesToHoles, holesPositions } = bagpipes[bagpipeType];
-  let yPos = holesPositions.closable[notesToHoles[note + octave]]?.yPos;
+  const { notesToLines, holesPositions } = bagpipes[bagpipeType];
+  let yPos = holesPositions.linesYPositions[notesToLines[note + octave]];
 
-  if (
-    !yPos &&
-    holesPositions.blowImage &&
-    notesToHoles[note + octave] === holesPositions.closable.length
-  ) {
-    yPos = holesPositions.blowImage.yPos;
-  }
   return { yPosInPx: yPos };
 };
 
@@ -51,7 +44,7 @@ const drawNote = (
 
   ctx.fillRect(
     startPos,
-    y.yPosInPx + imageProperties.notes.brickHeightHalf,
+    y.yPosInPx - imageProperties.notes.brickHeightHalf,
     dur * notesScale,
     imageProperties.notes.brickhHeight
   );

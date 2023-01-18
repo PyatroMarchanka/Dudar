@@ -3,7 +3,7 @@ import { notesMaps } from "./bagpipesNotesMaps";
 import { BagpipeConfig, BagpipeTypes } from "../interfaces";
 import { holesPositions } from "./bagpipesHolesPositions";
 import { bagpipeImages } from "./bagpipeImages";
-import { bagpipesNotesToHoles } from "./bagpipesNotesToHoles";
+import { bagpipesNotesToLines } from "./bagpipesNotesToHoles";
 
 const bagpipeNames = {
   [BagpipeTypes.BelarusianTraditionalDuda]:
@@ -21,7 +21,7 @@ const getBagpipeData = (bagpipeType: BagpipeTypes): BagpipeConfig => {
     holesPositions: holesPositions[bagpipeType],
     imagesProperties: bagpipesImagesProperties[bagpipeType],
     images: bagpipeImages[bagpipeType],
-    notesToHoles: bagpipesNotesToHoles[bagpipeType],
+    notesToLines: bagpipesNotesToLines[bagpipeType],
   };
 };
 

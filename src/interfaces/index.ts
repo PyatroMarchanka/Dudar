@@ -1,4 +1,4 @@
-import { BagpipesNotesToHoles } from "./../dataset/bagpipesNotesToHoles";
+import { BagpipesNotesToLines } from "./../dataset/bagpipesNotesToHoles";
 import { BagpipeImages } from "../dataset/bagpipeImages";
 import { BagpipesImagesProperties } from "../dataset/bagpipesImageProperties";
 
@@ -64,7 +64,7 @@ export interface BagpipeConfig {
   holesPositions: BagpipeHolesPositions;
   imagesProperties: BagpipesImagesProperties;
   images: BagpipeImages;
-  notesToHoles: BagpipesNotesToHoles;
+  notesToLines: BagpipesNotesToLines;
 }
 
 export type BagpipeNotesMap = {
@@ -74,11 +74,13 @@ export interface Hole {
   yPos: number;
   leftMargin: number;
   diameter: number;
+  isAdditional?: boolean;
 }
 
 export interface BagpipeHolesPositions {
   closable: Hole[];
   blowImage?: Hole;
+  linesYPositions: number[];
 }
 
 export enum SharpNotesEnum {
