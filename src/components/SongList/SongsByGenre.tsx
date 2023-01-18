@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -12,14 +12,11 @@ import styled from "styled-components";
 import { mediaQueries } from "../../constants/style";
 import { mainColors } from "../../utils/theme";
 import { store } from "../../context";
+import { Song, SongListByBagpipe } from "../../interfaces";
 
 interface Props {
-  songsNames: string[];
   setOpen: (bool: boolean) => void;
   onStop: () => void;
-  allLists: {
-    [key: string]: string[];
-  };
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -67,9 +64,15 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const SongsByGenre = ({ allLists, setOpen, onStop }: Props) => {
+export const SongsByGenre = ({ setOpen, onStop }: Props) => {
+  const {
+    state: { bagpipeType },
+  } = useContext(store);
+
+  const [songByType, setSongByType] = useState<{ [key: string]: Song[] }>({});
+
   const classes = useStyles();
-  const genres = Object.keys(allLists);
+  const genres = Object.keys(songByType);
 
   const {
     setActiveSong,
@@ -104,31 +107,31 @@ export const SongsByGenre = ({ allLists, setOpen, onStop }: Props) => {
 
             <AccordionDetails classes={{ root: classes.detailsRoot }}>
               <List classes={{ padding: classes.list }}>
-                {allLists[genre].map((song) => (
+                {songByType[genre].map((song) => (
                   <div
                     className={
-                      activeSong === `${genre}/${song}`
+                      activeSong?.pathName === song.pathName
                         ? classes.activeSong
                         : ""
                     }
-                    key={song}
+                    key={song.name}
                   >
                     <IconButton
                       classes={{ root: classes.buttonRoot }}
                       className="songButton"
                       onClick={() => {
-                        setActiveSong(`${genre}/${song}`);
+                        setActiveSong(song);
                         onStop();
                       }}
                     >
                       <Icon
                         type={
-                          activeSong === `${genre}/${song}`
+                          activeSong?.pathName === song.pathName
                             ? "song-play"
                             : "music"
                         }
                       />
-                      <ListItem>{formatMidiFileName(song)}</ListItem>
+                      <ListItem>{song.name}</ListItem>
                     </IconButton>
                   </div>
                 ))}

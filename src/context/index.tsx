@@ -1,7 +1,12 @@
 import { Midi } from "@tonejs/midi";
 import React, { createContext, useReducer } from "react";
 import { getUserDataFromLocal } from "../hooks/useLocalStorage";
-import { BagpipeTypes, SharpNotes } from "../interfaces";
+import {
+  BagpipeTypes,
+  SharpNotes,
+  Song,
+  SongListByBagpipe,
+} from "../interfaces";
 
 interface Action {
   type:
@@ -14,6 +19,7 @@ interface Action {
     | "SET_SHOW_PIANO_ROLL"
     | "SET_IS_PLAYING"
     | "SET_ALL_LISTS"
+    | "SET_LISTS_BY_BAGPIPE"
     | "SET_SIZE"
     | "SET_TRANSPOSE"
     | "SET_BAGPIPE_TYPE"
@@ -30,13 +36,14 @@ interface State {
   songNotes: SharpNotes[] | null;
   midi: ArrayBuffer | null;
   metronome: boolean;
-  activeSong: string | undefined;
+  activeSong: Song | undefined;
   songLength?: number;
   progress?: { percent: number; time?: number; timeRemaining?: number };
   tempo: number;
   showPianoRoll: boolean;
   isPlaying: boolean;
-  allLists: any;
+  allLists: Song[] | null;
+  listsByBagpipe: SongListByBagpipe | null;
   bagpipeType: BagpipeTypes;
   screenSize: { width: number; height: number };
   transpose: number;
@@ -51,7 +58,8 @@ const initialState: State = {
   progress: { percent: 0, time: 0, timeRemaining: 0 },
   showPianoRoll: true,
   isPlaying: false,
-  allLists: {},
+  allLists: null,
+  listsByBagpipe: null,
   bagpipeType: BagpipeTypes.BelarusianNONTraditionalDuda,
   screenSize: { width: 400, height: 500 },
   songLength: 0,
@@ -64,13 +72,14 @@ interface Context {
   setMidi: (midi: ArrayBuffer) => void;
   setMetronome: (bool: boolean) => void;
   setMidiData: (midi: Midi) => void;
-  setActiveSong: (fileName: string) => void;
+  setActiveSong: (song: Song) => void;
   setSongLength: (seconds: number) => void;
   setProgress: (percent: number, time?: number, timeRemaining?: number) => void;
   setTempo: (bpm: number) => void;
   togglePianoRoll: (value: boolean) => void;
   setIsPlaying: (bool: boolean) => void;
-  setAllLists: (lists: any) => void;
+  setAllLists: (lists: Song[]) => void;
+  setListsByBagpipe: (lists: SongListByBagpipe) => void;
   setBagpipeType: (bagpipeType: BagpipeTypes) => void;
   setScreenSize: (size: { width: number; height: number }) => void;
   setTranspose: (num: number) => void;
@@ -83,12 +92,13 @@ const store = createContext<Context>({
   setMidi: (midi: ArrayBuffer) => {},
   setMetronome: (bool: boolean) => {},
   setMidiData: (midi: Midi) => {},
-  setActiveSong: (fileName: string) => {},
+  setActiveSong: (song: Song) => {},
   setProgress: (percent: number, time?: number, timeRemaining?: number) => {},
   setTempo: (bpm: number) => {},
   togglePianoRoll: (value: boolean) => {},
   setIsPlaying: (bool: boolean) => {},
-  setAllLists: (lists: any) => {},
+  setAllLists: (lists: Song[]) => {},
+  setListsByBagpipe: (lists: SongListByBagpipe) => {},
   setBagpipeType: (bagpipeType: BagpipeTypes) => {},
   setScreenSize: (size: { width: number; height: number }) => {},
   setTranspose: (num: number) => {},
@@ -172,9 +182,17 @@ const ContextProvider = ({ children }: any) => {
         };
 
       case "SET_ALL_LISTS":
+        console.log("SET_ALL_LISTS", action.payload);
         return {
           ...state,
           allLists: action.payload,
+        };
+
+      case "SET_LISTS_BY_BAGPIPE":
+        console.log("SET_LISTS_BY_BAGPIPE", action.payload);
+        return {
+          ...state,
+          listsByBagpipe: action.payload,
         };
 
       case "SET_SIZE":
@@ -220,10 +238,10 @@ const ContextProvider = ({ children }: any) => {
   const setMidiData = (midi: Midi) => {
     dispatch({ type: "SET_MIDI_DATA", payload: midi });
   };
-  const setActiveSong = (fileName: string) => {
+  const setActiveSong = (song: Song) => {
     dispatch({
       type: "SET_ACTIVE_SONG",
-      payload: fileName.split("_").join(" "),
+      payload: song,
     });
   };
 
@@ -250,8 +268,12 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_IS_PLAYING", payload: bool });
   };
 
-  const setAllLists = (list: any) => {
+  const setAllLists = (list: Song[]) => {
     dispatch({ type: "SET_ALL_LISTS", payload: list });
+  };
+
+  const setListsByBagpipe = (list: SongListByBagpipe) => {
+    dispatch({ type: "SET_LISTS_BY_BAGPIPE", payload: list });
   };
 
   const setBagpipeType = (bagpipeType: BagpipeTypes) => {
@@ -287,6 +309,7 @@ const ContextProvider = ({ children }: any) => {
         togglePianoRoll,
         setIsPlaying,
         setAllLists,
+        setListsByBagpipe,
         setBagpipeType,
         setScreenSize,
         setTranspose,

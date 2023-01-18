@@ -20,7 +20,6 @@ const holesToLinesYPositions = (holes: Hole[]) => {
       return 0;
     })
     .filter(Boolean);
-  console.log(res);
   return res;
 };
 

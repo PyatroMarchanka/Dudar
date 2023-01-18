@@ -49,7 +49,7 @@ export default ({ player }: Props) => {
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const { songList, allLists } = useSongList();
+  const { allLists } = useSongList();
 
   return (
     <Container>
@@ -62,12 +62,7 @@ export default ({ player }: Props) => {
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
       >
-        <SongsByGenre
-          songsNames={songList}
-          allLists={allLists}
-          setOpen={setOpen}
-          onStop={onStop}
-        />
+        <SongsByGenre allLists={allLists} setOpen={setOpen} onStop={onStop} />
       </SwipeableDrawer>
       <IconButton onClick={() => setOpen(true)} className="icon">
         <Icon type="hamb" fill={theme.colors.black} className="play-icon" />

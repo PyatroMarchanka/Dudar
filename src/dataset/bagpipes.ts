@@ -4,13 +4,18 @@ import { BagpipeConfig, BagpipeTypes } from "../interfaces";
 import { holesPositions } from "./bagpipesHolesPositions";
 import { bagpipeImages } from "./bagpipeImages";
 import { bagpipesNotesToLines } from "./bagpipesNotesToHoles";
+import { getLabelByBagpipeType } from "../interfaces/enumUtils";
 
 const bagpipeNames = {
-  [BagpipeTypes.BelarusianTraditionalDuda]:
-    "Belarusian Duda - Traditional Fingers",
-  [BagpipeTypes.BelarusianNONTraditionalDuda]:
-    "Belarusian Duda - Nontraditional fingers",
-  [BagpipeTypes.BelarusianOpenDuda]: "Belarusian Duda - Open fingers",
+  [BagpipeTypes.BelarusianTraditionalDuda]: getLabelByBagpipeType(
+    BagpipeTypes.BelarusianTraditionalDuda
+  ),
+  [BagpipeTypes.BelarusianNONTraditionalDuda]: getLabelByBagpipeType(
+    BagpipeTypes.BelarusianNONTraditionalDuda
+  ),
+  [BagpipeTypes.BelarusianOpenDuda]: getLabelByBagpipeType(
+    BagpipeTypes.BelarusianOpenDuda
+  ),
 };
 
 const getBagpipeData = (bagpipeType: BagpipeTypes): BagpipeConfig => {
