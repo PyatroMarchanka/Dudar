@@ -18,6 +18,7 @@ interface Action {
     | "SET_TRANSPOSE"
     | "SET_BAGPIPE_TYPE"
     | "SET_SONG_NOTES"
+    | "SET_IS_PRECLICK"
     | "SET_SONG_LENGTH";
 
   payload?: any;
@@ -40,6 +41,7 @@ interface State {
   bagpipeType: BagpipeTypes;
   screenSize: { width: number; height: number };
   transpose: number;
+  isPreclick: boolean;
 }
 const userData = getUserDataFromLocal();
 
@@ -55,6 +57,7 @@ const initialState: State = {
   bagpipeType: BagpipeTypes.BelarusianNONTraditionalDuda,
   screenSize: { width: 400, height: 500 },
   songLength: 0,
+  isPreclick: true,
   ...userData,
 };
 
@@ -75,6 +78,7 @@ interface Context {
   setScreenSize: (size: { width: number; height: number }) => void;
   setTranspose: (num: number) => void;
   setSongNotes: (notes: SharpNotes[]) => void;
+  setIsPreclick: (bool: boolean) => void;
 }
 
 const store = createContext<Context>({
@@ -94,6 +98,7 @@ const store = createContext<Context>({
   setTranspose: (num: number) => {},
   setSongNotes: (notes: SharpNotes[]) => {},
   setSongLength: (seconds: number) => {},
+  setIsPreclick: (bool: boolean) => {},
 });
 const { Provider } = store;
 
@@ -137,14 +142,6 @@ const ContextProvider = ({ children }: any) => {
           };
         } else {
           return state;
-          // {
-          //   ...state,
-          //   progress: {
-          //     percent: state.progress.percent,
-          //     time: action.payload.time,
-          //     timeRemaining: action.payload.timeRemaining,
-          //   },
-          // };
         }
 
       case "SET_SONG_LENGTH":
@@ -274,6 +271,10 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_SONG_LENGTH", payload: songLength });
   };
 
+  const setIsPreclick = (bool: boolean) => {
+    dispatch({ type: "SET_IS_PRECLICK", payload: bool });
+  };
+
   return (
     <Provider
       value={{
@@ -293,6 +294,7 @@ const ContextProvider = ({ children }: any) => {
         setSongNotes,
         setMetronome,
         setSongLength,
+        setIsPreclick,
       }}
     >
       {children}

@@ -15,12 +15,12 @@ export const useMidiPlayer = (
   handleProgress: PlaybackProgressHandler
 ) => {
   const {
-    state: { tempo, metronome, isPlaying },
+    state: { tempo, metronome },
     setIsPlaying,
   } = useContext(store);
   const [midiPlayer, setMidiPlayer] = useState<MidiPlayer | null>(null);
 
-  const playerRef = useRef(null);
+  const playerRef: any = useRef(null);
 
   const MPlayer = (
     <Container>
