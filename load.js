@@ -13,7 +13,9 @@ const list = {};
 folders.forEach((folder) => {
   const fileNames = [];
   fs.readdirSync(folder.path).forEach((file) => {
-    fileNames.push(file);
+    if (file.includes(".mid")) {
+      fileNames.push(file);
+    }
   });
   list[folder.label] = fileNames;
 });
