@@ -1,28 +1,55 @@
 import { useContext, useEffect, useState } from "react";
 import { store } from "../context";
+import {
+  Song,
+  SongList,
+  SongListByBagpipe,
+  SongListBySongType,
+} from "../dataset/songs/interfaces";
+import { songList } from "../dataset/songs/songsList";
+import { BagpipeTypes } from "../interfaces";
 
 export const useSongList = () => {
-  const { setAllLists: setAllListContext } = useContext(store);
+  const {
+    setListsByBagpipe,
+    state: { bagpipeType },
+  } = useContext(store);
 
-  const [songList, setSongList] = useState<string[]>([]);
-  const [allLists, setAllLists] = useState<{ [key: string]: string[] }>({});
-  const initialList = Object.keys(allLists)[0];
-
-  const getAllList = async () => {
-    const file = await fetch("midi/list.json");
-    const list = await file.json();
-
-    setAllLists(list);
-    setAllListContext(list);
+  const getAllList = async (bagpipeType: BagpipeTypes) => {
+    const sortedList = sortSongsByBagpipe(songList);
+    setListsByBagpipe(sortSongsBySongType(sortedList[bagpipeType]));
   };
 
   useEffect(() => {
-    setSongList(allLists[initialList] || {});
-  }, [allLists]);
+    getAllList(bagpipeType);
+  }, [bagpipeType]);
+};
 
-  useEffect(() => {
-    getAllList();
-  }, []);
+const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {
+  const list: SongListByBagpipe = {};
+  songs.forEach((song) => {
+    song.bagpipesToPlay.forEach((bagpipeType) => {
+      if (list[bagpipeType]) {
+        list[bagpipeType].push(song);
+      } else {
+        list[bagpipeType] = [song];
+      }
+    });
+  });
 
-  return { songList, allLists };
+  return list;
+};
+
+const sortSongsBySongType = (songs: Song[]): SongListBySongType => {
+  const list: SongListBySongType = {};
+
+  songs.forEach((song) => {
+    if (song.type in list) {
+      list[song.type].push(song);
+    } else {
+      list[song.type] = [song];
+    }
+  });
+
+  return list;
 };

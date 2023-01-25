@@ -3,22 +3,24 @@ import {
   userTranspose,
   userIsPreclick,
 } from "./../constants/localStorage";
+import { songList } from "./../dataset/songs/songsList";
 import { useContext, useEffect } from "react";
 import { lastSongData } from "../constants/localStorage";
 import { store } from "../context";
 
-export const fallbackSong = "belarusian/Verabey.mid";
+export const fallbackSong = songList.find(
+  (song) => song.pathName === "belarusian/Verabey.mid"
+)!;
 
 export const getUserDataFromLocal = () => {
   const songData = localStorage.getItem(lastSongData);
   const userTempoData = localStorage.getItem(userTempo);
   const userTransposeData = localStorage.getItem(userTranspose);
   const isPreclick = localStorage.getItem(userIsPreclick);
-  const songFileName = songData as string;
-  const isSongNameCorrect = !!songData?.split("/")[1];
 
   return {
-    activeSong: isSongNameCorrect ? songFileName : fallbackSong,
+    activeSong:
+      songList.find((song) => song.pathName === songData) || fallbackSong,
     tempo: userTempoData !== null ? +userTempoData : 200,
     transpose: userTransposeData !== null ? +userTransposeData : 0,
     userIsPreclick: !!isPreclick !== null,
@@ -38,7 +40,7 @@ export const useLocalStorage = () => {
     if (activeSong) {
       const formattetLastUserSong = activeSong;
 
-      localStorage.setItem(lastSongData, formattetLastUserSong);
+      localStorage.setItem(lastSongData, formattetLastUserSong.pathName);
     }
 
     if (tempo) {
@@ -62,8 +64,9 @@ export const useLocalStorage = () => {
     const userTransposeData = localStorage.getItem(userTranspose);
     const userIsPreclickData = localStorage.getItem(userIsPreclick);
     const songFileName = songData?.[0];
+    const userSong = songList?.find((song) => song.pathName === songFileName);
 
-    setActiveSong(songFileName || "belarusian/Verabey.mid");
+    setActiveSong(userSong || songList[0]);
     setTempo((userTempoData && +userTempoData) || 200);
     setTranspose((userTransposeData !== null && +userTransposeData) || 0);
     setIsPreclick(!!userIsPreclickData);

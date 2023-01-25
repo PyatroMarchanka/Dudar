@@ -7,7 +7,6 @@ import {
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { store } from "../../context";
-import { useSongList } from "../../hooks/useSongLIst";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { mainColors, theme } from "../../utils/theme";
 import { Icon } from "../global/Icon";
@@ -49,7 +48,6 @@ export default ({ player }: Props) => {
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const { songList, allLists } = useSongList();
 
   return (
     <Container>
@@ -62,12 +60,7 @@ export default ({ player }: Props) => {
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
       >
-        <SongsByGenre
-          songsNames={songList}
-          allLists={allLists}
-          setOpen={setOpen}
-          onStop={onStop}
-        />
+        <SongsByGenre setOpen={setOpen} onStop={onStop} />
       </SwipeableDrawer>
       <IconButton onClick={() => setOpen(true)} className="icon">
         <Icon type="hamb" fill={theme.colors.black} className="play-icon" />
