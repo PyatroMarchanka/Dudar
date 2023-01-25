@@ -4,12 +4,14 @@ import { mainColors } from "../../utils/theme";
 export const useSelectStyles = makeStyles(() =>
   createStyles({
     select: {
-      width: "100%",
+      padding: "20px",
+      marginLeft: "20px",
+      marginRight: "20px",
       "&:before": {
-        borderColor: mainColors.darkerGray,
+        borderColor: mainColors.lightGrey,
       },
       "&:after": {
-        borderColor: mainColors.darkerGray,
+        borderColor: mainColors.lightGrey,
       },
     },
   })

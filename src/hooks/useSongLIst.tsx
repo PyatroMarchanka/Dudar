@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { store } from "../context";
 import {
   Song,
-  SongList,
   SongListByBagpipe,
   SongListBySongType,
 } from "../dataset/songs/interfaces";

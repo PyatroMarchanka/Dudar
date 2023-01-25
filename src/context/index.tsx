@@ -1,8 +1,7 @@
 import { Midi } from "@tonejs/midi";
-import React, { createContext, useReducer } from "react";
+import { createContext, useReducer } from "react";
 import { Song, SongListByBagpipe } from "../dataset/songs/interfaces";
-import { songList } from "../dataset/songs/songsList";
-import { fallbackSong, getUserDataFromLocal } from "../hooks/useLocalStorage";
+import { getUserDataFromLocal } from "../hooks/useLocalStorage";
 import { BagpipeTypes, SharpNotes } from "../interfaces";
 
 interface Action {
@@ -195,6 +194,12 @@ const ContextProvider = ({ children }: any) => {
         return {
           ...state,
           transpose: action.payload,
+        };
+
+      case "SET_IS_PRECLICK":
+        return {
+          ...state,
+          isPreclick: action.payload,
         };
 
       case "SET_SONG_NOTES":

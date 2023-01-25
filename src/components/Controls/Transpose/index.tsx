@@ -32,28 +32,23 @@ export default ({ midiPlayer }: Props) => {
   }, [midiPlayer]);
 
   return (
-    <ModalButton
-      buttonLabel={"Transpose"}
-      dialogContent={
-        <div>
-          <Select
-            id="demo-simple-select"
-            className={selectClasses.select}
-            value={value}
-            onChange={(e) => {
-              setTranspose && setTranspose(Number(e.target.value));
-              setValue(Number(e.target.value));
-            }}
-          >
-            {options.map((option) => (
-              <MenuItem key={option.label} value={option.value}>
-                <b>{transposeNote("A", +option.label)}</b>
-                {` : ${option.label} semitones`}
-              </MenuItem>
-            ))}
-          </Select>
-        </div>
-      }
-    />
+    <div>
+      <Select
+        id="demo-simple-select"
+        className={selectClasses.select}
+        value={value}
+        onChange={(e) => {
+          setTranspose && setTranspose(Number(e.target.value));
+          setValue(Number(e.target.value));
+        }}
+      >
+        {options.map((option) => (
+          <MenuItem key={option.label} value={option.value}>
+            <b>{transposeNote("A", +option.label)}</b>
+            {` : ${option.label} semitones`}
+          </MenuItem>
+        ))}
+      </Select>
+    </div>
   );
 };

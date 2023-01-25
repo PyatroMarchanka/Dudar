@@ -21,31 +21,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: mainColors.lightestGrey,
     color: "#fff",
-    width: "100%",
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+    },
+    [theme.breakpoints.up("md")]: {
+      width: "500px",
+    },
   },
 }));
 
 export default ({ midiPlayer }: Props) => {
-  const {
-    state: { transpose },
-    setTranspose: setTransposeCtx,
-  } = useContext(store);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const classes = useStyles();
-
-  const setTranspose = (num: number) => {
-    setTransposeCtx(num);
-    midiPlayer?.setTranspose(num);
-  };
-
-  const [value, setValue] = useState<number>(transpose);
-  const options = new Array(24)
-    .fill(undefined)
-    .map((_, i) => ({ value: i - 12, label: i - 12 }));
-
-  useEffect(() => {
-    setTranspose(transpose);
-  }, [midiPlayer]);
 
   return (
     <Container>
@@ -53,17 +40,20 @@ export default ({ midiPlayer }: Props) => {
         classes={{
           paper: classes.root,
         }}
+        className=""
         anchor="right"
         open={open}
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
       >
         <Content>
-          <IconButton onClick={() => setOpen(false)} className="close">
-            <Icon type="back" fill={theme.colors.white} className="icon" />
-          </IconButton>
-          <Title>Settings</Title>
-          <MainSettings />
+          <Header>
+            <IconButton onClick={() => setOpen(false)} className="close">
+              <Icon type="back" fill={theme.colors.white} className="icon" />
+            </IconButton>
+            <Title>Settings</Title>
+          </Header>
+          <MainSettings midiPlayer={midiPlayer} />
         </Content>
       </SwipeableDrawer>
       <IconButton onClick={() => setOpen(true)} className="settings">
@@ -76,6 +66,14 @@ export default ({ midiPlayer }: Props) => {
 const Container = styled.div`
   .icon {
     transform: translate(13px, 0px);
+  }
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  .close {
+    position: absolute;
   }
 `;
 
@@ -92,9 +90,8 @@ const Content = styled.div`
   }
 
   padding: 10px;
-  width: 300px;
+  width: 100%;
   z-index: 10;
-  .close,
   .settings {
     position: fixed;
     left: 10px;
