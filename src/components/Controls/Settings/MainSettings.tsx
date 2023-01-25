@@ -33,10 +33,11 @@ export const MainSettings = ({ midiPlayer }: Props) => {
 
   return (
     <Container>
-      <BottomLineRow>
+      <Row>
         <Icon type="duda" className="duda" />
         <Title>Instrument Type</Title>
-      </BottomLineRow>
+      </Row>
+      <Line />
       <InstrumentTypes>
         {bagpipeTypes.map((type, i) => (
           <TypeItem key={type} onClick={() => onChange(type)}>
@@ -49,12 +50,14 @@ export const MainSettings = ({ midiPlayer }: Props) => {
           </TypeItem>
         ))}
       </InstrumentTypes>
-      <BottomLineRow>
+      <Line />
+      <Row>
         <Icon type="duda" className="duda" />
         <Title>Transpose</Title>
         <Transpose midiPlayer={midiPlayer} />
-      </BottomLineRow>
-      <BottomLineRow>
+      </Row>
+      <Line />
+      <Row>
         <Icon type="duda" className="duda" />
         <Title>Preclick</Title>
         <RedCheckbox
@@ -62,7 +65,8 @@ export const MainSettings = ({ midiPlayer }: Props) => {
           onChange={() => setIsPreclick(!isPreclick)}
           name="checkedG"
         />
-      </BottomLineRow>
+      </Row>
+      <Line />
     </Container>
   );
 };
@@ -101,9 +105,8 @@ const Row = styled.div`
   flex-wrap: wrap;
 `;
 
-const BottomLineRow = styled(Row)`
+const Line = styled.div`
   border-bottom: 2px solid ${mainColors.lightGrey};
-  margin: 0 6%;
 `;
 
 const Title = styled.h3`
