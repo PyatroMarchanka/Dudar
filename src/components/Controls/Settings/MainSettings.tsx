@@ -32,7 +32,7 @@ export const MainSettings = ({}: Props) => {
       </BottomLineRow>
       <InstrumentTypes>
         {bagpipeTypes.map((type, i) => (
-          <TypeItem>
+          <TypeItem key={type}>
             <TypeContainer>
               <RadioButton
                 onChange={() => onChange(type)}

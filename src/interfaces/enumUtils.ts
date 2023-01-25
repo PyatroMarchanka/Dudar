@@ -1,4 +1,5 @@
-import { BagpipeTypes, SongTypes } from ".";
+import { BagpipeTypes } from ".";
+import { SongTypes } from "../dataset/songs/interfaces";
 
 export const getLabelBySongType = (type: SongTypes) => {
   switch (type) {

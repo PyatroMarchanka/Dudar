@@ -1,12 +1,9 @@
 import { Midi } from "@tonejs/midi";
 import React, { createContext, useReducer } from "react";
-import { getUserDataFromLocal } from "../hooks/useLocalStorage";
-import {
-  BagpipeTypes,
-  SharpNotes,
-  Song,
-  SongListByBagpipe,
-} from "../interfaces";
+import { Song, SongListByBagpipe } from "../dataset/songs/interfaces";
+import { songList } from "../dataset/songs/songsList";
+import { fallbackSong, getUserDataFromLocal } from "../hooks/useLocalStorage";
+import { BagpipeTypes, SharpNotes } from "../interfaces";
 
 interface Action {
   type:
@@ -18,7 +15,6 @@ interface Action {
     | "SET_TEMPO"
     | "SET_SHOW_PIANO_ROLL"
     | "SET_IS_PLAYING"
-    | "SET_ALL_LISTS"
     | "SET_LISTS_BY_BAGPIPE"
     | "SET_SIZE"
     | "SET_TRANSPOSE"
@@ -42,7 +38,6 @@ interface State {
   tempo: number;
   showPianoRoll: boolean;
   isPlaying: boolean;
-  allLists: Song[] | null;
   listsByBagpipe: SongListByBagpipe | null;
   bagpipeType: BagpipeTypes;
   screenSize: { width: number; height: number };
@@ -58,7 +53,6 @@ const initialState: State = {
   progress: { percent: 0, time: 0, timeRemaining: 0 },
   showPianoRoll: true,
   isPlaying: false,
-  allLists: null,
   listsByBagpipe: null,
   bagpipeType: BagpipeTypes.BelarusianNONTraditionalDuda,
   screenSize: { width: 400, height: 500 },
@@ -78,7 +72,6 @@ interface Context {
   setTempo: (bpm: number) => void;
   togglePianoRoll: (value: boolean) => void;
   setIsPlaying: (bool: boolean) => void;
-  setAllLists: (lists: Song[]) => void;
   setListsByBagpipe: (lists: SongListByBagpipe) => void;
   setBagpipeType: (bagpipeType: BagpipeTypes) => void;
   setScreenSize: (size: { width: number; height: number }) => void;
@@ -97,7 +90,6 @@ const store = createContext<Context>({
   setTempo: (bpm: number) => {},
   togglePianoRoll: (value: boolean) => {},
   setIsPlaying: (bool: boolean) => {},
-  setAllLists: (lists: Song[]) => {},
   setListsByBagpipe: (lists: SongListByBagpipe) => {},
   setBagpipeType: (bagpipeType: BagpipeTypes) => {},
   setScreenSize: (size: { width: number; height: number }) => {},
@@ -181,15 +173,7 @@ const ContextProvider = ({ children }: any) => {
           isPlaying: action.payload,
         };
 
-      case "SET_ALL_LISTS":
-        console.log("SET_ALL_LISTS", action.payload);
-        return {
-          ...state,
-          allLists: action.payload,
-        };
-
       case "SET_LISTS_BY_BAGPIPE":
-        console.log("SET_LISTS_BY_BAGPIPE", action.payload);
         return {
           ...state,
           listsByBagpipe: action.payload,
@@ -268,10 +252,6 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_IS_PLAYING", payload: bool });
   };
 
-  const setAllLists = (list: Song[]) => {
-    dispatch({ type: "SET_ALL_LISTS", payload: list });
-  };
-
   const setListsByBagpipe = (list: SongListByBagpipe) => {
     dispatch({ type: "SET_LISTS_BY_BAGPIPE", payload: list });
   };
@@ -308,7 +288,6 @@ const ContextProvider = ({ children }: any) => {
         setTempo,
         togglePianoRoll,
         setIsPlaying,
-        setAllLists,
         setListsByBagpipe,
         setBagpipeType,
         setScreenSize,

@@ -1,19 +1,21 @@
+import { songList } from "./../dataset/songs/songsList";
 import { userTempo, userTranspose } from "./../constants/localStorage";
 import { useContext, useEffect } from "react";
 import { lastSongData } from "../constants/localStorage";
 import { store } from "../context";
 
-export const fallbackSong = "newSongFormat/Verabey|belarusian|bnd,bod|4-4.mid";
+export const fallbackSong = songList.find(
+  (song) => song.pathName === "belarusian/Verabey.mid"
+)!;
 
 export const getUserDataFromLocal = () => {
   const songData = localStorage.getItem(lastSongData);
   const userTempoData = localStorage.getItem(userTempo);
   const userTransposeData = localStorage.getItem(userTranspose);
-  const songFileName = songData as string;
-  const isSongNameCorrect = !!songData?.split("/")[1];
 
   return {
-    activeSong: isSongNameCorrect ? songFileName : fallbackSong,
+    activeSong:
+      songList.find((song) => song.pathName === songData) || fallbackSong,
     tempo: userTempoData !== null ? +userTempoData : 200,
     transpose: userTransposeData !== null ? +userTransposeData : 0,
   };
@@ -21,7 +23,7 @@ export const getUserDataFromLocal = () => {
 
 export const useLocalStorage = () => {
   const {
-    state: { activeSong, tempo, transpose, allLists },
+    state: { activeSong, tempo, transpose },
     setActiveSong,
     setTempo,
     setTranspose,
@@ -48,10 +50,10 @@ export const useLocalStorage = () => {
     const userTempoData = localStorage.getItem(userTempo);
     const userTransposeData = localStorage.getItem(userTranspose);
     const songFileName = songData?.[0];
-    const userSong = allLists?.find((song) => song.pathName === songFileName);
+    const userSong = songList?.find((song) => song.pathName === songFileName);
 
-    setActiveSong(userSong || allLists[0]);
+    setActiveSong(userSong || songList[0]);
     setTempo((userTempoData && +userTempoData) || 200);
     setTranspose((userTransposeData !== null && +userTransposeData) || 0);
-  }, [allLists]);
+  }, [songList]);
 };

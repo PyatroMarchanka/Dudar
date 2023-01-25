@@ -9,25 +9,6 @@ export enum Modes {
   Dorian = "dorian",
 }
 
-export enum SongTypes {
-  Belarusian = "belarusian",
-  Medieval = "medieval",
-  Irish = "irish",
-  Schotland = "schotland",
-}
-
-export type TimeSignatures = "4/4" | "3/4" | "6/8" | "8/8";
-
-export interface Song {
-  name: string;
-  type: SongTypes;
-  bagpipesToPlay: BagpipeTypes[];
-  timeSignature: TimeSignatures;
-  pathName: string;
-}
-
-export type SongListByBagpipe = { bagpipeType: BagpipeTypes; songs: Song[] };
-
 export type Notes =
   | "A"
   | "A#"

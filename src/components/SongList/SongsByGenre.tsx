@@ -12,7 +12,8 @@ import styled from "styled-components";
 import { mediaQueries } from "../../constants/style";
 import { mainColors } from "../../utils/theme";
 import { store } from "../../context";
-import { Song, SongListByBagpipe } from "../../interfaces";
+import { Song } from "../../dataset/songs/interfaces";
+import { useSongList } from "../../hooks/useSongLIst";
 
 interface Props {
   setOpen: (bool: boolean) => void;
@@ -66,18 +67,17 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const SongsByGenre = ({ setOpen, onStop }: Props) => {
   const {
-    state: { bagpipeType },
+    state: { bagpipeType, listsByBagpipe, activeSong },
+    setActiveSong,
   } = useContext(store);
-
-  const [songByType, setSongByType] = useState<{ [key: string]: Song[] }>({});
 
   const classes = useStyles();
-  const genres = Object.keys(songByType);
+  const genres = Object.keys(listsByBagpipe || {});
 
-  const {
-    setActiveSong,
-    state: { activeSong },
-  } = useContext(store);
+  useSongList();
+  // if (!listsByBagpipe) {
+  //   return null;
+  // }
 
   return (
     <Content>
@@ -107,7 +107,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
 
             <AccordionDetails classes={{ root: classes.detailsRoot }}>
               <List classes={{ padding: classes.list }}>
-                {songByType[genre].map((song) => (
+                {listsByBagpipe![genre].map((song) => (
                   <div
                     className={
                       activeSong?.pathName === song.pathName
