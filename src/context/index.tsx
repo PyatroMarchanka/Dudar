@@ -55,7 +55,6 @@ const initialState: State = {
   showPianoRoll: true,
   isPlaying: false,
   listsByBagpipe: null,
-  bagpipeType: BagpipeTypes.BelarusianNONTraditionalDuda,
   screenSize: { width: 400, height: 500 },
   songLength: 0,
   isPreclick: true,

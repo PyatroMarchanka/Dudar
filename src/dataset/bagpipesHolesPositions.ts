@@ -50,12 +50,11 @@ const belarusianNONTraditionalHolesClosable = [
 ];
 
 const belarusianOpenHolesClosable = [
-  { yPos: 628, leftMargin: 50, diameter: 25 },
-  { yPos: 482, leftMargin: 60, diameter: 20, isAdditional: true },
+  { yPos: 624, leftMargin: 50, diameter: 25 },
+  { yPos: 528, leftMargin: 50, diameter: 25 },
   { yPos: 452, leftMargin: 50, diameter: 20 },
   { yPos: 386, leftMargin: 50, diameter: 25 },
   { yPos: 318, leftMargin: 50, diameter: 25 },
-  { yPos: 262, leftMargin: 63, diameter: 20, isAdditional: true },
   { yPos: 242, leftMargin: 43, diameter: 20 },
   { yPos: 176, leftMargin: 50, diameter: 25 },
   { yPos: 130, leftMargin: 50, diameter: 25 },
