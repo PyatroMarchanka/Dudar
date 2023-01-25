@@ -1,12 +1,13 @@
 import { Midi } from "@tonejs/midi";
 import { useContext, useEffect, useState } from "react";
 import { store } from "../context";
+import { Song } from "../dataset/songs/interfaces";
 import { addMetronome, fixMidiDataOctaves } from "../utils/midiUtils";
 import { fallbackSong } from "./useLocalStorage";
 
 export const useLoadSong = () => {
   const {
-    state: { activeSong, allLists, metronome, tempo },
+    state: { activeSong, metronome, tempo },
     setMidi,
     setMidiData,
     setSongLength,
@@ -15,22 +16,15 @@ export const useLoadSong = () => {
 
   const [lowestOctave, setLowestOctave] = useState(4);
 
-  const loadMidiSong = async (fileName: string) => {
+  const loadMidiSong = async (song: Song) => {
     try {
-      let [genreList, songName] = fileName.split("/");
-
-      if (
-        Object.keys(allLists).length &&
-        genreList &&
-        !allLists[genreList]?.includes(songName)
-      ) {
-        console.log(`No song with this path in list \n ${fileName}`);
-        console.log(`Fallback to ${fallbackSong}`);
+      if (!song.pathName) {
+        console.log(`No song with this path in list \n ${song.pathName}`);
+        console.log(`Fallback to ${fallbackSong.pathName}`);
 
         setActiveSong(fallbackSong);
       }
-
-      const file = await fetch(`midi/${fileName}`);
+      const file = await fetch(`midi/${song.pathName}`);
       const buffer = await file.arrayBuffer();
 
       const songWithMetronome = await addMetronome(buffer);
@@ -53,7 +47,7 @@ export const useLoadSong = () => {
     if (activeSong) {
       loadMidiSong(activeSong);
     }
-  }, [activeSong, allLists, metronome]);
+  }, [activeSong, metronome]);
 
   return { lowestOctave };
 };

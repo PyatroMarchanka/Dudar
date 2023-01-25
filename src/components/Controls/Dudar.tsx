@@ -66,7 +66,7 @@ export const Dudar = () => {
         <SongList player={midiPlayer} />
         {/* <Right> */}
         <Header>
-          <h3>{formatMidiFileNameForTitle(activeSong!) || noSongsLabel}</h3>
+          <h3>{activeSong?.name || noSongsLabel}</h3>
         </Header>
         <Transpose midiPlayer={midiPlayer} />
         {/* </Right> */}
