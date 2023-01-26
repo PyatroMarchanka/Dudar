@@ -23,8 +23,6 @@ export const getUserDataFromLocal = () => {
   const isPreclick = localStorage.getItem(userIsPreclick);
   const bagpipeType = localStorage.getItem(userBagpipeType);
   const song = songList.find((song) => song.pathName === songData);
-  console.log("isPreclick", isPreclick);
-
   return {
     activeSong: song,
     tempo: userTempoData !== null ? +userTempoData : 200,
@@ -80,7 +78,7 @@ export const useLocalStorage = () => {
 
     setActiveSong(userSong || fallbackSong);
     setTempo((userTempoData && +userTempoData) || 200);
-    setTranspose((userTransposeData !== null && +userTransposeData) || 0);
+    setTranspose(userTransposeData !== null ? +userTransposeData : 0);
     setIsPreclick(!!userIsPreclickData);
     setBagpipeType((bagpipeType as BagpipeTypes) || fallBackBagpipe);
   }, []);

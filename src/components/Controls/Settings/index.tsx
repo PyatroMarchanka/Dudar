@@ -31,8 +31,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default ({ midiPlayer }: Props) => {
+  const {
+    state: { transpose, isPlaying },
+  } = useContext(store);
+
   const [open, setOpen] = useState(false);
   const classes = useStyles();
+
+  useEffect(() => {
+    midiPlayer?.setTranspose(transpose, isPlaying);
+  }, [midiPlayer, transpose]);
 
   return (
     <Container>

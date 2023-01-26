@@ -8,7 +8,7 @@ export type PlaybackProgressHandler = (
   timeRemaining: number
 ) => void;
 export type NotesMovingHandler = (tick: number) => void;
-export type SetTransposeType = (num: number) => void;
+export type SetTransposeType = (num: number, isPlaying: boolean) => void;
 
 var Player = new MidiPlayerLib.Player(function (event: any) {});
 

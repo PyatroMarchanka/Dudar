@@ -42,7 +42,7 @@ interface State {
   bagpipeType: BagpipeTypes;
   screenSize: { width: number; height: number };
   transpose: number;
-  isPreclick?: boolean;
+  isPreclick: boolean;
 }
 const userData = getUserDataFromLocal();
 
