@@ -54,7 +54,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
       <Line />
       <Row>
         <Icon type="duda" className="duda" />
-        <Title>Transpose</Title>
+        <Title>Transpose melody</Title>
         <Transpose midiPlayer={midiPlayer} />
       </Row>
       <Line />
