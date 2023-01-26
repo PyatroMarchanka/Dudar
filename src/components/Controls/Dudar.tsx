@@ -47,6 +47,7 @@ export const Dudar = () => {
   };
 
   useLocalStorage();
+  useLoadSong();
 
   useEffect(() => {
     setDimensions();
