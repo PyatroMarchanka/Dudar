@@ -50,14 +50,16 @@ const belarusianNONTraditionalHolesClosable = [
 ];
 
 const belarusianOpenHolesClosable = [
-  { yPos: 624, leftMargin: 50, diameter: 25 },
-  { yPos: 528, leftMargin: 50, diameter: 25 },
-  { yPos: 452, leftMargin: 50, diameter: 20 },
-  { yPos: 386, leftMargin: 50, diameter: 25 },
-  { yPos: 318, leftMargin: 50, diameter: 25 },
-  { yPos: 242, leftMargin: 43, diameter: 20 },
-  { yPos: 176, leftMargin: 50, diameter: 25 },
-  { yPos: 130, leftMargin: 50, diameter: 25 },
+  { yPos: 620, leftMargin: 30, diameter: 25 },
+  { yPos: 568, leftMargin: 50, diameter: 25 },
+  { yPos: 522, leftMargin: 60, diameter: 20, isAdditional: true },
+  { yPos: 492, leftMargin: 50, diameter: 20 },
+  { yPos: 436, leftMargin: 50, diameter: 25 },
+  { yPos: 348, leftMargin: 50, diameter: 25 },
+  { yPos: 292, leftMargin: 63, diameter: 20, isAdditional: true },
+  { yPos: 262, leftMargin: 43, diameter: 20 },
+  { yPos: 196, leftMargin: 50, diameter: 25 },
+  { yPos: 150, leftMargin: 50, diameter: 25 },
 ];
 
 const belarusianTraditionalHoles: BagpipeHolesPositions = {
@@ -77,7 +79,7 @@ const belarusianNONTraditionalHoles: BagpipeHolesPositions = {
 };
 
 const blowImage = {
-  yPos: coeff(640),
+  yPos: coeff(680),
   leftMargin: coeff(43),
   diameter: coeff(38),
 };
@@ -85,10 +87,10 @@ const blowImage = {
 const belarusianOpenHoles: BagpipeHolesPositions = {
   closable: belarusianOpenHolesClosable.map(applyCoefficientToHole),
   blowImage: blowImage,
-  linesYPositions: holesToLinesYPositions([
-    blowImage,
-    ...belarusianOpenHolesClosable,
-  ]),
+  linesYPositions: [
+    blowImage.yPos,
+    ...holesToLinesYPositions(belarusianOpenHolesClosable),
+  ],
 };
 
 export const holesPositions = {
