@@ -6,7 +6,7 @@ import { useNotesMoving } from "../../hooks/useNotesMoving";
 import { BagpipeTypes, SharpNotes } from "../../interfaces";
 import { getBagpipeNotesFromMidi } from "../../dataset/bagpipesUtils";
 import { MidiPlayer } from "../../utils/MidiPlayer";
-import { drawAll, drawStatic } from "../../utils/drawUtils/drawAll";
+import { cleanLines, drawAll, drawStatic } from "../../utils/drawUtils/drawAll";
 
 const maxCavasWidth = 800;
 
@@ -45,10 +45,8 @@ export default ({ player, activeHole }: Props) => {
     const context: CanvasRenderingContext2D | null =
       canvas && (canvas as HTMLCanvasElement)!.getContext("2d");
 
-    if (!isPlaying) {
-      context!.clearRect(0, 0, context!.canvas.width, context!.canvas.height);
-    }
-  }, [activeSong]);
+    cleanLines(context!);
+  }, [activeSong, bagpipeType]);
 
   useEffect(() => {
     let animationFrameId: number;

@@ -27,6 +27,10 @@ export const drawAll = (
   }
 };
 
+export const cleanLines = (ctx: CanvasRenderingContext2D) => {
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+};
+
 export const drawStatic = (
   ctx: CanvasRenderingContext2D,
   bagpipeType: BagpipeTypes
