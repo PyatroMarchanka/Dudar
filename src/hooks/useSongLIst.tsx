@@ -11,7 +11,8 @@ import { BagpipeTypes } from "../interfaces";
 export const useSongList = () => {
   const {
     setListsByBagpipe,
-    state: { bagpipeType },
+    setActiveSong,
+    state: { bagpipeType, listsByBagpipe, activeSong },
   } = useContext(store);
 
   const getAllList = async (bagpipeType: BagpipeTypes) => {
@@ -22,6 +23,24 @@ export const useSongList = () => {
   useEffect(() => {
     getAllList(bagpipeType);
   }, [bagpipeType]);
+
+  useEffect(() => {
+    if (!listsByBagpipe) {
+      return;
+    }
+
+    const activeSongInNewList =
+      activeSong &&
+      listsByBagpipe[activeSong!.type].find(
+        (song) => song.name === activeSong!.name
+      );
+
+    if (activeSongInNewList) {
+      setActiveSong(activeSongInNewList);
+    } else {
+      setActiveSong(listsByBagpipe[Object.keys(listsByBagpipe)[0]][0]);
+    }
+  }, [listsByBagpipe]);
 };
 
 const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {
