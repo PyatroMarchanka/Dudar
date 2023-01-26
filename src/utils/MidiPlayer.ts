@@ -100,7 +100,7 @@ export class MidiPlayer {
         this.playRef.current?.player.loader.instrumentInfo(instrument).variable
       ],
       0,
-      note + this.transpose,
+      note + this.transpose - 1,
       9999,
       volume
     );

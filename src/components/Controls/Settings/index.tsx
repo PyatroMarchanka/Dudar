@@ -9,7 +9,6 @@ import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
 import styled from "styled-components";
 import { mainColors, theme } from "../../../utils/theme";
-import { mediaQueries } from "../../../constants/style";
 import { Icon } from "../../global/Icon";
 import { MainSettings } from "./MainSettings";
 

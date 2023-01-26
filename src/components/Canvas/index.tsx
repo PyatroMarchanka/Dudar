@@ -3,10 +3,10 @@ import styled from "styled-components";
 import { mediaQueries } from "../../constants/style";
 import { store } from "../../context";
 import { useNotesMoving } from "../../hooks/useNotesMoving";
-import { BagpipeTypes, SharpNotes } from "../../interfaces";
+import { SharpNotes } from "../../interfaces";
 import { getBagpipeNotesFromMidi } from "../../dataset/bagpipesUtils";
 import { MidiPlayer } from "../../utils/MidiPlayer";
-import { cleanLines, drawAll, drawStatic } from "../../utils/drawUtils/drawAll";
+import { cleanLines, drawAll } from "../../utils/drawUtils/drawAll";
 
 const maxCavasWidth = 800;
 

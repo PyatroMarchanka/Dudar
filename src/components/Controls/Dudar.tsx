@@ -21,7 +21,6 @@ export const Dudar = () => {
     setProgress,
     setScreenSize,
   } = useContext(store);
-
   const [activeNote, setActiveNote] = useState<{
     note: SharpNotes;
     octave: number;

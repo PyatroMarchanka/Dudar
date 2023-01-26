@@ -12,7 +12,7 @@ export const useSongList = (onStop: () => void) => {
   const {
     setListsByBagpipe,
     setActiveSong,
-    state: { bagpipeType, listsByBagpipe, activeSong },
+    state: { bagpipeType, activeSong },
   } = useContext(store);
 
   const getAllList = (bagpipeType: BagpipeTypes) => {
