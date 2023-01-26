@@ -32,7 +32,7 @@ export const useSongList = (onStop: () => void) => {
 
     const activeSongInNewList =
       activeSong &&
-      lists[activeSong!.type].find((song) => song.name === activeSong!.name);
+      lists[activeSong!.type]?.find((song) => song.name === activeSong!.name);
 
     if (activeSongInNewList) {
       setActiveSong(activeSongInNewList);
