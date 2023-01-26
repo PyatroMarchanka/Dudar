@@ -42,7 +42,7 @@ interface State {
   bagpipeType: BagpipeTypes;
   screenSize: { width: number; height: number };
   transpose: number;
-  isPreclick: boolean;
+  isPreclick?: boolean;
 }
 const userData = getUserDataFromLocal();
 
@@ -57,7 +57,6 @@ const initialState: State = {
   listsByBagpipe: null,
   screenSize: { width: 400, height: 500 },
   songLength: 0,
-  isPreclick: true,
   ...userData,
 };
 
