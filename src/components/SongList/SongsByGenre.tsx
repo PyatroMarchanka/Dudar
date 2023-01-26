@@ -74,11 +74,6 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
   const classes = useStyles();
   const genres = Object.keys(listsByBagpipe || {});
 
-  useSongList();
-  // if (!listsByBagpipe) {
-  //   return null;
-  // }
-
   return (
     <Content>
       <IconButton className="close" onClick={() => setOpen(false)}>

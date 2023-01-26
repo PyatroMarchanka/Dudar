@@ -7,12 +7,13 @@ import {
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { store } from "../../context";
+import { useSongList } from "../../hooks/useSongLIst";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { mainColors, theme } from "../../utils/theme";
 import { Icon } from "../global/Icon";
 import { SongsByGenre } from "./SongsByGenre";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
     width: 200,
     display: "flex",
@@ -45,6 +46,8 @@ export default ({ player }: Props) => {
     player?.stop();
     setProgress(100);
   };
+
+  useSongList(onStop);
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);

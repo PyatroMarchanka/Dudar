@@ -85,12 +85,7 @@ const Title = styled.h3`
 `;
 
 const Content = styled.div`
-  @media (max-width: ${mediaQueries.mobile}) {
-    width: 100%;
-  }
-
   padding: 10px;
-  width: 100%;
   z-index: 10;
   .settings {
     position: fixed;

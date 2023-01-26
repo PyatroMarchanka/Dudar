@@ -8,9 +8,7 @@ import SongList from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
 import { mediaQueries, numberQueries } from "../../constants/style";
-import { formatMidiFileNameForTitle } from "../../utils/textUtils";
 import Canvas from "../Canvas";
-import ManerCheckBox from "./ManerCheckBox";
 import LandscapeAlert from "../global/LandscapeAlert";
 import { landscapeAlertId } from "../../constants/localStorage";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
@@ -37,8 +35,6 @@ export const Dudar = () => {
     handleNote,
     setProgress
   );
-
-  const { lowestOctave } = useLoadSong();
 
   const setDimensions = () => {
     const height = window.innerHeight;
@@ -74,21 +70,12 @@ export const Dudar = () => {
       <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} />
       <BagpipeContainer className={"center"}>
         {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
-        <Canvas
-          player={midiPlayer}
-          activeHole={activeNote}
-          lowestOctave={lowestOctave}
-        />
+        <Canvas player={midiPlayer} activeHole={activeNote} />
       </BagpipeContainer>
       <Inputs>
         <PlayerControls player={midiPlayer} />
       </Inputs>
-      {/* <Link className="last">
-        <a href="https://github.com/PyatroMarchanka/Dudar">
-          <i className="fa fa-github fa_custom"></i>
-          <div>GitHub</div>
-        </a>
-      </Link> */}
+
       {MPlayer}
     </Container>
   );

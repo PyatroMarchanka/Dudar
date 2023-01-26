@@ -9,6 +9,7 @@ import { Icon } from "../../global/Icon";
 import Transpose from "../Transpose";
 import { RedRadio } from "../../global/RedRadioButton";
 import { RedCheckbox } from "../../global/RedCheckbox";
+import { Typography } from "@material-ui/core";
 
 type Props = {
   midiPlayer: MidiPlayer | null;
@@ -67,11 +68,31 @@ export const MainSettings = ({ midiPlayer }: Props) => {
         />
       </Row>
       <Line />
+      <a
+        href="https://github.com/PyatroMarchanka/Dudar"
+        className="github-link"
+      >
+        <i className="fa fa-github fa_custom"></i>
+        <Typography variant="h5">GitHub</Typography>
+      </a>
     </Container>
   );
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+  .github-link {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    color: ${mainColors.darkerGray};
+    text-decoration: none;
+
+    .fa_custom {
+      font-size: 30px;
+      margin-right: 5px;
+    }
+  }
+`;
 
 const InstrumentTypes = styled.div`
   display: flex;

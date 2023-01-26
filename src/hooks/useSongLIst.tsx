@@ -8,39 +8,39 @@ import {
 import { songList } from "../dataset/songs/songsList";
 import { BagpipeTypes } from "../interfaces";
 
-export const useSongList = () => {
+export const useSongList = (onStop: () => void) => {
   const {
     setListsByBagpipe,
     setActiveSong,
     state: { bagpipeType, listsByBagpipe, activeSong },
   } = useContext(store);
 
-  const getAllList = async (bagpipeType: BagpipeTypes) => {
+  const getAllList = (bagpipeType: BagpipeTypes) => {
     const sortedList = sortSongsByBagpipe(songList);
-    setListsByBagpipe(sortSongsBySongType(sortedList[bagpipeType]));
+    const lists = sortSongsBySongType(sortedList[bagpipeType]);
+    setListsByBagpipe(lists);
+
+    return lists;
   };
 
   useEffect(() => {
-    getAllList(bagpipeType);
-  }, [bagpipeType]);
-
-  useEffect(() => {
-    if (!listsByBagpipe) {
+    const lists = getAllList(bagpipeType);
+    if (!lists) {
       return;
     }
+    onStop();
 
     const activeSongInNewList =
       activeSong &&
-      listsByBagpipe[activeSong!.type].find(
-        (song) => song.name === activeSong!.name
-      );
+      lists[activeSong!.type].find((song) => song.name === activeSong!.name);
 
     if (activeSongInNewList) {
       setActiveSong(activeSongInNewList);
     } else {
-      setActiveSong(listsByBagpipe[Object.keys(listsByBagpipe)[0]][0]);
+      const firstSongInList = lists[Object.keys(lists)[0]][0];
+      setActiveSong(firstSongInList);
     }
-  }, [listsByBagpipe]);
+  }, [bagpipeType]);
 };
 
 const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {

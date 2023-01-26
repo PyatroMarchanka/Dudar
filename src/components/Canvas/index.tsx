@@ -13,10 +13,9 @@ const maxCavasWidth = 800;
 type Props = {
   player: MidiPlayer | null;
   activeHole: { note: SharpNotes; octave: number } | null;
-  lowestOctave: number;
 };
 
-export default ({ player, activeHole, lowestOctave }: Props) => {
+export default ({ player, activeHole }: Props) => {
   const { nextNotes, nextToNextNotes, setTick, tick } = useNotesMoving();
 
   const {
@@ -74,7 +73,7 @@ export default ({ player, activeHole, lowestOctave }: Props) => {
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [drawAll, tick, activeHole, lowestOctave, songNotes, bagpipeType]);
+  }, [drawAll, tick, activeHole, songNotes, bagpipeType]);
 
   useEffect(() => {
     const bagpipeNotes = getBagpipeNotesFromMidi(midiData!, transpose);
