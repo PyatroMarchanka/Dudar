@@ -69,4 +69,20 @@ export const bagpipesImagesProperties: {
       brickLeftMargin: coeff(55),
     },
   },
+  [BagpipeTypes.Dudelsack]: {
+    main_pipe: {
+      width: coeff(200),
+      heigth: coeff(896),
+      imageScale: coeff(200) / coeff(896),
+      leftMargin: coeff(-38),
+      topMargin: coeff(-27),
+    },
+    notes: {
+      lineHeight: 2,
+      brickhHeight: coeff(18),
+      brickHeightHalf: coeff(18 / 2),
+      notesScale: 0.3,
+      brickLeftMargin: coeff(55),
+    },
+  },
 };

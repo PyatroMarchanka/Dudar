@@ -31,6 +31,9 @@ export const getLabelByBagpipeType = (type: BagpipeTypes) => {
     case BagpipeTypes.BelarusianTraditionalDuda:
       return "Belarusian Duda - Traditional Fingers";
 
+    case BagpipeTypes.Dudelsack:
+      return "Dudelsack";
+
     default:
       return "Belarusian Duda - Traditional fingers";
   }
