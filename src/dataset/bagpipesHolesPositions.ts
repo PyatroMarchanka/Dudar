@@ -62,6 +62,17 @@ const belarusianOpenHolesClosable = [
   { yPos: 150, leftMargin: 50, diameter: 25 },
 ];
 
+const dudelsackClosable = [
+  { yPos: 620, leftMargin: 30, diameter: 25 },
+  { yPos: 568, leftMargin: 50, diameter: 25 },
+  { yPos: 492, leftMargin: 53, diameter: 20 },
+  { yPos: 436, leftMargin: 50, diameter: 25 },
+  { yPos: 328, leftMargin: 50, diameter: 25 },
+  { yPos: 262, leftMargin: 53, diameter: 20 },
+  { yPos: 186, leftMargin: 50, diameter: 25 },
+  { yPos: 140, leftMargin: 50, diameter: 25 },
+];
+
 const belarusianTraditionalHoles: BagpipeHolesPositions = {
   closable: belarusianTraditionalHolesClosable.map(applyCoefficientToHole),
   linesYPositions: [
@@ -78,7 +89,7 @@ const belarusianNONTraditionalHoles: BagpipeHolesPositions = {
   ],
 };
 
-const blowImage = {
+const blowImageBelOpenDuda = {
   yPos: coeff(680),
   leftMargin: coeff(43),
   diameter: coeff(38),
@@ -86,10 +97,25 @@ const blowImage = {
 
 const belarusianOpenHoles: BagpipeHolesPositions = {
   closable: belarusianOpenHolesClosable.map(applyCoefficientToHole),
-  blowImage: blowImage,
+  blowImage: blowImageBelOpenDuda,
   linesYPositions: [
-    blowImage.yPos,
+    blowImageBelOpenDuda.yPos,
     ...holesToLinesYPositions(belarusianOpenHolesClosable),
+  ],
+};
+
+const blowImageDudelsack = {
+  yPos: coeff(680),
+  leftMargin: coeff(45),
+  diameter: coeff(33),
+};
+
+const dudelsackHoles: BagpipeHolesPositions = {
+  closable: dudelsackClosable.map(applyCoefficientToHole),
+  blowImage: blowImageDudelsack,
+  linesYPositions: [
+    blowImageDudelsack.yPos,
+    ...holesToLinesYPositions(dudelsackClosable),
   ],
 };
 
@@ -97,4 +123,5 @@ export const holesPositions = {
   [BagpipeTypes.BelarusianTraditionalDuda]: belarusianTraditionalHoles,
   [BagpipeTypes.BelarusianNONTraditionalDuda]: belarusianNONTraditionalHoles,
   [BagpipeTypes.BelarusianOpenDuda]: belarusianOpenHoles,
+  [BagpipeTypes.Dudelsack]: dudelsackHoles,
 };

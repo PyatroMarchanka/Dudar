@@ -22,11 +22,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
     setIsPreclick,
   } = useContext(store);
 
-  const bagpipeTypes = [
-    BagpipeTypes.BelarusianNONTraditionalDuda,
-    BagpipeTypes.BelarusianOpenDuda,
-    BagpipeTypes.BelarusianTraditionalDuda,
-  ];
+  const bagpipeTypes = Object.values(BagpipeTypes);
 
   const onChange = (bagpipeType: BagpipeTypes) => {
     setBagpipeType(bagpipeType);
@@ -41,7 +37,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
       <Line />
       <InstrumentTypes>
         {bagpipeTypes.map((type, i) => (
-          <TypeItem key={type} onClick={() => onChange(type)}>
+          <TypeItem key={type} onClick={() => onChange(type as BagpipeTypes)}>
             <RedRadio
               checked={type === bagpipeType}
               name="radio-button-demo"

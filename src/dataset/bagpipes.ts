@@ -16,6 +16,7 @@ const bagpipeNames = {
   [BagpipeTypes.BelarusianOpenDuda]: getLabelByBagpipeType(
     BagpipeTypes.BelarusianOpenDuda
   ),
+  [BagpipeTypes.Dudelsack]: getLabelByBagpipeType(BagpipeTypes.Dudelsack),
 };
 
 const getBagpipeData = (bagpipeType: BagpipeTypes): BagpipeConfig => {
@@ -40,4 +41,5 @@ export const bagpipes: { [key: string]: BagpipeConfig } = {
   [BagpipeTypes.BelarusianOpenDuda]: getBagpipeData(
     BagpipeTypes.BelarusianOpenDuda
   ),
+  [BagpipeTypes.Dudelsack]: getBagpipeData(BagpipeTypes.Dudelsack),
 };

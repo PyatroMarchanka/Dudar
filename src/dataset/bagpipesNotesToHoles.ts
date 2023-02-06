@@ -43,4 +43,15 @@ export const bagpipesNotesToLines: { [key: string]: BagpipesNotesToLines } = {
     [SharpNotesEnum.G5]: 1,
     [SharpNotesEnum.A5]: 0,
   },
+  [BagpipeTypes.Dudelsack]: {
+    [SharpNotesEnum.G4]: 8,
+    [SharpNotesEnum.A4]: 7,
+    [SharpNotesEnum.B4]: 6,
+    [SharpNotesEnum.C5]: 5,
+    [SharpNotesEnum.D5]: 4,
+    [SharpNotesEnum.E5]: 3,
+    [SharpNotesEnum.F5]: 2,
+    [SharpNotesEnum.G5]: 1,
+    [SharpNotesEnum.A5]: 0,
+  },
 };
