@@ -23,18 +23,18 @@ export const getLabelBySongType = (type: SongTypes) => {
 export const getLabelByBagpipeType = (type: BagpipeTypes) => {
   switch (type) {
     case BagpipeTypes.BelarusianNONTraditionalDuda:
-      return "Belarusian Duda - Nontraditional fingers";
+      return "Belarusian Nontraditional Closed Duda";
 
     case BagpipeTypes.BelarusianOpenDuda:
-      return "Belarusian Duda - Open fingers";
+      return "Belarusian Open Duda";
 
     case BagpipeTypes.BelarusianTraditionalDuda:
-      return "Belarusian Duda - Traditional Fingers";
+      return "Belarusian Traditional Duda";
 
     case BagpipeTypes.Dudelsack:
       return "Dudelsack";
 
     default:
-      return "Belarusian Duda - Traditional fingers";
+      return "Unknown bagpipe";
   }
 };

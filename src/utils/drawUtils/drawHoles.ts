@@ -36,13 +36,14 @@ const drawBlowImage = (
   const blowImageLeftMargin = holesPositions.blowImage!.leftMargin;
   const blowImageSize = holesPositions.blowImage!.diameter;
 
-  ctx.drawImage(
-    images.blowImage,
-    blowImageLeftMargin,
-    blowImageYPos,
-    blowImageSize,
-    blowImageSize
-  );
+  images.blowImage &&
+    ctx.drawImage(
+      images.blowImage,
+      blowImageLeftMargin,
+      blowImageYPos,
+      blowImageSize,
+      blowImageSize
+    );
 };
 
 const drawHole = (
@@ -53,13 +54,14 @@ const drawHole = (
   isBack: boolean
 ) => {
   const image = getHoleImage(bagpipeType, isActive, isBack);
-  ctx.drawImage(
-    image,
-    hole.leftMargin,
-    hole.yPos,
-    hole.diameter,
-    hole.diameter
-  );
+  image &&
+    ctx.drawImage(
+      image,
+      hole.leftMargin,
+      hole.yPos,
+      hole.diameter,
+      hole.diameter
+    );
 };
 
 export const drawClosedHoles = (

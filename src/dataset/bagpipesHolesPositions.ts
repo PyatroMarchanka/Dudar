@@ -24,12 +24,12 @@ const holesToLinesYPositions = (holes: Hole[]) => {
 };
 
 const belarusianTraditionalHolesClosable = [
-  { yPos: 524, leftMargin: 73, diameter: 20, isAdditional: true },
-  { yPos: 504, leftMargin: 93, diameter: 20 },
+  { yPos: 524, leftMargin: 73, diameter: 17, isAdditional: true },
+  { yPos: 504, leftMargin: 73, diameter: 17 },
   { yPos: 433, leftMargin: 68, diameter: 35 },
   { yPos: 366, leftMargin: 68, diameter: 35 },
-  { yPos: 322, leftMargin: 70, diameter: 20, isAdditional: true },
-  { yPos: 302, leftMargin: 90, diameter: 20 },
+  { yPos: 324, leftMargin: 73, diameter: 17, isAdditional: true },
+  { yPos: 304, leftMargin: 73, diameter: 17 },
   { yPos: 245, leftMargin: 68, diameter: 35 },
   { yPos: 178, leftMargin: 68, diameter: 35 },
   { yPos: 145, leftMargin: 5, diameter: 17, isAdditional: true },
@@ -37,29 +37,29 @@ const belarusianTraditionalHolesClosable = [
 ].reverse();
 
 const belarusianNONTraditionalHolesClosable = [
-  { yPos: 624, leftMargin: 50, diameter: 25 },
+  { yPos: 634, leftMargin: 20, diameter: 25 },
   { yPos: 528, leftMargin: 50, diameter: 25 },
-  { yPos: 482, leftMargin: 60, diameter: 20, isAdditional: true },
-  { yPos: 452, leftMargin: 50, diameter: 20 },
+  { yPos: 468, leftMargin: 54, diameter: 17, isAdditional: true },
+  { yPos: 445, leftMargin: 54, diameter: 17 },
   { yPos: 386, leftMargin: 50, diameter: 25 },
-  { yPos: 318, leftMargin: 50, diameter: 25 },
-  { yPos: 262, leftMargin: 63, diameter: 20, isAdditional: true },
-  { yPos: 242, leftMargin: 43, diameter: 20 },
-  { yPos: 176, leftMargin: 50, diameter: 25 },
+  { yPos: 338, leftMargin: 50, diameter: 25 },
+  { yPos: 292, leftMargin: 56, diameter: 17, isAdditional: true },
+  { yPos: 267, leftMargin: 56, diameter: 17 },
+  { yPos: 196, leftMargin: 50, diameter: 25 },
   { yPos: 130, leftMargin: 50, diameter: 25 },
 ];
 
 const belarusianOpenHolesClosable = [
-  { yPos: 620, leftMargin: 30, diameter: 25 },
-  { yPos: 568, leftMargin: 50, diameter: 25 },
-  { yPos: 522, leftMargin: 60, diameter: 20, isAdditional: true },
-  { yPos: 492, leftMargin: 50, diameter: 20 },
-  { yPos: 436, leftMargin: 50, diameter: 25 },
-  { yPos: 348, leftMargin: 50, diameter: 25 },
-  { yPos: 292, leftMargin: 63, diameter: 20, isAdditional: true },
-  { yPos: 262, leftMargin: 43, diameter: 20 },
+  { yPos: 634, leftMargin: 20, diameter: 25 },
+  { yPos: 528, leftMargin: 50, diameter: 25 },
+  { yPos: 468, leftMargin: 54, diameter: 17, isAdditional: true },
+  { yPos: 445, leftMargin: 54, diameter: 17 },
+  { yPos: 386, leftMargin: 50, diameter: 25 },
+  { yPos: 338, leftMargin: 50, diameter: 25 },
+  { yPos: 292, leftMargin: 56, diameter: 17, isAdditional: true },
+  { yPos: 267, leftMargin: 56, diameter: 17 },
   { yPos: 196, leftMargin: 50, diameter: 25 },
-  { yPos: 150, leftMargin: 50, diameter: 25 },
+  { yPos: 130, leftMargin: 50, diameter: 25 },
 ];
 
 const dudelsackClosable = [
