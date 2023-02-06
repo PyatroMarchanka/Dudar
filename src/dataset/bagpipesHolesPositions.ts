@@ -24,17 +24,17 @@ const holesToLinesYPositions = (holes: Hole[]) => {
 };
 
 const belarusianTraditionalHolesClosable = [
-  { yPos: 564, leftMargin: 43, diameter: 20, isAdditional: true },
-  { yPos: 544, leftMargin: 63, diameter: 20 },
-  { yPos: 478, leftMargin: 43, diameter: 35 },
-  { yPos: 422, leftMargin: 43, diameter: 35 },
-  { yPos: 302, leftMargin: 43, diameter: 20, isAdditional: true },
-  { yPos: 282, leftMargin: 63, diameter: 20 },
-  { yPos: 222, leftMargin: 43, diameter: 35 },
-  { yPos: 176, leftMargin: 43, diameter: 35 },
-  { yPos: 120, leftMargin: 63, diameter: 20, isAdditional: true },
-  { yPos: 140, leftMargin: 43, diameter: 20 },
-];
+  { yPos: 524, leftMargin: 73, diameter: 20, isAdditional: true },
+  { yPos: 504, leftMargin: 93, diameter: 20 },
+  { yPos: 433, leftMargin: 68, diameter: 35 },
+  { yPos: 366, leftMargin: 68, diameter: 35 },
+  { yPos: 322, leftMargin: 70, diameter: 20, isAdditional: true },
+  { yPos: 302, leftMargin: 90, diameter: 20 },
+  { yPos: 245, leftMargin: 68, diameter: 35 },
+  { yPos: 178, leftMargin: 68, diameter: 35 },
+  { yPos: 145, leftMargin: 5, diameter: 17, isAdditional: true },
+  { yPos: 125, leftMargin: 5, diameter: 17 },
+].reverse();
 
 const belarusianNONTraditionalHolesClosable = [
   { yPos: 624, leftMargin: 50, diameter: 25 },
@@ -77,7 +77,7 @@ const belarusianTraditionalHoles: BagpipeHolesPositions = {
   closable: belarusianTraditionalHolesClosable.map(applyCoefficientToHole),
   linesYPositions: [
     ...holesToLinesYPositions([...belarusianTraditionalHolesClosable]),
-    coeff(100),
+    coeff(570),
   ],
 };
 

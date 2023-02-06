@@ -4,7 +4,7 @@ import { Note } from "@tonejs/midi/dist/Note";
 import { SharpNotes } from "../../interfaces";
 import { mainColors } from "../theme";
 
-const notesScale = 0.3;
+const notesScale = 0.2;
 
 const getYposByNote = (
   note: SharpNotes,

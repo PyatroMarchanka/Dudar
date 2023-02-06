@@ -44,7 +44,7 @@ const getNewImageSet = (set: BagpipeImageSet): BagpipeImages => {
 
 const srcs = {
   [BagpipeTypes.BelarusianTraditionalDuda]: {
-    mainPipe: "/images/main_pipe_bel.png",
+    mainPipe: "/images/bel_duda_side_color.png",
     activeHoleImage: "/images/piston_open.svg",
     backActiveHoleImage: "/images/piston_back_open.svg",
     closedHoleImage: "/images/piston_closed.svg",

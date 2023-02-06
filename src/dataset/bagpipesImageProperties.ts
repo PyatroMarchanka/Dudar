@@ -23,10 +23,10 @@ export const bagpipesImagesProperties: {
 } = {
   [BagpipeTypes.BelarusianTraditionalDuda]: {
     main_pipe: {
-      width: coeff(200),
-      heigth: coeff(896),
+      width: coeff(400),
+      heigth: coeff(900),
       imageScale: coeff(200) / coeff(896),
-      leftMargin: coeff(-38),
+      leftMargin: coeff(0),
       topMargin: coeff(-27),
     },
     notes: {
