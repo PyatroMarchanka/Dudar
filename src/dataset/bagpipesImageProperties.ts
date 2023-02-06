@@ -75,7 +75,7 @@ export const bagpipesImagesProperties: {
       heigth: coeff(896),
       imageScale: coeff(200) / coeff(896),
       leftMargin: coeff(-38),
-      topMargin: coeff(-27),
+      topMargin: coeff(0),
     },
     notes: {
       lineHeight: 2,

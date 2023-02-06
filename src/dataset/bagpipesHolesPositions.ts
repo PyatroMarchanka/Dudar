@@ -67,10 +67,10 @@ const dudelsackClosable = [
   { yPos: 568, leftMargin: 50, diameter: 25 },
   { yPos: 492, leftMargin: 53, diameter: 20 },
   { yPos: 436, leftMargin: 50, diameter: 25 },
-  { yPos: 348, leftMargin: 50, diameter: 25 },
+  { yPos: 328, leftMargin: 50, diameter: 25 },
   { yPos: 262, leftMargin: 53, diameter: 20 },
-  { yPos: 196, leftMargin: 50, diameter: 25 },
-  { yPos: 150, leftMargin: 50, diameter: 25 },
+  { yPos: 186, leftMargin: 50, diameter: 25 },
+  { yPos: 140, leftMargin: 50, diameter: 25 },
 ];
 
 const belarusianTraditionalHoles: BagpipeHolesPositions = {
@@ -106,8 +106,8 @@ const belarusianOpenHoles: BagpipeHolesPositions = {
 
 const blowImageDudelsack = {
   yPos: coeff(680),
-  leftMargin: coeff(43),
-  diameter: coeff(38),
+  leftMargin: coeff(45),
+  diameter: coeff(33),
 };
 
 const dudelsackHoles: BagpipeHolesPositions = {
