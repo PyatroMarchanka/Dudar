@@ -60,6 +60,7 @@ export default ({ player, activeHole }: Props) => {
         context!,
         bagpipeType,
         tick,
+        songNotes,
         nextNotes,
         nextToNextNotes,
         activeHole

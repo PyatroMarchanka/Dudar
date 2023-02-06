@@ -15,6 +15,15 @@ export interface BagpipesImagesProperties {
     brickHeightHalf: number;
     notesScale: number;
     brickLeftMargin: number;
+    notesNamesLeftMargin: number;
+    noteNameColor: string;
+  };
+  bg?: {
+    width: number;
+    heigth: number;
+    imageScale: number;
+    leftMargin: number;
+    topMargin: number;
   };
 }
 
@@ -35,6 +44,8 @@ export const bagpipesImagesProperties: {
       brickHeightHalf: coeff(18 / 2),
       notesScale: 0.3,
       brickLeftMargin: coeff(55),
+      notesNamesLeftMargin: coeff(40),
+      noteNameColor: "#fff",
     },
   },
   [BagpipeTypes.BelarusianNONTraditionalDuda]: {
@@ -51,6 +62,15 @@ export const bagpipesImagesProperties: {
       brickHeightHalf: coeff(18 / 2),
       notesScale: 0.3,
       brickLeftMargin: coeff(55),
+      notesNamesLeftMargin: coeff(5),
+      noteNameColor: "#000",
+    },
+    bg: {
+      width: coeff(454),
+      heigth: coeff(454) / (414 / 896),
+      leftMargin: 100,
+      topMargin: 100,
+      imageScale: 414 / 896,
     },
   },
   [BagpipeTypes.BelarusianOpenDuda]: {
@@ -67,6 +87,8 @@ export const bagpipesImagesProperties: {
       brickHeightHalf: coeff(18 / 2),
       notesScale: 0.3,
       brickLeftMargin: coeff(55),
+      notesNamesLeftMargin: coeff(5),
+      noteNameColor: "#000",
     },
   },
   [BagpipeTypes.Dudelsack]: {
@@ -83,6 +105,8 @@ export const bagpipesImagesProperties: {
       brickHeightHalf: coeff(18 / 2),
       notesScale: 0.3,
       brickLeftMargin: coeff(55),
+      notesNamesLeftMargin: coeff(40),
+      noteNameColor: "#000",
     },
   },
 };
