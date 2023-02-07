@@ -35,9 +35,8 @@ const drawNote = (
   const brickLeftMargin = 55;
 
   const startPos = start * notesScale - tick * notesScale + brickLeftMargin;
-
-  const path = new Path2D();
-  path.roundRect(
+  ctx.beginPath();
+  ctx.roundRect(
     startPos,
     y.yPosInPx - imageProperties.notes.brickHeightHalf,
     dur * notesScale,
@@ -49,7 +48,7 @@ const drawNote = (
   } else {
     ctx.fillStyle = mainColors.darkerGray;
   }
-  ctx.fill(path);
+  ctx.fill();
 };
 
 export const drawNotes = (
