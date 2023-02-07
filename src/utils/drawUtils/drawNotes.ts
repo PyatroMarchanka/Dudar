@@ -35,19 +35,22 @@ const drawNote = (
   const brickLeftMargin = 55;
 
   const startPos = start * notesScale - tick * notesScale + brickLeftMargin;
-
+  ctx.beginPath();
   if (startPos < brickLeftMargin) {
     ctx.fillStyle = mainColors.red;
   } else {
     ctx.fillStyle = mainColors.darkerGray;
   }
 
-  ctx.fillRect(
+  ctx.roundRect(
     startPos,
     y.yPosInPx - imageProperties.notes.brickHeightHalf,
     dur * notesScale,
-    imageProperties.notes.brickhHeight
+    imageProperties.notes.brickhHeight,
+    10
   );
+  ctx.fill();
+  ctx.closePath();
 };
 
 export const drawNotes = (
@@ -57,8 +60,6 @@ export const drawNotes = (
   nextNotes?: Note[],
   nextToNextNotes?: Note[]
 ) => {
-  ctx.beginPath();
-
   nextNotes &&
     nextNotes?.forEach((note) => {
       drawNote(
@@ -84,6 +85,4 @@ export const drawNotes = (
         note.octave
       );
     });
-
-  ctx.fill();
 };
