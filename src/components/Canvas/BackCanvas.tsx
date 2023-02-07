@@ -19,7 +19,7 @@ export const BackCanvas = ({}: Props) => {
       canvas && (canvas as HTMLCanvasElement)!.getContext("2d");
 
     drawLines(context!, bagpipeType);
-  }, [canvasRef.current]);
+  }, [canvasRef.current, bagpipeType]);
 
   return <GenericCanvas canvasRef={canvasRef} />;
 };

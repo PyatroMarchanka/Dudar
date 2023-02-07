@@ -15,7 +15,7 @@ import { mainColors } from "../../utils/theme";
 import { convertMidiPitchToNote } from "../../utils/midiUtils";
 import { StaticCanvas } from "../Canvas/StaticCanvas";
 import { BackCanvas } from "../Canvas/BackCanvas";
-import { DynamicCanvas } from "../Canvas/DymamicCanvas";
+import { DynamicCanvas } from "../Canvas/DynamicCanvas";
 
 export const Dudar = () => {
   const {

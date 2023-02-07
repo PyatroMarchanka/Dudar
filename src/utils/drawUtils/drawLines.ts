@@ -5,6 +5,7 @@ export const drawLines = (
   ctx: CanvasRenderingContext2D,
   bagpipeType: BagpipeTypes
 ) => {
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   const { holesPositions, imagesProperties } = bagpipes[bagpipeType];
 
   ctx.fillStyle = "#D6D6D6";
