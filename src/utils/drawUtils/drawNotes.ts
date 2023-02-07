@@ -42,7 +42,7 @@ const drawNote = (
     ctx.fillStyle = mainColors.darkerGray;
   }
 
-  ctx.roundRect(
+  (ctx as any).roundRect(
     startPos,
     y.yPosInPx - imageProperties.notes.brickHeightHalf,
     dur * notesScale,
