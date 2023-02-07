@@ -125,8 +125,10 @@ const Header = styled.div`
 
 const BagpipeContainer = styled.div`
   display: flex;
-  position: relative;
 
+  > div {
+    position: relative;
+  }
   &.center {
     justify-content: center;
   }
