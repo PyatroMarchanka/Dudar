@@ -37,30 +37,30 @@ const belarusianTraditionalHolesClosable = [
 ].reverse();
 
 const belarusianNONTraditionalHolesClosable = [
-  { yPos: 634, leftMargin: 20, diameter: 25 },
-  { yPos: 528, leftMargin: 50, diameter: 25 },
-  { yPos: 468, leftMargin: 54, diameter: 17, isAdditional: true },
-  { yPos: 445, leftMargin: 54, diameter: 17 },
-  { yPos: 386, leftMargin: 50, diameter: 25 },
-  { yPos: 338, leftMargin: 50, diameter: 25 },
-  { yPos: 292, leftMargin: 56, diameter: 17, isAdditional: true },
-  { yPos: 267, leftMargin: 56, diameter: 17 },
-  { yPos: 196, leftMargin: 50, diameter: 25 },
-  { yPos: 130, leftMargin: 50, diameter: 25 },
-];
+  { yPos: 475, leftMargin: 68, diameter: 35 },
+  { yPos: 420, leftMargin: 68, diameter: 35 },
+  { yPos: 387, leftMargin: 73, diameter: 17, isAdditional: true },
+  { yPos: 365, leftMargin: 73, diameter: 17 },
+  { yPos: 312, leftMargin: 68, diameter: 35 },
+  { yPos: 258, leftMargin: 68, diameter: 35 },
+  { yPos: 222, leftMargin: 73, diameter: 17, isAdditional: true },
+  { yPos: 202, leftMargin: 73, diameter: 17 },
+  { yPos: 146, leftMargin: 68, diameter: 35 },
+  { yPos: 120, leftMargin: -6, diameter: 35 },
+].reverse();
 
 const belarusianOpenHolesClosable = [
-  { yPos: 634, leftMargin: 20, diameter: 25 },
-  { yPos: 528, leftMargin: 50, diameter: 25 },
-  { yPos: 468, leftMargin: 54, diameter: 17, isAdditional: true },
-  { yPos: 445, leftMargin: 54, diameter: 17 },
-  { yPos: 386, leftMargin: 50, diameter: 25 },
-  { yPos: 338, leftMargin: 50, diameter: 25 },
-  { yPos: 292, leftMargin: 56, diameter: 17, isAdditional: true },
-  { yPos: 267, leftMargin: 56, diameter: 17 },
-  { yPos: 196, leftMargin: 50, diameter: 25 },
-  { yPos: 130, leftMargin: 50, diameter: 25 },
-];
+  { yPos: 475, leftMargin: 68, diameter: 35 },
+  { yPos: 420, leftMargin: 68, diameter: 35 },
+  { yPos: 387, leftMargin: 73, diameter: 17, isAdditional: true },
+  { yPos: 365, leftMargin: 73, diameter: 17 },
+  { yPos: 312, leftMargin: 68, diameter: 35 },
+  { yPos: 258, leftMargin: 68, diameter: 35 },
+  { yPos: 222, leftMargin: 73, diameter: 17, isAdditional: true },
+  { yPos: 202, leftMargin: 73, diameter: 17 },
+  { yPos: 146, leftMargin: 68, diameter: 35 },
+  { yPos: 120, leftMargin: -6, diameter: 35 },
+].reverse();
 
 const dudelsackClosable = [
   { yPos: 620, leftMargin: 30, diameter: 25 },
@@ -90,8 +90,8 @@ const belarusianNONTraditionalHoles: BagpipeHolesPositions = {
 };
 
 const blowImageBelOpenDuda = {
-  yPos: coeff(680),
-  leftMargin: coeff(43),
+  yPos: coeff(574),
+  leftMargin: coeff(30),
   diameter: coeff(38),
 };
 

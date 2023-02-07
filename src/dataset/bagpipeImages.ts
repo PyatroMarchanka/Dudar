@@ -41,7 +41,7 @@ const srcs = {
     blowImage: "/images/blow.svg",
   },
   [BagpipeTypes.BelarusianNONTraditionalDuda]: {
-    mainPipe: "/images/main_pipe_with_double_holes.png",
+    mainPipe: "/images/bel_duda_side_color_eight_holes.png",
     activeHoleImage: "/images/piston_open.svg",
     backActiveHoleImage: "/images/piston_back_open.svg",
     closedHoleImage: "/images/piston_closed.svg",
@@ -50,7 +50,7 @@ const srcs = {
     bgImage: "/images/BG.png",
   },
   [BagpipeTypes.BelarusianOpenDuda]: {
-    mainPipe: "/images/main_pipe_with_double_holes.png",
+    mainPipe: "/images/bel_duda_side_color_eight_holes.png",
     activeHoleImage: "/images/piston_open.svg",
     backActiveHoleImage: "/images/piston_back_open.svg",
     closedHoleImage: "/images/piston_closed.svg",

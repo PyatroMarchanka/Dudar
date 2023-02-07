@@ -27,77 +27,31 @@ export interface BagpipesImagesProperties {
   };
 }
 
+const belarusianDudaImageProperties = {
+  main_pipe: {
+    width: coeff(400),
+    heigth: coeff(900),
+    imageScale: coeff(200) / coeff(896),
+    leftMargin: coeff(0),
+    topMargin: coeff(-27),
+  },
+  notes: {
+    lineHeight: 2,
+    brickhHeight: coeff(18),
+    brickHeightHalf: coeff(18 / 2),
+    notesScale: 0.3,
+    brickLeftMargin: coeff(55),
+    notesNamesLeftMargin: coeff(30),
+    noteNameColor: "#fff",
+  },
+};
+
 export const bagpipesImagesProperties: {
   [key: string]: BagpipesImagesProperties;
 } = {
-  [BagpipeTypes.BelarusianTraditionalDuda]: {
-    main_pipe: {
-      width: coeff(400),
-      heigth: coeff(900),
-      imageScale: coeff(200) / coeff(896),
-      leftMargin: coeff(0),
-      topMargin: coeff(-27),
-    },
-    notes: {
-      lineHeight: 2,
-      brickhHeight: coeff(18),
-      brickHeightHalf: coeff(18 / 2),
-      notesScale: 0.3,
-      brickLeftMargin: coeff(55),
-      notesNamesLeftMargin: coeff(30),
-      noteNameColor: "#fff",
-    },
-  },
-  [BagpipeTypes.BelarusianNONTraditionalDuda]: {
-    main_pipe: {
-      width: coeff(200),
-      heigth: coeff(896),
-      imageScale: coeff(200) / coeff(896),
-      leftMargin: coeff(-38),
-      topMargin: coeff(-27),
-    },
-    notes: {
-      lineHeight: 2,
-      brickhHeight: coeff(18),
-      brickHeightHalf: coeff(18 / 2),
-      notesScale: 0.3,
-      brickLeftMargin: coeff(55),
-      notesNamesLeftMargin: coeff(5),
-      noteNameColor: "#000",
-    },
-    bg: {
-      width: coeff(454),
-      heigth: coeff(454) / (414 / 896),
-      leftMargin: -50,
-      topMargin: 0,
-      imageScale: 414 / 896,
-    },
-  },
-  [BagpipeTypes.BelarusianOpenDuda]: {
-    main_pipe: {
-      width: coeff(200),
-      heigth: coeff(896),
-      imageScale: coeff(200) / coeff(896),
-      leftMargin: coeff(-38),
-      topMargin: coeff(-27),
-    },
-    notes: {
-      lineHeight: 2,
-      brickhHeight: coeff(18),
-      brickHeightHalf: coeff(18 / 2),
-      notesScale: 0.3,
-      brickLeftMargin: coeff(55),
-      notesNamesLeftMargin: coeff(5),
-      noteNameColor: "#000",
-    },
-    bg: {
-      width: coeff(454),
-      heigth: coeff(454) / (414 / 896),
-      leftMargin: 0,
-      topMargin: 0,
-      imageScale: 414 / 896,
-    },
-  },
+  [BagpipeTypes.BelarusianTraditionalDuda]: belarusianDudaImageProperties,
+  [BagpipeTypes.BelarusianNONTraditionalDuda]: belarusianDudaImageProperties,
+  [BagpipeTypes.BelarusianOpenDuda]: belarusianDudaImageProperties,
   [BagpipeTypes.Dudelsack]: {
     main_pipe: {
       width: coeff(200),
