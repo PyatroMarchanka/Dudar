@@ -1,7 +1,7 @@
 import { bagpipes } from "./../../dataset/bagpipes";
 import { BagpipeTypes, SharpNotesEnum } from "../../interfaces";
 
-export type NotesMap = { [key: string]: number };
+export type NotesMap = { note: string; yPos: number }[];
 
 export type SongNotesData = {
   songNotes: SharpNotesEnum[] | null;
@@ -31,21 +31,16 @@ export const drawNotesNames = (
   songNotesData: SongNotesData
 ) => {
   const { songNotes, notesNameToLine } = songNotesData;
-  const linesYpositions = bagpipes[bagpipeType].holesPositions.linesYPositions;
 
   const { noteNameColor, notesNamesLeftMargin } =
     bagpipes[bagpipeType].imagesProperties.notes;
 
   ctx.fillStyle = noteNameColor;
 
-  songNotes?.forEach((note, i) => {
+  notesNameToLine?.forEach((noteData, i) => {
     ctx.font = "bold 15px Arial";
     songNotes?.[i] &&
-      ctx.fillText(
-        note,
-        notesNamesLeftMargin,
-        linesYpositions[notesNameToLine[note]]
-      );
+      ctx.fillText(noteData.note, notesNamesLeftMargin, noteData.yPos);
   });
 };
 

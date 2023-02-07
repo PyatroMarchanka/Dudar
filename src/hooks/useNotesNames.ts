@@ -13,7 +13,8 @@ export const useNotesNames = () => {
     setSongNotes,
   } = useContext(store);
 
-  const [notesNamesMap, setNotesNamesMap] = useState<NotesMap>({});
+  const [notesNamesMap, setNotesNamesMap] = useState<NotesMap>([] as any);
+  const linesYpositions = bagpipes[bagpipeType].holesPositions.linesYPositions;
 
   useEffect(() => {
     if (!midiData) {
@@ -26,10 +27,12 @@ export const useNotesNames = () => {
     );
 
     const notesMap = bagpipeNotes.reduce((acc, cur, i) => {
-      acc[transposedNotes[i] as string] =
-        bagpipes[bagpipeType].notesToLines[cur];
+      acc.push({
+        note: transposedNotes[i].slice(0, -1),
+        yPos: linesYpositions[bagpipes[bagpipeType].notesToLines[cur]],
+      });
       return acc;
-    }, {} as NotesMap);
+    }, [] as NotesMap);
 
     setNotesNamesMap(notesMap);
     setSongNotes(transposedNotes);
