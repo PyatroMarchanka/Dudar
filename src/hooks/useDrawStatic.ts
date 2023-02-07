@@ -2,8 +2,7 @@ import { drawStatic } from "./../utils/drawUtils/drawAll";
 import { useContext, useEffect, useRef } from "react";
 import { store } from "../context";
 import { SharpNotes } from "../interfaces";
-import { cleanLines, drawAll } from "../utils/drawUtils/drawAll";
-import { MidiPlayer } from "../utils/MidiPlayer";
+import { cleanLines } from "../utils/drawUtils/drawAll";
 
 import { useNotesNames } from "./useNotesNames";
 

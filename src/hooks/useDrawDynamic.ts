@@ -1,10 +1,9 @@
 import { useContext, useEffect, useRef } from "react";
 import { store } from "../context";
-import { cleanLines, drawAll } from "../utils/drawUtils/drawAll";
+import { cleanLines, drawDynamic } from "../utils/drawUtils/drawAll";
 import { MidiPlayer } from "../utils/MidiPlayer";
 
 import { useNotesMoving } from "./useNotesMoving";
-import { useNotesNames } from "./useNotesNames";
 
 export const useDrawDynamic = (player: MidiPlayer | null) => {
   const {
@@ -35,7 +34,7 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
 
     //RENDER
     const render = () => {
-      drawAll(context!, bagpipeType, tick, nextNotes, nextToNextNotes);
+      drawDynamic(context!, bagpipeType, tick, nextNotes, nextToNextNotes);
       animationFrameId = window.requestAnimationFrame(render);
     };
     render();
@@ -43,7 +42,7 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [drawAll, tick, bagpipeType]);
+  }, [drawDynamic, tick, bagpipeType]);
 
   return canvasRef;
 };

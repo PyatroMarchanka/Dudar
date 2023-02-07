@@ -7,10 +7,9 @@ import {
   NotesMap,
 } from "./drawBagpipe";
 import { drawActiveHoles, drawClosedHoles } from "./drawHoles";
-import { drawLines } from "./drawLines";
 import { drawNotes } from "./drawNotes";
 
-export const drawAll = (
+export const drawDynamic = (
   ctx: CanvasRenderingContext2D,
   bagpipeType: BagpipeTypes,
   tick: number,
@@ -36,10 +35,8 @@ export const drawStatic = (
   } | null
 ) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  // drawLines(ctx, bagpipeType);
   drawShadow(ctx, bagpipeType);
   drawBagpipe(ctx, bagpipeType);
-  drawClosedHoles(ctx, bagpipeType);
   drawClosedHoles(ctx, bagpipeType);
   drawNotesNames(ctx, bagpipeType, notesToLineIdx);
 
