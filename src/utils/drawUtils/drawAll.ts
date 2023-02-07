@@ -4,7 +4,7 @@ import {
   drawBagpipe,
   drawNotesNames,
   drawShadow,
-  SongNotesData,
+  NotesMap,
 } from "./drawBagpipe";
 import { drawActiveHoles, drawClosedHoles } from "./drawHoles";
 import { drawLines } from "./drawLines";
@@ -14,25 +14,12 @@ export const drawAll = (
   ctx: CanvasRenderingContext2D,
   bagpipeType: BagpipeTypes,
   tick: number,
-  songNotesData: SongNotesData,
   nextNotes?: Note[] | undefined,
-  nextToNextNotes?: Note[] | undefined,
-  activeNote?: {
-    note: SharpNotes;
-    octave: number;
-  } | null
+  nextToNextNotes?: Note[] | undefined
 ) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  drawLines(ctx, bagpipeType);
-  drawNotes(ctx, bagpipeType, tick, nextNotes, nextToNextNotes);
-  drawBagpipe(ctx, bagpipeType);
-  drawShadow(ctx, bagpipeType);
-  drawClosedHoles(ctx, bagpipeType);
-  drawNotesNames(ctx, bagpipeType, songNotesData);
 
-  if (activeNote) {
-    drawActiveHoles(ctx!, bagpipeType, activeNote);
-  }
+  drawNotes(ctx, bagpipeType, tick, nextNotes, nextToNextNotes);
 };
 
 export const cleanLines = (ctx: CanvasRenderingContext2D) => {
@@ -41,11 +28,22 @@ export const cleanLines = (ctx: CanvasRenderingContext2D) => {
 
 export const drawStatic = (
   ctx: CanvasRenderingContext2D,
-  bagpipeType: BagpipeTypes
+  bagpipeType: BagpipeTypes,
+  notesToLineIdx: NotesMap,
+  activeNote?: {
+    note: SharpNotes;
+    octave: number;
+  } | null
 ) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  drawLines(ctx, bagpipeType);
+  // drawLines(ctx, bagpipeType);
+  drawShadow(ctx, bagpipeType);
   drawBagpipe(ctx, bagpipeType);
   drawClosedHoles(ctx, bagpipeType);
-  drawShadow(ctx, bagpipeType);
+  drawClosedHoles(ctx, bagpipeType);
+  drawNotesNames(ctx, bagpipeType, notesToLineIdx);
+
+  if (activeNote) {
+    drawActiveHoles(ctx!, bagpipeType, activeNote);
+  }
 };

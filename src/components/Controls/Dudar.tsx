@@ -7,13 +7,15 @@ import Transpose from "./Settings";
 import SongList from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
-import { mediaQueries, numberQueries } from "../../constants/style";
-import Canvas from "../Canvas";
+import { numberQueries } from "../../constants/style";
 import LandscapeAlert from "../global/LandscapeAlert";
 import { landscapeAlertId } from "../../constants/localStorage";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { mainColors } from "../../utils/theme";
 import { convertMidiPitchToNote } from "../../utils/midiUtils";
+import { StaticCanvas } from "../Canvas/StaticCanvas";
+import { BackCanvas } from "../Canvas/BackCanvas";
+import { DynamicCanvas } from "../Canvas/DymamicCanvas";
 
 export const Dudar = () => {
   const {
@@ -60,17 +62,16 @@ export const Dudar = () => {
       <GlobalStyle />
       <SettingsButtons>
         <SongList player={midiPlayer} />
-        {/* <Right> */}
         <Header>
           <h3>{activeSong?.name || noSongsLabel}</h3>
         </Header>
         <Transpose midiPlayer={midiPlayer} />
-        {/* </Right> */}
       </SettingsButtons>
       <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} />
-      <BagpipeContainer className={"center"}>
-        {/* <MidiFileInput setMidiData={setMidiData} setMidi={setMidi} /> */}
-        <Canvas player={midiPlayer} activeHole={activeNote} />
+      <BagpipeContainer>
+        <BackCanvas />
+        <DynamicCanvas player={midiPlayer} />
+        <StaticCanvas activeHole={activeNote} />
       </BagpipeContainer>
       <Inputs>
         <PlayerControls player={midiPlayer} />
@@ -109,35 +110,6 @@ const Container = styled.div`
   }
 `;
 
-const Link = styled.div`
-  display: flex;
-  justify-content: center;
-
-  > a {
-    display: flex;
-    justify-content: center;
-    width: 100px;
-    padding: 5px;
-    justify-content: center;
-    border: 1px solid black;
-    border-radius: 4px;
-    background-color: #c9c9c9bf;
-
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 15px;
-    color: black;
-    text-decoration: none;
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
-  i {
-    display: flex;
-    margin-right: 5px;
-  }
-`;
-
 const Header = styled.div`
   width: 100%;
   display: flex;
@@ -149,32 +121,6 @@ const Header = styled.div`
     max-width: 150px;
   }
   padding: 5px 0;
-`;
-
-const Row = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  @media (max-width: ${mediaQueries.mobile}) {
-    flex-direction: column;
-  }
-`;
-
-const Column = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  > button {
-    flex-basis: 50%;
-  }
-  @media (max-width: ${mediaQueries.mobile}) {
-    > button {
-      flex-basis: 25%;
-      height: 60px;
-    }
-    width: 100%;
-    display: flex;
-    align-items: flex-end;
-  }
 `;
 
 const BagpipeContainer = styled.div`

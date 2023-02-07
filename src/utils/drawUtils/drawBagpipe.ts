@@ -3,11 +3,6 @@ import { BagpipeTypes, SharpNotesEnum } from "../../interfaces";
 
 export type NotesMap = { note: string; yPos: number }[];
 
-export type SongNotesData = {
-  songNotes: SharpNotesEnum[] | null;
-  notesNameToLine: NotesMap;
-};
-
 export const drawBagpipe = (
   ctx: CanvasRenderingContext2D,
   bagpipeType: BagpipeTypes
@@ -28,10 +23,8 @@ export const drawBagpipe = (
 export const drawNotesNames = (
   ctx: CanvasRenderingContext2D,
   bagpipeType: BagpipeTypes,
-  songNotesData: SongNotesData
+  notesNameToLine: NotesMap
 ) => {
-  const { songNotes, notesNameToLine } = songNotesData;
-
   const { noteNameColor, notesNamesLeftMargin } =
     bagpipes[bagpipeType].imagesProperties.notes;
 
@@ -39,8 +32,8 @@ export const drawNotesNames = (
 
   notesNameToLine?.forEach((noteData, i) => {
     ctx.font = "bold 15px Arial";
-    songNotes?.[i] &&
-      ctx.fillText(noteData.note, notesNamesLeftMargin, noteData.yPos);
+
+    ctx.fillText(noteData.note, notesNamesLeftMargin, noteData.yPos);
   });
 };
 
@@ -50,7 +43,8 @@ export const drawShadow = (
 ) => {
   const bgImage = bagpipes[bagpipeType].images.bgImage;
   const imagesProperties = bagpipes[bagpipeType].imagesProperties;
-
+  ctx.fillStyle = "#FCF7F2";
+  ctx.fillRect(0, 0, 50, 800);
   bgImage &&
     imagesProperties.bg &&
     ctx.drawImage(
