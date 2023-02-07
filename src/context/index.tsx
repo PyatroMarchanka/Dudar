@@ -2,7 +2,7 @@ import { Midi } from "@tonejs/midi";
 import { createContext, useReducer } from "react";
 import { Song, SongListByBagpipe } from "../dataset/songs/interfaces";
 import { getUserDataFromLocal } from "../hooks/useLocalStorage";
-import { BagpipeTypes, SharpNotes } from "../interfaces";
+import { BagpipeTypes, SharpNotesEnum } from "../interfaces";
 
 interface Action {
   type:
@@ -29,7 +29,7 @@ export const noSongsLabel = "No song selected";
 
 interface State {
   midiData: Midi | null;
-  songNotes: SharpNotes[] | null;
+  songNotes: SharpNotesEnum[] | null;
   midi: ArrayBuffer | null;
   metronome: boolean;
   activeSong: Song | undefined;
@@ -76,7 +76,7 @@ interface Context {
   setBagpipeType: (bagpipeType: BagpipeTypes) => void;
   setScreenSize: (size: { width: number; height: number }) => void;
   setTranspose: (num: number) => void;
-  setSongNotes: (notes: SharpNotes[]) => void;
+  setSongNotes: (notes: SharpNotesEnum[]) => void;
   setIsPreclick: (bool: boolean) => void;
 }
 
@@ -95,7 +95,7 @@ const store = createContext<Context>({
   setBagpipeType: (bagpipeType: BagpipeTypes) => {},
   setScreenSize: (size: { width: number; height: number }) => {},
   setTranspose: (num: number) => {},
-  setSongNotes: (notes: SharpNotes[]) => {},
+  setSongNotes: (notes: SharpNotesEnum[]) => {},
   setSongLength: (seconds: number) => {},
   setIsPreclick: (bool: boolean) => {},
 });
@@ -268,7 +268,7 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_TRANSPOSE", payload: num });
   };
 
-  const setSongNotes = (songNotes: SharpNotes[]) => {
+  const setSongNotes = (songNotes: SharpNotesEnum[]) => {
     dispatch({ type: "SET_SONG_NOTES", payload: songNotes });
   };
 

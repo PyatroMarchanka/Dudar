@@ -44,7 +44,7 @@ export const bagpipesImagesProperties: {
       brickHeightHalf: coeff(18 / 2),
       notesScale: 0.3,
       brickLeftMargin: coeff(55),
-      notesNamesLeftMargin: coeff(40),
+      notesNamesLeftMargin: coeff(30),
       noteNameColor: "#fff",
     },
   },
@@ -68,8 +68,8 @@ export const bagpipesImagesProperties: {
     bg: {
       width: coeff(454),
       heigth: coeff(454) / (414 / 896),
-      leftMargin: 100,
-      topMargin: 100,
+      leftMargin: -50,
+      topMargin: 0,
       imageScale: 414 / 896,
     },
   },
@@ -90,6 +90,13 @@ export const bagpipesImagesProperties: {
       notesNamesLeftMargin: coeff(5),
       noteNameColor: "#000",
     },
+    bg: {
+      width: coeff(454),
+      heigth: coeff(454) / (414 / 896),
+      leftMargin: 0,
+      topMargin: 0,
+      imageScale: 414 / 896,
+    },
   },
   [BagpipeTypes.Dudelsack]: {
     main_pipe: {
@@ -105,7 +112,7 @@ export const bagpipesImagesProperties: {
       brickHeightHalf: coeff(18 / 2),
       notesScale: 0.3,
       brickLeftMargin: coeff(55),
-      notesNamesLeftMargin: coeff(40),
+      notesNamesLeftMargin: coeff(5),
       noteNameColor: "#000",
     },
   },
