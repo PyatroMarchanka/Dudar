@@ -6,7 +6,7 @@ import { GenericCanvas } from "./GenericCanvas";
 
 export const BackCanvas = () => {
   const {
-    state: { bagpipeType },
+    state: { bagpipeType, isPlaying, activeSong },
   } = useContext(store);
 
   const canvasRef = useRef(null);
@@ -17,7 +17,7 @@ export const BackCanvas = () => {
       canvas && (canvas as HTMLCanvasElement)!.getContext("2d");
 
     drawLines(context!, bagpipeType);
-  }, [canvasRef.current, bagpipeType]);
+  }, [canvasRef.current, bagpipeType, isPlaying, activeSong]);
 
   return <GenericCanvas canvasRef={canvasRef} />;
 };
