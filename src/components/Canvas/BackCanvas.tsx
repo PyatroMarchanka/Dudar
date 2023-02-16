@@ -4,9 +4,7 @@ import { drawLines } from "../../utils/drawUtils/drawLines";
 
 import { GenericCanvas } from "./GenericCanvas";
 
-type Props = {};
-
-export const BackCanvas = ({}: Props) => {
+export const BackCanvas = () => {
   const {
     state: { bagpipeType },
   } = useContext(store);

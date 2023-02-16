@@ -36,6 +36,7 @@ const drawNote = (
 
   const startPos = start * notesScale - tick * notesScale + brickLeftMargin;
   ctx.beginPath();
+  // @ts-ignore
   ctx.roundRect(
     startPos,
     y.yPosInPx - imageProperties.notes.brickHeightHalf,
