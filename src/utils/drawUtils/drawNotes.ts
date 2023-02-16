@@ -4,7 +4,7 @@ import { Note } from "@tonejs/midi/dist/Note";
 import { SharpNotes } from "../../interfaces";
 import { mainColors } from "../theme";
 
-CanvasRenderingContext2D.prototype.roundRect = function (
+(CanvasRenderingContext2D.prototype as any).roundRect = function (
   x: number,
   y: number,
   width: number,
