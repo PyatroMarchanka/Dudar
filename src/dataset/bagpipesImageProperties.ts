@@ -41,7 +41,7 @@ const belarusianDudaImageProperties = {
     brickHeightHalf: coeff(18 / 2),
     notesScale: 0.3,
     brickLeftMargin: coeff(55),
-    notesNamesLeftMargin: coeff(30),
+    notesNamesLeftMargin: coeff(40),
     noteNameColor: "#fff",
   },
 };
@@ -51,7 +51,10 @@ export const bagpipesImagesProperties: {
 } = {
   [BagpipeTypes.BelarusianTraditionalDuda]: belarusianDudaImageProperties,
   [BagpipeTypes.BelarusianNONTraditionalDuda]: belarusianDudaImageProperties,
-  [BagpipeTypes.BelarusianOpenDuda]: belarusianDudaImageProperties,
+  [BagpipeTypes.BelarusianOpenDuda]: {
+    ...belarusianDudaImageProperties,
+    main_pipe: { ...belarusianDudaImageProperties.main_pipe, topMargin: 20 },
+  },
   [BagpipeTypes.Dudelsack]: {
     main_pipe: {
       width: coeff(200),
