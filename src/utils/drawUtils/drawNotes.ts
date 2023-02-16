@@ -4,6 +4,25 @@ import { Note } from "@tonejs/midi/dist/Note";
 import { SharpNotes } from "../../interfaces";
 import { mainColors } from "../theme";
 
+CanvasRenderingContext2D.prototype.roundRect = function (
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number
+) {
+  if (width < 2 * radius) radius = width / 2;
+  if (height < 2 * radius) radius = height / 2;
+  this.beginPath();
+  this.moveTo(x + radius, y);
+  this.arcTo(x + width, y, x + width, y + height, radius);
+  this.arcTo(x + width, y + height, x, y + height, radius);
+  this.arcTo(x, y + height, x, y, radius);
+  this.arcTo(x, y, x + width, y, radius);
+  this.closePath();
+  return this;
+};
+
 const notesScale = 0.2;
 
 const getYposByNote = (
