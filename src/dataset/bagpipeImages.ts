@@ -59,7 +59,7 @@ const srcs = {
     bgImage: "/images/BG.png",
   },
   [BagpipeTypes.Dudelsack]: {
-    mainPipe: "/images/dudelsack.png",
+    mainPipe: "/images/dudelsack_rotated.png",
     activeHoleImage: "/images/piston_open.svg",
     backActiveHoleImage: "/images/piston_back_open.svg",
     closedHoleImage: "/images/piston_closed.svg",

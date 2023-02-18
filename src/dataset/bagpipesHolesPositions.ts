@@ -63,15 +63,15 @@ const belarusianOpenHolesClosable = [
 ].reverse();
 
 const dudelsackClosable = [
-  { yPos: 620, leftMargin: 30, diameter: 25 },
+  { yPos: 620, leftMargin: 50, diameter: 25 },
   { yPos: 568, leftMargin: 50, diameter: 25 },
   { yPos: 492, leftMargin: 53, diameter: 20 },
   { yPos: 436, leftMargin: 50, diameter: 25 },
   { yPos: 328, leftMargin: 50, diameter: 25 },
   { yPos: 262, leftMargin: 53, diameter: 20 },
   { yPos: 186, leftMargin: 50, diameter: 25 },
-  { yPos: 140, leftMargin: 50, diameter: 25 },
-];
+  { yPos: 140, leftMargin: 20, diameter: 25 },
+].reverse();
 
 const belarusianTraditionalHoles: BagpipeHolesPositions = {
   closable: belarusianTraditionalHolesClosable.map(applyCoefficientToHole),
@@ -105,7 +105,7 @@ const belarusianOpenHoles: BagpipeHolesPositions = {
 };
 
 const blowImageDudelsack = {
-  yPos: coeff(680),
+  yPos: coeff(90),
   leftMargin: coeff(45),
   diameter: coeff(33),
 };
