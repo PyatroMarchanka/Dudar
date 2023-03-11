@@ -46,7 +46,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
               name="radio-button-demo"
               inputProps={{ "aria-label": "C" }}
             />
-            <BigTitle>{t(bagpipes[type].name)}</BigTitle>
+            <BigTitle>{t(`dudas.${bagpipes[type].name}`)}</BigTitle>
           </TypeItem>
         ))}
       </InstrumentTypes>

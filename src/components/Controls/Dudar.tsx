@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
-import { useTranslation } from "react-i18next";
 import { SharpNotes } from "../../interfaces";
 import { PlayerControls } from "./PlayerControls";
 import { useMidiPlayer } from "../../hooks/useMidiPlayer";

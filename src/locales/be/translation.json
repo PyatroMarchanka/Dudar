@@ -5,9 +5,16 @@
   "transposeMelody": "Транспаніраваць",
   "preclick": "Прэклік",
   "noIcon": "Няма іконкі",
-  "belNonTradDuda": "Беларуская нетрадыцыйная дуда",
-  "belOpenDuda": "Беларуская дуда ў адкрытай манеры",
-  "belTradDuda": "Беларуская традыцыйная дуда",
-  "dudelsack": "Дудэльзак",
-  "unknownBagpipe": "Невядомая дуда"
+  "dudas": {
+    "belNonTradDuda": "Беларуская нетрадыцыйная дуда",
+    "belOpenDuda": "Беларуская дуда ў адкрытай манеры",
+    "belTradDuda": "Беларуская традыцыйная дуда",
+    "dudelsack": "Дудэльзак",
+    "unknownBagpipe": "Невядомая дуда"
+  },
+  "genres": {
+    "medieval": "Сярэднявечныя",
+    "belarusian": "Беларускія",
+    "irish": "Ірландскія"
+  }
 }

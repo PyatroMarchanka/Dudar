@@ -1,19 +1,17 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
-import { formatMidiFileName } from "../../utils/textUtils";
-import { capitalize, IconButton, List, ListItem } from "@material-ui/core";
+import { IconButton, List, ListItem } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { Icon } from "../global/Icon";
 import styled from "styled-components";
 import { mediaQueries } from "../../constants/style";
 import { mainColors } from "../../utils/theme";
 import { store } from "../../context";
-import { Song } from "../../dataset/songs/interfaces";
-import { useSongList } from "../../hooks/useSongLIst";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   setOpen: (bool: boolean) => void;
@@ -66,6 +64,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const SongsByGenre = ({ setOpen, onStop }: Props) => {
+  const { t } = useTranslation("translation");
+
   const {
     state: { bagpipeType, listsByBagpipe, activeSong },
     setActiveSong,
@@ -96,7 +96,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
               id="panel1a-header"
             >
               <Typography className={classes.heading}>
-                {capitalize(genre)}
+                {t(`genres.${genre}`)}
               </Typography>
             </AccordionSummary>
 
