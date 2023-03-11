@@ -1,7 +1,7 @@
 import { BagpipeTypes } from "../../interfaces";
 import { Song, SongTypes } from "./interfaces";
 
-export const songList: Song[] = [
+const belarusian: Song[] = [
   {
     name: "Liudzvinka",
     type: SongTypes.Belarusian,
@@ -147,6 +147,9 @@ export const songList: Song[] = [
     timeSignature: "4/4",
     pathName: "belarusian/Zajgraj zha mnie Dudarochku.mid",
   },
+];
+
+const irish: Song[] = [
   {
     name: "Foggy Dew",
     type: SongTypes.Irish,
@@ -190,6 +193,9 @@ export const songList: Song[] = [
     timeSignature: "6/8",
     pathName: "irish/The Kesh jig.mid",
   },
+];
+
+const medieval: Song[] = [
   {
     name: "Ai Vist Lo Lop",
     type: SongTypes.Medieval,
@@ -225,3 +231,5 @@ export const songList: Song[] = [
     pathName: "medieval/Palaestinalied.mid",
   },
 ];
+
+export const songList: Song[] = [...belarusian, ...irish, ...medieval];
