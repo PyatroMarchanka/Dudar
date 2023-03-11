@@ -90,9 +90,9 @@ const belarusianNONTraditionalHoles: BagpipeHolesPositions = {
 };
 
 const blowImageBelOpenDuda = {
-  yPos: coeff(110),
-  leftMargin: coeff(30),
-  diameter: coeff(38),
+  yPos: coeff(115),
+  leftMargin: coeff(32),
+  diameter: coeff(30),
 };
 
 const belarusianOpenHoles: BagpipeHolesPositions = {
