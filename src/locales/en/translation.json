@@ -1,0 +1,15 @@
+{
+  "title": "Hello!",
+  "description": "Hello description",
+  "tempo": "Tempo",
+  "settings": "Settings",
+  "instrumentType": "Instrument Type",
+  "transposeMelody": "Transpose melody",
+  "preclick": "Preclick",
+  "noIcon": "No icon",
+  "belNonTradDuda": "Belarusian Nontraditional Closed Duda",
+  "belOpenDuda": "Belarusian Open Duda",
+  "belTradDuda": "Belarusian Traditional Duda",
+  "dudelsack": "Dudelsack",
+  "unknownBagpipe": "Unknown bagpipe"
+}

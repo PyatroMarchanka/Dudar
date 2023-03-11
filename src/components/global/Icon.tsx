@@ -496,7 +496,7 @@ export const Icon = styled(
         );
 
       default:
-        return <div>No Icon</div>;
+        return <div>No icon</div>;
     }
   }
 )`
