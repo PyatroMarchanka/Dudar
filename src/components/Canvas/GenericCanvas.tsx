@@ -1,9 +1,7 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { mediaQueries } from "../../constants/style";
+import { mediaQueries, sizes } from "../../constants/style";
 import { store } from "../../context";
-
-const maxCavasWidth = 800;
 
 type Props = {
   canvasRef: React.MutableRefObject<null>;
@@ -16,10 +14,12 @@ export const GenericCanvas = ({ canvasRef }: Props) => {
 
   return (
     <CanvasComponent
-      marginLeft={screenSize.width / 2 - maxCavasWidth / 2}
+      marginLeft={screenSize.width / 2 - sizes.maxCanvasWidth / 2}
       height={screenSize.height}
       width={
-        screenSize.width < maxCavasWidth ? screenSize.width : maxCavasWidth
+        screenSize.width < sizes.maxCanvasWidth
+          ? screenSize.width
+          : sizes.maxCanvasWidth
       }
       className="canvas"
       ref={canvasRef}
