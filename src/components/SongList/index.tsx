@@ -66,7 +66,8 @@ export default ({ player }: Props) => {
         <SongsByGenre setOpen={setOpen} onStop={onStop} />
       </SwipeableDrawer>
       <IconButton onClick={() => setOpen(true)} className="icon">
-        <Icon type="hamb" fill={theme.colors.black} className="play-icon" />
+        <Icon type="hamb" fill={theme.colors.black} className="desktop" />
+        <Icon type="hamb" fill={theme.colors.white} className="mobile" />
       </IconButton>
     </Container>
   );
@@ -75,5 +76,21 @@ export default ({ player }: Props) => {
 const Container = styled.div`
   .icon {
     transform: translate(13px, 0px);
+  }
+
+  .desktop {
+    display: block;
+
+    @media ${theme.breakpoints.belowTablet} {
+      display: none;
+    }
+  }
+
+  .mobile {
+    display: none;
+
+    @media ${theme.breakpoints.belowTablet} {
+      display: block;
+    }
   }
 `;
