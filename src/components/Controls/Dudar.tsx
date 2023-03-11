@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
+import { useTranslation } from "react-i18next";
 import { SharpNotes } from "../../interfaces";
 import { PlayerControls } from "./PlayerControls";
 import { useMidiPlayer } from "../../hooks/useMidiPlayer";
@@ -18,6 +19,8 @@ import { BackCanvas } from "../Canvas/BackCanvas";
 import { DynamicCanvas } from "../Canvas/DynamicCanvas";
 
 export const Dudar = () => {
+  const { t, i18n } = useTranslation();
+
   const {
     state: { activeSong, screenSize },
     setProgress,
@@ -63,6 +66,7 @@ export const Dudar = () => {
       <SettingsButtons>
         <SongList player={midiPlayer} />
         <Header>
+          <h3>{t("Welcome to React")}</h3>
           <h3>{activeSong?.name || noSongsLabel}</h3>
         </Header>
         <Transpose midiPlayer={midiPlayer} />
