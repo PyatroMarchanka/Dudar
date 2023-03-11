@@ -8,7 +8,7 @@ export type PlaybackProgressHandler = (
   timeRemaining: number
 ) => void;
 export type NotesMovingHandler = (tick: number) => void;
-export type SetTransposeType = (num: number) => void;
+export type SetTransposeType = (num: number, isPlaying: boolean) => void;
 
 var Player = new MidiPlayerLib.Player(function (event: any) {});
 
@@ -100,7 +100,7 @@ export class MidiPlayer {
         this.playRef.current?.player.loader.instrumentInfo(instrument).variable
       ],
       0,
-      note + this.transpose,
+      note + this.transpose - 1,
       9999,
       volume
     );
@@ -161,6 +161,23 @@ export class MidiPlayer {
       this.setProgress(progress, true);
     }
     this.playDrone(this.droneNote);
+  };
+
+  playWithPreclick = (midi: ArrayBuffer | null, progress: number) => {
+    const when = this.playRef?.current?.contextTime();
+    const N = (4 * 60) / this.bpm;
+    const duration4th = N / 2;
+    const dur = duration4th;
+
+    const preClickTime = (60 / this.bpm) * 1000 * 8;
+    this.playRef?.current?.playChordAt(when + dur * 0, 1219, [60], dur * 1);
+    this.playRef?.current?.playChordAt(when + dur * 1, 1219, [60], dur * 1);
+    this.playRef?.current?.playChordAt(when + dur * 2, 1219, [60], dur * 1);
+    this.playRef?.current?.playChordAt(when + dur * 3, 1219, [60], dur * 1);
+
+    setTimeout(() => {
+      this.playMidi(midi, progress);
+    }, preClickTime);
   };
 
   stop = () => {

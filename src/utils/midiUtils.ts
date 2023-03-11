@@ -1,6 +1,12 @@
-import { Notes, SharpMap, SharpNotes } from "./../interfaces/index";
+import {
+  Notes,
+  SharpMap,
+  SharpNotes,
+  SharpNotesEnum,
+} from "./../interfaces/index";
 import { Midi } from "@tonejs/midi";
 import { parseMidi, MidiData, writeMidi } from "midi-file";
+import { AllNotes } from "../dataset/notes";
 
 export const convertToSharp = (note: Notes): SharpNotes => {
   const map: SharpMap = {
@@ -60,6 +66,26 @@ export const getSongNotesFromMidi = (midi: Midi): SharpNotes[] => {
   return Object.keys(notesObject) as SharpNotes[];
 };
 
+export const getSongNotesWithOctaveFromMidi = (
+  midi: Midi
+): SharpNotesEnum[] => {
+  const notes = midi?.tracks.filter((track) => track.notes.length)[0].notes;
+  const notesObject = {} as any;
+
+  if (!notes) {
+    return [];
+  }
+
+  notes.forEach((note) => {
+    const noteWthOctave = note.pitch + note.octave;
+    if (!(noteWthOctave in notesObject)) {
+      notesObject[noteWthOctave] = noteWthOctave;
+    }
+  });
+
+  return Object.keys(notesObject) as SharpNotesEnum[];
+};
+
 function toArrayBuffer(buf: Buffer) {
   const ab = new ArrayBuffer(buf.length);
   const view = new Uint8Array(ab);
@@ -117,4 +143,48 @@ export const addMetronome = async (songBuffer: ArrayBuffer) => {
 
   const outputBuffer = Buffer.from(writeMidi(songWithMetronome));
   return toArrayBuffer(outputBuffer);
+};
+
+export function transposeNote(note: SharpNotes, step: number): SharpNotes {
+  let indexOfNote = AllNotes.indexOf(note);
+  if (step < 0) {
+    const index = (indexOfNote + step) % AllNotes.length;
+
+    return AllNotes[index >= 0 ? index : 12 + index];
+  }
+
+  return AllNotes[(indexOfNote + step) % AllNotes.length];
+}
+
+export function transposeNoteWithOctave(
+  note: SharpNotesEnum,
+  step: number
+): SharpNotesEnum {
+  let pitch = note.slice(0, -1);
+  let octave = +note.slice(-1);
+  let indexOfNote = AllNotes.indexOf(pitch as SharpNotes);
+  const newIndexOfNote = indexOfNote + step;
+
+  if (newIndexOfNote < 0) {
+    octave -= 1;
+  }
+  if (newIndexOfNote > 11) {
+    octave += 1;
+  }
+
+  if (step < 0) {
+    const index = (indexOfNote + step) % AllNotes.length;
+
+    return (AllNotes[index >= 0 ? index : 12 + index] +
+      octave) as SharpNotesEnum;
+  }
+
+  return (AllNotes[(indexOfNote + step) % AllNotes.length] +
+    octave) as SharpNotesEnum;
+}
+
+export const convertMidiPitchToNote = (midiPitch: number) => {
+  const note = midiPitch % 12;
+  const octave = Math.floor(midiPitch / 12) - 1;
+  return { note: AllNotes[note], octave };
 };

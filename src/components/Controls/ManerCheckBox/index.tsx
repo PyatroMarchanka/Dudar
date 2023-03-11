@@ -15,13 +15,15 @@ export default ({}: Props) => {
   const classes = useStyles();
 
   const {
-    state: { isClosedManer },
-    setIsClosedManer,
+    state: {},
+    setBagpipeType,
   } = useContext(store);
 
   const onChange = () => {
-    setIsClosedManer(!isClosedManer);
+    // setBagpipeType(!isClosedManer);
   };
+
+  // const bagpipeType;
 
   return (
     <Container>
@@ -34,18 +36,8 @@ export default ({}: Props) => {
         variant="contained"
         color="primary"
       >
-        <Button
-          className={isClosedManer ? "non-selected" : "selected"}
-          onClick={onChange}
-        >
-          Open
-        </Button>
-        <Button
-          className={isClosedManer ? "selected" : "non-selected"}
-          onClick={onChange}
-        >
-          Closed
-        </Button>
+        <Button onClick={onChange}>Open</Button>
+        <Button onClick={onChange}>Closed</Button>
       </ButtonGroup>
     </Container>
   );

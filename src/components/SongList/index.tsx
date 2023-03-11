@@ -13,7 +13,7 @@ import { mainColors, theme } from "../../utils/theme";
 import { Icon } from "../global/Icon";
 import { SongsByGenre } from "./SongsByGenre";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
     width: 200,
     display: "flex",
@@ -47,9 +47,10 @@ export default ({ player }: Props) => {
     setProgress(100);
   };
 
+  useSongList(onStop);
+
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const { songList, allLists } = useSongList();
 
   return (
     <Container>
@@ -62,15 +63,11 @@ export default ({ player }: Props) => {
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
       >
-        <SongsByGenre
-          songsNames={songList}
-          allLists={allLists}
-          setOpen={setOpen}
-          onStop={onStop}
-        />
+        <SongsByGenre setOpen={setOpen} onStop={onStop} />
       </SwipeableDrawer>
       <IconButton onClick={() => setOpen(true)} className="icon">
-        <Icon type="hamb" fill={theme.colors.black} className="play-icon" />
+        <Icon type="hamb" fill={theme.colors.black} className="desktop" />
+        <Icon type="hamb" fill={theme.colors.white} className="mobile" />
       </IconButton>
     </Container>
   );
@@ -79,5 +76,21 @@ export default ({ player }: Props) => {
 const Container = styled.div`
   .icon {
     transform: translate(13px, 0px);
+  }
+
+  .desktop {
+    display: block;
+
+    @media ${theme.breakpoints.belowTablet} {
+      display: none;
+    }
+  }
+
+  .mobile {
+    display: none;
+
+    @media ${theme.breakpoints.belowTablet} {
+      display: block;
+    }
   }
 `;

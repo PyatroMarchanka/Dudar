@@ -1,26 +1,49 @@
 console.log("Make MIDI Catalog...");
 
 const folders = [
-  { path: "./public/midi/belarusian", label: "belarusian" },
+  { path: "./public/midi/belarusian", label: "Belarusian" },
   { path: "./public/midi/irish", label: "irish" },
-  { path: "./public/midi/medieval", label: "medieval" },
-  { path: "./public/midi/schotland", label: "schotland" },
+  // { path: "./public/midi/medieval", label: "medieval" },
+  // { path: "./public/midi/schotland", label: "schotland" },
 ];
 const fs = require("fs");
 
-const list = {};
+const checkSong = (song) => {
+  if (
+    !song.name ||
+    !song.type ||
+    !song.bagpipesToPlay ||
+    !song.bagpipesToPlay.length ||
+    !song.bagpipesToPlay[0] ||
+    !song.timeSignature ||
+    !song.pathName
+  ) {
+    console.error("Caugth an error parsing song name: ", song.pathName, song);
+  }
+};
 
+const songs = [];
 folders.forEach((folder) => {
-  const fileNames = [];
   fs.readdirSync(folder.path).forEach((file) => {
-    fileNames.push(file);
+    if (file.includes(".mid")) {
+      const song = {};
+      const props = file.split("|");
+      song.name = props[0];
+      song.type = props[1];
+      song.bagpipesToPlay = props[2].split(",");
+      song.timeSignature = props[3];
+      song.pathName = file;
+
+      checkSong(song);
+
+      songs.push(song);
+    }
   });
-  list[folder.label] = fileNames;
 });
 
 fs.writeFile(
   "./public/midi/list.json",
-  JSON.stringify(list),
+  JSON.stringify(songs),
   "utf8",
   function (err) {
     if (err) {

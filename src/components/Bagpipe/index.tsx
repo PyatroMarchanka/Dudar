@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { SharpNotes } from "../../interfaces";
-import { BagpipeNotes } from "../../utils/bagpipesUtils";
+import { BagpipeNotes } from "../../dataset/bagpipesUtils";
 
 interface HoleProps {
   isOpen: boolean;

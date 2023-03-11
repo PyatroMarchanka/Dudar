@@ -1,6 +1,6 @@
 import { Note } from "@tonejs/midi/dist/Note";
 import { SharpNotes } from "../../interfaces";
-import { mainColors } from "../../utils/theme";
+import { mainColors } from "../theme";
 
 const numbers = {
   4: {
@@ -121,10 +121,6 @@ export const drawActiveHoles = (
   if (!isClosedManer) {
     yPosesReversed.forEach((pos, i) => {
       if (i <= yPoses.length - yPos.position - 1 && i >= 1) {
-        // ctx.arc(holeLeftMargin, pos + topMargin, holeRadius, 0, 2 * Math.PI);
-        // ctx.fillStyle = activeHoleColor;
-        // ctx.fill();
-
         ctx.drawImage(
           i === 1 ? backActiveHoleImage : activeHoleImage,
           i === 1 ? lastHoleLeftMargin : holeLeftMargin,
@@ -192,13 +188,7 @@ export const drawNote = (
   } else {
     ctx.fillStyle = mainColors.darkerGray;
   }
-  // (ctx as any).roundRect(
-  //   startPos,
-  //   y.yPosInPx - brickHeightHalf,
-  //   dur * notesScale,
-  //   brickhHeight,
-  //   5
-  // );
+
   ctx.fillRect(
     startPos,
     y.yPosInPx - brickHeightHalf,

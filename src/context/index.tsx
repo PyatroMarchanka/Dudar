@@ -1,7 +1,8 @@
 import { Midi } from "@tonejs/midi";
-import React, { createContext, useReducer } from "react";
+import { createContext, useReducer } from "react";
+import { Song, SongListByBagpipe } from "../dataset/songs/interfaces";
 import { getUserDataFromLocal } from "../hooks/useLocalStorage";
-import { SharpNotes } from "../interfaces";
+import { BagpipeTypes, SharpNotesEnum } from "../interfaces";
 
 interface Action {
   type:
@@ -13,11 +14,12 @@ interface Action {
     | "SET_TEMPO"
     | "SET_SHOW_PIANO_ROLL"
     | "SET_IS_PLAYING"
-    | "SET_ALL_LISTS"
+    | "SET_LISTS_BY_BAGPIPE"
     | "SET_SIZE"
     | "SET_TRANSPOSE"
-    | "SET_IS_CLOSED_MANER"
+    | "SET_BAGPIPE_TYPE"
     | "SET_SONG_NOTES"
+    | "SET_IS_PRECLICK"
     | "SET_SONG_LENGTH";
 
   payload?: any;
@@ -27,19 +29,20 @@ export const noSongsLabel = "No song selected";
 
 interface State {
   midiData: Midi | null;
-  songNotes: SharpNotes[] | null;
+  songNotes: SharpNotesEnum[] | null;
   midi: ArrayBuffer | null;
   metronome: boolean;
-  activeSong: string | undefined;
+  activeSong: Song | undefined;
   songLength?: number;
   progress?: { percent: number; time?: number; timeRemaining?: number };
   tempo: number;
   showPianoRoll: boolean;
   isPlaying: boolean;
-  allLists: any;
-  isClosedManer: boolean;
+  listsByBagpipe: SongListByBagpipe | null;
+  bagpipeType: BagpipeTypes;
   screenSize: { width: number; height: number };
   transpose: number;
+  isPreclick: boolean;
 }
 const userData = getUserDataFromLocal();
 
@@ -51,8 +54,7 @@ const initialState: State = {
   progress: { percent: 0, time: 0, timeRemaining: 0 },
   showPianoRoll: true,
   isPlaying: false,
-  allLists: {},
-  isClosedManer: false,
+  listsByBagpipe: null,
   screenSize: { width: 400, height: 500 },
   songLength: 0,
   ...userData,
@@ -64,17 +66,18 @@ interface Context {
   setMidi: (midi: ArrayBuffer) => void;
   setMetronome: (bool: boolean) => void;
   setMidiData: (midi: Midi) => void;
-  setActiveSong: (fileName: string) => void;
+  setActiveSong: (song: Song) => void;
   setSongLength: (seconds: number) => void;
   setProgress: (percent: number, time?: number, timeRemaining?: number) => void;
   setTempo: (bpm: number) => void;
   togglePianoRoll: (value: boolean) => void;
   setIsPlaying: (bool: boolean) => void;
-  setAllLists: (lists: any) => void;
-  setIsClosedManer: (bool: boolean) => void;
+  setListsByBagpipe: (lists: SongListByBagpipe) => void;
+  setBagpipeType: (bagpipeType: BagpipeTypes) => void;
   setScreenSize: (size: { width: number; height: number }) => void;
   setTranspose: (num: number) => void;
-  setSongNotes: (notes: SharpNotes[]) => void;
+  setSongNotes: (notes: SharpNotesEnum[]) => void;
+  setIsPreclick: (bool: boolean) => void;
 }
 
 const store = createContext<Context>({
@@ -83,17 +86,18 @@ const store = createContext<Context>({
   setMidi: (midi: ArrayBuffer) => {},
   setMetronome: (bool: boolean) => {},
   setMidiData: (midi: Midi) => {},
-  setActiveSong: (fileName: string) => {},
+  setActiveSong: (song: Song) => {},
   setProgress: (percent: number, time?: number, timeRemaining?: number) => {},
   setTempo: (bpm: number) => {},
   togglePianoRoll: (value: boolean) => {},
   setIsPlaying: (bool: boolean) => {},
-  setAllLists: (lists: any) => {},
-  setIsClosedManer: (bool: boolean) => {},
+  setListsByBagpipe: (lists: SongListByBagpipe) => {},
+  setBagpipeType: (bagpipeType: BagpipeTypes) => {},
   setScreenSize: (size: { width: number; height: number }) => {},
   setTranspose: (num: number) => {},
-  setSongNotes: (notes: SharpNotes[]) => {},
+  setSongNotes: (notes: SharpNotesEnum[]) => {},
   setSongLength: (seconds: number) => {},
+  setIsPreclick: (bool: boolean) => {},
 });
 const { Provider } = store;
 
@@ -137,14 +141,6 @@ const ContextProvider = ({ children }: any) => {
           };
         } else {
           return state;
-          // {
-          //   ...state,
-          //   progress: {
-          //     percent: state.progress.percent,
-          //     time: action.payload.time,
-          //     timeRemaining: action.payload.timeRemaining,
-          //   },
-          // };
         }
 
       case "SET_SONG_LENGTH":
@@ -171,10 +167,10 @@ const ContextProvider = ({ children }: any) => {
           isPlaying: action.payload,
         };
 
-      case "SET_ALL_LISTS":
+      case "SET_LISTS_BY_BAGPIPE":
         return {
           ...state,
-          allLists: action.payload,
+          listsByBagpipe: action.payload,
         };
 
       case "SET_SIZE":
@@ -186,16 +182,22 @@ const ContextProvider = ({ children }: any) => {
           },
         };
 
-      case "SET_IS_CLOSED_MANER":
+      case "SET_BAGPIPE_TYPE":
         return {
           ...state,
-          isClosedManer: action.payload,
+          bagpipeType: action.payload,
         };
 
       case "SET_TRANSPOSE":
         return {
           ...state,
           transpose: action.payload,
+        };
+
+      case "SET_IS_PRECLICK":
+        return {
+          ...state,
+          isPreclick: action.payload,
         };
 
       case "SET_SONG_NOTES":
@@ -220,10 +222,10 @@ const ContextProvider = ({ children }: any) => {
   const setMidiData = (midi: Midi) => {
     dispatch({ type: "SET_MIDI_DATA", payload: midi });
   };
-  const setActiveSong = (fileName: string) => {
+  const setActiveSong = (song: Song) => {
     dispatch({
       type: "SET_ACTIVE_SONG",
-      payload: fileName.split("_").join(" "),
+      payload: song,
     });
   };
 
@@ -250,12 +252,12 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_IS_PLAYING", payload: bool });
   };
 
-  const setAllLists = (list: any) => {
-    dispatch({ type: "SET_ALL_LISTS", payload: list });
+  const setListsByBagpipe = (list: SongListByBagpipe) => {
+    dispatch({ type: "SET_LISTS_BY_BAGPIPE", payload: list });
   };
 
-  const setIsClosedManer = (bool: boolean) => {
-    dispatch({ type: "SET_IS_CLOSED_MANER", payload: bool });
+  const setBagpipeType = (bagpipeType: BagpipeTypes) => {
+    dispatch({ type: "SET_BAGPIPE_TYPE", payload: bagpipeType });
   };
 
   const setScreenSize = (size: { width: number; height: number }) => {
@@ -266,12 +268,16 @@ const ContextProvider = ({ children }: any) => {
     dispatch({ type: "SET_TRANSPOSE", payload: num });
   };
 
-  const setSongNotes = (songNotes: SharpNotes[]) => {
+  const setSongNotes = (songNotes: SharpNotesEnum[]) => {
     dispatch({ type: "SET_SONG_NOTES", payload: songNotes });
   };
 
   const setSongLength = (songLength: number) => {
     dispatch({ type: "SET_SONG_LENGTH", payload: songLength });
+  };
+
+  const setIsPreclick = (bool: boolean) => {
+    dispatch({ type: "SET_IS_PRECLICK", payload: bool });
   };
 
   return (
@@ -286,13 +292,14 @@ const ContextProvider = ({ children }: any) => {
         setTempo,
         togglePianoRoll,
         setIsPlaying,
-        setAllLists,
-        setIsClosedManer,
+        setListsByBagpipe,
+        setBagpipeType,
         setScreenSize,
         setTranspose,
         setSongNotes,
         setMetronome,
         setSongLength,
+        setIsPreclick,
       }}
     >
       {children}
