@@ -11,6 +11,7 @@ import styled from "styled-components";
 import { mainColors, theme } from "../../../utils/theme";
 import { Icon } from "../../global/Icon";
 import { MainSettings } from "./MainSettings";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
@@ -30,6 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default ({ midiPlayer }: Props) => {
+  const { t } = useTranslation("translation");
+
   const {
     state: { transpose, isPlaying },
   } = useContext(store);
@@ -58,7 +61,7 @@ export default ({ midiPlayer }: Props) => {
             <IconButton onClick={() => setOpen(false)} className="close">
               <Icon type="back" fill={theme.colors.white} className="icon" />
             </IconButton>
-            <Title>Settings</Title>
+            <Title>{t("settings")}</Title>
           </Header>
           <MainSettings midiPlayer={midiPlayer} />
         </Content>

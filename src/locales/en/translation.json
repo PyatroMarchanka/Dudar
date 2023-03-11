@@ -1,0 +1,20 @@
+{
+  "tempo": "Tempo",
+  "settings": "Settings",
+  "instrumentType": "Instrument Type",
+  "transposeMelody": "Transpose melody",
+  "preclick": "Preclick",
+  "noIcon": "No icon",
+  "dudas": {
+    "belNonTradDuda": "Belarusian Nontraditional Closed Duda",
+    "belOpenDuda": "Belarusian Open Duda",
+    "belTradDuda": "Belarusian Traditional Duda",
+    "dudelsack": "Dudelsack",
+    "unknownBagpipe": "Unknown bagpipe"
+  },
+  "genres": {
+    "medieval": "Medieval",
+    "belarusian": "Belarusian",
+    "irish": "Irish"
+  }
+}

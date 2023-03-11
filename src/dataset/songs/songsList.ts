@@ -1,9 +1,9 @@
 import { BagpipeTypes } from "../../interfaces";
 import { Song, SongTypes } from "./interfaces";
 
-export const songList: Song[] = [
+const belarusian: Song[] = [
   {
-    name: "Liudzvinka",
+    name: "Людзвінка",
     type: SongTypes.Belarusian,
     bagpipesToPlay: [
       BagpipeTypes.BelarusianNONTraditionalDuda,
@@ -14,7 +14,7 @@ export const songList: Song[] = [
     pathName: "belarusian/Liudzvinka.mid",
   },
   {
-    name: "Taukacyki",
+    name: "Таўкачыкі",
     type: SongTypes.Belarusian,
     bagpipesToPlay: [
       BagpipeTypes.BelarusianTraditionalDuda,
@@ -26,14 +26,14 @@ export const songList: Song[] = [
     pathName: "belarusian/Taukacyki.mid",
   },
   {
-    name: "Verabey",
+    name: "Верабей",
     type: SongTypes.Belarusian,
     bagpipesToPlay: [BagpipeTypes.BelarusianTraditionalDuda],
     timeSignature: "4/4",
     pathName: "belarusian/Verabey Traditional.mid",
   },
   {
-    name: "Verabey",
+    name: "Верабей",
     type: SongTypes.Belarusian,
     bagpipesToPlay: [
       BagpipeTypes.BelarusianNONTraditionalDuda,
@@ -44,7 +44,7 @@ export const songList: Song[] = [
     pathName: "belarusian/Verabey.mid",
   },
   {
-    name: "Bazar",
+    name: "Базар",
     type: SongTypes.Belarusian,
     bagpipesToPlay: [
       BagpipeTypes.BelarusianTraditionalDuda,
@@ -56,7 +56,7 @@ export const songList: Song[] = [
     pathName: "belarusian/Bazar.mid",
   },
   {
-    name: "Ciacierka",
+    name: "Цяцерка",
     type: SongTypes.Belarusian,
     bagpipesToPlay: [
       BagpipeTypes.BelarusianTraditionalDuda,
@@ -68,7 +68,7 @@ export const songList: Song[] = [
     pathName: "belarusian/Ciacierka.mid",
   },
   {
-    name: "Karapet",
+    name: "Карапэт",
     type: SongTypes.Belarusian,
     bagpipesToPlay: [
       BagpipeTypes.BelarusianTraditionalDuda,
@@ -80,7 +80,7 @@ export const songList: Song[] = [
     pathName: "belarusian/Karapet.mid",
   },
   {
-    name: "Lavonicha",
+    name: "Лявоніха",
     type: SongTypes.Belarusian,
     bagpipesToPlay: [
       BagpipeTypes.BelarusianTraditionalDuda,
@@ -91,7 +91,7 @@ export const songList: Song[] = [
     pathName: "belarusian/Lavonicha.mid",
   },
   {
-    name: "Matlyot",
+    name: "Матлёт",
     type: SongTypes.Belarusian,
     bagpipesToPlay: [
       BagpipeTypes.BelarusianTraditionalDuda,
@@ -102,7 +102,7 @@ export const songList: Song[] = [
     pathName: "belarusian/Matlyot.mid",
   },
   {
-    name: "Ojra",
+    name: "Ойра",
     type: SongTypes.Belarusian,
     bagpipesToPlay: [
       BagpipeTypes.BelarusianTraditionalDuda,
@@ -113,7 +113,7 @@ export const songList: Song[] = [
     pathName: "belarusian/Ojra.mid",
   },
   {
-    name: "Polka babachka",
+    name: "Полька бабачка",
     type: SongTypes.Belarusian,
     bagpipesToPlay: [
       BagpipeTypes.BelarusianTraditionalDuda,
@@ -125,7 +125,7 @@ export const songList: Song[] = [
     pathName: "belarusian/Polka babachka.mid",
   },
   {
-    name: "Sayka dy Gryshka",
+    name: "Саўка ды Грышка",
     type: SongTypes.Belarusian,
     bagpipesToPlay: [
       BagpipeTypes.BelarusianTraditionalDuda,
@@ -136,7 +136,7 @@ export const songList: Song[] = [
     pathName: "belarusian/Sayka dy Gryshka.mid",
   },
   {
-    name: "Zajgraj zha mnie Dudarochku",
+    name: "Зайграй жа дударочку",
     type: SongTypes.Belarusian,
     bagpipesToPlay: [
       BagpipeTypes.BelarusianTraditionalDuda,
@@ -147,6 +147,9 @@ export const songList: Song[] = [
     timeSignature: "4/4",
     pathName: "belarusian/Zajgraj zha mnie Dudarochku.mid",
   },
+];
+
+const irish: Song[] = [
   {
     name: "Foggy Dew",
     type: SongTypes.Irish,
@@ -190,6 +193,9 @@ export const songList: Song[] = [
     timeSignature: "6/8",
     pathName: "irish/The Kesh jig.mid",
   },
+];
+
+const medieval: Song[] = [
   {
     name: "Ai Vist Lo Lop",
     type: SongTypes.Medieval,
@@ -225,3 +231,5 @@ export const songList: Song[] = [
     pathName: "medieval/Palaestinalied.mid",
   },
 ];
+
+export const songList: Song[] = [...belarusian, ...irish, ...medieval];

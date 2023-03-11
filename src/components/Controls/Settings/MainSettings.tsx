@@ -10,12 +10,15 @@ import Transpose from "../Transpose";
 import { RedRadio } from "../../global/RedRadioButton";
 import { RedCheckbox } from "../../global/RedCheckbox";
 import { Typography } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   midiPlayer: MidiPlayer | null;
 };
 
 export const MainSettings = ({ midiPlayer }: Props) => {
+  const { t } = useTranslation("translation");
+
   const {
     state: { bagpipeType, isPreclick },
     setBagpipeType,
@@ -32,7 +35,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
     <Container>
       <Row>
         <Icon type="duda" className="duda" />
-        <Title>Instrument Type</Title>
+        <Title>{t("instrumentType")}</Title>
       </Row>
       <Line />
       <InstrumentTypes>
@@ -43,20 +46,20 @@ export const MainSettings = ({ midiPlayer }: Props) => {
               name="radio-button-demo"
               inputProps={{ "aria-label": "C" }}
             />
-            <BigTitle>{bagpipes[type].name}</BigTitle>
+            <BigTitle>{t(`dudas.${bagpipes[type].name}`)}</BigTitle>
           </TypeItem>
         ))}
       </InstrumentTypes>
       <Line />
       <Row>
         <Icon type="duda" className="duda" />
-        <Title>Transpose melody</Title>
+        <Title>{t("transposeMelody")}</Title>
         <Transpose midiPlayer={midiPlayer} />
       </Row>
       <Line />
       <Row>
         <Icon type="duda" className="duda" />
-        <Title>Preclick</Title>
+        <Title>{t("preclick")}</Title>
         <RedCheckbox
           checked={isPreclick}
           onChange={() => setIsPreclick(!isPreclick)}

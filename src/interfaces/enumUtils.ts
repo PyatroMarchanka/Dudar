@@ -38,3 +38,22 @@ export const getLabelByBagpipeType = (type: BagpipeTypes) => {
       return "Unknown bagpipe";
   }
 };
+
+export const getTranslationKeyByBagpipeType = (type: BagpipeTypes) => {
+  switch (type) {
+    case BagpipeTypes.BelarusianNONTraditionalDuda:
+      return "belNonTradDuda";
+
+    case BagpipeTypes.BelarusianOpenDuda:
+      return "belOpenDuda";
+
+    case BagpipeTypes.BelarusianTraditionalDuda:
+      return "belTradDuda";
+
+    case BagpipeTypes.Dudelsack:
+      return "dudelsack";
+
+    default:
+      return "unknownBagpipe";
+  }
+};

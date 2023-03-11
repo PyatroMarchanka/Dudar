@@ -1,5 +1,4 @@
 import {
-  Button,
   createStyles,
   Dialog,
   DialogContent,
@@ -9,6 +8,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { store } from "../../context";
 import { MidiPlayer } from "../../utils/MidiPlayer";
@@ -28,6 +28,8 @@ const useStyles = makeStyles(() =>
 );
 
 export const TempoSlider = ({ player }: Props) => {
+  const { t } = useTranslation("translation");
+
   const {
     state: { tempo, metronome },
     setTempo,
@@ -66,7 +68,9 @@ export const TempoSlider = ({ player }: Props) => {
       </TempoButtons>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent className={classes.container}>
-          <Typography>Tempo {Math.floor(tempo / 2)} bpm</Typography>
+          <Typography>
+            {t("tempo")} {Math.floor(tempo / 2)} bpm
+          </Typography>
           <Slider
             className="volume-slider"
             onChange={(e, value) => {

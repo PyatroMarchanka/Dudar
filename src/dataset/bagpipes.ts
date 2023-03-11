@@ -4,19 +4,21 @@ import { BagpipeConfig, BagpipeTypes } from "../interfaces";
 import { holesPositions } from "./bagpipesHolesPositions";
 import { bagpipeImages } from "./bagpipeImages";
 import { bagpipesNotesToLines } from "./bagpipesNotesToHoles";
-import { getLabelByBagpipeType } from "../interfaces/enumUtils";
+import { getTranslationKeyByBagpipeType } from "../interfaces/enumUtils";
 
 const bagpipeNames = {
-  [BagpipeTypes.BelarusianTraditionalDuda]: getLabelByBagpipeType(
+  [BagpipeTypes.BelarusianTraditionalDuda]: getTranslationKeyByBagpipeType(
     BagpipeTypes.BelarusianTraditionalDuda
   ),
-  [BagpipeTypes.BelarusianNONTraditionalDuda]: getLabelByBagpipeType(
+  [BagpipeTypes.BelarusianNONTraditionalDuda]: getTranslationKeyByBagpipeType(
     BagpipeTypes.BelarusianNONTraditionalDuda
   ),
-  [BagpipeTypes.BelarusianOpenDuda]: getLabelByBagpipeType(
+  [BagpipeTypes.BelarusianOpenDuda]: getTranslationKeyByBagpipeType(
     BagpipeTypes.BelarusianOpenDuda
   ),
-  [BagpipeTypes.Dudelsack]: getLabelByBagpipeType(BagpipeTypes.Dudelsack),
+  [BagpipeTypes.Dudelsack]: getTranslationKeyByBagpipeType(
+    BagpipeTypes.Dudelsack
+  ),
 };
 
 const getBagpipeData = (bagpipeType: BagpipeTypes): BagpipeConfig => {
