@@ -29,7 +29,7 @@ export const drawBarsLines = (
 
   const { holesPositions, imagesProperties } = bagpipes[bagpipeType];
   const [top, bottom] = [
-    holesPositions.linesYPositions[0],
+    holesPositions.linesYPositions[0] - 30,
     holesPositions.linesYPositions[holesPositions.linesYPositions.length - 1],
   ];
   ctx.strokeStyle = mainColors.lightGrey;
@@ -42,6 +42,6 @@ export const drawBarsLines = (
     ctx.lineTo(line, bottom);
     ctx.stroke();
 
-    ctx.fillText((currentBar + 1 + i).toString(), line, top - 10);
+    ctx.fillText((currentBar + 1 + i).toString(), line + 10, top + 20);
   });
 };
