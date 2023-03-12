@@ -85,7 +85,7 @@ const belarusianNONTraditionalHoles: BagpipeHolesPositions = {
   closable: belarusianNONTraditionalHolesClosable.map(applyCoefficientToHole),
   linesYPositions: [
     ...holesToLinesYPositions([...belarusianNONTraditionalHolesClosable]),
-    coeff(100),
+    coeff(570),
   ],
 };
 
