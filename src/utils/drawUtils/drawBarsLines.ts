@@ -12,7 +12,10 @@ const getLinePosition = (midiData: Midi, tick: number) => {
 
   const lines = [lineXPosStart, lineXPosStart + ticksPerBar];
 
-  return lines.map((line) => line * sizes.notesScale + sizes.brickLeftMargin);
+  return {
+    lines: lines.map((line) => line * sizes.notesScale + sizes.brickLeftMargin),
+    currentBar,
+  };
 };
 
 export const drawBarsLines = (
@@ -22,7 +25,8 @@ export const drawBarsLines = (
   bagpipeType: BagpipeTypes
 ) => {
   if (!midiData) return;
-  const lines = getLinePosition(midiData, tick);
+  const { lines, currentBar } = getLinePosition(midiData, tick);
+
   const { holesPositions, imagesProperties } = bagpipes[bagpipeType];
   const [top, bottom] = [
     holesPositions.linesYPositions[0],
@@ -30,10 +34,14 @@ export const drawBarsLines = (
   ];
   ctx.strokeStyle = mainColors.lightGrey;
   ctx.lineWidth = imagesProperties.notes.lineHeight;
-  lines.forEach((line) => {
+  ctx.font = "bold 16px Arial";
+
+  lines.forEach((line, i) => {
     ctx.beginPath();
     ctx.moveTo(line, top);
     ctx.lineTo(line, bottom);
     ctx.stroke();
+
+    ctx.fillText((currentBar + 1 + i).toString(), line, top - 10);
   });
 };
