@@ -3,6 +3,7 @@ import { BagpipeTypes } from "./../../interfaces/index";
 import { Note } from "@tonejs/midi/dist/Note";
 import { SharpNotes } from "../../interfaces";
 import { mainColors } from "../theme";
+import { sizes } from "../../constants/style";
 
 (CanvasRenderingContext2D.prototype as any).roundRect = function (
   x: number,
@@ -22,8 +23,6 @@ import { mainColors } from "../theme";
   this.closePath();
   return this;
 };
-
-const notesScale = 0.2;
 
 const getYposByNote = (
   note: SharpNotes,
@@ -51,19 +50,19 @@ const drawNote = (
   if (!y?.yPosInPx) {
     return;
   }
-  const brickLeftMargin = 55;
 
-  const startPos = start * notesScale - tick * notesScale + brickLeftMargin;
+  const startPos =
+    start * sizes.notesScale - tick * sizes.notesScale + sizes.brickLeftMargin;
   ctx.beginPath();
   // @ts-ignore
   ctx.roundRect(
     startPos,
     y.yPosInPx - imageProperties.notes.brickHeightHalf,
-    dur * notesScale,
+    dur * sizes.notesScale,
     imageProperties.notes.brickhHeight,
     10
   );
-  if (startPos < brickLeftMargin) {
+  if (startPos < sizes.brickLeftMargin) {
     ctx.fillStyle = mainColors.red;
   } else {
     ctx.fillStyle = mainColors.darkerGray;
