@@ -50,10 +50,9 @@ const drawNote = (
   if (!y?.yPosInPx) {
     return;
   }
-  const brickLeftMargin = 55;
 
   const startPos =
-    start * sizes.notesScale - tick * sizes.notesScale + brickLeftMargin;
+    start * sizes.notesScale - tick * sizes.notesScale + sizes.brickLeftMargin;
   ctx.beginPath();
   // @ts-ignore
   ctx.roundRect(
@@ -63,7 +62,7 @@ const drawNote = (
     imageProperties.notes.brickhHeight,
     10
   );
-  if (startPos < brickLeftMargin) {
+  if (startPos < sizes.brickLeftMargin) {
     ctx.fillStyle = mainColors.red;
   } else {
     ctx.fillStyle = mainColors.darkerGray;

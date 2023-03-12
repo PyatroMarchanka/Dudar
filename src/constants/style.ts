@@ -29,4 +29,5 @@ export const numberQueries = {
 export const sizes = {
   maxCanvasWidth: 800,
   notesScale: 0.2,
+  brickLeftMargin: 55,
 };

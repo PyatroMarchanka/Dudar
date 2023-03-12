@@ -1,4 +1,3 @@
-import { Midi } from "@tonejs/midi";
 import { Note } from "@tonejs/midi/dist/Note";
 import { useContext, useEffect, useState } from "react";
 import { sizes } from "../constants/style";

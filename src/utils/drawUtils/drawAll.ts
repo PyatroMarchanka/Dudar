@@ -1,3 +1,4 @@
+import { Midi } from "@tonejs/midi";
 import { Note } from "@tonejs/midi/dist/Note";
 import { BagpipeTypes, SharpNotes } from "../../interfaces";
 import {
@@ -6,6 +7,7 @@ import {
   drawShadow,
   NotesMap,
 } from "./drawBagpipe";
+import { drawBarsLines } from "./drawBarsLines";
 import { drawActiveHoles, drawClosedHoles } from "./drawHoles";
 import { drawNotes } from "./drawNotes";
 
@@ -13,11 +15,12 @@ export const drawDynamic = (
   ctx: CanvasRenderingContext2D,
   bagpipeType: BagpipeTypes,
   tick: number,
+  midiData: Midi | null,
   nextNotes?: Note[] | undefined,
   nextToNextNotes?: Note[] | undefined
 ) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
+  drawBarsLines(ctx, tick, midiData, bagpipeType);
   drawNotes(ctx, bagpipeType, tick, nextNotes, nextToNextNotes);
 };
 
