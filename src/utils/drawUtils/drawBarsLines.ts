@@ -32,10 +32,11 @@ export const drawBarsLines = (
     holesPositions.linesYPositions[0] - 30,
     holesPositions.linesYPositions[holesPositions.linesYPositions.length - 1],
   ];
+
   ctx.strokeStyle = mainColors.lightGrey;
   ctx.lineWidth = imagesProperties.notes.lineHeight;
   ctx.font = "bold 16px Arial";
-
+  console.log("lines", lines);
   lines.forEach((line, i) => {
     ctx.beginPath();
     ctx.moveTo(line, top);
