@@ -2,14 +2,14 @@ import { MenuItem, Select } from "@material-ui/core";
 import React, { useContext, useState } from "react";
 import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
-import { transposeNote } from "../../../utils/midiUtils";
 import { useSelectStyles } from "../../global/selectStyles";
+import { transposeNote } from "../../../utils/midiUtils";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
 }
 
-export default ({ midiPlayer }: Props) => {
+const Transpose = ({ midiPlayer }: Props) => {
   const {
     state: { transpose, isPlaying },
     setTranspose: setTransposeCtx,
@@ -25,9 +25,7 @@ export default ({ midiPlayer }: Props) => {
   };
 
   const [value, setValue] = useState<number>(transpose);
-  const options = new Array(24)
-    .fill(undefined)
-    .map((_, i) => ({ value: i - 12, label: i - 12 }));
+  const options = new Array(24).fill(undefined).map((_, i) => ({ value: i - 12, label: i - 12 }));
   const selectClasses = useSelectStyles();
 
   return (
@@ -51,3 +49,5 @@ export default ({ midiPlayer }: Props) => {
     </div>
   );
 };
+
+export default Transpose;

@@ -2,8 +2,8 @@ import { Midi } from "@tonejs/midi";
 import { useContext, useEffect, useState } from "react";
 import { store } from "../context";
 import { Song } from "../dataset/songs/interfaces";
-import { addMetronome, fixMidiDataOctaves } from "../utils/midiUtils";
 import { fallbackSong } from "./useLocalStorage";
+import { addMetronome, fixMidiDataOctaves } from "../utils/midiUtils";
 
 export const useLoadSong = () => {
   const {

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { SharpNotes } from "../../interfaces";
-import { BagpipeNotes } from "../../dataset/bagpipesUtils";
+import { BagpipeNotes } from "../../utils/bagpipesUtils";
 
 interface HoleProps {
   isOpen: boolean;
@@ -19,27 +19,17 @@ interface Props {
 }
 
 export const Bagpipe = ({ bagpipe, activeNote }: Props) => {
-  const notes = [bagpipe.entry, ...bagpipe.main].filter(
-    Boolean
-  ) as SharpNotes[];
+  const notes = [bagpipe.entry, ...bagpipe.main].filter(Boolean) as SharpNotes[];
 
-  const checkIsNoteActive = (
-    note: SharpNotes,
-    activeNote: Props["activeNote"],
-    i: number
-  ) => {
+  const checkIsNoteActive = (note: SharpNotes, activeNote: Props["activeNote"], i: number) => {
     const isNoteNameSame = note[0] === activeNote?.note[0];
     const isFifthOctaveSame =
-      (i > 2 && activeNote?.octave === 5) ||
-      (i <= 2 && activeNote?.octave === 4);
+      (i > 2 && activeNote?.octave === 5) || (i <= 2 && activeNote?.octave === 4);
 
     const isFourthOctaveSame =
-      (i > 2 && activeNote?.octave === 4) ||
-      (i <= 2 && activeNote?.octave === 3);
+      (i > 2 && activeNote?.octave === 4) || (i <= 2 && activeNote?.octave === 3);
 
-    return isNoteNameSame && (isFifthOctaveSame || isFourthOctaveSame)
-      ? "active"
-      : "";
+    return isNoteNameSame && (isFifthOctaveSame || isFourthOctaveSame) ? "active" : "";
   };
 
   return (

@@ -1,10 +1,6 @@
 import { Midi } from "@tonejs/midi";
 import { BagpipeNotesSteps, Modes, SharpNotes } from "../interfaces/index";
-import {
-  convertToSharp,
-  getSongNotesFromMidi,
-  transposeNote,
-} from "../utils/midiUtils";
+import { convertToSharp, getSongNotesFromMidi, transposeNote } from "./midiUtils";
 
 export interface BagpipeNotes {
   main: SharpNotes[];
@@ -43,10 +39,7 @@ const getBagpipeNotesSteps = (mode: Modes): BagpipeNotesSteps => {
   }
 };
 
-const getBagpipeNotes = (
-  tone: SharpNotes,
-  steps: BagpipeNotesSteps
-): BagpipeNotes => {
+const getBagpipeNotes = (tone: SharpNotes, steps: BagpipeNotesSteps): BagpipeNotes => {
   let currentStep = 0;
   const resultNotes = steps.main.map((step) => {
     let note: SharpNotes;
@@ -82,10 +75,7 @@ const getModeFromMidi = (midi: Midi, transpose: number) => {
   return Modes.Dorian;
 };
 
-export const getBagpipeNotesFromMidi = (
-  midi: Midi,
-  transpose: number
-): SharpNotes[] => {
+export const getBagpipeNotesFromMidi = (midi: Midi, transpose: number): SharpNotes[] => {
   const tone = transposeNote("A", transpose);
   const mode = getModeFromMidi(midi, transpose);
   const { main: songNotes } = getBagpipeData(mode, tone);
