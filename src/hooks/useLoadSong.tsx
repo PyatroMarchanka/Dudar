@@ -18,6 +18,7 @@ export const useLoadSong = () => {
 
   const loadMidiSong = async (song: Song) => {
     try {
+      console.log(song);
       if (!song.pathName) {
         console.log(`No song with this path in list \n ${song.pathName}`);
         console.log(`Fallback to ${fallbackSong.pathName}`);
@@ -25,6 +26,7 @@ export const useLoadSong = () => {
         setActiveSong(fallbackSong);
       }
       const file = await fetch(`midi/${song.pathName}`);
+      console.log(`midi/${song.pathName}`);
       const buffer = await file.arrayBuffer();
 
       const songWithMetronome = await addMetronome(buffer);

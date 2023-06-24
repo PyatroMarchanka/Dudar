@@ -30,7 +30,7 @@ const belarusian: Song[] = [
     type: SongTypes.Belarusian,
     bagpipesToPlay: [BagpipeTypes.BelarusianTraditionalDuda],
     timeSignature: "4/4",
-    pathName: "belarusian/Verabey Traditional.mid",
+    pathName: "belarusian/Верабей-trad.mid",
   },
   {
     name: "Верабей",
@@ -41,7 +41,7 @@ const belarusian: Song[] = [
       BagpipeTypes.Dudelsack,
     ],
     timeSignature: "4/4",
-    pathName: "belarusian/Verabey.mid",
+    pathName: "belarusian/Верабей.mid",
   },
   {
     name: "Базар",
@@ -53,7 +53,7 @@ const belarusian: Song[] = [
       BagpipeTypes.Dudelsack,
     ],
     timeSignature: "4/4",
-    pathName: "belarusian/Bazar.mid",
+    pathName: "belarusian/Базар.mid",
   },
   {
     name: "Цяцерка",
@@ -65,7 +65,7 @@ const belarusian: Song[] = [
       BagpipeTypes.Dudelsack,
     ],
     timeSignature: "4/4",
-    pathName: "belarusian/Ciacierka.mid",
+    pathName: "belarusian/Цяцерка.mid",
   },
   {
     name: "Карапэт",
@@ -77,7 +77,7 @@ const belarusian: Song[] = [
       BagpipeTypes.Dudelsack,
     ],
     timeSignature: "4/4",
-    pathName: "belarusian/Karapet.mid",
+    pathName: "belarusian/Карапэт.mid",
   },
   {
     name: "Лявоніха",
@@ -186,10 +186,7 @@ const irish: Song[] = [
   {
     name: "The Kesh jig",
     type: SongTypes.Irish,
-    bagpipesToPlay: [
-      BagpipeTypes.BelarusianNONTraditionalDuda,
-      BagpipeTypes.BelarusianOpenDuda,
-    ],
+    bagpipesToPlay: [BagpipeTypes.BelarusianNONTraditionalDuda, BagpipeTypes.BelarusianOpenDuda],
     timeSignature: "6/8",
     pathName: "irish/The Kesh jig.mid",
   },

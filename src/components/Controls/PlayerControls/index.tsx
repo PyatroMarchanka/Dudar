@@ -101,17 +101,9 @@ export const PlayerControls = ({ player }: Props) => {
         <Preclick />
         <PlayStop>
           <IconButton onClick={onStop} className="icon">
-            <Icon
-              type="stop"
-              fill={theme.colors.black}
-              Icon={PauseIcon}
-              className="play-icon"
-            />
+            <Icon type="stop" fill={theme.colors.black} Icon={PauseIcon} className="play-icon" />
           </IconButton>
-          <PlayStopButton
-            isPlaying={isPlaying}
-            handlePlaying={isPlaying ? onPause : onPlay}
-          />
+          <PlayStopButton isPlaying={isPlaying} handlePlaying={isPlaying ? onPause : onPlay} />
         </PlayStop>
       </Buttons>
     </Container>

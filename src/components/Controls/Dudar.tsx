@@ -15,7 +15,7 @@ import { mainColors } from "../../utils/theme";
 import { StaticCanvas } from "../Canvas/StaticCanvas";
 import { BackCanvas } from "../Canvas/BackCanvas";
 import { DynamicCanvas } from "../Canvas/DynamicCanvas";
-import { convertMidiPitchToNote } from "../../utils/midiUtils";
+import { convertMidiPitchToNote, getSongListWithBagpipeTypes } from "../../utils/midiUtils";
 
 export const Dudar = () => {
   const {
@@ -48,6 +48,8 @@ export const Dudar = () => {
   useLoadSong();
 
   useEffect(() => {
+    getSongListWithBagpipeTypes();
+
     setDimensions();
     window.addEventListener("resize", setDimensions);
 

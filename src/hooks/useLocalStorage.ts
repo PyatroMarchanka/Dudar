@@ -10,9 +10,7 @@ import { useContext, useEffect } from "react";
 import { store } from "../context";
 import { BagpipeTypes } from "../interfaces";
 
-export const fallbackSong = songList.find(
-  (song) => song.pathName === "belarusian/Verabey.mid"
-)!;
+export const fallbackSong = songList.find((song) => song.pathName === "belarusian/Карапэт.mid")!;
 
 const fallBackBagpipe = BagpipeTypes.BelarusianNONTraditionalDuda;
 
