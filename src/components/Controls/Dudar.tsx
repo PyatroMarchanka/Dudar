@@ -4,7 +4,7 @@ import { SharpNotes } from "../../interfaces";
 import { PlayerControls } from "./PlayerControls";
 import { useMidiPlayer } from "../../hooks/useMidiPlayer";
 import Transpose from "./Settings";
-import SongList from "../SongList";
+import { SongList } from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
 import { numberQueries } from "../../constants/style";

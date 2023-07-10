@@ -1,9 +1,4 @@
-import {
-  SwipeableDrawer,
-  IconButton,
-  makeStyles,
-  Theme,
-} from "@material-ui/core";
+import { SwipeableDrawer, IconButton, makeStyles, Theme } from "@material-ui/core";
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { store } from "../../context";
@@ -38,7 +33,7 @@ type Props = {
   player: MidiPlayer | null;
 };
 
-export default ({ player }: Props) => {
+export const SongList = ({ player }: Props) => {
   const { setIsPlaying, setProgress } = useContext(store);
 
   const onStop = () => {

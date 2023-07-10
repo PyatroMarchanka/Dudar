@@ -95,38 +95,27 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography className={classes.heading}>
-                {t(`genres.${genre}`)}
-              </Typography>
+              <Typography className={classes.heading}>{t(`genres.${genre}`)}</Typography>
             </AccordionSummary>
 
             <AccordionDetails classes={{ root: classes.detailsRoot }}>
               <List classes={{ padding: classes.list }}>
                 {listsByBagpipe![genre].map((song) => (
                   <div
-                    className={
-                      activeSong?.pathName === song.pathName
-                        ? classes.activeSong
-                        : ""
-                    }
+                    className={activeSong?.pathName === song.pathName ? classes.activeSong : ""}
                     key={song.name}
                   >
                     <IconButton
                       classes={{ root: classes.buttonRoot }}
                       className="songButton"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setActiveSong(song);
                         onStop();
                       }}
                     >
-                      <Icon
-                        type={
-                          activeSong?.pathName === song.pathName
-                            ? "song-play"
-                            : "music"
-                        }
-                      />
-                      <ListItem>{song.name}</ListItem>
+                      <Icon type={activeSong?.pathName === song.pathName ? "song-play" : "music"} />
+                      <ListItem className="song-button" id={song.name}>{song.name}</ListItem>
                     </IconButton>
                   </div>
                 ))}
