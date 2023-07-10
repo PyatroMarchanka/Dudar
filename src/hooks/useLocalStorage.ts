@@ -5,12 +5,23 @@ import {
   userBagpipeType,
   lastSongData,
 } from "./../constants/localStorage";
-import { songList } from "./../dataset/songs/songsList";
 import { useContext, useEffect } from "react";
 import { store } from "../context";
 import { BagpipeTypes } from "../interfaces";
+import { Song, SongTypes } from "../dataset/songs/interfaces";
 
-export const fallbackSong = songList.find((song) => song.pathName === "belarusian/Карапэт.mid")!;
+export const fallbackSong: Song = {
+  timeSignature: "4/4",
+  name: "Цяцерка",
+  type: SongTypes.Belarusian,
+  bagpipesToPlay: [
+    BagpipeTypes.BelarusianNONTraditionalDuda,
+    BagpipeTypes.BelarusianOpenDuda,
+    BagpipeTypes.BelarusianTraditionalDuda,
+    BagpipeTypes.Dudelsack,
+  ],
+  pathName: "belarusian/Цяцерка.mid",
+};
 
 const fallBackBagpipe = BagpipeTypes.BelarusianNONTraditionalDuda;
 
@@ -20,13 +31,13 @@ export const getUserDataFromLocal = () => {
   const userTransposeData = localStorage.getItem(userTranspose);
   const isPreclick = localStorage.getItem(userIsPreclick);
   const bagpipeType = localStorage.getItem(userBagpipeType);
-  const song = songList.find((song) => song.pathName === songData);
+
   return {
-    activeSong: song,
     tempo: userTempoData !== null ? +userTempoData : 200,
     transpose: userTransposeData !== null ? +userTransposeData : 0,
     isPreclick: !!isPreclick,
     bagpipeType: (bagpipeType as BagpipeTypes) || fallBackBagpipe,
+    songData,
   };
 };
 
@@ -44,7 +55,7 @@ export const useLocalStorage = () => {
     if (activeSong) {
       const formattetLastUserSong = activeSong;
 
-      localStorage.setItem(lastSongData, formattetLastUserSong.pathName);
+      localStorage.setItem(lastSongData, JSON.stringify(formattetLastUserSong));
     }
 
     if (tempo) {
@@ -67,14 +78,14 @@ export const useLocalStorage = () => {
   }, [activeSong, tempo, transpose, isPreclick, bagpipeType]);
 
   useEffect(() => {
-    const songFileName = localStorage.getItem(lastSongData);
+    const songDataFromLocalStorage = localStorage.getItem(lastSongData);
+    const songData = !!songDataFromLocalStorage ? JSON.parse(songDataFromLocalStorage) : undefined;
     const userTempoData = localStorage.getItem(userTempo);
     const userTransposeData = localStorage.getItem(userTranspose);
     const userIsPreclickData = localStorage.getItem(userIsPreclick);
-    const userSong = songList?.find((song) => song.pathName === songFileName);
     const bagpipeType = localStorage.getItem(userBagpipeType);
 
-    setActiveSong(userSong || fallbackSong);
+    setActiveSong(songData);
     setTempo((userTempoData && +userTempoData) || 200);
     setTranspose(userTransposeData !== null ? +userTransposeData : 0);
     setIsPreclick(!!userIsPreclickData);

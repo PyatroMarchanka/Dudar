@@ -22,8 +22,8 @@ export const useSongList = (onStop: () => void) => {
     }
   }, [bagpipeType, setListsByBagpipe]);
 
-  const getAllList = useCallback(
-    async (bagpipeType: BagpipeTypes) => {
+  const handleActiveSong = useCallback(
+    (bagpipeType: BagpipeTypes) => {
       if (!listsByBagpipe || !bagpipeType) {
         return;
       }
@@ -37,6 +37,7 @@ export const useSongList = (onStop: () => void) => {
         setActiveSong(activeSongInNewList);
       } else {
         const firstSongInList = listsByBagpipe[Object.keys(listsByBagpipe)[0]][0];
+        console.log(firstSongInList);
         setActiveSong(firstSongInList);
       }
     },
@@ -44,8 +45,15 @@ export const useSongList = (onStop: () => void) => {
   );
 
   useEffect(() => {
+    if (!activeSong && listsByBagpipe) {
+      const firstSongInList = listsByBagpipe[Object.keys(listsByBagpipe)[0]][0];
+      console.log(firstSongInList);
+      setActiveSong(firstSongInList);
+    }
+  }, [activeSong, listsByBagpipe]);
+
+  useEffect(() => {
     addBagpipesTypesToSongList();
-    getAllList(bagpipeType);
   }, [bagpipeType]);
 };
 

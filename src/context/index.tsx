@@ -57,6 +57,7 @@ const initialState: State = {
   listsByBagpipe: null,
   screenSize: { width: 400, height: 500 },
   songLength: 0,
+  activeSong: undefined,
   ...userData,
 };
 
@@ -229,11 +230,7 @@ const ContextProvider = ({ children }: any) => {
     });
   };
 
-  const setProgress = (
-    percent: number,
-    time?: number,
-    timeRemaining?: number
-  ) => {
+  const setProgress = (percent: number, time?: number, timeRemaining?: number) => {
     dispatch({
       type: "SET_PROGRESS",
       payload: { percent: 100 - percent, time, timeRemaining },

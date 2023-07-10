@@ -7,7 +7,7 @@ import { addMetronome, fixMidiDataOctaves } from "../utils/midiUtils";
 
 export const useLoadSong = () => {
   const {
-    state: { activeSong, metronome, tempo },
+    state: { activeSong, metronome, tempo, listsByBagpipe, bagpipeType },
     setMidi,
     setMidiData,
     setSongLength,
@@ -21,9 +21,9 @@ export const useLoadSong = () => {
       console.log(song);
       if (!song.pathName) {
         console.log(`No song with this path in list \n ${song.pathName}`);
-        console.log(`Fallback to ${fallbackSong.pathName}`);
+        console.log(`Fallback to ${fallbackSong}`);
 
-        setActiveSong(fallbackSong);
+        listsByBagpipe && setActiveSong(listsByBagpipe[bagpipeType][0]);
       }
       const file = await fetch(`midi/${song.pathName}`);
       console.log(`midi/${song.pathName}`);
@@ -46,6 +46,7 @@ export const useLoadSong = () => {
   };
 
   useEffect(() => {
+    console.log(activeSong);
     if (activeSong) {
       loadMidiSong(activeSong);
     }
