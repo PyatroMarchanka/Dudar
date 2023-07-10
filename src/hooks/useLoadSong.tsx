@@ -2,12 +2,12 @@ import { Midi } from "@tonejs/midi";
 import { useContext, useEffect, useState } from "react";
 import { store } from "../context";
 import { Song } from "../dataset/songs/interfaces";
-import { addMetronome, fixMidiDataOctaves } from "../utils/midiUtils";
 import { fallbackSong } from "./useLocalStorage";
+import { addMetronome, fixMidiDataOctaves } from "../utils/midiUtils";
 
 export const useLoadSong = () => {
   const {
-    state: { activeSong, metronome, tempo },
+    state: { activeSong, metronome, tempo, listsByBagpipe, bagpipeType },
     setMidi,
     setMidiData,
     setSongLength,
@@ -18,13 +18,15 @@ export const useLoadSong = () => {
 
   const loadMidiSong = async (song: Song) => {
     try {
+      console.log(song);
       if (!song.pathName) {
         console.log(`No song with this path in list \n ${song.pathName}`);
-        console.log(`Fallback to ${fallbackSong.pathName}`);
+        console.log(`Fallback to ${fallbackSong}`);
 
-        setActiveSong(fallbackSong);
+        listsByBagpipe && setActiveSong(listsByBagpipe[bagpipeType][0]);
       }
       const file = await fetch(`midi/${song.pathName}`);
+      console.log(`midi/${song.pathName}`);
       const buffer = await file.arrayBuffer();
 
       const songWithMetronome = await addMetronome(buffer);
@@ -44,6 +46,7 @@ export const useLoadSong = () => {
   };
 
   useEffect(() => {
+    console.log(activeSong);
     if (activeSong) {
       loadMidiSong(activeSong);
     }

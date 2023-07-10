@@ -12,10 +12,10 @@ import LandscapeAlert from "../global/LandscapeAlert";
 import { landscapeAlertId } from "../../constants/localStorage";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { mainColors } from "../../utils/theme";
-import { convertMidiPitchToNote } from "../../utils/midiUtils";
 import { StaticCanvas } from "../Canvas/StaticCanvas";
 import { BackCanvas } from "../Canvas/BackCanvas";
 import { DynamicCanvas } from "../Canvas/DynamicCanvas";
+import { convertMidiPitchToNote, getSongListWithBagpipeTypes } from "../../utils/midiUtils";
 
 export const Dudar = () => {
   const {
@@ -32,10 +32,7 @@ export const Dudar = () => {
     setActiveNote(convertMidiPitchToNote(event.noteNumber));
   };
 
-  const { Player: midiPlayer, MPlayer } = useMidiPlayer(
-    handleNote,
-    setProgress
-  );
+  const { Player: midiPlayer, MPlayer } = useMidiPlayer(handleNote, setProgress);
 
   const setDimensions = () => {
     const height = window.innerHeight;
@@ -51,6 +48,8 @@ export const Dudar = () => {
   useLoadSong();
 
   useEffect(() => {
+    getSongListWithBagpipeTypes();
+
     setDimensions();
     window.addEventListener("resize", setDimensions);
 

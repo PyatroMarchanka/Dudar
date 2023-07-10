@@ -36,7 +36,7 @@ export const drawBarsLines = (
   ctx.strokeStyle = mainColors.lightGrey;
   ctx.lineWidth = imagesProperties.notes.lineHeight;
   ctx.font = "bold 16px Arial";
-  console.log("lines", lines);
+
   lines.forEach((line, i) => {
     ctx.beginPath();
     ctx.moveTo(line, top);
