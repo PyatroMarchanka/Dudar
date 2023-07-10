@@ -54,7 +54,6 @@ export const useLocalStorage = () => {
   useEffect(() => {
     if (activeSong) {
       const formattetLastUserSong = activeSong;
-
       localStorage.setItem(lastSongData, JSON.stringify(formattetLastUserSong));
     }
 
@@ -79,7 +78,13 @@ export const useLocalStorage = () => {
 
   useEffect(() => {
     const songDataFromLocalStorage = localStorage.getItem(lastSongData);
-    const songData = !!songDataFromLocalStorage ? JSON.parse(songDataFromLocalStorage) : undefined;
+    let parsedSong;
+    try {
+      parsedSong = !!songDataFromLocalStorage && JSON.parse(songDataFromLocalStorage);
+    } catch (error) {
+      parsedSong = fallbackSong;
+    }
+    const songData = parsedSong.pathName ? parsedSong : undefined;
     const userTempoData = localStorage.getItem(userTempo);
     const userTransposeData = localStorage.getItem(userTranspose);
     const userIsPreclickData = localStorage.getItem(userIsPreclick);

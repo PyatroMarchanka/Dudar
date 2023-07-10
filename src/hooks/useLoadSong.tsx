@@ -18,15 +18,13 @@ export const useLoadSong = () => {
 
   const loadMidiSong = async (song: Song) => {
     try {
-      console.log(song);
       if (!song.pathName) {
         console.log(`No song with this path in list \n ${song.pathName}`);
-        console.log(`Fallback to ${fallbackSong}`);
+        console.log(`Fallback to ${fallbackSong.name}`);
 
         listsByBagpipe && setActiveSong(listsByBagpipe[bagpipeType][0]);
       }
       const file = await fetch(`midi/${song.pathName}`);
-      console.log(`midi/${song.pathName}`);
       const buffer = await file.arrayBuffer();
 
       const songWithMetronome = await addMetronome(buffer);
@@ -46,7 +44,6 @@ export const useLoadSong = () => {
   };
 
   useEffect(() => {
-    console.log(activeSong);
     if (activeSong) {
       loadMidiSong(activeSong);
     }

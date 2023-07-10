@@ -37,7 +37,6 @@ export const useSongList = (onStop: () => void) => {
         setActiveSong(activeSongInNewList);
       } else {
         const firstSongInList = listsByBagpipe[Object.keys(listsByBagpipe)[0]][0];
-        console.log(firstSongInList);
         setActiveSong(firstSongInList);
       }
     },
@@ -47,7 +46,6 @@ export const useSongList = (onStop: () => void) => {
   useEffect(() => {
     if (!activeSong && listsByBagpipe) {
       const firstSongInList = listsByBagpipe[Object.keys(listsByBagpipe)[0]][0];
-      console.log(firstSongInList);
       setActiveSong(firstSongInList);
     }
   }, [activeSong, listsByBagpipe]);
