@@ -66,7 +66,7 @@ export const Dudar = () => {
         </Header>
         <Transpose midiPlayer={midiPlayer} />
       </SettingsButtons>
-      <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} />
+      {/* <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} /> */}
       <BagpipeContainer>
         <BackCanvas />
         <DynamicCanvas player={midiPlayer} />
