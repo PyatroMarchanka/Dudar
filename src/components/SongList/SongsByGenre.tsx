@@ -111,6 +111,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                       onClick={(e) => {
                         e.stopPropagation();
                         setActiveSong(song);
+                        setOpen(false)
                         onStop();
                       }}
                     >
