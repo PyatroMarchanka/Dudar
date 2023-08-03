@@ -26,4 +26,4 @@ yarn-error.log*
 
 .idea/**
 
-/public/midi/list.json
+public/midi/list.json
