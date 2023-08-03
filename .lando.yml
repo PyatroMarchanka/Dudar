@@ -1,0 +1,34 @@
+name: dudar
+proxy:
+  appserver:
+    - dudar.lndo.site:3000
+  webserver:
+    - dudar-build.lndo.site
+services:
+  appserver:
+    type: node:16
+    ssl: true
+    webroot: public
+    build_as_root:
+    - npm install
+    - npm run build
+  webserver:
+    type: apache
+    webroot: build
+    ssl: true
+
+tooling:
+  npm:
+    service: appserver
+  dev:
+    description: Start serving the project in development mode
+    service: appserver
+    cmd:
+      - echo "============ Starting server for development... ==========="
+      - npm start
+  build:
+    description: Building the project into static
+    service: appserver
+    cmd:
+      - echo "============ Building project... ==========="
+      - npm run build

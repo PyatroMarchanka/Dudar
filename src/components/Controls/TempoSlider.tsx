@@ -1,15 +1,19 @@
 import {
-  Button,
   createStyles,
   Dialog,
   DialogContent,
+  IconButton,
   makeStyles,
   Slider,
   Typography,
 } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import styled from "styled-components";
 import { store } from "../../context";
 import { MidiPlayer } from "../../utils/MidiPlayer";
+import { theme } from "../../utils/theme";
+import { Icon } from "../global/Icon";
 
 interface Props {
   player: MidiPlayer | null;
@@ -24,9 +28,12 @@ const useStyles = makeStyles(() =>
 );
 
 export const TempoSlider = ({ player }: Props) => {
+  const { t } = useTranslation("translation");
+
   const {
-    state: { tempo },
+    state: { tempo, metronome },
     setTempo,
+    setMetronome,
   } = useContext(store);
 
   const classes = useStyles();
@@ -36,14 +43,34 @@ export const TempoSlider = ({ player }: Props) => {
     player?.checkTempo(tempo);
   }, [player]);
 
+  useEffect(() => {
+    player?.setMetronome(metronome);
+  }, [metronome]);
+
   return (
-    <>
-      <Button size="small" variant="outlined" onClick={() => setOpen(true)}>
-        Tempo
-      </Button>
+    <Tempo>
+      <TempoButtons>
+        <IconButton className="button" onClick={() => setMetronome(!metronome)}>
+          <Icon
+            type={metronome ? "metr-on" : "metr-off"}
+            fill={theme.colors.black}
+            className="play-icon"
+          />
+        </IconButton>
+        <IconButton
+          className="button"
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          <Typography variant="h5">{tempo / 2} bpm</Typography>
+        </IconButton>
+      </TempoButtons>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent className={classes.container}>
-          <Typography>Tempo {Math.floor(tempo / 3)} bpm</Typography>
+          <Typography>
+            {t("tempo")} {Math.floor(tempo / 2)} bpm
+          </Typography>
           <Slider
             className="volume-slider"
             onChange={(e, value) => {
@@ -59,6 +86,23 @@ export const TempoSlider = ({ player }: Props) => {
           />
         </DialogContent>
       </Dialog>
-    </>
+    </Tempo>
   );
 };
+
+const TempoButtons = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Tempo = styled.div`
+  display: flex;
+  align-items: center;
+
+  button > span {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: black;
+  }
+`;

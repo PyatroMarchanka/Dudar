@@ -4,7 +4,7 @@ import {
   MidiNoteHandler,
   MidiPlayer,
   PlaybackProgressHandler,
-} from "./MidiPlayer";
+} from "../utils/MidiPlayer";
 // @ts-ignore
 import MIDISounds from "midi-sounds-react";
 import styled from "styled-components";
@@ -15,11 +15,12 @@ export const useMidiPlayer = (
   handleProgress: PlaybackProgressHandler
 ) => {
   const {
-    state: { tempo },
+    state: { tempo, metronome },
+    setIsPlaying,
   } = useContext(store);
   const [midiPlayer, setMidiPlayer] = useState<MidiPlayer | null>(null);
 
-  const playerRef = useRef(null);
+  const playerRef: any = useRef(null);
 
   const MPlayer = (
     <Container>
@@ -31,9 +32,13 @@ export const useMidiPlayer = (
     </Container>
   );
 
+  const switchIsPlaying = () => {
+    setIsPlaying(false);
+  };
+
   useEffect(() => {
-    const player = new MidiPlayer(playerRef, tempo);
-    player.initPlayer(handleNote, handleProgress);
+    const player = new MidiPlayer(playerRef, tempo, metronome);
+    player.initPlayer(handleNote, handleProgress, switchIsPlaying);
     setMidiPlayer(player);
   }, []);
 

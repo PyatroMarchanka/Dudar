@@ -1,30 +1,29 @@
-import { Midi } from "@tonejs/midi";
 import { Note } from "@tonejs/midi/dist/Note";
 import { useContext, useEffect, useState } from "react";
+import { sizes } from "../constants/style";
 import { store } from "../context";
 
-const screenWitdh = 1500;
-
-const getNotesChunks = (notes: Note[]) => {
+const getNotesChunks = (notes: Note[], canvasWidth: number) => {
   const result: Note[][] = [[]];
   let min = 0;
-  let max = screenWitdh;
+  let max = canvasWidth / 2;
 
   notes.forEach((note) => {
-    if (note.ticks > min && note.ticks <= max) {
+    if (note.ticks >= min && note.ticks <= max) {
       result[result.length - 1].push(note);
     } else if (note.ticks > max) {
       min = max;
-      max += screenWitdh;
+      max += canvasWidth;
       result.push([note]);
     }
   });
+
   return result;
 };
 
 export const useNotesMoving = () => {
   const {
-    state: { midiData, isPlaying, progress },
+    state: { midiData, isPlaying, progress, screenSize },
   } = useContext(store);
 
   const [chunkedNotes, setChunkedNotes] = useState<Note[][]>([]);
@@ -36,12 +35,12 @@ export const useNotesMoving = () => {
   );
 
   useEffect(() => {
-    if (!progress || !(progress % 10 === 0)) {
+    if (!progress || !(progress.percent % 1 === 0)) {
       return;
     }
 
     const newIndex = progress
-      ? Math.floor((chunkedNotes.length * progress) / 100)
+      ? Math.floor((chunkedNotes.length * (progress.percent - 1)) / 100)
       : 0;
     setCurrentChunkIndex(newIndex);
     setNextNotes(chunkedNotes[newIndex] || []);
@@ -61,7 +60,12 @@ export const useNotesMoving = () => {
     if (midiData && isPlaying) {
       const tracks = midiData?.tracks.filter((track) => track.notes.length);
       const notes = tracks[0].notes;
-      const chunks = getNotesChunks(notes);
+      const chunks = getNotesChunks(
+        notes,
+        (screenSize.width < sizes.maxCanvasWidth
+          ? screenSize.width
+          : sizes.maxCanvasWidth) / sizes.notesScale
+      );
       setChunkedNotes(chunks);
       setNextNotes(chunks[0]);
       setNextToNextNotes(chunks[1]);

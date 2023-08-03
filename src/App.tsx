@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Dudar } from "./components/Controls";
+import "./i18n.ts";
+import { Dudar } from "./components/Controls/Dudar";
 import NoMidi from "./components/NoMidi";
 import { ContextProvider } from "./context";
 import { detectOS } from "./utils/detectOS";

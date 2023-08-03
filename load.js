@@ -1,33 +1,34 @@
-console.log("Make MIDI Catalog...");
+console.log("Catalog making was skipped...");
 
 const folders = [
-  { path: "./public/midi/belarussian", label: "belarussian" },
-  { path: "./public/midi/irish", label: "irish" },
-  { path: "./public/midi/medieval", label: "medieval" },
-  { path: "./public/midi/schotland", label: "schotland" },
+  { path: "./public/midi/belarusian", label: "Belarusian" },
+  { path: "./public/midi/irish", label: "Irish" },
+  { path: "./public/midi/medieval", label: "Medieval" },
+  // { path: "./public/midi/schotland", label: "schotland" },
 ];
 const fs = require("fs");
 
-const list = {};
-
+const songs = [];
 folders.forEach((folder) => {
-  const fileNames = [];
   fs.readdirSync(folder.path).forEach((file) => {
-    fileNames.push(file);
+    if (file.includes(".mid")) {
+      const song = {};
+      const [name, timeSignature] = file.split(".mid").join("").split("|");
+      song.timeSignature = timeSignature?.split("-").join("/") || "4/4";
+      song.name = name;
+      song.type = folder.label.toLowerCase();
+      song.pathName = `${folder.path.split("./public/midi/").join("")}/${file}`;
+
+      songs.push(song);
+    }
   });
-  list[folder.label] = fileNames;
 });
 
-fs.writeFile(
-  "./public/midi/list.json",
-  JSON.stringify(list),
-  "utf8",
-  function (err) {
-    if (err) {
-      console.log("An error occured while writing JSON Object to File.");
-      return console.log(err);
-    }
-
-    console.log("MIDI Catalog file has been saved in list.json.");
+fs.writeFile("./public/midi/list.json", JSON.stringify(songs), "utf8", function (err) {
+  if (err) {
+    console.log("An error occured while writing JSON Object to File.");
+    return console.log(err);
   }
-);
+
+  console.log("MIDI Catalog file has been saved in list.json.");
+});
