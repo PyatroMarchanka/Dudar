@@ -51,7 +51,7 @@ const store = createContext<Context>({
   setSongNotes: (notes: SharpNotesEnum[]) => {},
   setSongLength: (seconds: number) => {},
   setIsPreclick: (bool: boolean) => {},
-  setLoop: (bool: boolean) => {}
+  setLoop: (bool: boolean) => {},
 });
 const { Provider } = store;
 

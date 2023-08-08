@@ -133,6 +133,7 @@ export class MidiPlayer {
 
   setProgress = (percent: number, isPlaying: boolean) => {
     Player.skipToPercent(percent);
+    this.setCurrentBarStart()
     if (isPlaying) {
       Player.play();
       this.envelopes.forEach((env) => env && env.cancel());

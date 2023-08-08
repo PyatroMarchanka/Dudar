@@ -30,7 +30,6 @@ export interface PlayerState {
   isPlaying: boolean;
   listsByBagpipe: SongListByBagpipe | null;
 }
-const userData = getUserDataFromLocal();
 
 export const playerInitialState: PlayerState = {
   midiData: null,
@@ -41,7 +40,6 @@ export const playerInitialState: PlayerState = {
   listsByBagpipe: null,
   songLength: 0,
   activeSong: undefined,
-  ...userData,
 };
 
 export const usePlayerReducer = () => {
