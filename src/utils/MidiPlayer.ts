@@ -20,9 +20,9 @@ Player.on("endOfFile", function () {
 
 const bagpipeChanter = 1166;
 const metronomeTick = 1219;
-
 const drone = 731;
-export const bagpipeInstr = [bagpipeChanter, metronomeTick, drone];
+
+export const instruments = [bagpipeChanter, metronomeTick, drone];
 
 export class MidiPlayer {
   playRef: any;

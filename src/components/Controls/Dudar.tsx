@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { SharpNotes } from "../../interfaces";
 import { PlayerControls } from "./PlayerControls";
@@ -14,6 +14,7 @@ import { StaticCanvas } from "../Canvas/StaticCanvas";
 import { BackCanvas } from "../Canvas/BackCanvas";
 import { DynamicCanvas } from "../Canvas/DynamicCanvas";
 import { convertMidiPitchToNote, getSongListWithBagpipeTypes } from "../../utils/midiUtils";
+import { MidiPlayerComponent } from "../MidiPlayerComponent";
 
 export const Dudar = () => {
   const {
@@ -29,8 +30,8 @@ export const Dudar = () => {
   const handleNote = (event: any) => {
     setActiveNote(convertMidiPitchToNote(event.noteNumber));
   };
-
-  const { Player: midiPlayer, MPlayer } = useMidiPlayer(handleNote, setProgress);
+  const playerRef = useRef(null);
+  const { Player: midiPlayer } = useMidiPlayer(handleNote, setProgress, playerRef);
 
   const setDimensions = () => {
     const height = window.innerHeight;
@@ -80,7 +81,7 @@ export const Dudar = () => {
         <PlayerControls player={midiPlayer} />
       </Inputs>
 
-      {MPlayer}
+      <MidiPlayerComponent playerRef={playerRef} />
     </Container>
   );
 };
