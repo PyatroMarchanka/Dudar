@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  SwipeableDrawer,
-  IconButton,
-  makeStyles,
-  Theme,
-} from "@material-ui/core";
+import { SwipeableDrawer, IconButton, makeStyles, Theme } from "@material-ui/core";
+// @ts-ignore
+import Feedback from "feeder-react-feedback"; // import Feedback component
+import "feeder-react-feedback/dist/feeder-react-feedback.css";
 import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
 import styled from "styled-components";
@@ -30,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default ({ midiPlayer }: Props) => {
+export const Settings = ({ midiPlayer }: Props) => {
   const { t } = useTranslation("translation");
 
   const {
@@ -64,6 +62,7 @@ export default ({ midiPlayer }: Props) => {
             <Title>{t("settings")}</Title>
           </Header>
           <MainSettings midiPlayer={midiPlayer} />
+          <Feedback projectId="64d1fdf1da1fea00024effdd" />
         </Content>
       </SwipeableDrawer>
       <IconButton onClick={() => setOpen(true)} className="settings">

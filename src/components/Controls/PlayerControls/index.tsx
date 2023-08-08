@@ -11,7 +11,7 @@ import { createTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import { TempoSlider } from "../TempoSlider";
 import { secondsToTime } from "../../../utils/textUtils";
-import Preclick from "../../Preclick";
+import { Preclick } from "../../Preclick";
 
 interface Props {
   player: MidiPlayer | null;

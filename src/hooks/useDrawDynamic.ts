@@ -11,6 +11,7 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
   } = useContext(store);
   const canvasRef = useRef(null);
   const { nextNotes, nextToNextNotes, setTick, tick } = useNotesMoving();
+
   useEffect(() => {
     if (player && showPianoRoll) {
       player.handleNotesMoving = setTick;
@@ -33,14 +34,7 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
 
     //RENDER
     const render = () => {
-      drawDynamic(
-        context!,
-        bagpipeType,
-        tick,
-        midiData,
-        nextNotes,
-        nextToNextNotes
-      );
+      drawDynamic(context!, bagpipeType, tick, midiData, nextNotes, nextToNextNotes);
       animationFrameId = window.requestAnimationFrame(render);
     };
     render();

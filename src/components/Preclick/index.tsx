@@ -6,9 +6,7 @@ import { mainColors } from "../../utils/theme";
 import { store } from "../../context";
 import { Icon } from "../global/Icon";
 
-interface Props {}
-
-export default ({}: Props) => {
+export const Preclick = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const {
@@ -48,9 +46,7 @@ export default ({}: Props) => {
     }
   }, [clickIdx]);
 
-  const Circle = ({ isActive }: { isActive: boolean }) => (
-    <CircleComponent isActive={isActive} />
-  );
+  const Circle = ({ isActive }: { isActive: boolean }) => <CircleComponent isActive={isActive} />;
 
   const circles = new Array(4).fill(undefined);
 
@@ -63,8 +59,7 @@ export default ({}: Props) => {
         disableEscapeKeyDown
         open={isOpen}
         onClose={(e, reason) => {
-          if (reason !== "backdropClick" && reason !== "escapeKeyDown")
-            setIsOpen(false);
+          if (reason !== "backdropClick" && reason !== "escapeKeyDown") setIsOpen(false);
         }}
       >
         <DialogContent>

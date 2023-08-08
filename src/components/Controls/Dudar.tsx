@@ -3,7 +3,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import { SharpNotes } from "../../interfaces";
 import { PlayerControls } from "./PlayerControls";
 import { useMidiPlayer } from "../../hooks/useMidiPlayer";
-import Transpose from "./Settings";
+import { Settings } from "./Settings";
 import { SongList } from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
@@ -16,9 +16,7 @@ import { StaticCanvas } from "../Canvas/StaticCanvas";
 import { BackCanvas } from "../Canvas/BackCanvas";
 import { DynamicCanvas } from "../Canvas/DynamicCanvas";
 import { convertMidiPitchToNote, getSongListWithBagpipeTypes } from "../../utils/midiUtils";
-// @ts-ignore
-import Feedback from "feeder-react-feedback"; // import Feedback component
-import "feeder-react-feedback/dist/feeder-react-feedback.css";
+
 
 export const Dudar = () => {
   const {
@@ -63,13 +61,11 @@ export const Dudar = () => {
     <Container>
       <GlobalStyle />
       <SettingsButtons>
-      <Feedback projectId="64d1fdf1da1fea00024effdd" />
-
         <SongList player={midiPlayer} />
         <Header>
           <h3>{activeSong?.name || noSongsLabel}</h3>
         </Header>
-        <Transpose midiPlayer={midiPlayer} />
+        <Settings midiPlayer={midiPlayer} />
       </SettingsButtons>
       {/* <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} /> */}
       <BagpipeContainer>
@@ -90,10 +86,6 @@ const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
   }
- .frf-feedback-container {
-  bottom: 105px;
-  right: 5px;
- }
 `;
 
 const SettingsButtons = styled.div`
