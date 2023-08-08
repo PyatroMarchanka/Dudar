@@ -1,5 +1,7 @@
 import MidiPlayerLib from "midi-player-js";
 import { Midi } from "@tonejs/midi";
+import { playNote, stopNote } from "./midiUtils/sampler";
+import { midiNumbersToNotes } from "./midiUtils/notesToMidiNumbers";
 
 export type MidiNoteHandler = (note: number) => void;
 export type PlaybackProgressHandler = (
@@ -30,7 +32,7 @@ export class MidiPlayer {
   midiData: Midi | null = null;
   envelopes: any[];
   transpose: number = 0;
-  droneNote: number = 46;
+  droneNote: number = 55;
   metronom: boolean = true;
   loopData = { startLoopTicks: 0, endLoopTicks: 1920 };
   loop: boolean = false;
@@ -76,7 +78,7 @@ export class MidiPlayer {
         handleNote(event);
         this.checkTempo(this.bpm);
       } else if (event.name === "Note on" && event.noteNumber === 33 && this.metronom) {
-        this.keyDown(65, 65, metronomeTick, 8);
+        // this.keyDown(65, 65, metronomeTick, 8);
       }
     });
 
@@ -111,29 +113,41 @@ export class MidiPlayer {
   }
 
   keyDown(note: number, tick: number, instrument = bagpipeChanter, volume = 1) {
-    this.envelopes[tick] = this.playRef.current?.player.queueWaveTable(
-      this.playRef.current?.audioContext,
-      this.playRef.current?.equalizer.input,
-      window[this.playRef.current?.player.loader.instrumentInfo(instrument).variable],
-      0,
-      note + this.transpose - 1,
-      9999,
-      volume
-    );
+    console.log(note);
+    // @ts-ignore
+    playNote(midiNumbersToNotes[note + this.transpose - 1+ 12]);
+    this.envelopes[note] = note;
+    // this.envelopes[tick] = this.playRef.current?.player.queueWaveTable(
+    //   this.playRef.current?.audioContext,
+    //   this.playRef.current?.equalizer.input,
+    //   window[this.playRef.current?.player.loader.instrumentInfo(instrument).variable],
+    //   0,
+    //   note + this.transpose - 1,
+    //   9999,
+    //   volume
+    // );
   }
 
-  keyUp(tick: any) {
+  keyUp(noteNumber: number) {
+    console.log(noteNumber);
+
     if (this.envelopes) {
-      if (this.envelopes[tick]) {
-        this.envelopes[tick].cancel();
-        this.envelopes[tick] = null;
+      if (this.envelopes[noteNumber]) {
+        // @ts-ignore
+        stopNote(midiNumbersToNotes[noteNumber + this.transpose - 1 + 12]);
       }
     }
+    // if (this.envelopes) {
+    //   if (this.envelopes[noteNumber]) {
+    //     this.envelopes[noteNumber].cancel();
+    //     this.envelopes[noteNumber] = null;
+    //   }
+    // }
   }
 
   setProgress = (percent: number, isPlaying: boolean) => {
     Player.skipToPercent(percent);
-    this.setCurrentBarStart()
+    this.setCurrentBarStart();
     if (isPlaying) {
       Player.play();
       this.envelopes.forEach((env) => env && env.cancel());
@@ -209,8 +223,9 @@ export class MidiPlayer {
   };
 
   stop = () => {
-    this.playRef.current?.cancelQueue();
-    Player.stop();
+    // this.envelopes
+    // this.playRef.current?.cancelQueue();
+    // Player.stop();
   };
 
   pause = () => {
