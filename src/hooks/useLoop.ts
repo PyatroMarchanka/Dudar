@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { MidiPlayer } from "../utils/MidiPlayer";
 import { store } from "../context";
 
@@ -18,6 +18,10 @@ export const useLoop = (player: MidiPlayer | null) => {
       player?.setCurrentBarStart();
     }
   };
+
+  useEffect(() => {
+    player?.setLoop(loop)
+  }, [player])
 
   return {
     onLoop,

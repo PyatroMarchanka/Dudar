@@ -34,7 +34,7 @@ export const settingsInitialState: SettingsState = {
   metronome: true,
   showPianoRoll: true,
   screenSize: { width: 400, height: 500 },
-  loop: true,
+  loop: false,
   ...userData,
 };
 
