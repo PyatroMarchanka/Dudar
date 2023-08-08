@@ -23,16 +23,13 @@ const getNotesChunks = (notes: Note[], canvasWidth: number) => {
 
 export const useNotesMoving = () => {
   const {
-    state: { midiData, isPlaying, progress, screenSize },
+    state: { midiData, isPlaying, progress, screenSize, loop },
   } = useContext(store);
-
   const [chunkedNotes, setChunkedNotes] = useState<Note[][]>([]);
   const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
   const [tick, setTick] = useState(0);
   const [nextNotes, setNextNotes] = useState<Note[] | undefined>([]);
-  const [nextToNextNotes, setNextToNextNotes] = useState<Note[] | undefined>(
-    []
-  );
+  const [nextToNextNotes, setNextToNextNotes] = useState<Note[] | undefined>([]);
 
   useEffect(() => {
     if (!progress || !(progress.percent % 1 === 0)) {
@@ -62,9 +59,8 @@ export const useNotesMoving = () => {
       const notes = tracks[0].notes;
       const chunks = getNotesChunks(
         notes,
-        (screenSize.width < sizes.maxCanvasWidth
-          ? screenSize.width
-          : sizes.maxCanvasWidth) / sizes.notesScale
+        (screenSize.width < sizes.maxCanvasWidth ? screenSize.width : sizes.maxCanvasWidth) /
+          sizes.notesScale
       );
       setChunkedNotes(chunks);
       setNextNotes(chunks[0]);
@@ -75,7 +71,7 @@ export const useNotesMoving = () => {
 
   return {
     tick,
-    setTick: (tick: number) => setTick(tick),
+    setTick,
     nextNotes,
     nextToNextNotes,
     setNextNotes,

@@ -7,8 +7,6 @@ import { Settings } from "./Settings";
 import { SongList } from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
-import { numberQueries } from "../../constants/style";
-import LandscapeAlert from "../global/LandscapeAlert";
 import { landscapeAlertId } from "../../constants/localStorage";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { mainColors } from "../../utils/theme";
@@ -17,10 +15,9 @@ import { BackCanvas } from "../Canvas/BackCanvas";
 import { DynamicCanvas } from "../Canvas/DynamicCanvas";
 import { convertMidiPitchToNote, getSongListWithBagpipeTypes } from "../../utils/midiUtils";
 
-
 export const Dudar = () => {
   const {
-    state: { activeSong, screenSize },
+    state: { activeSong, midiData },
     setProgress,
     setScreenSize,
   } = useContext(store);
@@ -44,6 +41,12 @@ export const Dudar = () => {
 
     setScreenSize({ width, height });
   };
+
+  useEffect(() => {
+    if (midiData) {
+      midiPlayer?.setMidiData(midiData);
+    }
+  }, [midiPlayer, midiData]);
 
   useLocalStorage();
   useLoadSong();

@@ -31,6 +31,7 @@ interface Context {
   setTranspose: (num: number) => void;
   setSongNotes: (notes: SharpNotesEnum[]) => void;
   setIsPreclick: (bool: boolean) => void;
+  setLoop: (bool: boolean) => void;
 }
 
 const store = createContext<Context>({
@@ -50,6 +51,7 @@ const store = createContext<Context>({
   setSongNotes: (notes: SharpNotesEnum[]) => {},
   setSongLength: (seconds: number) => {},
   setIsPreclick: (bool: boolean) => {},
+  setLoop: (bool: boolean) => {}
 });
 const { Provider } = store;
 

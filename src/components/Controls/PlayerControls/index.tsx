@@ -5,6 +5,7 @@ import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
 import { PlayStopButton } from "../../global/PlayStopButton";
 import PauseIcon from "@material-ui/icons/Pause";
+import LoopIcon from "@material-ui/icons/Loop";
 import { Icon } from "../../global/Icon";
 import { mainColors, theme } from "../../../utils/theme";
 import { createTheme } from "@material-ui/core/styles";
@@ -12,6 +13,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import { TempoSlider } from "../TempoSlider";
 import { secondsToTime } from "../../../utils/textUtils";
 import { Preclick } from "../../Preclick";
+import { useLoop } from "../../../hooks/useLoop";
 
 interface Props {
   player: MidiPlayer | null;
@@ -39,6 +41,9 @@ export const PlayerControls = ({ player }: Props) => {
     setProgress,
     setIsPlaying,
   } = useContext(store);
+
+  const { onLoop, isLoop } = useLoop(player);
+
 
   const onPlay = () => {
     setIsPlaying(true);
@@ -104,6 +109,9 @@ export const PlayerControls = ({ player }: Props) => {
             <Icon type="stop" fill={theme.colors.black} Icon={PauseIcon} className="play-icon" />
           </IconButton>
           <PlayStopButton isPlaying={isPlaying} handlePlaying={isPlaying ? onPause : onPlay} />
+          <IconButton onClick={onLoop} className="icon">
+            <Icon type="material" fill={isLoop ? mainColors.darkerGray : mainColors.lightGrey} Icon={LoopIcon} className="play-icon" />
+          </IconButton>
         </PlayStop>
       </Buttons>
     </Container>
