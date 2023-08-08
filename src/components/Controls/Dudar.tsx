@@ -91,7 +91,8 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
   }
  .frf-feedback-container {
-  bottom: 120px;
+  bottom: 105px;
+  right: 5px;
  }
 `;
 
