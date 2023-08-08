@@ -16,6 +16,9 @@ import { StaticCanvas } from "../Canvas/StaticCanvas";
 import { BackCanvas } from "../Canvas/BackCanvas";
 import { DynamicCanvas } from "../Canvas/DynamicCanvas";
 import { convertMidiPitchToNote, getSongListWithBagpipeTypes } from "../../utils/midiUtils";
+// @ts-ignore
+import Feedback from "feeder-react-feedback"; // import Feedback component
+import "feeder-react-feedback/dist/feeder-react-feedback.css";
 
 export const Dudar = () => {
   const {
@@ -60,6 +63,8 @@ export const Dudar = () => {
     <Container>
       <GlobalStyle />
       <SettingsButtons>
+      <Feedback projectId="64d1fdf1da1fea00024effdd" />
+
         <SongList player={midiPlayer} />
         <Header>
           <h3>{activeSong?.name || noSongsLabel}</h3>
@@ -85,6 +90,9 @@ const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
   }
+ .frf-feedback-container {
+  bottom: 120px;
+ }
 `;
 
 const SettingsButtons = styled.div`
