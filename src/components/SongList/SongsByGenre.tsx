@@ -12,6 +12,7 @@ import { mediaQueries } from "../../constants/style";
 import { mainColors } from "../../utils/theme";
 import { store } from "../../context";
 import { useTranslation } from "react-i18next";
+import { gtmPush } from "../../utils/gtm";
 
 interface Props {
   setOpen: (bool: boolean) => void;
@@ -113,10 +114,11 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                         setActiveSong(song);
                         setOpen(false)
                         onStop();
+                        gtmPush({"song_name": song.name})
                       }}
                     >
                       <Icon type={activeSong?.pathName === song.pathName ? "song-play" : "music"} />
-                      <ListItem className="song-button" id={song.name}>{song.name}</ListItem>
+                      <ListItem className="song-button-gtm" id={song.name}>{song.name}</ListItem>
                     </IconButton>
                   </div>
                 ))}
