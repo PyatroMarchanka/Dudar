@@ -5,6 +5,7 @@ export enum SongTypes {
   Medieval = "medieval",
   Irish = "irish",
   Schotland = "schotland",
+  Balkan = "balkan",
 }
 
 export type TimeSignatures = "4/4" | "3/4" | "6/8" | "8/8" | "6/4";

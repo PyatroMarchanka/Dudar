@@ -1,10 +1,9 @@
-console.log("Catalog making was skipped...");
-
 const folders = [
   { path: "./public/midi/belarusian", label: "Belarusian" },
   { path: "./public/midi/irish", label: "Irish" },
   { path: "./public/midi/medieval", label: "Medieval" },
-  // { path: "./public/midi/schotland", label: "schotland" },
+  { path: "./public/midi/balkan", label: "Balkan" },
+  { path: "./public/midi/schotland", label: "Schotland" },
 ];
 const fs = require("fs");
 
