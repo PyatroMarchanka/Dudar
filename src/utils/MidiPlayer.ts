@@ -109,11 +109,12 @@ export class MidiPlayer {
   }
 
   handleMetronomeEvent = (event: any) => {
+    const delayMs = 75;
     if (event.noteNumber === 33 && this.metronom) {
       if (event.name === "Note on") {
         setTimeout(() => {
           this.playMidiNote(65, 0, metronomeTick, 8);
-        }, 70);
+        }, delayMs);
       } else if (event.name === "Note off") {
         this.stopMidiNote(65);
       }
@@ -191,7 +192,7 @@ export class MidiPlayer {
 
   setTranspose: SetTransposeType = (num: number) => {
     this.transpose = num;
-  }; 
+  };
 
   setMidiData = (midi: Midi) => {
     this.midiData = midi;
