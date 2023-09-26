@@ -30,7 +30,7 @@ export class MidiPlayer {
   playRef: any;
   bpm: number = 80;
   midiData: Midi | null = null;
-  envelopes: any[];
+  envelopes: { [key: string]: any };
   transpose: number = 0;
   droneNote: number = 57;
   metronom: boolean = true;
@@ -41,7 +41,7 @@ export class MidiPlayer {
   constructor(playRef: any, bpm: number, metronom: boolean) {
     this.playRef = playRef;
     this.bpm = bpm;
-    this.envelopes = [];
+    this.envelopes = {};
     this.metronom = metronom;
 
     if (this.playRef.current) {
@@ -71,15 +71,10 @@ export class MidiPlayer {
     });
 
     Player.on("midiEvent", (event: any) => {
-      if (event.name === "Note off" || (event.name === "Note on" && event.velocity === 0)) {
-        this.keyUp(event.noteNumber);
-      } else if (event.name === "Note on" && event.noteNumber !== 33) {
-        this.keyDown(event.noteNumber, event.noteNumber);
-        handleNote(event);
-        this.checkTempo(this.bpm);
-      } else
-       if (event.name === "Note on" && event.noteNumber === 33 && this.metronom) {
-        this.playMetronomeBeat(65, 65, metronomeTick, 8);
+      if (event.noteNumber === 33 && this.metronom) {
+        this.handleMetronomeEvent(event);
+      } else {
+        this.handleSamplerEvent(event, handleNote);
       }
     });
 
@@ -113,7 +108,29 @@ export class MidiPlayer {
     }
   }
 
-  playMetronomeBeat = (note: number, tick: number, instrument = bagpipeChanter, volume = 1) => {
+  handleMetronomeEvent = (event: any) => {
+    if (event.noteNumber === 33 && this.metronom) {
+      if (event.name === "Note on") {
+        setTimeout(() => {
+          this.playMidiNote(65, 0, metronomeTick, 8);
+        }, 70);
+      } else if (event.name === "Note off") {
+        this.stopMidiNote(65);
+      }
+    }
+  };
+
+  handleSamplerEvent = (event: any, handleNote: (event: any) => void) => {
+    if (event.name === "Note off" || (event.name === "Note on" && event.velocity === 0)) {
+      this.keyUp(event.noteNumber);
+    } else if (event.name === "Note on" && event.noteNumber !== 33) {
+      this.keyDown(event.noteNumber);
+      handleNote(event);
+      this.checkTempo(this.bpm);
+    }
+  };
+
+  playMidiNote = (note: number, tick: number, instrument = bagpipeChanter, volume = 1) => {
     this.envelopes[tick] = this.playRef.current?.player.queueWaveTable(
       this.playRef.current?.audioContext,
       this.playRef.current?.equalizer.input,
@@ -125,15 +142,22 @@ export class MidiPlayer {
     );
   };
 
-  keyDown(note: number, tick: number, instrument = bagpipeChanter, volume = 1) {
+  stopMidiNote = (tick: number) => {
+    if (this.envelopes) {
+      if (this.envelopes[tick]) {
+        this.envelopes[tick].cancel();
+        this.envelopes[tick] = null;
+      }
+    }
+  };
+
+  keyDown(note: number, volume = 0.7) {
     // @ts-ignore
-    playNote(midiNumbersToNotes[note + this.transpose - 1 + 12]);
+    playNote(midiNumbersToNotes[note + this.transpose - 1 + 12], volume);
     this.envelopes[note] = note;
   }
 
   keyUp(noteNumber: number) {
-    console.log(noteNumber);
-
     if (this.envelopes) {
       if (this.envelopes[noteNumber]?.cancel) {
         this.envelopes[noteNumber].cancel();
@@ -167,7 +191,7 @@ export class MidiPlayer {
 
   setTranspose: SetTransposeType = (num: number) => {
     this.transpose = num;
-  };
+  }; 
 
   setMidiData = (midi: Midi) => {
     this.midiData = midi;
@@ -186,7 +210,8 @@ export class MidiPlayer {
   };
 
   playDrone = (note: number) => {
-    this.keyDown(note, note, drone);
+    this.keyUp(note);
+    this.keyDown(note, 0.5);
   };
 
   playMidi = (midi: ArrayBuffer | null, progress: number) => {
@@ -230,9 +255,13 @@ export class MidiPlayer {
   stopAllNotes = () => {
     if (this.envelopes) {
       Object.values(this.envelopes).forEach((num) => {
-        stopNote(
-          midiNumbersToNotes[(num + this.transpose - 1 + 12) as keyof typeof midiNumbersToNotes]
-        );
+        if (typeof num === "number") {
+          stopNote(
+            midiNumbersToNotes[(num + this.transpose - 1 + 12) as keyof typeof midiNumbersToNotes]
+          );
+        } else if (num) {
+          this.stopMidiNote(num);
+        }
       });
     }
   };
@@ -240,5 +269,6 @@ export class MidiPlayer {
   pause = () => {
     this.playRef.current?.cancelQueue();
     Player.pause();
+    this.stopAllNotes();
   };
 }
