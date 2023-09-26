@@ -14,7 +14,6 @@ import { TempoSlider } from "../TempoSlider";
 import { secondsToTime } from "../../../utils/textUtils";
 import { Preclick } from "../../Preclick";
 import { useLoop } from "../../../hooks/useLoop";
-import { playNote, stopNote } from "../../../utils/midiUtils/sampler";
 
 interface Props {
   player: MidiPlayer | null;
@@ -104,12 +103,6 @@ export const PlayerControls = ({ player }: Props) => {
       <Buttons>
         <TempoSlider player={player} />
         <Preclick />
-        <IconButton onClick={() => playNote('A4')} className="icon">
-          <Icon type="stop" fill={theme.colors.black} Icon={PauseIcon} className="play-icon" />
-        </IconButton>
-        <IconButton onClick={() => stopNote('A4')} className="icon">
-          <Icon type="stop" fill={theme.colors.black} Icon={PauseIcon} className="play-icon" />
-        </IconButton>
         <PlayStop>
           <IconButton onClick={onStop} className="icon">
             <Icon type="stop" fill={theme.colors.black} Icon={PauseIcon} className="play-icon" />

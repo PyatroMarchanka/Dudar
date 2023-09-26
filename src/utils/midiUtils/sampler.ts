@@ -2,15 +2,13 @@ import * as Tone from "tone";
 
 const sampler = new Tone.Sampler({
   urls: {
-    "A#2": "samples/A2.mp3",
-    "A#3": "samples/A3.mp3",
-    "A#4": "samples/A4.mp3",
-    "A#5": "samples/A5.mp3",
+    "A3": "samples/A2.mp3",
+    "A4": "samples/A3.mp3",
+    "C5": "samples/C4.mp3",
+    "E5": "samples/E4.mp3",
+    "A5": "samples/A4.mp3",
   },
   baseUrl: "",
-  onload: () => {
-    // sampler.triggerAttackRelease(["C3"],4);
-  },
 }).toDestination();
 
 export const playNote = (note?: string) => {
