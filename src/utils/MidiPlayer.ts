@@ -1,5 +1,7 @@
 import MidiPlayerLib from "midi-player-js";
 import { Midi } from "@tonejs/midi";
+import { playNote, stopNote } from "./midiUtils/sampler";
+import { midiNumbersToNotes } from "./midiUtils/notesToMidiNumbers";
 
 export type MidiNoteHandler = (note: number) => void;
 export type PlaybackProgressHandler = (
@@ -28,9 +30,9 @@ export class MidiPlayer {
   playRef: any;
   bpm: number = 80;
   midiData: Midi | null = null;
-  envelopes: any[];
+  envelopes: { [key: string]: any };
   transpose: number = 0;
-  droneNote: number = 46;
+  droneNote: number = 57;
   metronom: boolean = true;
   loopData = { startLoopTicks: 0, endLoopTicks: 1920 };
   loop: boolean = false;
@@ -39,7 +41,7 @@ export class MidiPlayer {
   constructor(playRef: any, bpm: number, metronom: boolean) {
     this.playRef = playRef;
     this.bpm = bpm;
-    this.envelopes = [];
+    this.envelopes = {};
     this.metronom = metronom;
 
     if (this.playRef.current) {
@@ -69,14 +71,10 @@ export class MidiPlayer {
     });
 
     Player.on("midiEvent", (event: any) => {
-      if (event.name === "Note off" || (event.name === "Note on" && event.velocity === 0)) {
-        this.keyUp(event.noteNumber);
-      } else if (event.name === "Note on" && event.noteNumber !== 33) {
-        this.keyDown(event.noteNumber, event.noteNumber);
-        handleNote(event);
-        this.checkTempo(this.bpm);
-      } else if (event.name === "Note on" && event.noteNumber === 33 && this.metronom) {
-        this.keyDown(65, 65, metronomeTick, 8);
+      if (event.noteNumber === 33 && this.metronom) {
+        this.handleMetronomeEvent(event);
+      } else {
+        this.handleSamplerEvent(event, handleNote);
       }
     });
 
@@ -110,7 +108,30 @@ export class MidiPlayer {
     }
   }
 
-  keyDown(note: number, tick: number, instrument = bagpipeChanter, volume = 1) {
+  handleMetronomeEvent = (event: any) => {
+    const delayMs = 75;
+    if (event.noteNumber === 33 && this.metronom) {
+      if (event.name === "Note on") {
+        setTimeout(() => {
+          this.playMidiNote(65, 0, metronomeTick, 8);
+        }, delayMs);
+      } else if (event.name === "Note off") {
+        this.stopMidiNote(65);
+      }
+    }
+  };
+
+  handleSamplerEvent = (event: any, handleNote: (event: any) => void) => {
+    if (event.name === "Note off" || (event.name === "Note on" && event.velocity === 0)) {
+      this.keyUp(event.noteNumber);
+    } else if (event.name === "Note on" && event.noteNumber !== 33) {
+      this.keyDown(event.noteNumber);
+      handleNote(event);
+      this.checkTempo(this.bpm);
+    }
+  };
+
+  playMidiNote = (note: number, tick: number, instrument = bagpipeChanter, volume = 1) => {
     this.envelopes[tick] = this.playRef.current?.player.queueWaveTable(
       this.playRef.current?.audioContext,
       this.playRef.current?.equalizer.input,
@@ -120,23 +141,41 @@ export class MidiPlayer {
       9999,
       volume
     );
-  }
+  };
 
-  keyUp(tick: any) {
+  stopMidiNote = (tick: number) => {
     if (this.envelopes) {
       if (this.envelopes[tick]) {
         this.envelopes[tick].cancel();
         this.envelopes[tick] = null;
       }
     }
+  };
+
+  keyDown(note: number, volume = 0.7) {
+    // @ts-ignore
+    playNote(midiNumbersToNotes[note + this.transpose - 1 + 12], volume);
+    this.envelopes[note] = note;
+  }
+
+  keyUp(noteNumber: number) {
+    if (this.envelopes) {
+      if (this.envelopes[noteNumber]?.cancel) {
+        this.envelopes[noteNumber].cancel();
+        this.envelopes[noteNumber] = null;
+      } else {
+        // @ts-ignore
+        stopNote(midiNumbersToNotes[noteNumber + this.transpose - 1 + 12]);
+      }
+    }
   }
 
   setProgress = (percent: number, isPlaying: boolean) => {
     Player.skipToPercent(percent);
-    this.setCurrentBarStart()
+    this.setCurrentBarStart();
     if (isPlaying) {
       Player.play();
-      this.envelopes.forEach((env) => env && env.cancel());
+      this.stopAllNotes();
 
       this.playDrone(this.droneNote);
     }
@@ -146,8 +185,7 @@ export class MidiPlayer {
     Player.skipToTick(tick);
     if (isPlaying) {
       Player.play();
-      this.envelopes.forEach((env) => env && env.cancel());
-
+      this.stopAllNotes();
       this.playDrone(this.droneNote);
     }
   };
@@ -173,7 +211,8 @@ export class MidiPlayer {
   };
 
   playDrone = (note: number) => {
-    this.keyDown(note, note, drone);
+    this.keyUp(note);
+    this.keyDown(note, 0.5);
   };
 
   playMidi = (midi: ArrayBuffer | null, progress: number) => {
@@ -211,10 +250,26 @@ export class MidiPlayer {
   stop = () => {
     this.playRef.current?.cancelQueue();
     Player.stop();
+    this.stopAllNotes();
+  };
+
+  stopAllNotes = () => {
+    if (this.envelopes) {
+      Object.values(this.envelopes).forEach((num) => {
+        if (typeof num === "number") {
+          stopNote(
+            midiNumbersToNotes[(num + this.transpose - 1 + 12) as keyof typeof midiNumbersToNotes]
+          );
+        } else if (num) {
+          this.stopMidiNote(num);
+        }
+      });
+    }
   };
 
   pause = () => {
     this.playRef.current?.cancelQueue();
     Player.pause();
+    this.stopAllNotes();
   };
 }

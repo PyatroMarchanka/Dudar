@@ -44,7 +44,6 @@ export const PlayerControls = ({ player }: Props) => {
 
   const { onLoop, isLoop } = useLoop(player);
 
-
   const onPlay = () => {
     setIsPlaying(true);
     const play = isPreclick ? player?.playWithPreclick : player?.playMidi;
@@ -110,7 +109,12 @@ export const PlayerControls = ({ player }: Props) => {
           </IconButton>
           <PlayStopButton isPlaying={isPlaying} handlePlaying={isPlaying ? onPause : onPlay} />
           <IconButton onClick={onLoop} className="icon">
-            <Icon type="material" fill={isLoop ? mainColors.darkerGray : mainColors.lightGrey} Icon={LoopIcon} className="play-icon" />
+            <Icon
+              type="material"
+              fill={isLoop ? mainColors.darkerGray : mainColors.lightGrey}
+              Icon={LoopIcon}
+              className="play-icon"
+            />
           </IconButton>
         </PlayStop>
       </Buttons>

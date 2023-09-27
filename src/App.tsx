@@ -15,7 +15,7 @@ function App() {
 
   return (
     <ContextProvider>
-      {OS !== "iOS" ? <Dudar /> : <NoMidi os={OS} />}
+      <Dudar />
     </ContextProvider>
   );
 }
