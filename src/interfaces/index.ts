@@ -28,19 +28,7 @@ export type Notes =
   | "G#"
   | "Ab";
 
-export type SharpNotes =
-  | "A"
-  | "A#"
-  | "B"
-  | "C"
-  | "C#"
-  | "D"
-  | "D#"
-  | "E"
-  | "F"
-  | "F#"
-  | "G"
-  | "G#";
+export type SharpNotes = "A" | "A#" | "B" | "C" | "C#" | "D" | "D#" | "E" | "F" | "F#" | "G" | "G#";
 
 export type SharpMap = {
   [key: string]: Notes;
@@ -127,4 +115,9 @@ export enum BagpipeTypes {
   BelarusianNONTraditionalDuda = "bnd",
   BelarusianOpenDuda = "bod",
   Dudelsack = "ddl",
+}
+
+export enum Languages {
+  Belarusian = "be",
+  English = "en",
 }

@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-import { BagpipeTypes } from "../../interfaces";
+import { BagpipeTypes, Languages } from "../../interfaces";
 import { getUserDataFromLocal } from "../../hooks/useLocalStorage";
 
 interface Action {
@@ -11,7 +11,8 @@ interface Action {
     | "SET_BAGPIPE_TYPE"
     | "SET_SIZE"
     | "SET_LOOP"
-    | "SET_IS_PRECLICK";
+    | "SET_IS_PRECLICK"
+    | "SET_LANGUAGE";
 
   payload?: any;
 }
@@ -27,6 +28,7 @@ export interface SettingsState {
   isPreclick: boolean;
   screenSize: { width: number; height: number };
   loop: boolean;
+  language: Languages;
 }
 const userData = getUserDataFromLocal();
 
@@ -91,6 +93,12 @@ export const useSettingsReducer = () => {
             height: action.payload.height,
           },
         };
+
+      case "SET_LANGUAGE":
+        return {
+          ...state,
+          language: action.payload,
+        };
       default:
         return state;
     }
@@ -128,6 +136,10 @@ export const useSettingsReducer = () => {
     dispatch({ type: "SET_SIZE", payload: size });
   };
 
+  const setLanguage = (lang: Languages) => {
+    dispatch({ type: "SET_LANGUAGE", payload: lang });
+  };
+
   return {
     state,
     setMetronome,
@@ -138,5 +150,6 @@ export const useSettingsReducer = () => {
     setIsPreclick,
     setScreenSize,
     setLoop,
+    setLanguage,
   };
 };

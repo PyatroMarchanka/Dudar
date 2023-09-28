@@ -3,40 +3,43 @@ import { store } from "../context";
 import { Song, SongListByBagpipe, SongListBySongType } from "../dataset/songs/interfaces";
 import { BagpipeTypes } from "../interfaces";
 import { getSongListWithBagpipeTypes } from "../utils/midiUtils";
+import { transliterateSongList, useIsCyrylicLang } from "../locales";
 
 export const useSongList = (onStop: () => void) => {
   const {
     setListsByBagpipe,
     setActiveSong,
-    state: { bagpipeType, activeSong, listsByBagpipe },
+    state: { bagpipeType, activeSong, listsByBagpipe, language },
   } = useContext(store);
+
+  const isCyrylicLang = useIsCyrylicLang();
 
   const addBagpipesTypesToSongList = useCallback(async () => {
     try {
       const listFromFile = await getSongListWithBagpipeTypes();
       const sortedList = sortSongsByBagpipe(listFromFile);
       const lists = sortSongsBySongType(sortedList[bagpipeType]);
-      setListsByBagpipe(lists);
+      const transliteratedLists = !isCyrylicLang() ? transliterateSongList(lists) : lists;
+      setListsByBagpipe(transliteratedLists);
+      handleActiveSong(bagpipeType, transliteratedLists);
     } catch (error) {
       console.log(error);
     }
-  }, [bagpipeType, setListsByBagpipe]);
+  }, [bagpipeType, setListsByBagpipe, language]);
 
   const handleActiveSong = useCallback(
-    (bagpipeType: BagpipeTypes) => {
-      if (!listsByBagpipe || !bagpipeType) {
+    (bagpipeType: BagpipeTypes, listsByBagpipeLocal: SongListByBagpipe) => {
+      if (!listsByBagpipeLocal || !bagpipeType) {
         return;
       }
       onStop();
-
       const activeSongInNewList =
         activeSong &&
-        listsByBagpipe[activeSong!.type]?.find((song) => song.name === activeSong!.name);
-
+        listsByBagpipeLocal[activeSong!.type]?.find((song) => song.name === activeSong!.name);
       if (activeSongInNewList) {
         setActiveSong(activeSongInNewList);
       } else {
-        const firstSongInList = listsByBagpipe[Object.keys(listsByBagpipe)[0]][0];
+        const firstSongInList = listsByBagpipeLocal[Object.keys(listsByBagpipeLocal)[0]][0];
         setActiveSong(firstSongInList);
       }
     },
@@ -52,7 +55,7 @@ export const useSongList = (onStop: () => void) => {
 
   useEffect(() => {
     addBagpipesTypesToSongList();
-  }, [bagpipeType]);
+  }, [bagpipeType, language]);
 };
 
 const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {

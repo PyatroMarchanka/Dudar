@@ -5,6 +5,7 @@
   "transposeMelody": "Транспаніраваць",
   "preclick": "Прэклік",
   "noIcon": "Няма іконкі",
+  "semitones": "паўтон(аў)",
   "dudas": {
     "belNonTradDuda": "Беларуская нетрадыцыйная дуда",
     "belOpenDuda": "Беларуская дуда ў адкрытай манеры",
@@ -18,5 +19,10 @@
     "irish": "Ірландскія",
     "balkan": "Балканскія",
     "schotland": "Шатландскія"
+  },
+  "languages": {
+    "be": "Беларуская",
+    "en": "English",
+    "lang": "Мова"
   }
 }

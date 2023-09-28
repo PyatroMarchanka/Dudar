@@ -4,6 +4,7 @@ import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
 import { useSelectStyles } from "../../global/selectStyles";
 import { transposeNote } from "../../../utils/midiUtils";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
@@ -15,6 +16,7 @@ const Transpose = ({ midiPlayer }: Props) => {
     setTranspose: setTransposeCtx,
     setIsPlaying,
   } = useContext(store);
+  const { t } = useTranslation();
 
   const setTranspose = (num: number) => {
     setTransposeCtx(num);
@@ -42,7 +44,7 @@ const Transpose = ({ midiPlayer }: Props) => {
         {options.map((option) => (
           <MenuItem key={option.label} value={option.value}>
             <b>{transposeNote("A", +option.label)}</b>
-            {` : ${option.label} semitones`}
+            {` : ${option.label > 0 ? `+${option.label}` : option.label} ${t("semitones")}`}
           </MenuItem>
         ))}
       </Select>

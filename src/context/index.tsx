@@ -1,9 +1,10 @@
 import { Midi } from "@tonejs/midi";
-import { createContext } from "react";
+import { createContext, useEffect } from "react";
 import { Song, SongListByBagpipe } from "../dataset/songs/interfaces";
-import { BagpipeTypes, SharpNotesEnum } from "../interfaces";
+import { BagpipeTypes, Languages, SharpNotesEnum } from "../interfaces";
 import { SettingsState, settingsInitialState, useSettingsReducer } from "./reducers/settings";
 import { PlayerState, playerInitialState, usePlayerReducer } from "./reducers/player";
+import { useChangeLanguage } from "../locales";
 
 export const noSongsLabel = "No song selected";
 
@@ -17,6 +18,7 @@ const initialState: State = {
 interface Context {
   state: State;
   setMidi: (midi: ArrayBuffer) => void;
+  setLanguage: (lang: Languages) => void;
   setMetronome: (bool: boolean) => void;
   setMidiData: (midi: Midi) => void;
   setActiveSong: (song: Song) => void;
@@ -37,6 +39,7 @@ interface Context {
 const store = createContext<Context>({
   state: initialState,
   setMidi: (midi: ArrayBuffer) => {},
+  setLanguage: (lang: Languages) => {},
   setMetronome: (bool: boolean) => {},
   setMidiData: (midi: Midi) => {},
   setActiveSong: (song: Song) => {},
@@ -60,6 +63,11 @@ const ContextProvider = ({ children }: any) => {
   const { state: playerState, ...playerDispatchers } = usePlayerReducer();
   const state = { ...settingsState, ...playerState };
   const dispatchers = { ...settingsDispatchers, ...playerDispatchers };
+ const changeLanguage =  useChangeLanguage()
+
+  useEffect(() => {
+    changeLanguage(settingsState.language)
+  }, [])
 
   return (
     <Provider
