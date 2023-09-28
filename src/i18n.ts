@@ -3,6 +3,7 @@ import { initReactI18next } from "react-i18next";
 
 import translationEN from "./locales/en/translation.json";
 import translationBE from "./locales/be/translation.json";
+import { Languages } from "./interfaces";
 
 // the translations
 const resources = {
@@ -21,8 +22,8 @@ i18n
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
     resources,
-    lng: "be",
-    fallbackLng: "en",
+    lng: Languages.Belarusian,
+    fallbackLng: Languages.English,
     debug: true,
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default

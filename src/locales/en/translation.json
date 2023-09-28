@@ -5,6 +5,7 @@
   "transposeMelody": "Transpose melody",
   "preclick": "Preclick",
   "noIcon": "No icon",
+  "semitones": "semitones",
   "dudas": {
     "belNonTradDuda": "Belarusian Nontraditional Closed Duda",
     "belOpenDuda": "Belarusian Open Duda",
@@ -18,6 +19,10 @@
     "irish": "Irish",
     "balkan": "Balkan",
     "schotland": "Schotland"
-    
+  },
+  "languages": {
+    "be": "Беларуская",
+    "en": "English",
+    "lang": "Language"
   }
 }

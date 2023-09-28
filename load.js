@@ -14,7 +14,7 @@ folders.forEach((folder) => {
       const song = {};
       const [name, timeSignature] = file.split(".mid").join("").split("|");
       song.timeSignature = timeSignature?.split("-").join("/") || "4/4";
-      song.name = name;
+      song.name = name.split('-trad').join('');
       song.type = folder.label.toLowerCase();
       song.pathName = `${folder.path.split("./public/midi/").join("")}/${file}`;
 

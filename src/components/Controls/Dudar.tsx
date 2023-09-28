@@ -15,10 +15,11 @@ import { BackCanvas } from "../Canvas/BackCanvas";
 import { DynamicCanvas } from "../Canvas/DynamicCanvas";
 import { convertMidiPitchToNote, getSongListWithBagpipeTypes } from "../../utils/midiUtils";
 import { MidiPlayerComponent } from "../MidiPlayerComponent";
+import { useSongTitle } from "../../hooks/useSongTitle";
 
 export const Dudar = () => {
   const {
-    state: { activeSong, midiData },
+    state: { midiData },
     setProgress,
     setScreenSize,
   } = useContext(store);
@@ -27,6 +28,7 @@ export const Dudar = () => {
     octave: number;
   } | null>(null);
 
+  const songTitle = useSongTitle();
   const handleNote = (event: any) => {
     setActiveNote(convertMidiPitchToNote(event.noteNumber));
   };
@@ -67,7 +69,7 @@ export const Dudar = () => {
       <SettingsButtons>
         <SongList player={midiPlayer} />
         <Header>
-          <h3>{activeSong?.name || noSongsLabel}</h3>
+          <h3>{songTitle || noSongsLabel}</h3>
         </Header>
         <Settings midiPlayer={midiPlayer} />
       </SettingsButtons>
