@@ -74,6 +74,13 @@ export const MainSettings = ({ midiPlayer }: Props) => {
         <i className="fa fa-github fa_custom"></i>
         <Typography variant="h5">GitHub</Typography>
       </a>
+      <a
+        href="https://www.facebook.com/piatro.marchanka"
+        className="github-link"
+      >
+        <Icon className="" type="facebook" fill={mainColors.darkerGray} />
+        <Typography variant="h5">Facebook</Typography>
+      </a>
     </Container>
   );
 };
@@ -90,6 +97,11 @@ const Container = styled.div`
       font-size: 30px;
       margin-right: 5px;
     }
+  }
+
+  .facebook {
+    height: 40px;
+    width: 40px;
   }
 `;
 
