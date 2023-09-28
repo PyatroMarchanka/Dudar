@@ -178,12 +178,12 @@ export const transliterateSongList = (list: SongListBySongType) => {
         if (isCyrilicWord(song.name)) {
           return { ...song, name: transliterate(song.name) };
         } else {
-          return song.name;
+          return song;
         }
       });
     }
   }
-
+  console.log(result)
   return result as SongListBySongType;
 };
 
