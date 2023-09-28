@@ -16,6 +16,7 @@ import { DynamicCanvas } from "../Canvas/DynamicCanvas";
 import { convertMidiPitchToNote, getSongListWithBagpipeTypes } from "../../utils/midiUtils";
 import { MidiPlayerComponent } from "../MidiPlayerComponent";
 import { useSongTitle } from "../../hooks/useSongTitle";
+import ChangeLogPopup from "../ChangeLogPopup";
 
 export const Dudar = () => {
   const {
@@ -71,6 +72,7 @@ export const Dudar = () => {
         <Header>
           <h3>{songTitle || noSongsLabel}</h3>
         </Header>
+        <ChangeLogPopup />
         <Settings midiPlayer={midiPlayer} />
       </SettingsButtons>
       {/* <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} /> */}

@@ -16,6 +16,7 @@ import LanguageSelector from "../LanguageSelector";
 import LanguageIcon from "@material-ui/icons/Language";
 import AvTimerIcon from "@material-ui/icons/AvTimer";
 import ImportExport from "@material-ui/icons/ImportExport";
+import ChangeLogPopup from "../../ChangeLogPopup";
 
 type Props = {
   midiPlayer: MidiPlayer | null;
@@ -98,6 +99,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
           <Typography variant="h5">Facebook</Typography>
         </a>
       </RowCentered>
+     
     </Container>
   );
 };
