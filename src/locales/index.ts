@@ -183,7 +183,6 @@ export const transliterateSongList = (list: SongListBySongType) => {
       });
     }
   }
-  console.log(result)
   return result as SongListBySongType;
 };
 
