@@ -13,6 +13,7 @@ import { mainColors } from "../../utils/theme";
 import { store } from "../../context";
 import { useTranslation } from "react-i18next";
 import { gtmPush } from "../../utils/gtm";
+import { bagpipes } from "../../dataset/bagpipes";
 
 interface Props {
   setOpen: (bool: boolean) => void;
@@ -45,6 +46,11 @@ const useStyles = makeStyles((theme: Theme) =>
         marginBottom: "5px",
       },
     },
+    dudaRoot: {
+      marginTop: "60px",
+      marginLeft: '20px'
+    },
+    duda: {},
     heading: {
       fontWeight: "bold",
       fontSize: "20px",
@@ -80,6 +86,10 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
       <IconButton className="close" onClick={() => setOpen(false)}>
         <Icon type="material" fill="#fff" Icon={Close} />
       </IconButton>
+      <div className={classes.dudaRoot}>
+        <Typography className={classes.duda}>{t("songList.instrument")}</Typography>
+        <Typography>{t(`dudas.${bagpipes[bagpipeType].name}`)}</Typography>
+      </div>
 
       {genres.map((genre) => (
         <div key={genre} className={classes.root}>
@@ -112,13 +122,15 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                       onClick={(e) => {
                         e.stopPropagation();
                         setActiveSong(song);
-                        setOpen(false)
+                        setOpen(false);
                         onStop();
-                        gtmPush({"song_name": song.name})
+                        gtmPush({ song_name: song.name });
                       }}
                     >
                       <Icon type={activeSong?.pathName === song.pathName ? "song-play" : "music"} />
-                      <ListItem className="song-button-gtm" id={song.name}>{song.name}</ListItem>
+                      <ListItem className="song-button-gtm" id={song.name}>
+                        {song.name}
+                      </ListItem>
                     </IconButton>
                   </div>
                 ))}

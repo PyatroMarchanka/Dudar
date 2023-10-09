@@ -29,13 +29,13 @@ export const useSongList = (onStop: () => void) => {
 
   const handleActiveSong = useCallback(
     (bagpipeType: BagpipeTypes, listsByBagpipeLocal: SongListByBagpipe) => {
-      if (!listsByBagpipeLocal || !bagpipeType) {
+      if (!listsByBagpipeLocal || !bagpipeType || !activeSong) {
         return;
       }
       onStop();
       const activeSongInNewList =
         activeSong &&
-        listsByBagpipeLocal[activeSong!.type]?.find((song) => song.name === activeSong!.name);
+        listsByBagpipeLocal[activeSong.type]?.find((song) => song.name === activeSong.name);
       if (activeSongInNewList) {
         setActiveSong(activeSongInNewList);
       } else {

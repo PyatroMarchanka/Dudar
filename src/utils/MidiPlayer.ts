@@ -154,7 +154,7 @@ export class MidiPlayer {
 
   keyDown(note: number, volume = 0.7) {
     // @ts-ignore
-    playNote(midiNumbersToNotes[note + this.transpose - 1 + 12], volume);
+    playNote(midiNumbersToNotes[note + this.transpose + 12], volume);
     this.envelopes[note] = note;
   }
 
@@ -165,7 +165,7 @@ export class MidiPlayer {
         this.envelopes[noteNumber] = null;
       } else {
         // @ts-ignore
-        stopNote(midiNumbersToNotes[noteNumber + this.transpose - 1 + 12]);
+        stopNote(midiNumbersToNotes[noteNumber + this.transpose + 12]);
       }
     }
   }
@@ -258,7 +258,7 @@ export class MidiPlayer {
       Object.values(this.envelopes).forEach((num) => {
         if (typeof num === "number") {
           stopNote(
-            midiNumbersToNotes[(num + this.transpose - 1 + 12) as keyof typeof midiNumbersToNotes]
+            midiNumbersToNotes[(num + this.transpose + 12) as keyof typeof midiNumbersToNotes]
           );
         } else if (num) {
           this.stopMidiNote(num);
