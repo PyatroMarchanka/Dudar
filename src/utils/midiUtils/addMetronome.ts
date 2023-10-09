@@ -1,34 +1,33 @@
 import { parseMidi, MidiData, writeMidi } from "midi-file";
 import { toArrayBuffer } from "../commonUtils";
+import { getTicksPerBeatByTimeSignature } from "../../dataset/songs/utils";
+import { TimeSignatures } from "../../dataset/songs/interfaces";
 
-export const addMetronome = async (songBuffer: ArrayBuffer) => {
+export const addMetronome = async (songBuffer: ArrayBuffer, timeSignature: TimeSignatures) => {
   // METRONOME ADDING
+  const ticks = getTicksPerBeatByTimeSignature(timeSignature);
   const outputSongBuffer = Buffer.from(songBuffer);
   const parsedSong = parseMidi(outputSongBuffer);
-
-  const metronomeFile = await fetch(`midi/common/metronome.midi`);
+  const metronomeFile = await fetch(`midi/common/metronome.mid`);
   const metronomeBuffer = await metronomeFile.arrayBuffer();
   const outputMetronomeBuffer = Buffer.from(metronomeBuffer);
   let parsedMetronome = parseMidi(outputMetronomeBuffer);
+  const songTicksPerBeat = parsedSong.header.ticksPerBeat || 480;
 
   // Update metronome tempo
-  parsedMetronome.header.ticksPerBeat = parsedSong.header.ticksPerBeat || 480;
+  parsedMetronome.header.ticksPerBeat = songTicksPerBeat;
 
   const songLength = parsedSong.tracks[0].reduce((acc, cur) => acc + cur.deltaTime, 0);
 
-  const metronomRoundsCountForSong = Math.ceil(
-    songLength / ((parsedSong.header.ticksPerBeat || 480) * 8)
-  );
+  const metronomRoundsCountForSong = Math.ceil(songLength / ticks);
 
-  parsedMetronome.tracks[0] = parsedMetronome.tracks[0]
-    .map((note) => {
-      if (parsedSong.header.ticksPerBeat !== 480 && note.deltaTime === 480) {
-        note.deltaTime = parsedSong.header.ticksPerBeat || 480;
-      }
+  parsedMetronome.tracks[0] = parsedMetronome.tracks[0].map((note) => {
+    if (note.type === "noteOff") {
+      note.deltaTime = ticks;
+    }
 
-      return note;
-    })
-    .filter((note) => note.deltaTime <= (parsedSong.header.ticksPerBeat || 480));
+    return note;
+  });
 
   const resultMetronomTrack = new Array(metronomRoundsCountForSong)
     .fill(parsedMetronome.tracks[0])

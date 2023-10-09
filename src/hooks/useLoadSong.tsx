@@ -27,7 +27,7 @@ export const useLoadSong = () => {
       const file = await fetch(`midi/${song.pathName}`);
       const buffer = await file.arrayBuffer();
 
-      const songWithMetronome = await addMetronome(buffer);
+      const songWithMetronome = await addMetronome(buffer, song.timeSignature);
 
       const midi = new Midi(songWithMetronome);
       midi.header.setTempo(tempo / 2);
