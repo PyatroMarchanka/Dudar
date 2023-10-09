@@ -16,6 +16,7 @@ const belarusianTraditionalDudaNotes: BagpipeNotesMap = {
 
 const belarusianNONTraditionalDudaNotes: BagpipeNotesMap = {
   [SharpNotesEnum.G4]: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+  [SharpNotesEnum["G#4"]]: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
   [SharpNotesEnum.A4]: [0, 1, 2, 3, 4, 5, 6, 7, 8],
   [SharpNotesEnum.B4]: [0, 1, 2, 3, 4, 5, 6, 7],
   [SharpNotesEnum.C5]: [0, 1, 2, 3, 4, 5, 6, 8],
@@ -30,6 +31,7 @@ const belarusianNONTraditionalDudaNotes: BagpipeNotesMap = {
 
 const belarusianOpenDudaNotes: BagpipeNotesMap = {
   [SharpNotesEnum.G4]: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+  [SharpNotesEnum["G#4"]]: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
   [SharpNotesEnum.A4]: [0, 1, 2, 3, 4, 5, 6, 7, 8],
   [SharpNotesEnum.B4]: [0, 1, 2, 3, 4, 5, 6, 7],
   [SharpNotesEnum.C5]: [0, 1, 2, 3, 4, 5, 6],
@@ -56,8 +58,7 @@ const dudelsackNotes: BagpipeNotesMap = {
 
 export const notesMaps = {
   [BagpipeTypes.BelarusianTraditionalDuda]: belarusianTraditionalDudaNotes,
-  [BagpipeTypes.BelarusianNONTraditionalDuda]:
-    belarusianNONTraditionalDudaNotes,
+  [BagpipeTypes.BelarusianNONTraditionalDuda]: belarusianNONTraditionalDudaNotes,
   [BagpipeTypes.BelarusianOpenDuda]: belarusianOpenDudaNotes,
   [BagpipeTypes.Dudelsack]: dudelsackNotes,
 };

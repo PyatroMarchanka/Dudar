@@ -8,7 +8,17 @@ export enum SongTypes {
   Balkan = "balkan",
 }
 
-export type TimeSignatures = "4/4" | "3/4" | "6/8" | "8/8" | "6/4";
+export type TimeSignatures =
+  | "3/4"
+  | "4/4"
+  | "5/4"
+  | "6/4"
+  | "6/8"
+  | "7/8"
+  | "8/8"
+  | "9/8"
+  | "10/8"
+  | "11/8";
 
 export interface Song {
   name: string;
