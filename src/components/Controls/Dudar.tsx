@@ -17,6 +17,7 @@ import { convertMidiPitchToNote, getSongListWithBagpipeTypes } from "../../utils
 import { MidiPlayerComponent } from "../MidiPlayerComponent";
 import { useSongTitle } from "../../hooks/useSongTitle";
 import ChangeLogPopup from "../ChangeLogPopup";
+import UpdatesAlert from "../global/UpdatesAlert";
 
 export const Dudar = () => {
   const {

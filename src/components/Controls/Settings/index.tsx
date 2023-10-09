@@ -10,6 +10,7 @@ import { mainColors, theme } from "../../../utils/theme";
 import { Icon } from "../../global/Icon";
 import { MainSettings } from "./MainSettings";
 import { useTranslation } from "react-i18next";
+import { feedbackId } from "../../../constants/ids";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
@@ -62,7 +63,7 @@ export const Settings = ({ midiPlayer }: Props) => {
             <Title>{t("settings")}</Title>
           </Header>
           <MainSettings midiPlayer={midiPlayer} />
-          <Feedback projectId="64d1fdf1da1fea00024effdd" />
+          <Feedback projectId={feedbackId} />
         </Content>
       </SwipeableDrawer>
       <IconButton onClick={() => setOpen(true)} className="settings">

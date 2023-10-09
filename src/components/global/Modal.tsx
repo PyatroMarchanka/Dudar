@@ -32,8 +32,6 @@ export default function Modal({ triggerComponent, children, title, className, st
         maxWidth='xl'
         style={style || {}}
         className={className}
-        onBackdropClick={handleClose}
-        disableBackdropClick
         disableEscapeKeyDown
         open={open}
         onClose={handleClose}

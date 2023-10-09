@@ -1,17 +1,86 @@
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@material-ui/core";
+// @ts-ignore
+import Feedback from "feeder-react-feedback"; // import Feedback component
+import "feeder-react-feedback/dist/feeder-react-feedback.css";
 import { theme } from "../../utils/theme";
 import { Icon } from "../global/Icon";
-import Modal from "../global/Modal";
 import InfoIcon from "@material-ui/icons/Info";
+import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
+import { landscapeAlertId } from "../../constants/localStorage";
+import { feedbackId } from "../../constants/ids";
+
+interface UpdatedContentProps {}
+
+export const UpdatesContent = ({}: UpdatedContentProps) => {
+  const { t } = useTranslation("translation");
+
+  const updatesList = (
+    <ul>
+      {t("about.updates")
+        .split("\n")
+        .map((str) => (
+          <li key={str}>
+            <DialogContentText>{str}</DialogContentText>
+          </li>
+        ))}
+    </ul>
+  );
+
+  return <DialogContent>{updatesList}</DialogContent>;
+};
+
 interface Props {}
 
 const ChangeLogPopup = (props: Props) => {
-  const Button = <Icon type="material" fill={theme.colors.black} Icon={InfoIcon} />
-  
+  const { t } = useTranslation("translation");
+  const [open, setOpen] = useState(true);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const InfoButton = <Icon type="material" fill={theme.colors.black} Icon={InfoIcon} />;
+
+  const handleCloseLocal = () => {
+    localStorage.setItem(landscapeAlertId, "closed");
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    const isAlertClosed = localStorage.getItem(landscapeAlertId);
+
+    if (isAlertClosed) {
+      handleCloseLocal();
+    }
+  }, []);
+
   return (
     <div>
-      <Modal triggerComponent={Button} title="About">
-        content
-      </Modal>
+      <div onClick={handleClickOpen}>{InfoButton}</div>
+
+      <Dialog maxWidth="xl" style={{}} disableEscapeKeyDown open={open} onClose={handleClose}>
+        <DialogTitle>{t("about.updatesTitle")}</DialogTitle>
+        <DialogContent>
+        <Feedback projectId={feedbackId} />
+          <UpdatesContent />
+          <DialogActions>
+            <Button onClick={handleClose || (() => {})} color="primary" autoFocus>
+              {t("gotIt")}
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

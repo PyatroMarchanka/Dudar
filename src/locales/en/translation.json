@@ -6,6 +6,16 @@
   "preclick": "Preclick",
   "noIcon": "No icon",
   "semitones": "semitones",
+  "gotIt": "Got it",
+  "about": {
+    "mainTitle": "Learn to play without notes! Bagpipe and flute training app",
+    "list": "List of melodies",
+    "listDescription": "Melodies that can be played on the selected instrument. It can be changed in settings",
+    "settings": "Settings",
+    "settingsDescription": "change instrument\nchange the tone of the melody to match your instrument\npreclick - additional countdown to the start of the performance to blow the bagpipe, prepare\nchange language", 
+    "updates": "melodies are filtered by the type of instrument selected\nthe bar can be looped (round arrows icon)\nthe sound of the bagpipe is sampled using a bagpipe made by Dzianis Sukhi\nlanguages - Belarusian and English (can be selected in the settings)\nfeedback form added",
+    "updatesTitle": "Updates:"
+  }, 
   "dudas": {
     "belNonTradDuda": "Belarusian Nontraditional Closed Duda",
     "belOpenDuda": "Belarusian Open Duda",
@@ -24,5 +34,8 @@
     "be": "Беларуская",
     "en": "English",
     "lang": "Language"
+  },
+  "songList": {
+    "instrument": "For the instrument:"
   }
 }
