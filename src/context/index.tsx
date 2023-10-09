@@ -34,6 +34,7 @@ interface Context {
   setSongNotes: (notes: SharpNotesEnum[]) => void;
   setIsPreclick: (bool: boolean) => void;
   setLoop: (bool: boolean) => void;
+  setIsSongLoading: (bool: boolean) => void
 }
 
 const store = createContext<Context>({
@@ -55,6 +56,7 @@ const store = createContext<Context>({
   setSongLength: (seconds: number) => {},
   setIsPreclick: (bool: boolean) => {},
   setLoop: (bool: boolean) => {},
+  setIsSongLoading: (bool: boolean) => {}
 });
 const { Provider } = store;
 
