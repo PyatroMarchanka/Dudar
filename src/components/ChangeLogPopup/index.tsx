@@ -70,7 +70,6 @@ const ChangeLogPopup = (props: Props) => {
       <Dialog maxWidth="xl" style={{}} disableEscapeKeyDown open={open} onClose={handleClose}>
         <DialogTitle>{t("about.updatesTitle")}</DialogTitle>
         <DialogContent>
-        <Feedback projectId={feedbackId} />
           <UpdatesContent />
           <DialogActions>
             <Button onClick={handleClose || (() => {})} color="primary" autoFocus>
