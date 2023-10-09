@@ -5,9 +5,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
 } from "@material-ui/core";
 // @ts-ignore
-import Feedback from "feeder-react-feedback"; // import Feedback component
 import "feeder-react-feedback/dist/feeder-react-feedback.css";
 import { theme } from "../../utils/theme";
 import { Icon } from "../global/Icon";
@@ -15,7 +15,7 @@ import InfoIcon from "@material-ui/icons/Info";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { landscapeAlertId } from "../../constants/localStorage";
-import { feedbackId } from "../../constants/ids";
+import styled from "styled-components";
 
 interface UpdatedContentProps {}
 
@@ -56,16 +56,20 @@ const ChangeLogPopup = (props: Props) => {
     const isAlertClosed = localStorage.getItem(landscapeAlertId);
 
     if (!isAlertClosed) {
-      setOpen(true)
+      setOpen(true);
       localStorage.setItem(landscapeAlertId, "closed");
     } else {
-      handleClose()
+      handleClose();
     }
   }, []);
 
   return (
-    <div>
-      <div onClick={handleClickOpen}>{InfoButton}</div>
+    <ChangeLogPopupContainer>
+      <div onClick={handleClickOpen}>
+        <IconButton  onClick={() => handleClickOpen()} className="close">
+          {InfoButton}
+        </IconButton>
+      </div>
 
       <Dialog maxWidth="xl" style={{}} disableEscapeKeyDown open={open} onClose={handleClose}>
         <DialogTitle>{t("about.updatesTitle")}</DialogTitle>
@@ -78,8 +82,16 @@ const ChangeLogPopup = (props: Props) => {
           </DialogActions>
         </DialogContent>
       </Dialog>
-    </div>
+    </ChangeLogPopupContainer>
   );
 };
 
 export default ChangeLogPopup;
+
+
+const ChangeLogPopupContainer = styled.div`
+  .close {
+    padding-left: 0;
+    padding-right: 0;
+  }
+`;

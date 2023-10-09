@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { store } from "../../../context";
 import { bagpipes } from "../../../dataset/bagpipes";
-import { BagpipeTypes, Languages } from "../../../interfaces";
+import { BagpipeTypes } from "../../../interfaces";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
 import { mainColors } from "../../../utils/theme";
 import { Icon } from "../../global/Icon";
@@ -11,12 +11,10 @@ import { RedRadio } from "../../global/RedRadioButton";
 import { RedCheckbox } from "../../global/RedCheckbox";
 import { Typography } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
-import { useChangeLanguage } from "../../../locales";
 import LanguageSelector from "../LanguageSelector";
 import LanguageIcon from "@material-ui/icons/Language";
 import AvTimerIcon from "@material-ui/icons/AvTimer";
 import ImportExport from "@material-ui/icons/ImportExport";
-import ChangeLogPopup from "../../ChangeLogPopup";
 
 type Props = {
   midiPlayer: MidiPlayer | null;
