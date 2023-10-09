@@ -1,4 +1,4 @@
-export const landscapeAlertId = "updates-alert-closed-09-10-2023";
+export const landscapeAlertId = "updates-alert-09-10-2023";
 export const lastSongData = "lastSongData";
 export const userTempo = "userTempo";
 export const userTranspose = "userTranspose";

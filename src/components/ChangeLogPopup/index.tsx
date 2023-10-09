@@ -41,7 +41,7 @@ interface Props {}
 
 const ChangeLogPopup = (props: Props) => {
   const { t } = useTranslation("translation");
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -52,16 +52,14 @@ const ChangeLogPopup = (props: Props) => {
   };
   const InfoButton = <Icon type="material" fill={theme.colors.black} Icon={InfoIcon} />;
 
-  const handleCloseLocal = () => {
-    localStorage.setItem(landscapeAlertId, "closed");
-    setOpen(false);
-  };
-
   useEffect(() => {
     const isAlertClosed = localStorage.getItem(landscapeAlertId);
 
-    if (isAlertClosed) {
-      handleCloseLocal();
+    if (!isAlertClosed) {
+      setOpen(true)
+      localStorage.setItem(landscapeAlertId, "closed");
+    } else {
+      handleClose()
     }
   }, []);
 
