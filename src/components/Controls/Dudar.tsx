@@ -17,10 +17,11 @@ import { convertMidiPitchToNote, getSongListWithBagpipeTypes } from "../../utils
 import { MidiPlayerComponent } from "../MidiPlayerComponent";
 import { useSongTitle } from "../../hooks/useSongTitle";
 import ChangeLogPopup from "../ChangeLogPopup";
+import { BackdropSpinner } from "../global/BackdropSpinner";
 
 export const Dudar = () => {
   const {
-    state: { midiData },
+    state: { midiData, isSongLoading },
     setProgress,
     setScreenSize,
   } = useContext(store);
@@ -67,6 +68,7 @@ export const Dudar = () => {
   return (
     <Container>
       <GlobalStyle />
+      <BackdropSpinner isOpen={isSongLoading} />
       <SettingsButtons>
         <SongList player={midiPlayer} />
         <Header>
@@ -75,7 +77,6 @@ export const Dudar = () => {
         <ChangeLogPopup />
         <Settings midiPlayer={midiPlayer} />
       </SettingsButtons>
-      {/* <LandscapeAlert isMobile={screenSize.width < numberQueries.mobile} /> */}
       <BagpipeContainer>
         <BackCanvas />
         <DynamicCanvas player={midiPlayer} />
@@ -111,7 +112,7 @@ const Container = styled.div`
   flex-direction: column;
   height: 100vh;
   background-color: ${mainColors.lightestGrey};
-
+  overflow-y: hidden;
   .last {
     margin-top: auto;
     margin-bottom: 20px;

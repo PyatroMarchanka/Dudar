@@ -12,6 +12,7 @@ export const useLoadSong = () => {
     setMidiData,
     setSongLength,
     setActiveSong,
+    setIsSongLoading,
   } = useContext(store);
 
   const [lowestOctave, setLowestOctave] = useState(4);
@@ -24,6 +25,7 @@ export const useLoadSong = () => {
 
         listsByBagpipe && setActiveSong(listsByBagpipe[bagpipeType][0]);
       }
+      setIsSongLoading(true);
       const file = await fetch(`midi/${song.pathName}`);
       const buffer = await file.arrayBuffer();
 
@@ -38,6 +40,7 @@ export const useLoadSong = () => {
       setLowestOctave(lowestOctaveFromFile);
       setMidiData(midi);
       setMidi(songWithMetronome);
+      setIsSongLoading(false);
     } catch (error) {
       console.log(error);
     }

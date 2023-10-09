@@ -13,6 +13,7 @@ interface Action {
     | "SET_IS_PLAYING"
     | "SET_LISTS_BY_BAGPIPE"
     | "SET_SONG_NOTES"
+    | "SET_IS_SONG_LOADING"
     | "SET_SONG_LENGTH";
 
   payload?: any;
@@ -29,6 +30,7 @@ export interface PlayerState {
   progress?: { percent: number; time?: number; timeRemaining?: number };
   isPlaying: boolean;
   listsByBagpipe: SongListByBagpipe | null;
+  isSongLoading: boolean;
 }
 
 export const playerInitialState: PlayerState = {
@@ -40,6 +42,7 @@ export const playerInitialState: PlayerState = {
   listsByBagpipe: null,
   songLength: 0,
   activeSong: undefined,
+  isSongLoading: false,
 };
 
 export const usePlayerReducer = () => {
@@ -102,6 +105,12 @@ export const usePlayerReducer = () => {
           songNotes: action.payload,
         };
 
+      case "SET_IS_SONG_LOADING":
+        return {
+          ...state,
+          isSongLoading: action.payload,
+        };
+
       default:
         return state;
     }
@@ -144,6 +153,10 @@ export const usePlayerReducer = () => {
     dispatch({ type: "SET_SONG_LENGTH", payload: songLength });
   };
 
+  const setIsSongLoading = (bool: boolean) => {
+    dispatch({ type: "SET_IS_SONG_LOADING", payload: bool });
+  };
+
   return {
     state,
     setMidi,
@@ -154,5 +167,6 @@ export const usePlayerReducer = () => {
     setListsByBagpipe,
     setSongNotes,
     setSongLength,
+    setIsSongLoading,
   };
 };
