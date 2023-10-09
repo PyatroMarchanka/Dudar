@@ -4,9 +4,11 @@ import { sizes } from "../../constants/style";
 import { BagpipeTypes } from "../../interfaces";
 import { bagpipes } from "../../dataset/bagpipes";
 import { mainColors } from "../theme";
+import { TimeSignatures } from "../../dataset/songs/interfaces";
 
-const getLinePosition = (midiData: Midi, tick: number) => {
-  const ticksPerBar = midiData.header.ppq * 4;
+const getLinePosition = (midiData: Midi, tick: number, timeSignature?: TimeSignatures) => {
+  const [beatsPerBar, fullBeats] = timeSignature?.split("/").map(Number) || [4, 4];
+  const ticksPerBar = midiData.header.ppq * (beatsPerBar / (fullBeats / 4));
   const currentBar = Math.ceil(tick / ticksPerBar);
   const lineXPosStart = currentBar * ticksPerBar - tick;
 
@@ -22,10 +24,11 @@ export const drawBarsLines = (
   ctx: CanvasRenderingContext2D,
   tick: number,
   midiData: Midi | null,
-  bagpipeType: BagpipeTypes
+  bagpipeType: BagpipeTypes,
+  timeSignature?: TimeSignatures
 ) => {
   if (!midiData) return;
-  const { lines, currentBar } = getLinePosition(midiData, tick);
+  const { lines, currentBar } = getLinePosition(midiData, tick, timeSignature);
 
   const { holesPositions, imagesProperties } = bagpipes[bagpipeType];
   const [top, bottom] = [
