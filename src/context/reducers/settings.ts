@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-import { BagpipeTypes, Languages } from "../../interfaces";
+import { BagpipeTypes, HolesModes, Languages } from "../../interfaces";
 import { getUserDataFromLocal } from "../../hooks/useLocalStorage";
 
 interface Action {
@@ -12,7 +12,8 @@ interface Action {
     | "SET_SIZE"
     | "SET_LOOP"
     | "SET_IS_PRECLICK"
-    | "SET_LANGUAGE";
+    | "SET_LANGUAGE"
+    | "SET_HOLES_MODE";
 
   payload?: any;
 }
@@ -29,6 +30,7 @@ export interface SettingsState {
   screenSize: { width: number; height: number };
   loop: boolean;
   language: Languages;
+  holesMode: HolesModes;
 }
 const userData = getUserDataFromLocal();
 
@@ -37,6 +39,7 @@ export const settingsInitialState: SettingsState = {
   showPianoRoll: true,
   screenSize: { width: 400, height: 500 },
   loop: false,
+
   ...userData,
 };
 
@@ -99,6 +102,12 @@ export const useSettingsReducer = () => {
           ...state,
           language: action.payload,
         };
+
+      case "SET_HOLES_MODE":
+        return {
+          ...state,
+          holesMode: action.payload,
+        };
       default:
         return state;
     }
@@ -140,6 +149,12 @@ export const useSettingsReducer = () => {
     dispatch({ type: "SET_LANGUAGE", payload: lang });
   };
 
+
+  const setHolesMode = (mode: HolesModes) => {
+    dispatch({ type: "SET_HOLES_MODE", payload: mode });
+  };
+
+
   return {
     state,
     setMetronome,
@@ -151,5 +166,6 @@ export const useSettingsReducer = () => {
     setScreenSize,
     setLoop,
     setLanguage,
+    setHolesMode
   };
 };

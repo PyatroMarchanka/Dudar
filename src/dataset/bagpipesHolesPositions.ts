@@ -12,9 +12,13 @@ const applyCoefficientToHole = (hole: Hole) => ({
 
 const holesToLinesYPositions = (holes: Hole[]) => {
   const res = holes
-    .map((hole) => {
+    .map((hole, i) => {
       if (!hole.isAdditional) {
-        return coeff(hole.yPos + hole.diameter / 2);
+        const isPreviousAdditional = holes[i + 1]?.isAdditional === true;
+
+        return coeff(
+          hole.yPos + hole.diameter / 2 + (isPreviousAdditional ? 11 : 0)
+        );
       }
 
       return 0;
@@ -75,10 +79,7 @@ const dudelsackClosable = [
 
 const belarusianTraditionalHoles: BagpipeHolesPositions = {
   closable: belarusianTraditionalHolesClosable.map(applyCoefficientToHole),
-  linesYPositions: [
-    ...holesToLinesYPositions([...belarusianTraditionalHolesClosable]),
-    coeff(570),
-  ],
+  linesYPositions: [...holesToLinesYPositions([...belarusianTraditionalHolesClosable]), coeff(570)],
 };
 
 const belarusianNONTraditionalHoles: BagpipeHolesPositions = {
@@ -99,8 +100,7 @@ const belarusianOpenHoles: BagpipeHolesPositions = {
   closable: belarusianOpenHolesClosable.map(applyCoefficientToHole),
   blowImage: blowImageBelOpenDuda,
   linesYPositions: [
-    blowImageBelOpenDuda.yPos,
-    ...holesToLinesYPositions(belarusianOpenHolesClosable),
+    ...holesToLinesYPositions(belarusianOpenHolesClosable),coeff(570),
   ],
 };
 
@@ -113,10 +113,7 @@ const blowImageDudelsack = {
 const dudelsackHoles: BagpipeHolesPositions = {
   closable: dudelsackClosable.map(applyCoefficientToHole),
   blowImage: blowImageDudelsack,
-  linesYPositions: [
-    blowImageDudelsack.yPos,
-    ...holesToLinesYPositions(dudelsackClosable),
-  ],
+  linesYPositions: [blowImageDudelsack.yPos, ...holesToLinesYPositions(dudelsackClosable)],
 };
 
 export const holesPositions = {

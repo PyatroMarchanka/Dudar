@@ -63,7 +63,7 @@ const drawNote = (
     10
   );
   if (startPos < sizes.brickLeftMargin) {
-    ctx.fillStyle = mainColors.red;
+    ctx.fillStyle = mainColors.darkRed;
   } else {
     ctx.fillStyle = mainColors.darkerGray;
   }

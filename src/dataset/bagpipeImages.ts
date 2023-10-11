@@ -84,3 +84,8 @@ export const bagpipeImages = {
   ),
   [BagpipeTypes.Dudelsack]: getBagpipeImages(BagpipeTypes.Dudelsack),
 };
+
+export const fingerRightImageSrc = "/images/finger_right.svg";
+export const fingerLeftImageSrc = "/images/finger_left.svg";
+export const fingerRightActiveImageSrc = "/images/finger_right_active.svg";
+export const fingerLeftActiveImageSrc = "/images/finger_left_active.svg";

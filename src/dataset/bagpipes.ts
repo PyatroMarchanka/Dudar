@@ -1,3 +1,4 @@
+import { fingersMaps } from './bagpipesFingersMaps';
 import { bagpipesImagesProperties } from "./bagpipesImageProperties";
 import { notesMaps } from "./bagpipesNotesMaps";
 import { BagpipeConfig, BagpipeTypes } from "../interfaces";
@@ -30,6 +31,7 @@ const getBagpipeData = (bagpipeType: BagpipeTypes): BagpipeConfig => {
     imagesProperties: bagpipesImagesProperties[bagpipeType],
     images: bagpipeImages[bagpipeType],
     notesToLines: bagpipesNotesToLines[bagpipeType],
+    fingersMaps: fingersMaps[bagpipeType]
   };
 };
 
