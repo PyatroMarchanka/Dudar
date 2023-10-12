@@ -7,7 +7,7 @@ import { Settings } from "./Settings";
 import { SongList } from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
-import { landscapeAlertId } from "../../constants/localStorage";
+import { updatesAlertId } from "../../constants/localStorage";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { mainColors } from "../../utils/theme";
 import { StaticCanvas } from "../Canvas/StaticCanvas";
@@ -40,9 +40,6 @@ export const Dudar = () => {
   const setDimensions = () => {
     const height = window.innerHeight;
     const width = window.innerWidth;
-    if (width > 600) {
-      localStorage.setItem(landscapeAlertId, "closed");
-    }
 
     setScreenSize({ width, height });
   };
