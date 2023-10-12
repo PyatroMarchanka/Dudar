@@ -79,13 +79,39 @@ export const bagpipeImages = {
   [BagpipeTypes.BelarusianNONTraditionalDuda]: getBagpipeImages(
     BagpipeTypes.BelarusianNONTraditionalDuda
   ),
-  [BagpipeTypes.BelarusianOpenDuda]: getBagpipeImages(
-    BagpipeTypes.BelarusianOpenDuda
-  ),
+  [BagpipeTypes.BelarusianOpenDuda]: getBagpipeImages(BagpipeTypes.BelarusianOpenDuda),
   [BagpipeTypes.Dudelsack]: getBagpipeImages(BagpipeTypes.Dudelsack),
 };
 
-export const fingerRightImageSrc = "/images/finger_right.svg";
-export const fingerLeftImageSrc = "/images/finger_left.svg";
-export const fingerRightActiveImageSrc = "/images/finger_right_active.svg";
-export const fingerLeftActiveImageSrc = "/images/finger_left_active.svg";
+const srcToImage = (src: string) => {
+  const image = new Image();
+  image.src = src;
+  return image;
+};
+
+export const imagesTree = {
+  left: {
+    active: {
+      double: srcToImage("/images/finger_left_double_active.svg"),
+      doubleHalf: srcToImage("/images/finger_left_double_half_active.svg"),
+      normal: srcToImage("/images/finger_left_active.svg"),
+    },
+    inactive: {
+      double: srcToImage("/images/finger_left_double.svg"),
+      doubleHalf: srcToImage("/images/finger_left_double_half.svg"),
+      normal: srcToImage("/images/finger_left.svg"),
+    },
+  },
+  right: {
+    active: {
+      double: srcToImage("/images/finger_right_double_active.svg"),
+      doubleHalf: srcToImage("/images/finger_right_double_half_active.svg"),
+      normal: srcToImage("/images/finger_right_active.svg"),
+    },
+    inactive: {
+      double: srcToImage("/images/finger_right_double.svg"),
+      doubleHalf: srcToImage("/images/finger_right_double_half.svg"),
+      normal: srcToImage("/images/finger_right.svg"),
+    },
+  },
+};

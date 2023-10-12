@@ -6,15 +6,13 @@ import { cleanLines } from "../utils/drawUtils/drawAll";
 
 import { useNotesNames } from "./useNotesNames";
 
-export const useDrawStatic = (
-  activeHole: { note: SharpNotes; octave: number } | null
-) => {
+export const useDrawStatic = (activeHole: { note: SharpNotes; octave: number } | null) => {
   const {
     state: { activeSong, songNotes, bagpipeType },
   } = useContext(store);
   const canvasRef = useRef(null);
 
-  const notesNameToLine = useNotesNames();
+  const { notesMap: notesNameToLine, bagpipeNotes } = useNotesNames();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -31,7 +29,7 @@ export const useDrawStatic = (
       canvas && (canvas as HTMLCanvasElement)!.getContext("2d");
 
     const render = () => {
-      drawStatic(context!, bagpipeType, notesNameToLine, activeHole);
+      drawStatic(context!, bagpipeType, notesNameToLine, bagpipeNotes, activeHole);
 
       animationFrameId = window.requestAnimationFrame(render);
     };
