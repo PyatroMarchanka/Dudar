@@ -14,7 +14,7 @@ import { Icon } from "../global/Icon";
 import InfoIcon from "@material-ui/icons/Info";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
-import { landscapeAlertId } from "../../constants/localStorage";
+import { updatesAlertId } from "../../constants/localStorage";
 import styled from "styled-components";
 
 interface UpdatedContentProps {}
@@ -42,7 +42,6 @@ interface Props {}
 const ChangeLogPopup = (props: Props) => {
   const { t } = useTranslation("translation");
   const [open, setOpen] = useState(false);
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -53,11 +52,11 @@ const ChangeLogPopup = (props: Props) => {
   const InfoButton = <Icon type="material" fill={theme.colors.black} Icon={InfoIcon} />;
 
   useEffect(() => {
-    const isAlertClosed = localStorage.getItem(landscapeAlertId);
+    const isAlertClosed = localStorage.getItem(updatesAlertId);
 
     if (!isAlertClosed) {
       setOpen(true);
-      localStorage.setItem(landscapeAlertId, "closed");
+      localStorage.setItem(updatesAlertId, "closed");
     } else {
       handleClose();
     }

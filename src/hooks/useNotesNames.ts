@@ -3,6 +3,7 @@ import { store } from "../context";
 import { bagpipes } from "../dataset/bagpipes";
 import { NotesMap } from "../utils/drawUtils/drawBagpipe";
 import { getSongNotesWithOctaveFromMidi, transposeNoteWithOctave } from "../utils/midiUtils";
+import { SharpNotesEnum } from "../interfaces";
 
 export const useNotesNames = () => {
   const {
@@ -10,7 +11,10 @@ export const useNotesNames = () => {
     setSongNotes,
   } = useContext(store);
 
-  const [notesNamesMap, setNotesNamesMap] = useState<NotesMap>([] as any);
+  const [notesNamesMap, setNotesNamesMap] = useState<{
+    bagpipeNotes: SharpNotesEnum[];
+    notesMap: NotesMap;
+  }>([] as any);
   const linesYpositions = bagpipes[bagpipeType].holesPositions.linesYPositions;
 
   useEffect(() => {
@@ -29,7 +33,7 @@ export const useNotesNames = () => {
       return acc;
     }, [] as NotesMap);
 
-    setNotesNamesMap(notesMap);
+    setNotesNamesMap({ notesMap, bagpipeNotes });
     setSongNotes(transposedNotes);
   }, [midiData, transpose, bagpipeType]);
 

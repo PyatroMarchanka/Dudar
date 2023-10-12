@@ -1,11 +1,12 @@
 import { Midi } from "@tonejs/midi";
 import { Note } from "@tonejs/midi/dist/Note";
-import { BagpipeTypes, SharpNotes } from "../../interfaces";
+import { BagpipeTypes, SharpNotes, SharpNotesEnum } from "../../interfaces";
 import { drawBagpipe, drawNotesNames, drawShadow, NotesMap } from "./drawBagpipe";
 import { drawBarsLines } from "./drawBarsLines";
 import { drawActiveHoles, drawClosedHoles } from "./drawHoles";
 import { drawNotes } from "./drawNotes";
-import { Song, TimeSignatures } from "../../dataset/songs/interfaces";
+import { Song } from "../../dataset/songs/interfaces";
+import { drawFingers } from "./drawFingers";
 
 export const drawDynamic = (
   ctx: CanvasRenderingContext2D,
@@ -29,18 +30,25 @@ export const drawStatic = (
   ctx: CanvasRenderingContext2D,
   bagpipeType: BagpipeTypes,
   notesToLineIdx: NotesMap,
+  bagpipeNotes: SharpNotesEnum[],
   activeNote?: {
     note: SharpNotes;
     octave: number;
-  } | null
+  } | null,
 ) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   drawShadow(ctx, bagpipeType);
   drawBagpipe(ctx, bagpipeType);
-  drawClosedHoles(ctx, bagpipeType);
+  if (bagpipeType === BagpipeTypes.Dudelsack) {
+    drawClosedHoles(ctx, bagpipeType);
+  }
   drawNotesNames(ctx, bagpipeType, notesToLineIdx);
 
   if (activeNote) {
-    drawActiveHoles(ctx!, bagpipeType, activeNote);
+    if (bagpipeType === BagpipeTypes.Dudelsack) {
+      drawActiveHoles(ctx!, bagpipeType, activeNote);
+    } else {
+      drawFingers(ctx!, bagpipeType, activeNote, bagpipeNotes);
+    }
   }
 };

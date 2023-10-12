@@ -1,7 +1,7 @@
 import { Midi } from "@tonejs/midi";
 import { createContext, useEffect } from "react";
 import { Song, SongListByBagpipe } from "../dataset/songs/interfaces";
-import { BagpipeTypes, Languages, SharpNotesEnum } from "../interfaces";
+import { BagpipeTypes, HolesModes, Languages, SharpNotesEnum } from "../interfaces";
 import { SettingsState, settingsInitialState, useSettingsReducer } from "./reducers/settings";
 import { PlayerState, playerInitialState, usePlayerReducer } from "./reducers/player";
 import { useChangeLanguage } from "../locales";
@@ -34,7 +34,8 @@ interface Context {
   setSongNotes: (notes: SharpNotesEnum[]) => void;
   setIsPreclick: (bool: boolean) => void;
   setLoop: (bool: boolean) => void;
-  setIsSongLoading: (bool: boolean) => void
+  setIsSongLoading: (bool: boolean) => void;
+  setHolesMode: (mode: HolesModes) => void;
 }
 
 const store = createContext<Context>({
@@ -56,7 +57,8 @@ const store = createContext<Context>({
   setSongLength: (seconds: number) => {},
   setIsPreclick: (bool: boolean) => {},
   setLoop: (bool: boolean) => {},
-  setIsSongLoading: (bool: boolean) => {}
+  setIsSongLoading: (bool: boolean) => {},
+  setHolesMode: (mode: HolesModes) => {}
 });
 const { Provider } = store;
 

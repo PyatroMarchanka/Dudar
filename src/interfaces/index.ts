@@ -53,6 +53,7 @@ export interface BagpipeConfig {
   imagesProperties: BagpipesImagesProperties;
   images: BagpipeImages;
   notesToLines: BagpipesNotesToLines;
+  fingersMaps: BagpipeNotesMap;
 }
 
 export type BagpipeNotesMap = {
@@ -120,4 +121,9 @@ export enum BagpipeTypes {
 export enum Languages {
   Belarusian = "be",
   English = "en",
+}
+
+export enum HolesModes {
+  Holes = 'holes',
+  Fingers = 'fingers'
 }

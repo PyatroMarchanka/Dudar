@@ -5,10 +5,11 @@ import {
   userBagpipeType,
   lastSongData,
   userLanguage,
+  userHolesMode,
 } from "./../constants/localStorage";
 import { useContext, useEffect } from "react";
 import { store } from "../context";
-import { BagpipeTypes, Languages } from "../interfaces";
+import { BagpipeTypes, HolesModes, Languages } from "../interfaces";
 import { Song, SongTypes } from "../dataset/songs/interfaces";
 
 export const fallbackSong: Song = {
@@ -34,6 +35,8 @@ export const getUserDataFromLocal = () => {
   const isPreclick = localStorage.getItem(userIsPreclick);
   const bagpipeType = localStorage.getItem(userBagpipeType);
   const language = localStorage.getItem(userLanguage);
+  const holesMode = localStorage.getItem(userHolesMode);
+
   return {
     tempo: userTempoData !== null ? +userTempoData : 200,
     transpose: userTransposeData !== null ? +userTransposeData : 0,
@@ -41,12 +44,13 @@ export const getUserDataFromLocal = () => {
     bagpipeType: (bagpipeType as BagpipeTypes) || fallBackBagpipe,
     songData,
     language: (language || fallBackLanguage) as Languages,
+    holesMode: (holesMode || HolesModes.Fingers) as HolesModes,
   };
 };
 
 export const useLocalStorage = () => {
   const {
-    state: { activeSong, tempo, transpose, isPreclick, bagpipeType, language },
+    state: { activeSong, tempo, transpose, isPreclick, bagpipeType, language, holesMode },
     setActiveSong,
     setTempo,
     setTranspose,
@@ -81,7 +85,11 @@ export const useLocalStorage = () => {
     if (language) {
       localStorage.setItem(userLanguage, language);
     }
-  }, [activeSong, tempo, transpose, isPreclick, bagpipeType, language]);
+
+    if (holesMode) {
+      localStorage.setItem(userHolesMode, holesMode);
+    }
+  }, [activeSong, tempo, transpose, isPreclick, bagpipeType, language, holesMode]);
 
   useEffect(() => {
     const songDataFromLocalStorage = localStorage.getItem(lastSongData);
@@ -89,7 +97,7 @@ export const useLocalStorage = () => {
     try {
       parsedSong = !!songDataFromLocalStorage && JSON.parse(songDataFromLocalStorage);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       parsedSong = fallbackSong;
     }
     const songData = parsedSong.pathName ? parsedSong : undefined;
