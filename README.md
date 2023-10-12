@@ -1,4 +1,5 @@
-The Dudar project is a service to learn how to play bagpipe. Android only.
+The Dudar project is a service to learn how to play bagpipe.
+Works with MIDI, Tone.js
 
 # Available Scripts
 
