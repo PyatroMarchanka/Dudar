@@ -26,7 +26,7 @@ export const fallbackSong: Song = {
 };
 
 const fallBackBagpipe = BagpipeTypes.BelarusianNONTraditionalDuda;
-const fallBackLanguage = Languages.Belarusian;
+const fallBackLanguage = Languages.English;
 
 export const getUserDataFromLocal = () => {
   const songData = localStorage.getItem(lastSongData);
