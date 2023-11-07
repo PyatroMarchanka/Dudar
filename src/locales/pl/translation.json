@@ -13,15 +13,15 @@
       "listDescription": "Melodie, które można wykonać na wybranym instrumencie. Można to zmienić w ustawieniach",
       "settings": "Ustawienia",
       "settingsDescription": "zmień instrument\nzmień ton melodii na swój instrument\nzawołanie - dodatkowe odliczanie do rozpoczęcia występu, aby zadąć w dudy, przygotować\nzmienić język",
-      "updates": "Jeśli chcesz dodać nową melodię - skorzystaj z formularza w ustawieniach (czarny przycisk poniżej)\nBeat można zapętlić (przycisk z okrągłymi strzałkami)\nNowe melodie: Troll Gnyot Yel - Что Совой Об Пень, Troll Gnyot Yel - Tańczące Trolle. , Pościg, Przyklejony, Trzy Żółwie, Villeman i Magnhild\n",
+      "updates": "Jeśli chcesz dodać nową melodię - skorzystaj z formularza w ustawieniach (czarny przycisk poniżej)\nTakt można zapętlić (przycisk z okrągłymi strzałkami)\nNowe melodie: Troll Gnyot Yel - Что Совой Об Пень, Troll Gnyot Yel - Tańczące Trolle. , Pościg, Przyklejony, Trzy Żółwie, Villeman i Magnhild",
       "updates_short": "Nowe melodie: Bagarodzica, Marazula, Was wollen wir trinken, Anioł, Pahonia, Lipka, Trzy Żółwie, Villeman i Magnhild",
       "updatesTitle": "Aktualizacje:"
     },
     "dudas": {
-      "belNonTradDuda": "Białoruskie nietradycyjne duda",
+      "belNonTradDuda": "Białoruskie nietradycyjne dudy",
       "belOpenDuda": "Białoruskie dudy w sposób otwarty",
       "belTradDuda": "Tradycyjne białoruskie dudy",
-      "Dudelsack": "Dudelzack",
+      "Dudelsack": "Dudelzak",
       "unknownBagpipe": "Nieznane Dudy"
     },
     "genres": {
@@ -33,8 +33,9 @@
       "other": "Inne"
     },
     "languages": {
-      "be": "białoruski",
-      "en": "angielski",
+      "be": "Беларуская",
+      "en": "English",
+      "pl": "Polski",
       "lang": "Język"
     },
     "songList": {

@@ -121,6 +121,7 @@ export enum BagpipeTypes {
 export enum Languages {
   Belarusian = "be",
   English = "en",
+  Polish = "pl"
 }
 
 export enum HolesModes {
