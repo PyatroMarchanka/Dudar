@@ -1,6 +1,6 @@
 import MidiPlayerLib from "midi-player-js";
 import { Midi } from "@tonejs/midi";
-import { playNote, stopNote } from "./midiUtils/sampler";
+import { droneFileLengthMs, playNote, stopNote } from "./midiUtils/sampler";
 import { midiNumbersToNotes } from "./midiUtils/notesToMidiNumbers";
 
 export type MidiNoteHandler = (note: number) => void;
@@ -36,6 +36,7 @@ export class MidiPlayer {
   metronom: boolean = true;
   loopData = { startLoopTicks: 0, endLoopTicks: 1920 };
   loop: boolean = false;
+  isPlaying = false;
   handleNotesMoving?: NotesMovingHandler;
 
   constructor(playRef: any, bpm: number, metronom: boolean) {
@@ -213,13 +214,19 @@ export class MidiPlayer {
   playDrone = (note: number) => {
     this.keyUp(note);
     this.keyDown(note, 0.5);
+
+    setTimeout(() => {
+      if (this.isPlaying) {
+        this.playDrone(note);
+      }
+    }, droneFileLengthMs);
   };
 
   playMidi = (midi: ArrayBuffer | null, progress: number) => {
     if (!midi) {
       return;
     }
-
+    this.isPlaying = true;
     Player.loadArrayBuffer(midi);
     Player.play();
 
@@ -248,6 +255,7 @@ export class MidiPlayer {
   };
 
   stop = () => {
+    this.isPlaying = false;
     this.playRef.current?.cancelQueue();
     Player.stop();
     this.stopAllNotes();
@@ -268,6 +276,7 @@ export class MidiPlayer {
   };
 
   pause = () => {
+    this.isPlaying = false;
     this.playRef.current?.cancelQueue();
     Player.pause();
     this.stopAllNotes();

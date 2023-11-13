@@ -1,5 +1,7 @@
 import * as Tone from "tone";
 
+const reverb = new Tone.Reverb(3).toDestination()
+
 const sampler = new Tone.Sampler({
   urls: {
     A3: "samples/A2.mp3",
@@ -10,7 +12,8 @@ const sampler = new Tone.Sampler({
     A5: "samples/A4.mp3",
   },
   baseUrl: "",
-}).toDestination();
+  
+}).chain(reverb).toDestination();
 
 export const playNote = (note?: string, volume = 0.5) => {
   if (note) {
@@ -23,3 +26,5 @@ export const stopNote = (note?: string) => {
     sampler.triggerRelease([note]);
   }
 };
+
+export const droneFileLengthMs = 60400;

@@ -27,9 +27,5 @@ export const useMidiPlayer = (
     setMidiPlayer(player);
   }, []);
 
-  useEffect(() => {
-    console.log(playerRef);
-  }, [playerRef]);
-
   return { Player: midiPlayer };
 };
