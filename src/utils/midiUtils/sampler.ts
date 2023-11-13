@@ -1,7 +1,5 @@
 import * as Tone from "tone";
 
-const reverb = new Tone.Reverb(3).toDestination()
-
 const sampler = new Tone.Sampler({
   urls: {
     A3: "samples/A2.mp3",
@@ -13,7 +11,7 @@ const sampler = new Tone.Sampler({
   },
   baseUrl: "",
   
-}).chain(reverb).toDestination();
+}).toDestination();
 
 export const playNote = (note?: string, volume = 0.5) => {
   if (note) {
