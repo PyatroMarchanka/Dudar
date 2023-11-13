@@ -3,26 +3,26 @@
     "settings": "Ustawienia",
     "instrumentType": "Typ instrumentu",
     "transposeMelody": "Transponuj",
-    "preclick": "Wstępne kliknięcie",
+    "preclick": "Wstępne odliczanie",
     "noIcon": "Brak ikony",
     "semitones": "półton(y)",
     "gotIt": "Rozumiem",
     "about": {
       "mainTitle": "Naucz się grać bez nut!\n Apka do nauki gry na dudach",
-      "list": "Lista dzwonków",
+      "list": "Lista melodii",
       "listDescription": "Melodie, które można wykonać na wybranym instrumencie. Można to zmienić w ustawieniach",
       "settings": "Ustawienia",
       "settingsDescription": "zmień instrument\nzmień ton melodii na swój instrument\nzawołanie - dodatkowe odliczanie do rozpoczęcia występu, aby zadąć w dudy, przygotować\nzmienić język",
-      "updates": "Jeśli chcesz dodać nową melodię - skorzystaj z formularza w ustawieniach (czarny przycisk poniżej)\nTakt można zapętlić (przycisk z okrągłymi strzałkami)\nNowe melodie: Troll Gnyot Yel - Что Совой Об Пень, Troll Gnyot Yel - Tańczące Trolle. , Pościg, Przyklejony, Trzy Żółwie, Villeman i Magnhild",
+      "updates": "Jeśli chcesz dodać nową melodię - skorzystaj z formularza w ustawieniach (czarny przycisk poniżej) - melodię  można zapętlić (przycisk z okrągłymi strzałkami) - Nowe melodie: Troll Gnyot Yel - Что Совой Об Пень, Troll Gnyot Yel - Tańczące Trolle. , Pościg, Przyklejony, Trzy Żółwie, Villeman i Magnhild",
       "updates_short": "Nowe melodie: Bagarodzica, Marazula, Was wollen wir trinken, Anioł, Pahonia, Lipka, Trzy Żółwie, Villeman i Magnhild",
       "updatesTitle": "Aktualizacje:"
     },
     "dudas": {
-      "belNonTradDuda": "Białoruskie nietradycyjne dudy",
-      "belOpenDuda": "Białoruskie dudy w sposób otwarty",
+      "belNonTradDuda": "Białoruskie nietradycyjne zamknięte dudy",
+      "belOpenDuda": "Białoruskie otwarte dudy",
       "belTradDuda": "Tradycyjne białoruskie dudy",
       "Dudelsack": "Dudelzak",
-      "unknownBagpipe": "Nieznane Dudy"
+      "unknownBagpipe": "Nieokreślone dudy"
     },
     "genres": {
       "medieval": "Średniowieczne",
