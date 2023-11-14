@@ -2,6 +2,7 @@ import MidiPlayerLib from "midi-player-js";
 import { Midi } from "@tonejs/midi";
 import { droneFileLengthMs, playNote, stopNote } from "./midiUtils/sampler";
 import { midiNumbersToNotes } from "./midiUtils/notesToMidiNumbers";
+import { SharpNotesEnum } from "../interfaces";
 
 export type MidiNoteHandler = (note: number) => void;
 export type PlaybackProgressHandler = (
@@ -11,6 +12,18 @@ export type PlaybackProgressHandler = (
 ) => void;
 export type NotesMovingHandler = (tick: number) => void;
 export type SetTransposeType = (num: number, isPlaying: boolean) => void;
+
+export interface MidiEvent {
+  byteIndex?: number;
+  delta?: number;
+  name?: "End of Track" | "Note on" | "Note off" | 'Sequence/Track Name';
+  tick?: number;
+  track?: number;
+  channel?: number;
+  noteName?: SharpNotesEnum;
+  noteNumber?: number;
+  velocity?: number;
+}
 
 var Player = new MidiPlayerLib.Player(function (event: any) {});
 Player.on("fileLoaded", function () {});
@@ -67,11 +80,13 @@ export class MidiPlayer {
       if (this.handleNotesMoving) {
         this.handleNotesMoving(tick);
       }
-
+      if(tick >= this.midiData?.durationTicks!){
+        this.setProgress(0, true)
+      }
       this.loopBar(tick);
     });
 
-    Player.on("midiEvent", (event: any) => {
+    Player.on("midiEvent", (event: MidiEvent) => {
       if (event.noteNumber === 33 && this.metronom) {
         this.handleMetronomeEvent(event);
       } else {
@@ -81,9 +96,6 @@ export class MidiPlayer {
 
     Player.on("endOfFile", () => {
       console.log("end of file");
-      this.stop();
-      switchIsPlaying();
-      handleProgress(0, Player.getSongTime(), Player.getSongTimeRemaining());
     });
   };
 
@@ -109,7 +121,7 @@ export class MidiPlayer {
     }
   }
 
-  handleMetronomeEvent = (event: any) => {
+  handleMetronomeEvent = (event: MidiEvent) => {
     const delayMs = 75;
     if (event.noteNumber === 33 && this.metronom) {
       if (event.name === "Note on") {
@@ -226,10 +238,11 @@ export class MidiPlayer {
     if (!midi) {
       return;
     }
+    console.log(this.midiData)
     this.isPlaying = true;
     Player.loadArrayBuffer(midi);
     Player.play();
-
+    console.log(Player.getEvents())
     if (progress) {
       this.setProgress(progress, true);
     }
