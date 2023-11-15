@@ -18,7 +18,7 @@
     "feeder-react-feedback": "^0.0.6",
     "i18next": "^22.4.11",
     "lodash": "^4.17.21",
-    "midi-file": "^1.2.3",
+    "midi-file": "^1.2.4",
     "midi-parse": "^0.0.6",
     "midi-parser-js": "^4.0.4",
     "midi-player-js": "^2.0.14",
