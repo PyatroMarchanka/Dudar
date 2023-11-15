@@ -3,6 +3,7 @@
   "timezone": "Europe/Warsaw",
   "extends": ["config:base"],
   "schedule": ["before 4pm"],
+  "rangeStrategy": "bump",
   "packageRules": [
     {
       "matchPackageNames": [
