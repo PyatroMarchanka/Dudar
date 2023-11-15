@@ -11,10 +11,16 @@
         "node"
       ],
       "matchUpdateTypes": [
-        "minor", 
+        "major", 
+        "minor"
+      ],
+      "enabled": false
+    },
+    {
+      "matchUpdateTypes": [
         "patch"
       ],
-      "enabled": true
+      "enabled": false
     }
   ]
 }
