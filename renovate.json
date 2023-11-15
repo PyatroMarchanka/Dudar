@@ -2,7 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "timezone": "Europe/Warsaw",
   "extends": ["config:base"],
-  "schedule": ["before 6pm"],
+  "schedule": ["before 7pm"],
   "RENOVATE_PR_CONCURRENT_LIMIT": 20,
   "rangeStrategy": "bump",
   "packageRules": [
