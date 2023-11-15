@@ -1,6 +1,20 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
+  "timezone": "Europe/Warsaw",
+  "extends": ["config:base"],
+  "schedule": ["before 3pm"],
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "cimg/node",
+        "node"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor", 
+        "patch"
+      ],
+      "enabled": true
+    }
   ]
 }
