@@ -3,6 +3,7 @@
   "timezone": "Europe/Warsaw",
   "extends": ["config:base"],
   "schedule": ["before 6pm"],
+  "RENOVATE_PR_CONCURRENT_LIMIT": 20,
   "rangeStrategy": "bump",
   "packageRules": [
     {
