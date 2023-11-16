@@ -3,8 +3,11 @@
   "timezone": "Europe/Warsaw",
   "extends": ["config:base"],
   "schedule": ["before 7pm"],
-  "RENOVATE_PR_CONCURRENT_LIMIT": 20,
   "rangeStrategy": "bump",
+  "separateMinorPatch": true,
+  "patch": {
+    "groupName": "all patch updates"
+  },
   "packageRules": [
     {
       "matchPackageNames": [
@@ -13,12 +16,6 @@
       ],
       "matchUpdateTypes": [
         "major", 
-        "minor"
-      ],
-      "enabled": false
-    },
-    {
-      "matchUpdateTypes": [
         "minor"
       ],
       "enabled": false
