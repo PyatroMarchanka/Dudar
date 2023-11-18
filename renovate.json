@@ -2,7 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "timezone": "Europe/Warsaw",
   "extends": ["config:base"],
-  "schedule": ["before 7pm"],
+  "schedule": ["before 4am on Monday"],
   "rangeStrategy": "bump",
   "separateMinorPatch": true,
   "patch": {
