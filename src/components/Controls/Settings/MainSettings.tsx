@@ -97,7 +97,6 @@ export const MainSettings = ({ midiPlayer }: Props) => {
           <Typography variant="h5">Facebook</Typography>
         </a>
       </RowCentered>
-     
     </Container>
   );
 };

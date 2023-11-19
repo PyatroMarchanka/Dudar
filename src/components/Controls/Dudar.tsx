@@ -7,7 +7,6 @@ import { Settings } from "./Settings";
 import { SongList } from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
-import { updatesAlertId } from "../../constants/localStorage";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { mainColors } from "../../utils/theme";
 import { StaticCanvas } from "../Canvas/StaticCanvas";
@@ -18,6 +17,7 @@ import { MidiPlayerComponent } from "../MidiPlayerComponent";
 import { useSongTitle } from "../../hooks/useSongTitle";
 import ChangeLogPopup from "../ChangeLogPopup";
 import { BackdropSpinner } from "../global/BackdropSpinner";
+import { DonationButton } from "../global/DonationButton";
 
 export const Dudar = () => {
   const {
@@ -65,6 +65,7 @@ export const Dudar = () => {
   return (
     <Container>
       <GlobalStyle />
+      <DonationButton />
       <BackdropSpinner isOpen={isSongLoading} />
       <SettingsButtons>
         <SongList player={midiPlayer} />
@@ -82,7 +83,6 @@ export const Dudar = () => {
       <Inputs>
         <PlayerControls player={midiPlayer} />
       </Inputs>
-
       <MidiPlayerComponent playerRef={playerRef} />
     </Container>
   );
