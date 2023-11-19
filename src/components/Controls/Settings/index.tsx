@@ -77,6 +77,7 @@ const Container = styled.div`
   .icon {
     transform: translate(13px, 0px);
   }
+  padding-right: 50px;
 `;
 
 const Header = styled.div`
@@ -97,9 +98,5 @@ const Title = styled.h3`
 const Content = styled.div`
   padding: 10px;
   z-index: 10;
-  .settings {
-    position: fixed;
-    left: 10px;
-    z-index: 100;
-  }
+  
 `;

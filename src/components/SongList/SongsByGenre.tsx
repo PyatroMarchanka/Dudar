@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     dudaRoot: {
       marginTop: "60px",
-      marginLeft: '20px'
+      marginLeft: "20px",
     },
     duda: {},
     heading: {
