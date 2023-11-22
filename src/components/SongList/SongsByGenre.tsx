@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     dudaRoot: {
       marginTop: "60px",
-      marginLeft: '20px'
+      marginLeft: "20px",
     },
     duda: {},
     heading: {
@@ -152,7 +152,7 @@ const Content = styled.div`
   z-index: 10;
   .close {
     position: absolute;
-    right: 10px;
+    left: 10px;
     margin-top: 10px;
     z-index: 100;
   }

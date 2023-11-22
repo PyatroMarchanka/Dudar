@@ -1,24 +1,44 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "timezone": "Europe/Warsaw",
-  "extends": ["config:base"],
-  "schedule": ["before 7pm"],
+  "extends": ["config:recommended"],
+  "schedule": ["before 7pm on Wednesday"],
+  "prConcurrentLimit": 20,
   "rangeStrategy": "bump",
   "separateMinorPatch": true,
-  "patch": {
-    "groupName": "all patch updates"
+  "major": {
+    "dependencyDashboardApproval": true
   },
   "packageRules": [
     {
-      "matchPackageNames": [
-        "cimg/node",
-        "node"
-      ],
-      "matchUpdateTypes": [
-        "major", 
-        "minor"
-      ],
+      "matchPackageNames": ["cimg/node", "node"],
+      "matchUpdateTypes": ["major", "minor"],
       "enabled": false
+    },
+    {
+      "matchPackagePatterns": ["^@vendure/"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "matchPackageNames": [
+        "yarn", "hashicorp/terraform"
+      ],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "labels": ["MAJOR UPDATE"]
+    },
+    {
+      "matchUpdateTypes": ["minor"],
+      "labels": ["MINOR UPDATE"]
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "labels": ["PATCH UPDATE"]
+    },
+    {
+      "matchPackagePatterns": ["^eslint-", "^@typescript-eslint"],
+      "groupName": ["ESlint packages"]
     }
   ]
 }
