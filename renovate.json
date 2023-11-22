@@ -1,29 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
-  "schedule": ["before 7pm on Wednesday"],
-  "prConcurrentLimit": 20,
   "rangeStrategy": "bump",
   "separateMinorPatch": true,
   "major": {
     "dependencyDashboardApproval": true
   },
   "packageRules": [
-    {
-      "matchPackageNames": ["cimg/node", "node"],
-      "matchUpdateTypes": ["major", "minor"],
-      "enabled": false
-    },
-    {
-      "matchPackagePatterns": ["^@vendure/"],
-      "dependencyDashboardApproval": true
-    },
-    {
-      "matchPackageNames": [
-        "yarn", "hashicorp/terraform"
-      ],
-      "dependencyDashboardApproval": true
-    },
     {
       "matchUpdateTypes": ["major"],
       "labels": ["MAJOR UPDATE"]
