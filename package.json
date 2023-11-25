@@ -3,6 +3,7 @@
   "name": "dudar",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "yarn@1.22.19",
   "dependencies": {
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.2",
