@@ -13,9 +13,12 @@ folders.forEach((folder) => {
   fs.readdirSync(folder.path).forEach((file) => {
     if (file.includes(".mid")) {
       const song = {};
-      const [name, timeSignature] = file.split(".mid").join("").split("|");
+      const nameWOutExt = file.split(".mid").join("");
+      const name = nameWOutExt.split("|")[0].split('$')[0];
+      const timeSignature = nameWOutExt.split("|")[1];
+      song.labels = nameWOutExt.split("$")[1].split("-");
       song.timeSignature = timeSignature?.split("-").join("/") || "4/4";
-      song.name = name.split('-trad').join('');
+      song.name = name.split("-trad").join("");
       song.type = folder.label.toLowerCase();
       song.pathName = `${folder.path.split("./public/midi/").join("")}/${file}`;
 
