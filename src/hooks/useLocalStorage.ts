@@ -10,7 +10,7 @@ import {
 import { useContext, useEffect } from "react";
 import { store } from "../context";
 import { BagpipeTypes, HolesModes, Languages } from "../interfaces";
-import { isSongInLists } from "../dataset/songs/utils";
+import { getFirstSongFromList, isSongInLists } from "../dataset/songs/utils";
 
 const fallBackBagpipe = BagpipeTypes.BelarusianNONTraditionalDuda;
 const fallBackLanguage = Languages.English;
@@ -43,7 +43,7 @@ export const useLocalStorage = () => {
       tempo,
       transpose,
       isPreclick,
-      bagpipeType,
+      bagpipeType: bagpipeTypeFromCtx,
       language,
       holesMode,
     },
@@ -74,8 +74,8 @@ export const useLocalStorage = () => {
       localStorage.setItem(userTranspose, `${transpose}`);
     }
 
-    if (bagpipeType) {
-      localStorage.setItem(userBagpipeType, bagpipeType);
+    if (bagpipeTypeFromCtx) {
+      localStorage.setItem(userBagpipeType, bagpipeTypeFromCtx);
     }
 
     if (language) {
@@ -85,7 +85,7 @@ export const useLocalStorage = () => {
     if (holesMode) {
       localStorage.setItem(userHolesMode, holesMode);
     }
-  }, [activeSong, tempo, transpose, isPreclick, bagpipeType, language, holesMode]);
+  }, [activeSong, tempo, transpose, isPreclick, bagpipeTypeFromCtx, language, holesMode]);
 
   useEffect(() => {
     const songDataFromLocalStorage = localStorage.getItem(lastSongData);
@@ -96,8 +96,10 @@ export const useLocalStorage = () => {
       console.log(error);
     }
 
-    const isInList = listsByBagpipe && isSongInLists(listsByBagpipe, parsedSong);
-    const songData = isInList && parsedSong.pathName ? parsedSong : undefined;
+    if (!listsByBagpipe) return;
+
+    const isInList = isSongInLists(listsByBagpipe, parsedSong);
+    const songData = isInList ? parsedSong : getFirstSongFromList(listsByBagpipe);
     const userTempoData = localStorage.getItem(userTempo);
     const userTransposeData = localStorage.getItem(userTranspose);
     const userIsPreclickData = localStorage.getItem(userIsPreclick);

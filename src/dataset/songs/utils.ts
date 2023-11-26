@@ -1,8 +1,7 @@
-import { BagpipeTypes } from "../../interfaces";
 import { Song, SongListByBagpipe, TimeSignatures } from "./interfaces";
 
-export const getFirstSongFromList = (lists: SongListByBagpipe, bagpipeType: BagpipeTypes): Song => {
-  return lists[bagpipeType][0];
+export const getFirstSongFromList = (lists: SongListByBagpipe): Song => {
+  return Object.values(lists)[0][0];
 };
 
 const fourToFourTicks = 480;
@@ -23,7 +22,9 @@ export const getTicksPerBeatByTimeSignature = (timeSignature: TimeSignatures): n
   return timeSignaturesToTicks[timeSignature];
 };
 
-export const isSongInLists = (lists: SongListByBagpipe, song: Song) => {
+export const isSongInLists = (lists: SongListByBagpipe | null, song: Song) => {
+  if (!lists) return false;
+
   return Object.values(lists).some((songList) =>
     songList.some((songFromList) => songFromList.pathName === song.pathName)
   );
