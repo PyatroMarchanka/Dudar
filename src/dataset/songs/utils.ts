@@ -22,3 +22,9 @@ const timeSignaturesToTicks = {
 export const getTicksPerBeatByTimeSignature = (timeSignature: TimeSignatures): number => {
   return timeSignaturesToTicks[timeSignature];
 };
+
+export const isSongInLists = (lists: SongListByBagpipe, song: Song) => {
+  return Object.values(lists).some((songList) =>
+    songList.some((songFromList) => songFromList.pathName === song.pathName)
+  );
+};

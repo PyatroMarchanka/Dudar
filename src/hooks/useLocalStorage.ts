@@ -10,6 +10,7 @@ import {
 import { useContext, useEffect } from "react";
 import { store } from "../context";
 import { BagpipeTypes, HolesModes, Languages } from "../interfaces";
+import { isSongInLists } from "../dataset/songs/utils";
 
 const fallBackBagpipe = BagpipeTypes.BelarusianNONTraditionalDuda;
 const fallBackLanguage = Languages.English;
@@ -36,7 +37,16 @@ export const getUserDataFromLocal = () => {
 
 export const useLocalStorage = () => {
   const {
-    state: { activeSong, tempo, transpose, isPreclick, bagpipeType, language, holesMode },
+    state: {
+      listsByBagpipe,
+      activeSong,
+      tempo,
+      transpose,
+      isPreclick,
+      bagpipeType,
+      language,
+      holesMode,
+    },
     setActiveSong,
     setTempo,
     setTranspose,
@@ -85,7 +95,9 @@ export const useLocalStorage = () => {
     } catch (error) {
       console.log(error);
     }
-    const songData = parsedSong.pathName ? parsedSong : undefined;
+
+    const isInList = listsByBagpipe && isSongInLists(listsByBagpipe, parsedSong);
+    const songData = isInList && parsedSong.pathName ? parsedSong : undefined;
     const userTempoData = localStorage.getItem(userTempo);
     const userTransposeData = localStorage.getItem(userTranspose);
     const userIsPreclickData = localStorage.getItem(userIsPreclick);
@@ -98,5 +110,5 @@ export const useLocalStorage = () => {
     setIsPreclick(!!userIsPreclickData);
     setBagpipeType((bagpipeType as BagpipeTypes) || fallBackBagpipe);
     setLanguage((language as Languages) || fallBackLanguage);
-  }, []);
+  }, [listsByBagpipe]);
 };
