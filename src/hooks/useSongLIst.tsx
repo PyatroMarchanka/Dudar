@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect } from "react";
 import { store } from "../context";
-import { Song, SongListByBagpipe, SongListBySongType } from "../dataset/songs/interfaces";
+import { Song, SongListByBagpipe, SongListBySongType, SongTags } from "../dataset/songs/interfaces";
 import { BagpipeTypes } from "../interfaces";
 import { getSongListWithBagpipeTypes } from "../utils/midiUtils";
 import { transliterateSongList, useIsCyrylicLang } from "../locales";
@@ -9,7 +9,7 @@ export const useSongList = (onStop: () => void) => {
   const {
     setListsByBagpipe,
     setActiveSong,
-    state: { bagpipeType, activeSong, listsByBagpipe, language },
+    state: { bagpipeType, activeSong, listsByBagpipe, language, activeSongTags },
   } = useContext(store);
 
   const isCyrylicLang = useIsCyrylicLang();
@@ -20,12 +20,13 @@ export const useSongList = (onStop: () => void) => {
       const sortedList = sortSongsByBagpipe(listFromFile);
       const lists = sortSongsBySongType(sortedList[bagpipeType]);
       const transliteratedLists = !isCyrylicLang() ? transliterateSongList(lists) : lists;
-      setListsByBagpipe(transliteratedLists);
+      const listsFeilteredByTags = filterSongsByTags(transliteratedLists, activeSongTags);
+      setListsByBagpipe(listsFeilteredByTags);
       handleActiveSong(bagpipeType, transliteratedLists);
     } catch (error) {
       console.log(error);
     }
-  }, [bagpipeType, setListsByBagpipe, language]);
+  }, [bagpipeType, setListsByBagpipe, language, activeSongTags]);
 
   const handleActiveSong = useCallback(
     (bagpipeType: BagpipeTypes, listsByBagpipeLocal: SongListByBagpipe) => {
@@ -55,7 +56,8 @@ export const useSongList = (onStop: () => void) => {
 
   useEffect(() => {
     addBagpipesTypesToSongList();
-  }, [bagpipeType, language]);
+  }, [bagpipeType, language, activeSongTags]);
+
 };
 
 const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {
@@ -85,4 +87,17 @@ const sortSongsBySongType = (songs: Song[]): SongListBySongType => {
   });
 
   return list;
+};
+
+const filterSongsByTags = (lists: SongListBySongType, songTags: SongTags[]): SongListBySongType => {
+  if (!songTags.length) return lists;
+
+  return Object.entries(lists).reduce((acc, cur) => {
+    const [key, value] = cur;
+    const filteredList = value.filter((song) => songTags.every((tag) => song.labels.includes(tag)));
+    if (filteredList.length) {
+      acc[key] = filteredList;
+    }
+    return acc;
+  }, {} as SongListBySongType);
 };

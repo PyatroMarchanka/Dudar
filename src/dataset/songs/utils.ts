@@ -1,4 +1,10 @@
-import { Song, SongListByBagpipe, TimeSignatures } from "./interfaces";
+import {
+  Song,
+  SongListByBagpipe,
+  SongListBySongType,
+  SongTags,
+  TimeSignatures,
+} from "./interfaces";
 
 export const getFirstSongFromList = (lists: SongListByBagpipe): Song => {
   return Object.values(lists)[0][0];
@@ -28,4 +34,20 @@ export const isSongInLists = (lists: SongListByBagpipe | null, song: Song) => {
   return Object.values(lists).some((songList) =>
     songList.some((songFromList) => songFromList.pathName === song.pathName)
   );
+};
+
+export const getAvailableTagsFromLists = (lists: SongListBySongType) => {
+  const map: any = {};
+
+  Object.values(lists).forEach((list) => {
+    list.forEach((song) => {
+      song.labels.forEach((tag) => {
+        if (!(tag in map)) {
+          map[tag] = tag;
+        }
+      });
+    });
+  });
+
+  return Object.keys(map) as SongTags[];
 };

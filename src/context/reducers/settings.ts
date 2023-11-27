@@ -1,6 +1,7 @@
 import { useReducer } from "react";
 import { BagpipeTypes, HolesModes, Languages } from "../../interfaces";
 import { getUserDataFromLocal } from "../../hooks/useLocalStorage";
+import { SongTags } from "../../dataset/songs/interfaces";
 
 interface Action {
   type:
@@ -13,6 +14,8 @@ interface Action {
     | "SET_LOOP"
     | "SET_IS_PRECLICK"
     | "SET_LANGUAGE"
+    | "SET_SONG_TAGS"
+    | "SET_ACTIVE_SONG_TAGS"
     | "SET_HOLES_MODE";
 
   payload?: any;
@@ -31,6 +34,8 @@ export interface SettingsState {
   loop: boolean;
   language: Languages;
   holesMode: HolesModes;
+  songTags: SongTags[];
+  activeSongTags: SongTags[];
 }
 const userData = getUserDataFromLocal();
 
@@ -39,7 +44,8 @@ export const settingsInitialState: SettingsState = {
   showPianoRoll: true,
   screenSize: { width: 400, height: 500 },
   loop: false,
-
+  songTags: [],
+  activeSongTags: [],
   ...userData,
 };
 
@@ -103,6 +109,18 @@ export const useSettingsReducer = () => {
           language: action.payload,
         };
 
+      case "SET_SONG_TAGS":
+        return {
+          ...state,
+          songTags: action.payload,
+        };
+
+      case "SET_ACTIVE_SONG_TAGS":
+        return {
+          ...state,
+          activeSongTags: action.payload,
+        };
+
       case "SET_HOLES_MODE":
         return {
           ...state,
@@ -149,11 +167,17 @@ export const useSettingsReducer = () => {
     dispatch({ type: "SET_LANGUAGE", payload: lang });
   };
 
-
   const setHolesMode = (mode: HolesModes) => {
     dispatch({ type: "SET_HOLES_MODE", payload: mode });
   };
 
+  const setSongTags = (tags: SongTags[]) => {
+    dispatch({ type: "SET_SONG_TAGS", payload: tags });
+  };
+
+  const setActiveSongTags = (tags: SongTags[]) => {
+    dispatch({ type: "SET_ACTIVE_SONG_TAGS", payload: tags });
+  };
 
   return {
     state,
@@ -166,6 +190,8 @@ export const useSettingsReducer = () => {
     setScreenSize,
     setLoop,
     setLanguage,
-    setHolesMode
+    setHolesMode,
+    setSongTags,
+    setActiveSongTags
   };
 };
