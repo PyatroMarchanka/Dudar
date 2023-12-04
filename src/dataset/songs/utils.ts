@@ -7,7 +7,7 @@ import {
 } from "./interfaces";
 
 export const getFirstSongFromList = (lists: SongListByBagpipe): Song => {
-  return Object.values(lists)[0][0];
+  return Object.values(lists)?.[0]?.[0];
 };
 
 const fourToFourTicks = 480;
@@ -36,7 +36,9 @@ export const isSongInLists = (lists: SongListByBagpipe | null, song: Song) => {
   );
 };
 
-export const getAvailableTagsFromLists = (lists: SongListBySongType) => {
+export const getAvailableTagsFromLists = (lists: SongListBySongType | null) => {
+  if (!lists) return [];
+
   const map: any = {};
 
   Object.values(lists).forEach((list) => {

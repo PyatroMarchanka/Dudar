@@ -392,7 +392,7 @@ const getSongListWithBagpipeTypes = async (songs: any): Promise<any[]> => {
   } catch (error: any) {
     console.log(error);
   }
-
+  
   return updatedSongList;
 };
 
@@ -418,7 +418,7 @@ const initSongList = async () => {
         const timeSignature = nameWOutExt.split("|")[1];
         song.labels = nameWOutExt.split("$")[1].split("-");
         song.timeSignature = timeSignature?.split("-").join("/") || "4/4";
-        song.name = name.split("-trad").join("");
+        song.name = name.split("-bd").join("");
         song.type = folder.label.toLowerCase();
         song.pathName = `${folder.path.split("./public/midi/").join("")}/${file}`;
 

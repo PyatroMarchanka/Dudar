@@ -11,16 +11,8 @@ interface Props {}
 
 export const SongTagsWrapper = (props: Props) => {
   const {
-    setSongTags,
-    state: { songTags, listsByBagpipe },
+    state: { songTags },
   } = useContext(store);
-
-  useEffect(() => {
-    if (listsByBagpipe) {
-      const tags = getAvailableTagsFromLists(listsByBagpipe);
-      setSongTags(tags);
-    }
-  }, [listsByBagpipe, setSongTags]);
 
   return (
     <div>
@@ -63,5 +55,3 @@ const Tag = styled.div`
   padding: 5px;
   margin: 5px;
 `;
-
-

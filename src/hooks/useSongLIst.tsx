@@ -1,26 +1,33 @@
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { store } from "../context";
 import { Song, SongListByBagpipe, SongListBySongType, SongTags } from "../dataset/songs/interfaces";
 import { BagpipeTypes } from "../interfaces";
 import { getSongListWithBagpipeTypes } from "../utils/midiUtils";
 import { transliterateSongList, useIsCyrylicLang } from "../locales";
+import { getAvailableTagsFromLists, getFirstSongFromList } from "../dataset/songs/utils";
 
 export const useSongList = (onStop: () => void) => {
   const {
     setListsByBagpipe,
     setActiveSong,
+    setSongTags,
     state: { bagpipeType, activeSong, listsByBagpipe, language, activeSongTags },
   } = useContext(store);
 
   const isCyrylicLang = useIsCyrylicLang();
 
-  const addBagpipesTypesToSongList = useCallback(async () => {
+  const initSongList = useCallback(async () => {
     try {
-      const listFromFile = await getSongListWithBagpipeTypes();
-      const sortedList = sortSongsByBagpipe(listFromFile);
+      const songListUrl = "midi/list.json";
+
+      const songListFromFile = await fetch(songListUrl);
+      const songList = await songListFromFile.json();
+
+      const sortedList = sortSongsByBagpipe(songList);
       const lists = sortSongsBySongType(sortedList[bagpipeType]);
       const transliteratedLists = !isCyrylicLang() ? transliterateSongList(lists) : lists;
-      const listsFeilteredByTags = filterSongsByTags(transliteratedLists, activeSongTags);
+      const sortedListsAlphabetically = sortListsAlphabetically(transliteratedLists);
+      const listsFeilteredByTags = filterSongsByTags(sortedListsAlphabetically, activeSongTags);
       setListsByBagpipe(listsFeilteredByTags);
       handleActiveSong(bagpipeType, transliteratedLists);
     } catch (error) {
@@ -49,15 +56,27 @@ export const useSongList = (onStop: () => void) => {
 
   useEffect(() => {
     if (!activeSong && listsByBagpipe) {
-      const firstSongInList = listsByBagpipe[Object.keys(listsByBagpipe)[0]][0];
+      const firstSongInList = getFirstSongFromList(listsByBagpipe);
       setActiveSong(firstSongInList);
     }
   }, [activeSong, listsByBagpipe]);
 
   useEffect(() => {
-    addBagpipesTypesToSongList();
+    initSongList();
   }, [bagpipeType, language, activeSongTags]);
 
+  useEffect(() => {
+    const tags = getAvailableTagsFromLists(listsByBagpipe);
+    setSongTags(tags);
+  }, [listsByBagpipe]);
+};
+
+const sortListsAlphabetically = (lists: SongListBySongType) => {
+  return Object.entries(lists).reduce((acc, cur) => {
+    const [key, value] = cur;
+    acc[key] = value.sort((a, b) => (a.name > b.name ? 1 : -1));
+    return acc;
+  }, {} as SongListBySongType);
 };
 
 const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {
@@ -65,7 +84,17 @@ const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {
   songs?.forEach((song) => {
     song.bagpipesToPlay.forEach((bagpipeType) => {
       if (list[bagpipeType]) {
-        list[bagpipeType].push(song);
+        const isAlreadyInList = !!list[bagpipeType].find(
+          (songFromList) => songFromList.name === song.name
+        );
+        const isSpecialForBagpipe = song.pathName.includes(`-${bagpipeType}`);
+
+        if (!isAlreadyInList) {
+          list[bagpipeType].push(song);
+        } else if (isSpecialForBagpipe) {
+          list[bagpipeType] = list[bagpipeType].slice(0, -1);
+          list[bagpipeType].push(song);
+        }
       } else {
         list[bagpipeType] = [song];
       }
@@ -77,8 +106,7 @@ const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {
 
 const sortSongsBySongType = (songs: Song[]): SongListBySongType => {
   const list: SongListBySongType = {};
-
-  songs.forEach((song) => {
+  songs?.forEach((song) => {
     if (song.type in list) {
       list[song.type].push(song);
     } else {

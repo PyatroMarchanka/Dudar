@@ -238,11 +238,9 @@ export class MidiPlayer {
     if (!midi) {
       return;
     }
-    console.log(this.midiData)
     this.isPlaying = true;
     Player.loadArrayBuffer(midi);
     Player.play();
-    console.log(Player.getEvents())
     if (progress) {
       this.setProgress(progress, true);
     }
