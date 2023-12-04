@@ -10,20 +10,6 @@ import {
 import { useContext, useEffect } from "react";
 import { store } from "../context";
 import { BagpipeTypes, HolesModes, Languages } from "../interfaces";
-import { Song, SongTypes } from "../dataset/songs/interfaces";
-
-export const fallbackSong: Song = {
-  timeSignature: "4/4",
-  name: "Цяцерка",
-  type: SongTypes.Belarusian,
-  bagpipesToPlay: [
-    BagpipeTypes.BelarusianNONTraditionalDuda,
-    BagpipeTypes.BelarusianOpenDuda,
-    BagpipeTypes.BelarusianTraditionalDuda,
-    BagpipeTypes.Dudelsack,
-  ],
-  pathName: "belarusian/Цяцерка.mid",
-};
 
 const fallBackBagpipe = BagpipeTypes.BelarusianNONTraditionalDuda;
 const fallBackLanguage = Languages.English;
@@ -98,7 +84,6 @@ export const useLocalStorage = () => {
       parsedSong = !!songDataFromLocalStorage && JSON.parse(songDataFromLocalStorage);
     } catch (error) {
       console.log(error);
-      parsedSong = fallbackSong;
     }
     const songData = parsedSong.pathName ? parsedSong : undefined;
     const userTempoData = localStorage.getItem(userTempo);

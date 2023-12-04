@@ -2,7 +2,6 @@ import { Midi } from "@tonejs/midi";
 import { useContext, useEffect, useState } from "react";
 import { store } from "../context";
 import { Song } from "../dataset/songs/interfaces";
-import { fallbackSong } from "./useLocalStorage";
 import { addMetronome, fixMidiDataOctaves } from "../utils/midiUtils";
 
 export const useLoadSong = () => {
@@ -21,7 +20,6 @@ export const useLoadSong = () => {
     try {
       if (!song.pathName) {
         console.log(`No song with this path in list \n ${song.pathName}`);
-        console.log(`Fallback to ${fallbackSong.name}`);
 
         listsByBagpipe && setActiveSong(listsByBagpipe[bagpipeType][0]);
       }
