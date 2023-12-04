@@ -40,5 +40,10 @@
   },
   "songList": {
     "instrument": "For the instrument:"
+  },
+  "tags": {
+    "song": "song",
+    "kaliady": "christmas",
+    "dance": "dance"
   }
 }

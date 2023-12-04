@@ -40,5 +40,10 @@
     },
     "songList": {
       "instrument": "Dla instrumentu:"
+    },
+    "tags": {
+      "song": "piosenka",
+      "kaliady": "Boże Narodzenie",
+      "dance": "taniec"
     }
  }

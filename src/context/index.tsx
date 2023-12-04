@@ -1,6 +1,6 @@
 import { Midi } from "@tonejs/midi";
 import { createContext, useEffect } from "react";
-import { Song, SongListByBagpipe } from "../dataset/songs/interfaces";
+import { Song, SongListByBagpipe, SongTags } from "../dataset/songs/interfaces";
 import { BagpipeTypes, HolesModes, Languages, SharpNotesEnum } from "../interfaces";
 import { SettingsState, settingsInitialState, useSettingsReducer } from "./reducers/settings";
 import { PlayerState, playerInitialState, usePlayerReducer } from "./reducers/player";
@@ -36,6 +36,8 @@ interface Context {
   setLoop: (bool: boolean) => void;
   setIsSongLoading: (bool: boolean) => void;
   setHolesMode: (mode: HolesModes) => void;
+  setSongTags: (tags: SongTags[]) => void;
+  setActiveSongTags: (tags: SongTags[]) => void;
 }
 
 const store = createContext<Context>({
@@ -58,7 +60,9 @@ const store = createContext<Context>({
   setIsPreclick: (bool: boolean) => {},
   setLoop: (bool: boolean) => {},
   setIsSongLoading: (bool: boolean) => {},
-  setHolesMode: (mode: HolesModes) => {}
+  setHolesMode: (mode: HolesModes) => {},
+  setSongTags: (tags: SongTags[]) => {},
+  setActiveSongTags: (tags: SongTags[]) => {},
 });
 const { Provider } = store;
 
@@ -67,11 +71,11 @@ const ContextProvider = ({ children }: any) => {
   const { state: playerState, ...playerDispatchers } = usePlayerReducer();
   const state = { ...settingsState, ...playerState };
   const dispatchers = { ...settingsDispatchers, ...playerDispatchers };
- const changeLanguage =  useChangeLanguage()
+  const changeLanguage = useChangeLanguage();
 
   useEffect(() => {
-    changeLanguage(settingsState.language)
-  }, [])
+    changeLanguage(settingsState.language);
+  }, []);
 
   return (
     <Provider

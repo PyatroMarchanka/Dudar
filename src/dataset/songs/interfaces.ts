@@ -27,6 +27,7 @@ export interface Song {
   bagpipesToPlay: BagpipeTypes[];
   timeSignature: TimeSignatures;
   pathName: string;
+  labels: SongTags[]
 }
 
 export type SongListByBagpipe = { [key: string]: Song[] };
@@ -34,3 +35,9 @@ export type SongListByBagpipe = { [key: string]: Song[] };
 export type SongList = Song[];
 
 export type SongListBySongType = { [key: string]: Song[] };
+
+export enum SongTags {
+  Song = "song",
+  Dance = "dance",
+  Kaliady = "kaliady",
+}

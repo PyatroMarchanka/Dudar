@@ -14,6 +14,7 @@ import { store } from "../../context";
 import { useTranslation } from "react-i18next";
 import { gtmPush } from "../../utils/gtm";
 import { bagpipes } from "../../dataset/bagpipes";
+import { SongTagsWrapper } from "./SongTagsWrapper";
 
 interface Props {
   setOpen: (bool: boolean) => void;
@@ -90,6 +91,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
         <Typography className={classes.duda}>{t("songList.instrument")}</Typography>
         <Typography>{t(`dudas.${bagpipes[bagpipeType].name}`)}</Typography>
       </div>
+      <SongTagsWrapper />
 
       {genres.map((genre) => (
         <div key={genre} className={classes.root}>

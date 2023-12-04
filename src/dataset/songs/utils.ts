@@ -1,8 +1,13 @@
-import { BagpipeTypes } from "../../interfaces";
-import { Song, SongListByBagpipe, TimeSignatures } from "./interfaces";
+import {
+  Song,
+  SongListByBagpipe,
+  SongListBySongType,
+  SongTags,
+  TimeSignatures,
+} from "./interfaces";
 
-export const getFirstSongFromList = (lists: SongListByBagpipe, bagpipeType: BagpipeTypes): Song => {
-  return lists[bagpipeType][0];
+export const getFirstSongFromList = (lists: SongListByBagpipe): Song => {
+  return Object.values(lists)?.[0]?.[0];
 };
 
 const fourToFourTicks = 480;
@@ -21,4 +26,30 @@ const timeSignaturesToTicks = {
 };
 export const getTicksPerBeatByTimeSignature = (timeSignature: TimeSignatures): number => {
   return timeSignaturesToTicks[timeSignature];
+};
+
+export const isSongInLists = (lists: SongListByBagpipe | null, song: Song) => {
+  if (!lists) return false;
+
+  return Object.values(lists).some((songList) =>
+    songList.some((songFromList) => songFromList.pathName === song.pathName)
+  );
+};
+
+export const getAvailableTagsFromLists = (lists: SongListBySongType | null) => {
+  if (!lists) return [];
+
+  const map: any = {};
+
+  Object.values(lists).forEach((list) => {
+    list.forEach((song) => {
+      song.labels.forEach((tag) => {
+        if (!(tag in map)) {
+          map[tag] = tag;
+        }
+      });
+    });
+  });
+
+  return Object.keys(map) as SongTags[];
 };
