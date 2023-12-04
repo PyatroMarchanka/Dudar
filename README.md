@@ -5,15 +5,18 @@ Works with MIDI, Tone.js
 
 In the project directory, you can run:
 
-### `npm start`
+### `yarn start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### `yarn build`
 
-### `npm build`
+Create the project build
+
+### `yarn songlist`
+
+Refresh the songlist. If there are some changes in git for the file **list.json**, commit them. Run the command if songs are added or their names are changed.
 
 # Local development with Lando (with containers)
 This set up utilizes Docker containers and may be used on any platform. It is especially recommended for Windows users since it helps to avoid a bunch of environmental issues.
