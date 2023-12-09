@@ -12,11 +12,11 @@
     "list": "List of melodies",
     "listDescription": "Melodies that can be played on the selected instrument. It can be changed in settings",
     "settings": "Settings",
-    "settingsDescription": "change instrument\nchange the tone of the melody to match your instrument\npreclick - additional countdown to the start of the performance to blow the bagpipe, prepare\nchange language", 
+    "settingsDescription": "change instrument\nchange the tone of the melody to match your instrument\npreclick - additional countdown to the start of the performance to blow the bagpipe, prepare\nchange language",
     "updates": "Dive in Christmas!!! Added belarusian christmas folk songs: \"Ho-ho, kaza\", \"Oj, staits yavor\", \"Pryjshla Kaliada Uviechary\", \"U Zajenki\"\nIf you want to add a new melody, use the form in the settings (big black button in the bottom)",
     "updates_short": "New melodies: Troll' Gnyot El' - CHto Sovoj Ob Pen', Troll' Gnyot El' - Tancy Trollej, Pol'ka Glybockaya, Korpiklaani - Tuli Kokko, Metsatöl - Ema hääl kutsub, Metsatöl - Saaremaa Vägimees, Perciwal - A story you wont believe, W moim ogródecku, Znich - Belarus",
     "updatesTitle": "Updates:"
-  }, 
+  },
   "dudas": {
     "belNonTradDuda": "Belarusian Nontraditional Closed Duda",
     "belOpenDuda": "Belarusian Open Duda",
@@ -45,5 +45,12 @@
     "song": "song",
     "kaliady": "christmas",
     "dance": "dance"
+  },
+  "feedback": {
+    "sendFeedback": "Send feddback",
+    "send": "Send",
+    "name": "Name",
+    "message": "Message",
+    "thanks": "Thank you for your feedback!"
   }
 }

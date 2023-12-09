@@ -7,8 +7,6 @@ import {
   DialogTitle,
   IconButton,
 } from "@material-ui/core";
-// @ts-ignore
-import "feeder-react-feedback/dist/feeder-react-feedback.css";
 import { theme } from "../../utils/theme";
 import { Icon } from "../global/Icon";
 import InfoIcon from "@material-ui/icons/Info";

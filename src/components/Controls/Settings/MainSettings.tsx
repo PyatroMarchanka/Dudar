@@ -15,6 +15,7 @@ import LanguageSelector from "../LanguageSelector";
 import LanguageIcon from "@material-ui/icons/Language";
 import AvTimerIcon from "@material-ui/icons/AvTimer";
 import ImportExport from "@material-ui/icons/ImportExport";
+import { FeedbackForm } from "../../FeedbackForm";
 
 type Props = {
   midiPlayer: MidiPlayer | null;
@@ -96,6 +97,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
           <Icon className="" type="facebook" fill={mainColors.darkerGray} />
           <Typography variant="h5">Facebook</Typography>
         </a>
+        <FeedbackForm />
       </RowCentered>
     </Container>
   );

@@ -1,49 +1,56 @@
 {
-    "tempo": "Tempo",
+  "tempo": "Tempo",
+  "settings": "Ustawienia",
+  "instrumentType": "Typ instrumentu",
+  "transposeMelody": "Transponuj",
+  "preclick": "Wstępne odliczanie",
+  "noIcon": "Brak ikony",
+  "semitones": "półton(y)",
+  "gotIt": "Rozumiem",
+  "about": {
+    "mainTitle": "Naucz się grać bez nut!\n Apka do nauki gry na dudach",
+    "list": "Lista melodii",
+    "listDescription": "Melodie, które można wykonać na wybranym instrumencie. Można to zmienić w ustawieniach",
     "settings": "Ustawienia",
-    "instrumentType": "Typ instrumentu",
-    "transposeMelody": "Transponuj",
-    "preclick": "Wstępne odliczanie",
-    "noIcon": "Brak ikony",
-    "semitones": "półton(y)",
-    "gotIt": "Rozumiem",
-    "about": {
-      "mainTitle": "Naucz się grać bez nut!\n Apka do nauki gry na dudach",
-      "list": "Lista melodii",
-      "listDescription": "Melodie, które można wykonać na wybranym instrumencie. Można to zmienić w ustawieniach",
-      "settings": "Ustawienia",
-      "settingsDescription": "zmień instrument\nzmień ton melodii na swój instrument\nzawołanie - dodatkowe odliczanie do rozpoczęcia występu, aby zadąć w dudy, przygotować\nzmienić język",
-      "updates": "Święta nadchodzą! Dodano białoruskie ludowe melodie bożonarodzeniowe: \"Ho-ho, kaza\", \"Oj, staits yavor\", \"Przjsyła Kalada Uwieczary\", \"A u Zaińki\"\nJeśli chcesz dodać nową melodię - skorzystaj z formularza w ustawieniach (czarny przycisk poniżej)",
-      "updates_short": "Nowe melodie: Bagarodzica, Marazula, Was wollen wir trinken, Anioł, Pahonia, Lipka, Trzy Żółwie, Villeman i Magnhild",
-      "updatesTitle": "Aktualizacje:"
-    },
-    "dudas": {
-      "belNonTradDuda": "Białoruskie nietradycyjne zamknięte dudy",
-      "belOpenDuda": "Białoruskie otwarte dudy",
-      "belTradDuda": "Tradycyjne białoruskie dudy",
-      "Dudelsack": "Dudelzak",
-      "unknownBagpipe": "Nieokreślone dudy"
-    },
-    "genres": {
-      "medieval": "Średniowieczne",
-      "belarusian": "Białoruskie",
-      "irish": "Irlandzkie",
-      "balkan": "Bałkańskie",
-      "schotland": "Szkockie",
-      "other": "Inne"
-    },
-    "languages": {
-      "be": "Беларуская",
-      "en": "English",
-      "pl": "Polski",
-      "lang": "Język"
-    },
-    "songList": {
-      "instrument": "Dla instrumentu:"
-    },
-    "tags": {
-      "song": "piosenka",
-      "kaliady": "Boże Narodzenie",
-      "dance": "taniec"
-    }
- }
+    "settingsDescription": "zmień instrument\nzmień ton melodii na swój instrument\nzawołanie - dodatkowe odliczanie do rozpoczęcia występu, aby zadąć w dudy, przygotować\nzmienić język",
+    "updates": "Święta nadchodzą! Dodano białoruskie ludowe melodie bożonarodzeniowe: \"Ho-ho, kaza\", \"Oj, staits yavor\", \"Przjsyła Kalada Uwieczary\", \"A u Zaińki\"\nJeśli chcesz dodać nową melodię - skorzystaj z formularza w ustawieniach (czarny przycisk poniżej)",
+    "updates_short": "Nowe melodie: Bagarodzica, Marazula, Was wollen wir trinken, Anioł, Pahonia, Lipka, Trzy Żółwie, Villeman i Magnhild",
+    "updatesTitle": "Aktualizacje:"
+  },
+  "dudas": {
+    "belNonTradDuda": "Białoruskie nietradycyjne zamknięte dudy",
+    "belOpenDuda": "Białoruskie otwarte dudy",
+    "belTradDuda": "Tradycyjne białoruskie dudy",
+    "Dudelsack": "Dudelzak",
+    "unknownBagpipe": "Nieokreślone dudy"
+  },
+  "genres": {
+    "medieval": "Średniowieczne",
+    "belarusian": "Białoruskie",
+    "irish": "Irlandzkie",
+    "balkan": "Bałkańskie",
+    "schotland": "Szkockie",
+    "other": "Inne"
+  },
+  "languages": {
+    "be": "Беларуская",
+    "en": "English",
+    "pl": "Polski",
+    "lang": "Język"
+  },
+  "songList": {
+    "instrument": "Dla instrumentu:"
+  },
+  "tags": {
+    "song": "piosenka",
+    "kaliady": "Boże Narodzenie",
+    "dance": "taniec"
+  },
+  "feedback": {
+    "sendFeedback": "Wyślij opinię",
+    "send": "Wyślij",
+    "name": "Imię",
+    "message": "Wiadomość",
+    "thanks": "Dziękujemy za twoją opinię!"
+  }
+}
