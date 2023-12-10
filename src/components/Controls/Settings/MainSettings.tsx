@@ -86,7 +86,9 @@ export const MainSettings = ({ midiPlayer }: Props) => {
           rel="noreferrer"
         >
           <i className="fa fa-github fa_custom"></i>
-          <Typography variant="h5">GitHub</Typography>
+          <Typography className="title" variant="h5">
+            GitHub
+          </Typography>
         </a>
         <a
           href="https://www.facebook.com/piatro.marchanka"
@@ -94,8 +96,10 @@ export const MainSettings = ({ midiPlayer }: Props) => {
           target="_blank"
           rel="noreferrer"
         >
-          <Icon className="" type="facebook" fill={mainColors.darkerGray} />
-          <Typography variant="h5">Facebook</Typography>
+          <Icon className="fa_custom" type="facebook" fill={mainColors.darkerGray} />
+          <Typography className="title" variant="h5">
+            Facebook
+          </Typography>
         </a>
         <FeedbackForm />
       </RowCentered>
@@ -105,21 +109,26 @@ export const MainSettings = ({ midiPlayer }: Props) => {
 
 const Container = styled.div`
   .github-link {
-    padding: 20px;
+    padding: 20px 0;
     display: flex;
     justify-content: center;
     color: ${mainColors.darkerGray};
     text-decoration: none;
+    .title {
+      font-size: 15px;
+    }
 
     .fa_custom {
-      font-size: 30px;
+      font-size: 20px;
       margin-right: 5px;
+      height: 20px;
+      width: 20px;
     }
   }
 
   .facebook {
-    height: 40px;
-    width: 40px;
+    height: 30px;
+    width: 30px;
   }
 `;
 
@@ -156,7 +165,8 @@ const Row = styled.div`
 `;
 
 const RowCentered = styled(Row)`
-  justify-content: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
 `;
 
 const Line = styled.div`

@@ -9,7 +9,7 @@ import LoopIcon from "@material-ui/icons/Loop";
 import { Icon } from "../../global/Icon";
 import { mainColors, theme } from "../../../utils/theme";
 import { createTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
+import { ThemeProvider } from "@material-ui/core";
 import { TempoSlider } from "../TempoSlider";
 import { secondsToTime } from "../../../utils/textUtils";
 import { Preclick } from "../../Preclick";
