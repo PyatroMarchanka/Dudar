@@ -1,8 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SwipeableDrawer, IconButton, makeStyles, Theme } from "@material-ui/core";
-// @ts-ignore
-import Feedback from "feeder-react-feedback"; // import Feedback component
-import "feeder-react-feedback/dist/feeder-react-feedback.css";
 import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
 import styled from "styled-components";
@@ -10,7 +7,6 @@ import { mainColors, theme } from "../../../utils/theme";
 import { Icon } from "../../global/Icon";
 import { MainSettings } from "./MainSettings";
 import { useTranslation } from "react-i18next";
-import { feedbackId } from "../../../constants/ids";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
@@ -63,7 +59,6 @@ export const Settings = ({ midiPlayer }: Props) => {
             <Title>{t("settings")}</Title>
           </Header>
           <MainSettings midiPlayer={midiPlayer} />
-          <Feedback projectId={feedbackId} />
         </Content>
       </SwipeableDrawer>
       <IconButton onClick={() => setOpen(true)} className="settings">

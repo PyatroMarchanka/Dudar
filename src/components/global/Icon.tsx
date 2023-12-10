@@ -468,6 +468,7 @@ export const Icon = styled(
         return (
           <svg
             fill={fill}
+            className={className}
             height="30px"
             width="30px"
             version="1.1"
