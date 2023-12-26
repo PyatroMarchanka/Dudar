@@ -1,15 +1,23 @@
-import { AllNotes } from "../../dataset/notes";
-import { Notes, SharpMap, SharpNotes, SharpNotesEnum } from "../../interfaces";
+import { AllNotes, AllNotesDoReMi } from "../../dataset/notes";
+import { Notes, SharpMap, SharpNotes, SharpNotesDoReMi, SharpNotesEnum } from "../../interfaces";
 
 export function transposeNote(note: SharpNotes, step: number): SharpNotes {
-  let indexOfNote = AllNotes.indexOf(note);
-  if (step < 0) {
-    const index = (indexOfNote + step) % AllNotes.length;
+  return transposeNoteGeneric<SharpNotes>(note, step, AllNotes);
+}
 
-    return AllNotes[index >= 0 ? index : 12 + index];
+export function transposeNoteDoReMi(note: SharpNotesDoReMi, step: number): SharpNotesDoReMi {
+  return transposeNoteGeneric<SharpNotesDoReMi>(note, step, AllNotesDoReMi);
+}
+
+export function transposeNoteGeneric<T>(note: T, step: number, notes: T[]): T {
+  let indexOfNote = notes.indexOf(note as any);
+  if (step < 0) {
+    const index = (indexOfNote + step) % notes.length;
+
+    return notes[index >= 0 ? index : 12 + index];
   }
 
-  return AllNotes[(indexOfNote + step) % AllNotes.length];
+  return notes[(indexOfNote + step) % notes.length];
 }
 
 export function transposeNoteWithOctave(note: SharpNotesEnum, step: number): SharpNotesEnum {

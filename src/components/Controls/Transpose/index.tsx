@@ -1,14 +1,19 @@
 import { MenuItem, Select } from "@material-ui/core";
-import React, { useContext, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
 import { useSelectStyles } from "../../global/selectStyles";
-import { transposeNote } from "../../../utils/midiUtils";
+import { transposeNote, transposeNoteDoReMi } from "../../../utils/midiUtils";
 import { useTranslation } from "react-i18next";
+import { transliterate, useIsCyrylicLang } from "../../../locales";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
 }
+
+const optionsNumbers = new Array(24)
+  .fill(undefined)
+  .map((_, i) => ({ value: i - 12, label: i - 12 }));
 
 const Transpose = ({ midiPlayer }: Props) => {
   const {
@@ -17,6 +22,7 @@ const Transpose = ({ midiPlayer }: Props) => {
     setIsPlaying,
   } = useContext(store);
   const { t } = useTranslation();
+  const isCyrylicLang = useIsCyrylicLang();
 
   const setTranspose = (num: number) => {
     setTransposeCtx(num);
@@ -27,8 +33,24 @@ const Transpose = ({ midiPlayer }: Props) => {
   };
 
   const [value, setValue] = useState<number>(transpose);
-  const options = new Array(24).fill(undefined).map((_, i) => ({ value: i - 12, label: i - 12 }));
   const selectClasses = useSelectStyles();
+
+  const options = useMemo(
+    () =>
+      optionsNumbers.map((option) => {
+        const doRemiLabel = !isCyrylicLang()
+          ? transliterate(transposeNoteDoReMi("Ля", +option.label))
+          : transposeNoteDoReMi("Ля", +option.label);
+
+        return (
+          <MenuItem key={option.label} value={option.value}>
+            <b>{`${transposeNote("A", +option.label)} - ${doRemiLabel}`}</b>
+            {` : ${option.label > 0 ? `+${option.label}` : option.label} ${t("semitones")}`}
+          </MenuItem>
+        );
+      }),
+    [isCyrylicLang, t]
+  );
 
   return (
     <div>
@@ -41,12 +63,7 @@ const Transpose = ({ midiPlayer }: Props) => {
           setValue(Number(e.target.value));
         }}
       >
-        {options.map((option) => (
-          <MenuItem key={option.label} value={option.value}>
-            <b>{transposeNote("A", +option.label)}</b>
-            {` : ${option.label > 0 ? `+${option.label}` : option.label} ${t("semitones")}`}
-          </MenuItem>
-        ))}
+        {options}
       </Select>
     </div>
   );

@@ -52,5 +52,13 @@
     "name": "Imię",
     "message": "Wiadomość",
     "thanks": "Dziękujemy za twoją opinię!"
+  },
+  "onboarding": {
+    "nextStep": "Następny krok",
+    "previousStep": "Poprzedni krok",
+    "selectInstrument": "Wybierz Instrument",
+    "selectTuning": "Wybierz ton główny",
+    "selectLanguage": "Wybierz język",
+    "finish": "Skończyć"
   }
 }

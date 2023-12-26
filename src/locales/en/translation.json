@@ -52,5 +52,13 @@
     "name": "Name",
     "message": "Message",
     "thanks": "Thank you for your feedback!"
+  },
+  "onboarding": {
+    "nextStep": "Next step",
+    "previousStep": "Previous step",
+    "selectInstrument": "Select Instrument",
+    "selectTuning": "Select Instrument Tuning",
+    "selectLanguage": "Select Language",
+    "finish": "Finish"
   }
 }

@@ -52,5 +52,13 @@
     "name": "Імя",
     "message": "Паведамленне",
     "thanks": "Дзякуем за зваротную сувязь!"
+  },
+  "onboarding": {
+    "nextStep": "Наступны крок",
+    "previousStep": "Назад",
+    "selectInstrument": "Абярыце інструмент",
+    "selectTuning": "Абярыце наладку інструмента",
+    "selectLanguage": "Абярыце мову",
+    "finish": "Завяршыць"
   }
 }
