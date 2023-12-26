@@ -82,7 +82,7 @@ export const Dudar = () => {
         <Header>
           <SongTitle>{songTitle || noSongsLabel}</SongTitle>
         </Header>
-        <ChangeLogPopup />
+        {/* <ChangeLogPopup /> */}
         <Settings midiPlayer={midiPlayer} />
       </SettingsButtons>
       <BagpipeContainer>
