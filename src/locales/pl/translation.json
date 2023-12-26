@@ -59,6 +59,7 @@
     "selectInstrument": "Wybierz Instrument",
     "selectTuning": "Wybierz ton główny",
     "selectLanguage": "Wybierz język",
-    "finish": "Skończyć"
+    "finish": "Skończyć", 
+    "skip": "Pomiń wstęp"
   }
 }

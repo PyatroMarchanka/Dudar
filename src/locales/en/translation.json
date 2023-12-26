@@ -59,6 +59,7 @@
     "selectInstrument": "Select Instrument",
     "selectTuning": "Select Instrument Tuning",
     "selectLanguage": "Select Language",
-    "finish": "Finish"
+    "finish": "Finish",
+    "skip": "Skip onboarding"
   }
 }

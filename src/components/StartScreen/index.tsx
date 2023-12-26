@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { userOnboardingFinished } from "../../constants/localStorage";
 import { routes } from "../../router/routes";
+import { mainColors } from "../../utils/theme";
 
 enum OnbordingSteps {
   Language = "language",
@@ -60,6 +61,9 @@ export const Onboarding = () => {
           <Button onClick={onFinish}>{t("onboarding.finish")}</Button>
         )}
       </Buttons>
+      <SkipButton>
+        <Button color={mainColors.darkerGray} onClick={onFinish}>{t("onboarding.skip")}</Button>
+      </SkipButton>
     </Container>
   );
 };
@@ -76,3 +80,7 @@ const Buttons = styled.div`
   display: flex;
   margin-top: 20px;
 `;
+
+const SkipButton = styled(Buttons)`
+  margin-top: 100px;
+`
