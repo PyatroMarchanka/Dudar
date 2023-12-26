@@ -6,3 +6,4 @@ export const userIsPreclick = "userIsPreclick";
 export const userBagpipeType = "userBagpipeType";
 export const userLanguage = "userLanguage";
 export const userHolesMode = "userHolesMode";
+export const userOnboardingFinished = 'userOnboardingFinished'

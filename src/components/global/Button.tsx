@@ -1,26 +1,27 @@
-import React from 'react';
-import styled, { css } from 'styled-components';
-import { useLongPress } from '../../hooks/useLongPress';
-import { Color, theme } from '../../utils/theme';
+import React from "react";
+import styled, { css } from "styled-components";
+import { useLongPress } from "../../hooks/useLongPress";
+import { Color, mainColors, theme } from "../../utils/theme";
 
 interface Props {
-  color?: Color;
+  color?: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onLongPress?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children: any;
-  type?: 'primary' | 'big';
+  type?: "primary" | "big";
   id?: string;
   className?: string;
   disabled?: boolean;
   ref?: any;
+  backgroundColor?: string;
 }
 
 export function Button({
-  color = theme.colors.bluePurple,
+  color = mainColors.orange,
   onClick = () => {},
   onLongPress = () => {},
   children,
-  type = 'primary',
+  type = "primary",
   id,
   className,
   disabled = false,
@@ -38,7 +39,7 @@ export function Button({
       id={id}
       {...longPressEvent}
       onClick={onClick}
-      fontColor={color}
+      color={color}
     >
       {children}
     </Component>
@@ -46,12 +47,12 @@ export function Button({
 }
 
 interface StyledProps {
-  fontColor: Color;
+  color: string;
 }
 export const PrimaryButtonStyles = css`
   padding: 10px;
   margin: 10px;
-  background-color: ${({ fontColor }: StyledProps) => fontColor[500]};
+  background-color: ${({ color }: StyledProps) => color};
   border: 0;
   border-radius: 8px;
 
@@ -73,16 +74,16 @@ export const PrimaryButtonStyles = css`
 
   &:hover {
     cursor: pointer;
-    background-color: ${({ fontColor }: StyledProps) => fontColor[700]};
+    opacity: 0.8;
   }
 
   &:active {
-    background-color: ${({ fontColor }: StyledProps) => fontColor[700]};
     border: 0;
   }
 
   &:disabled {
-    background-color: ${({ fontColor }: StyledProps) => fontColor[200]};
+    /* background-color: ${({ color }: StyledProps) => color[200]}; */
+    opacity: 0.2;
     &:hover {
       cursor: unset;
     }
@@ -100,12 +101,12 @@ const BigButton = styled(PrimaryButton)`
   font-weight: 500;
 `;
 
-function getButtonByType(type: Props['type']) {
+function getButtonByType(type: Props["type"]) {
   switch (type) {
-    case 'primary':
+    case "primary":
       return PrimaryButton;
 
-    case 'big':
+    case "big":
       return BigButton;
 
     default:

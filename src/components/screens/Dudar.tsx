@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { SharpNotes } from "../../interfaces";
-import { PlayerControls } from "./PlayerControls";
+import { PlayerControls } from "../Controls/PlayerControls";
 import { useMidiPlayer } from "../../hooks/useMidiPlayer";
-import { Settings } from "./Settings";
+import { Settings } from "../Controls/Settings";
 import { SongList } from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
