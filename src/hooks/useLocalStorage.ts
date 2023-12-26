@@ -12,7 +12,7 @@ import { store } from "../context";
 import { BagpipeTypes, HolesModes, Languages } from "../interfaces";
 import { getFirstSongFromList, isSongInLists } from "../dataset/songs/utils";
 
-const fallBackBagpipe = BagpipeTypes.BelarusianNONTraditionalDuda;
+const fallBackBagpipe = BagpipeTypes.BelarusianTraditionalDuda;
 const fallBackLanguage = Languages.English;
 
 export const getUserDataFromLocal = () => {
