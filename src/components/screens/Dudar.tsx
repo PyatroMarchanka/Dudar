@@ -18,8 +18,12 @@ import { useSongTitle } from "../../hooks/useSongTitle";
 import ChangeLogPopup from "../ChangeLogPopup";
 import { BackdropSpinner } from "../global/BackdropSpinner";
 import { DonationButton } from "../global/DonationButton";
+import { useHistory, useLocation } from "react-router-dom";
+import { userOnboardingFinished } from "../../constants/localStorage";
+import { Typography } from "@material-ui/core";
 
 export const Dudar = () => {
+  const history = useHistory();
   const {
     state: { midiData, isSongLoading },
     setProgress,
@@ -54,6 +58,12 @@ export const Dudar = () => {
   useLoadSong();
 
   useEffect(() => {
+    const isUserOnboardingCompleted = localStorage.getItem(userOnboardingFinished);
+
+    if (!isUserOnboardingCompleted) {
+      history.replace("/start");
+    }
+
     getSongListWithBagpipeTypes();
 
     setDimensions();
@@ -70,7 +80,7 @@ export const Dudar = () => {
       <SettingsButtons>
         <SongList player={midiPlayer} />
         <Header>
-          <h3>{songTitle || noSongsLabel}</h3>
+          <SongTitle>{songTitle || noSongsLabel}</SongTitle>
         </Header>
         <ChangeLogPopup />
         <Settings midiPlayer={midiPlayer} />
@@ -120,13 +130,15 @@ const Header = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  h3 {
-    font-family: Arial, Helvetica, sans-serif;
-    text-align: center;
-    margin: 0;
-    max-width: 150px;
-  }
   padding: 5px 0;
+`;
+
+const SongTitle = styled.h1`
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  margin: 0;
+  max-width: 150px;
 `;
 
 const BagpipeContainer = styled.div`

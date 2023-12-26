@@ -5,6 +5,9 @@ import { ChooseTuning } from "./ChooseTuning";
 import styled from "styled-components";
 import { Button } from "../global/Button";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
+import { userOnboardingFinished } from "../../constants/localStorage";
+import { routes } from "../../router/routes";
 
 enum OnbordingSteps {
   Language = "language",
@@ -36,9 +39,11 @@ export const Onboarding = () => {
   const { t } = useTranslation("translation");
   const [step, setStep] = useState<number>(0);
   const stepComponent = getStepComponent(step);
+  const history = useHistory();
 
   const onFinish = () => {
-    localStorage.setItem("userOnboardingFinished", "true");
+    localStorage.setItem(userOnboardingFinished, "true");
+    history.push(routes.main);
   };
 
   return (
