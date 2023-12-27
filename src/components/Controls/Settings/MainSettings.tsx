@@ -16,6 +16,7 @@ import LanguageIcon from "@material-ui/icons/Language";
 import AvTimerIcon from "@material-ui/icons/AvTimer";
 import ImportExport from "@material-ui/icons/ImportExport";
 import { FeedbackForm } from "../../FeedbackForm";
+import { InstrumentTypes } from "./InstrumentTypes";
 
 type Props = {
   midiPlayer: MidiPlayer | null;
@@ -25,16 +26,9 @@ export const MainSettings = ({ midiPlayer }: Props) => {
   const { t } = useTranslation("translation");
 
   const {
-    state: { bagpipeType, isPreclick },
-    setBagpipeType,
+    state: { isPreclick },
     setIsPreclick,
   } = useContext(store);
-
-  const bagpipeTypes = Object.values(BagpipeTypes);
-
-  const onChange = (bagpipeType: BagpipeTypes) => {
-    setBagpipeType(bagpipeType);
-  };
 
   return (
     <Container>
@@ -43,18 +37,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
         <Title>{t("instrumentType")}</Title>
       </Row>
       <Line />
-      <InstrumentTypes>
-        {bagpipeTypes.map((type, i) => (
-          <TypeItem key={type} onClick={() => onChange(type as BagpipeTypes)}>
-            <RedRadio
-              checked={type === bagpipeType}
-              name="radio-button-demo"
-              inputProps={{ "aria-label": "C" }}
-            />
-            <BigTitle>{t(`dudas.${bagpipes[type].name}`)}</BigTitle>
-          </TypeItem>
-        ))}
-      </InstrumentTypes>
+      <InstrumentTypes />
       <Line />
       <Row>
         <Icon type="material" fill={mainColors.darkerGray} Icon={ImportExport} />
@@ -130,31 +113,6 @@ const Container = styled.div`
     height: 30px;
     width: 30px;
   }
-`;
-
-const InstrumentTypes = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const TypeItem = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  width: 90%;
-  padding: 0 3%;
-`;
-
-const BigTitle = styled.h3`
-  color: ${mainColors.midGrey};
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 140%;
-  letter-spacing: 0.003em;
-  margin-left: 10px;
 `;
 
 const Row = styled.div`

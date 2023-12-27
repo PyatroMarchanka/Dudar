@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { SharpNotes } from "../../interfaces";
-import { PlayerControls } from "./PlayerControls";
+import { PlayerControls } from "../Controls/PlayerControls";
 import { useMidiPlayer } from "../../hooks/useMidiPlayer";
-import { Settings } from "./Settings";
+import { Settings } from "../Controls/Settings";
 import { SongList } from "../SongList";
 import { noSongsLabel, store } from "../../context";
 import { useLoadSong } from "../../hooks/useLoadSong";
@@ -15,11 +15,13 @@ import { DynamicCanvas } from "../Canvas/DynamicCanvas";
 import { convertMidiPitchToNote, getSongListWithBagpipeTypes } from "../../utils/midiUtils";
 import { MidiPlayerComponent } from "../MidiPlayerComponent";
 import { useSongTitle } from "../../hooks/useSongTitle";
-import ChangeLogPopup from "../ChangeLogPopup";
 import { BackdropSpinner } from "../global/BackdropSpinner";
 import { DonationButton } from "../global/DonationButton";
+import { useHistory } from "react-router-dom";
+import { getUserOnboardingFinished } from "../../constants/localStorage";
 
 export const Dudar = () => {
+  const history = useHistory();
   const {
     state: { midiData, isSongLoading },
     setProgress,
@@ -29,6 +31,8 @@ export const Dudar = () => {
     note: SharpNotes;
     octave: number;
   } | null>(null);
+
+  const isUserOnboardingCompleted = getUserOnboardingFinished()
 
   const songTitle = useSongTitle();
   const handleNote = (event: any) => {
@@ -54,13 +58,17 @@ export const Dudar = () => {
   useLoadSong();
 
   useEffect(() => {
+    if (!isUserOnboardingCompleted) {
+      history.replace("/start");
+    }
+
     getSongListWithBagpipeTypes();
 
     setDimensions();
     window.addEventListener("resize", setDimensions);
 
     return () => window.removeEventListener("resize", setDimensions);
-  }, []);
+  }, [history]);
 
   return (
     <Container>
@@ -70,9 +78,9 @@ export const Dudar = () => {
       <SettingsButtons>
         <SongList player={midiPlayer} />
         <Header>
-          <h3>{songTitle || noSongsLabel}</h3>
+          <SongTitle>{songTitle || noSongsLabel}</SongTitle>
         </Header>
-        <ChangeLogPopup />
+        {/* <ChangeLogPopup /> */}
         <Settings midiPlayer={midiPlayer} />
       </SettingsButtons>
       <BagpipeContainer>
@@ -120,13 +128,15 @@ const Header = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  h3 {
-    font-family: Arial, Helvetica, sans-serif;
-    text-align: center;
-    margin: 0;
-    max-width: 150px;
-  }
   padding: 5px 0;
+`;
+
+const SongTitle = styled.h1`
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  margin: 0;
+  max-width: 150px;
 `;
 
 const BagpipeContainer = styled.div`

@@ -13,8 +13,8 @@
     "@tonejs/midi": "^2.0.27",
     "@types/jest": "^29.5.10",
     "@types/node": "^12.0.0",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.2",
     "@types/styled-components": "^5.1.10",
     "axios": "^1.6.2",
     "i18next": "^22.4.11",
@@ -26,10 +26,11 @@
     "midi-sounds-react": "^1.2.54",
     "node-fetch": "^2.6.6",
     "parse-midi": "^2.0.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-i18next": "^12.2.0",
-    "react-is": "^18.2.0",
+    "react-is": "^17.0.2",
+    "react-router-dom": "^5.3.4",
     "react-scripts": "4.0.3",
     "react-spinners-kit": "^1.9.1",
     "react-spring": "^9.2.4",
@@ -64,6 +65,7 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.194"
+    "@types/lodash": "^4.14.194",
+    "@types/react-router-dom": "^5.3.3"
   }
 }

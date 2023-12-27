@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Button } from "../global/Button";
 import { FeedbackTypes, telegramClient } from "../../utils/feedback/client";
 import { useTranslation } from "react-i18next";
+import { mainColors } from "../../utils/theme";
 
 interface Props {}
 
@@ -47,7 +48,7 @@ export const FeedbackForm = (props: Props) => {
               label={t("feedback.message")}
             />
             <Button
-              color={colors.brown}
+              color={mainColors.orange}
               disabled={!message || !name}
               onClick={(e) => sendMessage(e)}
             >
@@ -66,7 +67,7 @@ export const FeedbackForm = (props: Props) => {
         onClose={() => setIsSnackBar(false)}
         message={t("feedback.thanks")}
       />
-      <Button color={colors.brown} onClick={() => setIsOpen(true)}>
+      <Button color={mainColors.orange} onClick={() => setIsOpen(true)}>
         {t("feedback.sendFeedback")}
       </Button>
     </>

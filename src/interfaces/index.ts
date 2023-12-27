@@ -29,6 +29,19 @@ export type Notes =
   | "Ab";
 
 export type SharpNotes = "A" | "A#" | "B" | "C" | "C#" | "D" | "D#" | "E" | "F" | "F#" | "G" | "G#";
+export type SharpNotesDoReMi =
+  | "До"
+  | "До#"
+  | "Рэ"
+  | "Рэ#"
+  | "Мі"
+  | "Фа"
+  | "Фа#"
+  | "Соль"
+  | "Соль#"
+  | "Ля"
+  | "Ля#"
+  | "Сі";
 
 export type SharpMap = {
   [key: string]: Notes;
@@ -121,10 +134,10 @@ export enum BagpipeTypes {
 export enum Languages {
   Belarusian = "be",
   English = "en",
-  Polish = "pl"
+  Polish = "pl",
 }
 
 export enum HolesModes {
-  Holes = 'holes',
-  Fingers = 'fingers'
+  Holes = "holes",
+  Fingers = "fingers",
 }
