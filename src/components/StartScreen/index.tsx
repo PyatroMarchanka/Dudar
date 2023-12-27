@@ -62,7 +62,9 @@ export const Onboarding = () => {
         )}
       </Buttons>
       <SkipButton>
-        <Button color={mainColors.darkerGray} onClick={onFinish}>{t("onboarding.skip")}</Button>
+        <Button color={mainColors.darkerGray} onClick={onFinish}>
+          {t("onboarding.skip")}
+        </Button>
       </SkipButton>
     </Container>
   );
@@ -83,4 +85,4 @@ const Buttons = styled.div`
 
 const SkipButton = styled(Buttons)`
   margin-top: 100px;
-`
+`;

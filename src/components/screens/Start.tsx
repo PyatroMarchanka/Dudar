@@ -1,18 +1,18 @@
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Onboarding } from "../StartScreen";
-import { userOnboardingFinished } from "../../constants/localStorage";
+import { getUserOnboardingFinished } from "../../constants/localStorage";
 import { routes } from "../../router/routes";
+import { useEffect } from "react";
 
 export const Start = () => {
-  const isUserOnboardingCompleted = localStorage.getItem(userOnboardingFinished);
+  const history = useHistory();
+  const isUserOnboardingCompleted = getUserOnboardingFinished();
 
-  return !isUserOnboardingCompleted ? (
-    <Onboarding />
-  ) : (
-    <Redirect
-      to={{
-        pathname: routes.main,
-      }}
-    />
-  );
+  useEffect(() => {
+    if (isUserOnboardingCompleted) {
+      history.replace(routes.main);
+    }
+  }, [history, isUserOnboardingCompleted]);
+
+  return <Onboarding />;
 };

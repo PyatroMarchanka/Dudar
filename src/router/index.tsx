@@ -11,9 +11,6 @@ export const AppRouter = () => {
         <Route path={routes.about}>
           <About />
         </Route>
-        <Route path={routes.app}>
-          <Dudar />
-        </Route>
         <Route path={routes.start}>
           <Start />
         </Route>

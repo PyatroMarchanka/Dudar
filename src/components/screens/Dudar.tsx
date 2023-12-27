@@ -15,12 +15,10 @@ import { DynamicCanvas } from "../Canvas/DynamicCanvas";
 import { convertMidiPitchToNote, getSongListWithBagpipeTypes } from "../../utils/midiUtils";
 import { MidiPlayerComponent } from "../MidiPlayerComponent";
 import { useSongTitle } from "../../hooks/useSongTitle";
-import ChangeLogPopup from "../ChangeLogPopup";
 import { BackdropSpinner } from "../global/BackdropSpinner";
 import { DonationButton } from "../global/DonationButton";
-import { useHistory, useLocation } from "react-router-dom";
-import { userOnboardingFinished } from "../../constants/localStorage";
-import { Typography } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
+import { getUserOnboardingFinished } from "../../constants/localStorage";
 
 export const Dudar = () => {
   const history = useHistory();
@@ -33,6 +31,8 @@ export const Dudar = () => {
     note: SharpNotes;
     octave: number;
   } | null>(null);
+
+  const isUserOnboardingCompleted = getUserOnboardingFinished()
 
   const songTitle = useSongTitle();
   const handleNote = (event: any) => {
@@ -58,8 +58,6 @@ export const Dudar = () => {
   useLoadSong();
 
   useEffect(() => {
-    const isUserOnboardingCompleted = localStorage.getItem(userOnboardingFinished);
-
     if (!isUserOnboardingCompleted) {
       history.replace("/start");
     }
@@ -70,7 +68,7 @@ export const Dudar = () => {
     window.addEventListener("resize", setDimensions);
 
     return () => window.removeEventListener("resize", setDimensions);
-  }, []);
+  }, [history]);
 
   return (
     <Container>

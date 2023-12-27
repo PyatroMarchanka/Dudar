@@ -26,16 +26,9 @@ export const MainSettings = ({ midiPlayer }: Props) => {
   const { t } = useTranslation("translation");
 
   const {
-    state: { bagpipeType, isPreclick },
-    setBagpipeType,
+    state: { isPreclick },
     setIsPreclick,
   } = useContext(store);
-
-  const bagpipeTypes = Object.values(BagpipeTypes);
-
-  const onChange = (bagpipeType: BagpipeTypes) => {
-    setBagpipeType(bagpipeType);
-  };
 
   return (
     <Container>
