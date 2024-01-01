@@ -82,9 +82,9 @@ export const bagpipesImagesProperties: {
       topMargin: coeff(0),
     },
     bg: {
-      width: coeff(400),
+      width: coeff(412),
       heigth: coeff(800),
-      imageScale: coeff(400) / coeff(800),
+      imageScale: coeff(412) / coeff(800),
       leftMargin: coeff(75),
       topMargin: coeff(100),
     },
