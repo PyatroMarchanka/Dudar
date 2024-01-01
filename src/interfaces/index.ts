@@ -129,6 +129,7 @@ export enum BagpipeTypes {
   BelarusianNONTraditionalDuda = "bnd",
   BelarusianOpenDuda = "bod",
   Dudelsack = "ddl",
+  Highlander = "ghb",
 }
 
 export enum Languages {

@@ -24,11 +24,7 @@ import { sizes } from "../../constants/style";
   return this;
 };
 
-const getYposByNote = (
-  note: SharpNotes,
-  octave: number,
-  bagpipeType: BagpipeTypes
-) => {
+const getYposByNote = (note: SharpNotes, octave: number, bagpipeType: BagpipeTypes) => {
   const { notesToLines, holesPositions } = bagpipes[bagpipeType];
   let yPos = holesPositions.linesYPositions[notesToLines[note + octave]];
 
@@ -52,7 +48,7 @@ const drawNote = (
   }
 
   const startPos =
-    start * sizes.notesScale - tick * sizes.notesScale + sizes.brickLeftMargin;
+    start * sizes.notesScale - tick * sizes.notesScale + imageProperties.notes.brickLeftMargin;
   ctx.beginPath();
   // @ts-ignore
   ctx.roundRect(
@@ -62,7 +58,7 @@ const drawNote = (
     imageProperties.notes.brickhHeight,
     10
   );
-  if (startPos < sizes.brickLeftMargin) {
+  if (startPos < imageProperties.notes.brickLeftMargin) {
     ctx.fillStyle = mainColors.darkRed;
   } else {
     ctx.fillStyle = mainColors.darkerGray;

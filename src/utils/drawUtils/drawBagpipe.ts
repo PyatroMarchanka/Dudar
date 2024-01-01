@@ -3,13 +3,11 @@ import { BagpipeTypes, SharpNotesEnum } from "../../interfaces";
 
 export type NotesMap = { note: string; yPos: number }[];
 
-export const drawBagpipe = (
-  ctx: CanvasRenderingContext2D,
-  bagpipeType: BagpipeTypes
-) => {
+export const drawBagpipe = (ctx: CanvasRenderingContext2D, bagpipeType: BagpipeTypes) => {
   const bagpipeImage = bagpipes[bagpipeType].images.mainPipe;
   const imagesProperties = bagpipes[bagpipeType].imagesProperties;
-
+  ctx.fillStyle = "#FCF7F2";
+  ctx.fillRect(0, 0, 50, 800);
   bagpipeImage &&
     ctx.drawImage(
       bagpipeImage,
@@ -25,8 +23,7 @@ export const drawNotesNames = (
   bagpipeType: BagpipeTypes,
   notesNameToLine: NotesMap
 ) => {
-  const { noteNameColor, notesNamesLeftMargin } =
-    bagpipes[bagpipeType].imagesProperties.notes;
+  const { noteNameColor, notesNamesLeftMargin } = bagpipes[bagpipeType].imagesProperties.notes;
 
   ctx.fillStyle = noteNameColor;
 
@@ -37,14 +34,10 @@ export const drawNotesNames = (
   });
 };
 
-export const drawShadow = (
-  ctx: CanvasRenderingContext2D,
-  bagpipeType: BagpipeTypes
-) => {
+export const drawShadow = (ctx: CanvasRenderingContext2D, bagpipeType: BagpipeTypes) => {
   const bgImage = bagpipes[bagpipeType].images.bgImage;
   const imagesProperties = bagpipes[bagpipeType].imagesProperties;
-  ctx.fillStyle = "#FCF7F2";
-  ctx.fillRect(0, 0, 50, 800);
+  
   bgImage &&
     imagesProperties.bg &&
     ctx.drawImage(

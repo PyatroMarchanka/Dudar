@@ -14,31 +14,12 @@ export const getLabelBySongType = (type: SongTypes) => {
 
     case SongTypes.Schotland:
       return "Schotland";
-    
+
     case SongTypes.Balkan:
       return "Balkan";
 
     default:
       break;
-  }
-};
-
-export const getLabelByBagpipeType = (type: BagpipeTypes) => {
-  switch (type) {
-    case BagpipeTypes.BelarusianNONTraditionalDuda:
-      return "Belarusian Nontraditional Closed Duda";
-
-    case BagpipeTypes.BelarusianOpenDuda:
-      return "Belarusian Open Duda";
-
-    case BagpipeTypes.BelarusianTraditionalDuda:
-      return "Belarusian Traditional Duda";
-
-    case BagpipeTypes.Dudelsack:
-      return "Dudelsack";
-
-    default:
-      return "Unknown bagpipe";
   }
 };
 
@@ -55,6 +36,9 @@ export const getTranslationKeyByBagpipeType = (type: BagpipeTypes) => {
 
     case BagpipeTypes.Dudelsack:
       return "dudelsack";
+
+    case BagpipeTypes.Highlander:
+      return "highlander";
 
     default:
       return "unknownBagpipe";
