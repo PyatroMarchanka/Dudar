@@ -45,7 +45,8 @@
   "tags": {
     "song": "piosenka",
     "kaliady": "Boże Narodzenie",
-    "dance": "taniec"
+    "dance": "taniec",
+    "schotland": "szkockie"
   },
   "feedback": {
     "sendFeedback": "Wyślij opinię",
@@ -60,7 +61,7 @@
     "selectInstrument": "Wybierz Instrument",
     "selectTuning": "Wybierz ton główny",
     "selectLanguage": "Wybierz język",
-    "finish": "Skończyć", 
+    "finish": "Skończyć",
     "skip": "Pomiń wstęp"
   }
 }
