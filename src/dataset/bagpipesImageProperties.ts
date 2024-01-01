@@ -79,6 +79,13 @@ export const bagpipesImagesProperties: {
       notesNamesLeftMargin: coeff(5),
       noteNameColor: "#000",
     },
+    bg: {
+      width: coeff(552),
+      heigth: coeff(1000),
+      imageScale: coeff(412) / coeff(800),
+      leftMargin: coeff(-40),
+      topMargin: coeff(0),
+    },
   },
   [BagpipeTypes.Highlander]: {
     main_pipe: {

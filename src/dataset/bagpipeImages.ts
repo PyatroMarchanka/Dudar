@@ -66,7 +66,8 @@ const srcs = {
     closedHoleImage: "/images/piston_closed.svg",
     backClosedHoleImage: "/images/piston_back_closed.svg",
     blowImage: "/images/blow.svg",
-  },
+    bgImage: "/images/dudelzack_back.png"
+  },  
   [BagpipeTypes.Highlander]: {
     mainPipe: "/images/scottish.png",
     activeHoleImage: "/images/piston_open.svg",
