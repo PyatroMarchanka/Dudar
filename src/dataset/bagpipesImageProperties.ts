@@ -44,6 +44,13 @@ const belarusianDudaImageProperties = {
     notesNamesLeftMargin: coeff(40),
     noteNameColor: "#fff",
   },
+  bg: {
+    width: coeff(552),
+    heigth: coeff(1000),
+    imageScale: coeff(412) / coeff(800),
+    leftMargin: coeff(-40),
+    topMargin: coeff(0),
+  },
 };
 
 export const bagpipesImagesProperties: {
