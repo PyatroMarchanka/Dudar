@@ -1,4 +1,3 @@
-import { holesPositions } from "./../../dataset/bagpipesHolesPositions";
 import { Midi } from "@tonejs/midi";
 import { sizes } from "../../constants/style";
 import { BagpipeTypes } from "../../interfaces";
@@ -6,7 +5,12 @@ import { bagpipes } from "../../dataset/bagpipes";
 import { mainColors } from "../theme";
 import { TimeSignatures } from "../../dataset/songs/interfaces";
 
-const getLinePosition = (midiData: Midi, tick: number, timeSignature?: TimeSignatures) => {
+const getLinePosition = (
+  midiData: Midi,
+  tick: number,
+  bagpipeType: BagpipeTypes,
+  timeSignature?: TimeSignatures
+) => {
   const [beatsPerBar, fullBeats] = timeSignature?.split("/").map(Number) || [4, 4];
   const ticksPerBar = midiData.header.ppq * (beatsPerBar / (fullBeats / 4));
   const currentBar = Math.ceil(tick / ticksPerBar);
@@ -14,8 +18,10 @@ const getLinePosition = (midiData: Midi, tick: number, timeSignature?: TimeSigna
 
   const lines = [lineXPosStart, lineXPosStart + ticksPerBar];
 
+  const { imagesProperties } = bagpipes[bagpipeType];
+
   return {
-    lines: lines.map((line) => line * sizes.notesScale + sizes.brickLeftMargin),
+    lines: lines.map((line) => line * sizes.notesScale + imagesProperties.notes.brickLeftMargin),
     currentBar,
   };
 };
@@ -28,7 +34,7 @@ export const drawBarsLines = (
   timeSignature?: TimeSignatures
 ) => {
   if (!midiData) return;
-  const { lines, currentBar } = getLinePosition(midiData, tick, timeSignature);
+  const { lines, currentBar } = getLinePosition(midiData, tick, bagpipeType, timeSignature);
 
   const { holesPositions, imagesProperties } = bagpipes[bagpipeType];
   const [top, bottom] = [

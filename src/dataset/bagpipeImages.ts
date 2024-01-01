@@ -39,6 +39,7 @@ const srcs = {
     closedHoleImage: "/images/piston_closed.svg",
     backClosedHoleImage: "/images/piston_back_closed.svg",
     blowImage: "/images/blow.svg",
+    bgImage: "/images/bel_duda_back.png",
   },
   [BagpipeTypes.BelarusianNONTraditionalDuda]: {
     mainPipe: "/images/bel_duda_side_color_eight_holes.png",
@@ -47,7 +48,7 @@ const srcs = {
     closedHoleImage: "/images/piston_closed.svg",
     backClosedHoleImage: "/images/piston_back_closed.svg",
     blowImage: "/images/blow.svg",
-    bgImage: "/images/BG.png",
+    bgImage: "/images/bel_duda_back.png",
   },
   [BagpipeTypes.BelarusianOpenDuda]: {
     mainPipe: "/images/bel_duda_side_color_eight_holes.png",
@@ -56,7 +57,7 @@ const srcs = {
     closedHoleImage: "/images/piston_closed.svg",
     backClosedHoleImage: "/images/piston_back_closed.svg",
     blowImage: "/images/blow.svg",
-    bgImage: "/images/BG.png",
+    bgImage: "/images/bel_duda_back.png",
   },
   [BagpipeTypes.Dudelsack]: {
     mainPipe: "/images/dudelsack_rotated.png",
@@ -65,6 +66,16 @@ const srcs = {
     closedHoleImage: "/images/piston_closed.svg",
     backClosedHoleImage: "/images/piston_back_closed.svg",
     blowImage: "/images/blow.svg",
+    bgImage: "/images/dudelzack_back.png"
+  },  
+  [BagpipeTypes.Highlander]: {
+    mainPipe: "/images/scottish.png",
+    activeHoleImage: "/images/piston_open.svg",
+    backActiveHoleImage: "/images/piston_back_open.svg",
+    closedHoleImage: "/images/piston_closed.svg",
+    backClosedHoleImage: "/images/piston_back_closed.svg",
+    blowImage: "/images/blow.svg",
+    bgImage: "/images/scottish_back.png"
   },
 };
 
@@ -81,6 +92,7 @@ export const bagpipeImages = {
   ),
   [BagpipeTypes.BelarusianOpenDuda]: getBagpipeImages(BagpipeTypes.BelarusianOpenDuda),
   [BagpipeTypes.Dudelsack]: getBagpipeImages(BagpipeTypes.Dudelsack),
+  [BagpipeTypes.Highlander]: getBagpipeImages(BagpipeTypes.Highlander),
 };
 
 const srcToImage = (src: string) => {

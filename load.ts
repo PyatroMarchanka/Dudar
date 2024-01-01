@@ -334,6 +334,76 @@ const bagpipes = {
       A5: [],
     },
   },
+  ghb: {
+    name: "highlander",
+    type: "ghb",
+    notesMap: {
+      G4: [0, 1, 2, 3, 4, 5, 6, 7],
+      A4: [0, 1, 2, 3, 4, 5, 6],
+      B4: [0, 1, 2, 3, 4, 5],
+      "C#5": [0, 1, 2, 3, 4],
+      D5: [0, 1, 2, 3],
+      E5: [0, 1, 2],
+      "F#5": [0, 1],
+      G5: [0],
+      A5: [],
+    },
+    holesPositions: {
+      closable: [
+        { yPos: 112, leftMargin: 16, diameter: 20 },
+        { yPos: 148.8, leftMargin: 40, diameter: 20 },
+        { yPos: 209.60000000000002, leftMargin: 42.400000000000006, diameter: 16 },
+        { yPos: 262.40000000000003, leftMargin: 40, diameter: 20 },
+        { yPos: 348.8, leftMargin: 40, diameter: 20 },
+        { yPos: 393.6, leftMargin: 42.400000000000006, diameter: 16 },
+        { yPos: 454.40000000000003, leftMargin: 40, diameter: 20 },
+        { yPos: 496, leftMargin: 40, diameter: 20 },
+      ],
+      blowImage: { yPos: 72, leftMargin: 36, diameter: 26.400000000000002 },
+      linesYPositions: [
+        72, 122, 158.8, 217.60000000000002, 272.40000000000003, 358.8, 401.6, 464.40000000000003,
+        506,
+      ],
+    },
+    imagesProperties: {
+      main_pipe: {
+        width: 127.2,
+        heigth: 415.20000000000005,
+        imageScale: 0.30635838150289013,
+        leftMargin: -30.400000000000002,
+        topMargin: 0,
+      },
+      notes: {
+        lineHeight: 2,
+        brickhHeight: 14.4,
+        brickHeightHalf: 7.2,
+        notesScale: 0.3,
+        brickLeftMargin: 44,
+        notesNamesLeftMargin: 4,
+        noteNameColor: "#000",
+      },
+    },
+    images: {
+      mainPipe: {},
+      activeHoleImage: {},
+      backActiveHoleImage: {},
+      closedHoleImage: {},
+      backClosedHoleImage: {},
+      blowImage: {},
+    },
+    notesToLines: { G4: 8, A4: 7, B4: 6, "C#5": 5, D5: 4, E5: 3, "F#5": 2, G5: 1, A5: 0 },
+    fingersMaps: {
+      G4: [0, 1, 2, 3, 4, 5, 6, 7],
+      A4: [0, 1, 2, 3, 4, 5, 6],
+      B4: [0, 1, 2, 3, 4, 5],
+      "C#5": [0, 1, 2, 3, 4],
+      D5: [0, 1, 2, 3],
+      E5: [0, 1, 2],
+      "F#5": [0, 1],
+      G5: [0],
+      A5: [],
+    },
+  },
 };
 
 const getSongNotesWithOctaveFromMidi = (midi: any) => {
@@ -354,7 +424,7 @@ const getSongNotesWithOctaveFromMidi = (midi: any) => {
   return Object.keys(notesObject);
 };
 
-const bagpipeNotesMaps = Object.values(["bd", "bnd", "bod", "ddl"]).map((bagpipeType) => ({
+const bagpipeNotesMaps = Object.values(["bd", "bnd", "bod", "ddl","ghb"]).map((bagpipeType) => ({
   bagpipeNotes: Object.keys(bagpipes[bagpipeType].notesMap),
   bagpipeType,
 }));
@@ -392,7 +462,7 @@ const getSongListWithBagpipeTypes = async (songs: any): Promise<any[]> => {
   } catch (error: any) {
     console.log(error);
   }
-  
+
   return updatedSongList;
 };
 

@@ -1,4 +1,4 @@
-import { fingersMaps } from './bagpipesFingersMaps';
+import { fingersMaps } from "./bagpipesFingersMaps";
 import { bagpipesImagesProperties } from "./bagpipesImageProperties";
 import { notesMaps } from "./bagpipesNotesMaps";
 import { BagpipeConfig, BagpipeTypes } from "../interfaces";
@@ -17,9 +17,8 @@ const bagpipeNames = {
   [BagpipeTypes.BelarusianOpenDuda]: getTranslationKeyByBagpipeType(
     BagpipeTypes.BelarusianOpenDuda
   ),
-  [BagpipeTypes.Dudelsack]: getTranslationKeyByBagpipeType(
-    BagpipeTypes.Dudelsack
-  ),
+  [BagpipeTypes.Dudelsack]: getTranslationKeyByBagpipeType(BagpipeTypes.Dudelsack),
+  [BagpipeTypes.Highlander]: getTranslationKeyByBagpipeType(BagpipeTypes.Highlander),
 };
 
 const getBagpipeData = (bagpipeType: BagpipeTypes): BagpipeConfig => {
@@ -31,19 +30,16 @@ const getBagpipeData = (bagpipeType: BagpipeTypes): BagpipeConfig => {
     imagesProperties: bagpipesImagesProperties[bagpipeType],
     images: bagpipeImages[bagpipeType],
     notesToLines: bagpipesNotesToLines[bagpipeType],
-    fingersMaps: fingersMaps[bagpipeType]
+    fingersMaps: fingersMaps[bagpipeType],
   };
 };
 
 export const bagpipes: { [key: string]: BagpipeConfig } = {
-  [BagpipeTypes.BelarusianTraditionalDuda]: getBagpipeData(
-    BagpipeTypes.BelarusianTraditionalDuda
-  ),
+  [BagpipeTypes.BelarusianTraditionalDuda]: getBagpipeData(BagpipeTypes.BelarusianTraditionalDuda),
   [BagpipeTypes.BelarusianNONTraditionalDuda]: getBagpipeData(
     BagpipeTypes.BelarusianNONTraditionalDuda
   ),
-  [BagpipeTypes.BelarusianOpenDuda]: getBagpipeData(
-    BagpipeTypes.BelarusianOpenDuda
-  ),
+  [BagpipeTypes.BelarusianOpenDuda]: getBagpipeData(BagpipeTypes.BelarusianOpenDuda),
   [BagpipeTypes.Dudelsack]: getBagpipeData(BagpipeTypes.Dudelsack),
+  [BagpipeTypes.Highlander]: getBagpipeData(BagpipeTypes.Highlander),
 };

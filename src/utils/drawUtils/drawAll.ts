@@ -1,7 +1,7 @@
 import { Midi } from "@tonejs/midi";
 import { Note } from "@tonejs/midi/dist/Note";
 import { BagpipeTypes, SharpNotes, SharpNotesEnum } from "../../interfaces";
-import { drawBagpipe, drawNotesNames, drawShadow, NotesMap } from "./drawBagpipe";
+import { drawBagpipe, drawNotesNames, NotesMap } from "./drawBagpipe";
 import { drawBarsLines } from "./drawBarsLines";
 import { drawActiveHoles, drawClosedHoles } from "./drawHoles";
 import { drawNotes } from "./drawNotes";
@@ -34,18 +34,20 @@ export const drawStatic = (
   activeNote?: {
     note: SharpNotes;
     octave: number;
-  } | null,
+  } | null
 ) => {
+  const isFingersAnimation =
+    bagpipeType !== BagpipeTypes.Dudelsack && bagpipeType !== BagpipeTypes.Highlander;
+
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  drawShadow(ctx, bagpipeType);
   drawBagpipe(ctx, bagpipeType);
-  if (bagpipeType === BagpipeTypes.Dudelsack) {
+  if (!isFingersAnimation) {
     drawClosedHoles(ctx, bagpipeType);
   }
   drawNotesNames(ctx, bagpipeType, notesToLineIdx);
 
   if (activeNote) {
-    if (bagpipeType === BagpipeTypes.Dudelsack) {
+    if (!isFingersAnimation) {
       drawActiveHoles(ctx!, bagpipeType, activeNote);
     } else {
       drawFingers(ctx!, bagpipeType, activeNote, bagpipeNotes);

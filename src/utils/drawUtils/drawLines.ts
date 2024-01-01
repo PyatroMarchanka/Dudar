@@ -1,5 +1,6 @@
 import { bagpipes } from "./../../dataset/bagpipes";
 import { BagpipeTypes } from "./../../interfaces/index";
+import { drawShadow } from "./drawBagpipe";
 
 export const drawLines = (
   ctx: CanvasRenderingContext2D,
@@ -16,4 +17,6 @@ export const drawLines = (
       imagesProperties.notes.lineHeight
     );
   });
+
+  drawShadow(ctx!, bagpipeType);
 };
