@@ -32,24 +32,12 @@ export const useNotesMoving = () => {
   const [nextToNextNotes, setNextToNextNotes] = useState<Note[] | undefined>([]);
 
   useEffect(() => {
-    if (!progress || !(progress.percent % 1 === 0)) {
-      return;
-    }
-
-    const newIndex = progress
-      ? Math.floor((chunkedNotes.length * (progress.percent - 1)) / 100)
-      : 0;
-    setCurrentChunkIndex(newIndex);
-    setNextNotes(chunkedNotes[newIndex] || []);
-    setNextToNextNotes(chunkedNotes[newIndex + 1] || []);
-  }, [progress]);
-
-  useEffect(() => {
     const lastNote = nextNotes?.[nextNotes.length - 1];
     if (lastNote?.ticks && lastNote?.ticks < tick - lastNote.durationTicks) {
-      setNextNotes(chunkedNotes[currentChunkIndex + 1] || []);
-      setNextToNextNotes(chunkedNotes[currentChunkIndex + 2] || []);
-      setCurrentChunkIndex(currentChunkIndex + 1);
+      const newIndex = chunkedNotes[currentChunkIndex + 1] ? currentChunkIndex + 1 : 0;
+      setNextNotes(chunkedNotes[newIndex] || []);
+      setNextToNextNotes(chunkedNotes[newIndex + 1] || []);
+      setCurrentChunkIndex(newIndex);
     }
   }, [tick, isPlaying]);
 
