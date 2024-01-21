@@ -19,6 +19,7 @@ import { BackdropSpinner } from "../global/BackdropSpinner";
 import { DonationButton } from "../global/DonationButton";
 import { useHistory } from "react-router-dom";
 import { getUserOnboardingFinished } from "../../constants/localStorage";
+import ChangeLogPopup from "../ChangeLogPopup";
 
 export const Dudar = () => {
   const history = useHistory();
@@ -80,7 +81,7 @@ export const Dudar = () => {
         <Header>
           <SongTitle>{songTitle || noSongsLabel}</SongTitle>
         </Header>
-        {/* <ChangeLogPopup /> */}
+        <ChangeLogPopup />
         <Settings midiPlayer={midiPlayer} />
       </SettingsButtons>
       <BagpipeContainer>
