@@ -24,7 +24,11 @@ import { sizes } from "../../constants/style";
   return this;
 };
 
-const getYposByNote = (note: SharpNotes, octave: number, bagpipeType: BagpipeTypes) => {
+const getYposByNote = (
+  note: SharpNotes,
+  octave: number,
+  bagpipeType: BagpipeTypes
+) => {
   const { notesToLines, holesPositions } = bagpipes[bagpipeType];
   let yPos = holesPositions.linesYPositions[notesToLines[note + octave]];
 
@@ -48,7 +52,9 @@ const drawNote = (
   }
 
   const startPos =
-    start * sizes.notesScale - tick * sizes.notesScale + imageProperties.notes.brickLeftMargin;
+    start * sizes.notesScale -
+    tick * sizes.notesScale +
+    imageProperties.notes.brickLeftMargin;
   ctx.beginPath();
   // @ts-ignore
   ctx.roundRect(
@@ -70,32 +76,44 @@ export const drawNotes = (
   ctx: CanvasRenderingContext2D,
   bagpipeType: BagpipeTypes,
   tick: number,
+  previousNotes?: Note[],
   nextNotes?: Note[],
   nextToNextNotes?: Note[]
 ) => {
-  nextNotes &&
-    nextNotes?.forEach((note) => {
-      drawNote(
-        ctx,
-        bagpipeType,
-        note.pitch as SharpNotes,
-        note.durationTicks,
-        note.ticks,
-        tick,
-        note.octave
-      );
-    });
+ 
+  previousNotes?.forEach((note) => {
+    drawNote(
+      ctx,
+      bagpipeType,
+      note.pitch as SharpNotes,
+      note.durationTicks,
+      note.ticks,
+      tick,
+      note.octave
+    );
+  });
 
-  nextToNextNotes &&
-    nextToNextNotes?.forEach((note) => {
-      drawNote(
-        ctx,
-        bagpipeType,
-        note.pitch as SharpNotes,
-        note.durationTicks,
-        note.ticks,
-        tick,
-        note.octave
-      );
-    });
+  nextNotes?.forEach((note) => {
+    drawNote(
+      ctx,
+      bagpipeType,
+      note.pitch as SharpNotes,
+      note.durationTicks,
+      note.ticks,
+      tick,
+      note.octave
+    );
+  });
+
+  nextToNextNotes?.forEach((note) => {
+    drawNote(
+      ctx,
+      bagpipeType,
+      note.pitch as SharpNotes,
+      note.durationTicks,
+      note.ticks,
+      tick,
+      note.octave
+    );
+  });
 };

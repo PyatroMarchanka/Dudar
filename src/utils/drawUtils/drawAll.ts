@@ -13,13 +13,14 @@ export const drawDynamic = (
   bagpipeType: BagpipeTypes,
   tick: number,
   midiData: Midi | null,
+  previousNotes: Note[] | undefined,
   nextNotes?: Note[] | undefined,
   nextToNextNotes?: Note[] | undefined,
   song?: Song
 ) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   drawBarsLines(ctx, tick, midiData, bagpipeType, song?.timeSignature);
-  drawNotes(ctx, bagpipeType, tick, nextNotes, nextToNextNotes);
+  drawNotes(ctx, bagpipeType, tick, previousNotes, nextNotes, nextToNextNotes);
 };
 
 export const cleanLines = (ctx: CanvasRenderingContext2D) => {
@@ -37,7 +38,8 @@ export const drawStatic = (
   } | null
 ) => {
   const isFingersAnimation =
-    bagpipeType !== BagpipeTypes.Dudelsack && bagpipeType !== BagpipeTypes.Highlander;
+    bagpipeType !== BagpipeTypes.Dudelsack &&
+    bagpipeType !== BagpipeTypes.Highlander;
 
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   drawBagpipe(ctx, bagpipeType);
