@@ -1,9 +1,9 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React from "react";
+import { useState, useEffect } from "react";
 
 export function useLongPress(
   callback: (e: React.MouseEvent<HTMLButtonElement>) => void = () => {},
-  ms = 300,
+  ms = 300
 ) {
   const [startLongPress, setStartLongPress] = useState(false);
   const [event, setEvent] = useState<any | null>(null);
@@ -24,20 +24,26 @@ export function useLongPress(
   return {
     onMouseDown: (e: React.MouseEvent<HTMLButtonElement>) => {
       e.persist();
+      e.preventDefault();
       setEvent(e);
       setStartLongPress(true);
     },
-    onMouseUp: () => setStartLongPress(false),
+    onMouseUp: (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      setStartLongPress(false);
+    },
     onMouseLeave: () => {
       setEvent(null);
       setStartLongPress(false);
     },
     onTouchStart: (e: React.TouchEvent<HTMLButtonElement>) => {
       e.persist();
+      e.preventDefault();
       setEvent(e);
       setStartLongPress(true);
     },
-    onTouchEnd: () => {
+    onTouchEnd: (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
       setEvent(null);
       setStartLongPress(false);
     },
