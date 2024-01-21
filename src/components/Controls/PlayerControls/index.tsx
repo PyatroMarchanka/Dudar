@@ -5,7 +5,6 @@ import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
 import { PlayStopButton } from "../../global/PlayStopButton";
 import PauseIcon from "@material-ui/icons/Pause";
-import LoopIcon from "@material-ui/icons/Loop";
 import { Icon } from "../../global/Icon";
 import { mainColors, theme } from "../../../utils/theme";
 import { createTheme } from "@material-ui/core/styles";
@@ -13,7 +12,7 @@ import { ThemeProvider } from "@material-ui/core";
 import { TempoSlider } from "../TempoSlider";
 import { secondsToTime } from "../../../utils/textUtils";
 import { Preclick } from "../../Preclick";
-import { useLoop } from "../../../hooks/useLoop";
+import { LoopBars } from "./LoopBars";
 
 interface Props {
   player: MidiPlayer | null;
@@ -37,19 +36,17 @@ const muiTheme = createTheme({
 
 export const PlayerControls = ({ player }: Props) => {
   const {
-    state: { midi, progress, isPlaying, songLength, isPreclick },
+    state: { midi, progress, isPlaying, songLength, isPreclick, activeSong },
     setProgress,
     setIsPlaying,
   } = useContext(store);
-
-  const { onLoop, isLoop } = useLoop(player);
 
   const onPlay = () => {
     setIsPlaying(true);
     const play = isPreclick ? player?.playWithPreclick : player?.playMidi;
 
     if (play) {
-      play && play(midi, progress?.percent || 0);
+      play && play(midi, progress?.percent || 0, activeSong!.timeSignature);
     }
   };
 
@@ -105,17 +102,18 @@ export const PlayerControls = ({ player }: Props) => {
         <Preclick />
         <PlayStop>
           <IconButton onClick={onStop} className="icon">
-            <Icon type="stop" fill={theme.colors.black} Icon={PauseIcon} className="play-icon" />
-          </IconButton>
-          <PlayStopButton isPlaying={isPlaying} handlePlaying={isPlaying ? onPause : onPlay} />
-          <IconButton onClick={onLoop} className="icon">
             <Icon
-              type="material"
-              fill={isLoop ? mainColors.darkerGray : mainColors.lightGrey}
-              Icon={LoopIcon}
+              type="stop"
+              fill={theme.colors.black}
+              Icon={PauseIcon}
               className="play-icon"
             />
           </IconButton>
+          <PlayStopButton
+            isPlaying={isPlaying}
+            handlePlaying={isPlaying ? onPause : onPlay}
+          />
+          <LoopBars player={player} />
         </PlayStop>
       </Buttons>
     </Container>
@@ -177,5 +175,9 @@ const Container = styled.div`
     background-color: ${mainColors.darkRed};
     height: 8px;
     border-radius: 4px;
+  }
+
+  .loop-icon {
+    user-select: none
   }
 `;

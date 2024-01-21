@@ -7,5 +7,6 @@ export const userBagpipeType = "userBagpipeType";
 export const userLanguage = "userLanguage";
 export const userHolesMode = "userHolesMode";
 export const userOnboardingFinished = "userOnboardingFinished";
+export const userLoopCount = "userLoopCount";
 
 export const getUserOnboardingFinished = () => !!localStorage.getItem(userOnboardingFinished);

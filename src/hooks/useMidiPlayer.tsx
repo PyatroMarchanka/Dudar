@@ -9,7 +9,7 @@ export const useMidiPlayer = (
   playerRef: any
 ) => {
   const {
-    state: { tempo, metronome },
+    state: { tempo, metronome, loopBars },
     setIsPlaying,
   } = useContext(store);
   const [midiPlayer, setMidiPlayer] = useState<MidiPlayer | null>(null);
@@ -21,7 +21,7 @@ export const useMidiPlayer = (
 
   useEffect(() => {
     if (isUserOnboardingCompleted) {
-      let player: MidiPlayer | null = new MidiPlayer(playerRef, tempo, metronome);
+      let player: MidiPlayer | null = new MidiPlayer(playerRef, tempo, metronome, loopBars);
       player.initPlayer(handleNote, handleProgress, switchIsPlaying);
       setMidiPlayer(player);
     }

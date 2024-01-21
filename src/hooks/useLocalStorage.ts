@@ -6,6 +6,7 @@ import {
   lastSongData,
   userLanguage,
   userHolesMode,
+  userLoopCount,
 } from "./../constants/localStorage";
 import { useContext, useEffect } from "react";
 import { store } from "../context";
@@ -14,6 +15,7 @@ import { getFirstSongFromList, isSongInLists } from "../dataset/songs/utils";
 
 const fallBackBagpipe = BagpipeTypes.BelarusianTraditionalDuda;
 const fallBackLanguage = Languages.English;
+const fallbackLoopCount = 1;
 
 export const getUserDataFromLocal = () => {
   const songData = localStorage.getItem(lastSongData);
@@ -23,6 +25,7 @@ export const getUserDataFromLocal = () => {
   const bagpipeType = localStorage.getItem(userBagpipeType);
   const language = localStorage.getItem(userLanguage);
   const holesMode = localStorage.getItem(userHolesMode);
+  const loopBars = localStorage.getItem(userLoopCount);
 
   return {
     tempo: userTempoData !== null ? +userTempoData : 200,
@@ -32,6 +35,7 @@ export const getUserDataFromLocal = () => {
     songData,
     language: (language || fallBackLanguage) as Languages,
     holesMode: (holesMode || HolesModes.Fingers) as HolesModes,
+    loopBars: loopBars ? Number(loopBars) : fallbackLoopCount,
   };
 };
 
@@ -46,6 +50,7 @@ export const useLocalStorage = () => {
       bagpipeType: bagpipeTypeFromCtx,
       language,
       holesMode,
+      loopBars,
     },
     setActiveSong,
     setTempo,
@@ -53,6 +58,7 @@ export const useLocalStorage = () => {
     setIsPreclick,
     setBagpipeType,
     setLanguage,
+    setLoopBars,
   } = useContext(store);
 
   useEffect(() => {
@@ -85,13 +91,27 @@ export const useLocalStorage = () => {
     if (holesMode) {
       localStorage.setItem(userHolesMode, holesMode);
     }
-  }, [activeSong, tempo, transpose, isPreclick, bagpipeTypeFromCtx, language, holesMode]);
+
+    if (loopBars) {
+      localStorage.setItem(userLoopCount, loopBars.toString());
+    }
+  }, [
+    activeSong,
+    tempo,
+    transpose,
+    isPreclick,
+    bagpipeTypeFromCtx,
+    language,
+    holesMode,
+    loopBars,
+  ]);
 
   useEffect(() => {
     const songDataFromLocalStorage = localStorage.getItem(lastSongData);
     let parsedSong;
     try {
-      parsedSong = !!songDataFromLocalStorage && JSON.parse(songDataFromLocalStorage);
+      parsedSong =
+        !!songDataFromLocalStorage && JSON.parse(songDataFromLocalStorage);
     } catch (error) {
       console.log(error);
     }
@@ -99,7 +119,9 @@ export const useLocalStorage = () => {
     if (!listsByBagpipe) return;
 
     const isInList = isSongInLists(listsByBagpipe, parsedSong);
-    const songData = isInList ? parsedSong : getFirstSongFromList(listsByBagpipe);
+    const songData = isInList
+      ? parsedSong
+      : getFirstSongFromList(listsByBagpipe);
     const userTempoData = localStorage.getItem(userTempo);
     const userTransposeData = localStorage.getItem(userTranspose);
     const userIsPreclickData = localStorage.getItem(userIsPreclick);
@@ -112,5 +134,6 @@ export const useLocalStorage = () => {
     setIsPreclick(!!userIsPreclickData);
     setBagpipeType((bagpipeType as BagpipeTypes) || fallBackBagpipe);
     setLanguage((language as Languages) || fallBackLanguage);
+    setLoopBars(loopBars ? Number(loopBars) : fallbackLoopCount);
   }, [listsByBagpipe]);
 };

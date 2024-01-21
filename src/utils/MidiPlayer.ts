@@ -3,6 +3,7 @@ import { Midi } from "@tonejs/midi";
 import { droneFileLengthMs, playNote, stopNote } from "./midiUtils/sampler";
 import { midiNumbersToNotes } from "./midiUtils/notesToMidiNumbers";
 import { SharpNotesEnum } from "../interfaces";
+import { TimeSignatures } from "../dataset/songs/interfaces";
 
 export type MidiNoteHandler = (note: number) => void;
 export type PlaybackProgressHandler = (
@@ -16,7 +17,7 @@ export type SetTransposeType = (num: number, isPlaying: boolean) => void;
 export interface MidiEvent {
   byteIndex?: number;
   delta?: number;
-  name?: "End of Track" | "Note on" | "Note off" | 'Sequence/Track Name';
+  name?: "End of Track" | "Note on" | "Note off" | "Sequence/Track Name";
   tick?: number;
   track?: number;
   channel?: number;
@@ -47,16 +48,19 @@ export class MidiPlayer {
   transpose: number = 0;
   droneNote: number = 57;
   metronom: boolean = true;
-  loopData = { startLoopTicks: 0, endLoopTicks: 1920 };
+  loopData = { startLoopTicks: 0, endLoopTicks: 1920, loopBars: 1 };
   loop: boolean = false;
+  timeSignature: TimeSignatures = "4/4";
+  barLength = 1;
   isPlaying = false;
   handleNotesMoving?: NotesMovingHandler;
 
-  constructor(playRef: any, bpm: number, metronom: boolean) {
+  constructor(playRef: any, bpm: number, metronom: boolean, loopBars: number) {
     this.playRef = playRef;
     this.bpm = bpm;
     this.envelopes = {};
     this.metronom = metronom;
+    this.loopData.loopBars = loopBars;
 
     if (this.playRef.current) {
       this.playRef.current?.setBand256(-5);
@@ -80,8 +84,8 @@ export class MidiPlayer {
       if (this.handleNotesMoving) {
         this.handleNotesMoving(tick);
       }
-      if(tick >= this.midiData?.durationTicks!){
-        this.setProgress(0, true)
+      if (tick >= this.midiData?.durationTicks!) {
+        this.setProgress(0, true);
       }
       this.loopBar(tick);
     });
@@ -103,6 +107,10 @@ export class MidiPlayer {
     this.loop = loop;
   }
 
+  setLoopBarsCount(num: number) {
+    this.loopData.loopBars = num;
+  }
+
   setCurrentBarStart() {
     const tick = Player.getCurrentTick();
     // TODO: set count of beats according to the song time signature
@@ -116,7 +124,10 @@ export class MidiPlayer {
   }
 
   loopBar(tick: number) {
-    if (this.loop && tick >= this.loopData.endLoopTicks) {
+    if (
+      this.loop &&
+      tick >= this.loopData.endLoopTicks * this.loopData.loopBars * this.barLength
+    ) {
       this.setTick(this.loopData.startLoopTicks, true);
     }
   }
@@ -135,7 +146,10 @@ export class MidiPlayer {
   };
 
   handleSamplerEvent = (event: any, handleNote: (event: any) => void) => {
-    if (event.name === "Note off" || (event.name === "Note on" && event.velocity === 0)) {
+    if (
+      event.name === "Note off" ||
+      (event.name === "Note on" && event.velocity === 0)
+    ) {
       this.keyUp(event.noteNumber);
     } else if (event.name === "Note on" && event.noteNumber !== 33) {
       this.keyDown(event.noteNumber);
@@ -144,11 +158,18 @@ export class MidiPlayer {
     }
   };
 
-  playMidiNote = (note: number, tick: number, instrument = bagpipeChanter, volume = 1) => {
+  playMidiNote = (
+    note: number,
+    tick: number,
+    instrument = bagpipeChanter,
+    volume = 1
+  ) => {
     this.envelopes[tick] = this.playRef.current?.player.queueWaveTable(
       this.playRef.current?.audioContext,
       this.playRef.current?.equalizer.input,
-      window[this.playRef.current?.player.loader.instrumentInfo(instrument).variable],
+      window[
+        this.playRef.current?.player.loader.instrumentInfo(instrument).variable
+      ],
       0,
       note + this.transpose - 1,
       9999,
@@ -234,10 +255,16 @@ export class MidiPlayer {
     }, droneFileLengthMs);
   };
 
-  playMidi = (midi: ArrayBuffer | null, progress: number) => {
+  playMidi = (
+    midi: ArrayBuffer | null,
+    progress: number,
+    timeSignature: TimeSignatures
+  ) => {
     if (!midi) {
       return;
     }
+    const [first, second] = timeSignature.split("/");
+    this.barLength = +first / +second;
     this.isPlaying = true;
     Player.loadArrayBuffer(midi);
     Player.play();
@@ -248,7 +275,11 @@ export class MidiPlayer {
     this.playDrone(this.droneNote);
   };
 
-  playWithPreclick = (midi: ArrayBuffer | null, progress: number) => {
+  playWithPreclick = (
+    midi: ArrayBuffer | null,
+    progress: number,
+    timeSignature: TimeSignatures
+  ) => {
     const when = this.playRef?.current?.contextTime();
     const N = (4 * 60) / this.bpm;
     const duration4th = N / 2;
@@ -257,11 +288,16 @@ export class MidiPlayer {
 
     const preClickTime = (60 / this.bpm) * 1000 * (preClickBeatsCount * 2);
     for (let index = 0; index < preClickBeatsCount; index++) {
-      this.playRef?.current?.playChordAt(when + dur * index, 1219, [60], dur * 1);
+      this.playRef?.current?.playChordAt(
+        when + dur * index,
+        1219,
+        [60],
+        dur * 1
+      );
     }
 
     setTimeout(() => {
-      this.playMidi(midi, progress);
+      this.playMidi(midi, progress, timeSignature);
     }, preClickTime);
   };
 
@@ -277,7 +313,9 @@ export class MidiPlayer {
       Object.values(this.envelopes).forEach((num) => {
         if (typeof num === "number") {
           stopNote(
-            midiNumbersToNotes[(num + this.transpose + 12) as keyof typeof midiNumbersToNotes]
+            midiNumbersToNotes[
+              (num + this.transpose + 12) as keyof typeof midiNumbersToNotes
+            ]
           );
         } else if (num) {
           this.stopMidiNote(num);

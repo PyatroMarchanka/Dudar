@@ -7,6 +7,10 @@
   "noIcon": "No icon",
   "semitones": "semitones",
   "gotIt": "Got it",
+  "looper": {
+    "selectBarsCount": "Wybierz liczbę taktów muzycznych do zapętlenia",
+    "bars": "takt(y)"
+  },
   "about": {
     "mainTitle": "Learn to play without notes! Bagpipe and flute training app",
     "list": "List of melodies",
