@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const LoopBars = ({ player }: Props) => {
   const {
-    state: { loopBars },
+    state: { loopBars, isPlaying },
     setLoopBars,
   } = useContext(store);
 
@@ -94,7 +94,7 @@ export const LoopBars = ({ player }: Props) => {
           </Select>
         </DialogContent>
       </Dialog>
-      <IconButton onClick={onLoop} {...longPressEvent} className="icon loop-icon">
+      <IconButton disabled={isPlaying} onClick={onLoop} {...longPressEvent} className="icon loop-icon">
         <Icon
           type="material"
           fill={isLoop ? mainColors.darkerGray : mainColors.lightGrey}

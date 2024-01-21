@@ -3,6 +3,7 @@ import { Midi } from "@tonejs/midi";
 import { droneFileLengthMs, playNote, stopNote } from "./midiUtils/sampler";
 import { midiNumbersToNotes } from "./midiUtils/notesToMidiNumbers";
 import { SharpNotesEnum } from "../interfaces";
+import { TimeSignatures } from "../dataset/songs/interfaces";
 
 export type MidiNoteHandler = (note: number) => void;
 export type PlaybackProgressHandler = (
@@ -49,14 +50,17 @@ export class MidiPlayer {
   metronom: boolean = true;
   loopData = { startLoopTicks: 0, endLoopTicks: 1920, loopBars: 1 };
   loop: boolean = false;
+  timeSignature: TimeSignatures = "4/4";
+  barLength = 1;
   isPlaying = false;
   handleNotesMoving?: NotesMovingHandler;
 
-  constructor(playRef: any, bpm: number, metronom: boolean) {
+  constructor(playRef: any, bpm: number, metronom: boolean, loopBars: number) {
     this.playRef = playRef;
     this.bpm = bpm;
     this.envelopes = {};
     this.metronom = metronom;
+    this.loopData.loopBars = loopBars;
 
     if (this.playRef.current) {
       this.playRef.current?.setBand256(-5);
@@ -122,7 +126,7 @@ export class MidiPlayer {
   loopBar(tick: number) {
     if (
       this.loop &&
-      tick >= this.loopData.endLoopTicks * this.loopData.loopBars
+      tick >= this.loopData.endLoopTicks * this.loopData.loopBars * this.barLength
     ) {
       this.setTick(this.loopData.startLoopTicks, true);
     }
@@ -251,10 +255,16 @@ export class MidiPlayer {
     }, droneFileLengthMs);
   };
 
-  playMidi = (midi: ArrayBuffer | null, progress: number) => {
+  playMidi = (
+    midi: ArrayBuffer | null,
+    progress: number,
+    timeSignature: TimeSignatures
+  ) => {
     if (!midi) {
       return;
     }
+    const [first, second] = timeSignature.split("/");
+    this.barLength = +first / +second;
     this.isPlaying = true;
     Player.loadArrayBuffer(midi);
     Player.play();
@@ -265,7 +275,11 @@ export class MidiPlayer {
     this.playDrone(this.droneNote);
   };
 
-  playWithPreclick = (midi: ArrayBuffer | null, progress: number) => {
+  playWithPreclick = (
+    midi: ArrayBuffer | null,
+    progress: number,
+    timeSignature: TimeSignatures
+  ) => {
     const when = this.playRef?.current?.contextTime();
     const N = (4 * 60) / this.bpm;
     const duration4th = N / 2;
@@ -283,7 +297,7 @@ export class MidiPlayer {
     }
 
     setTimeout(() => {
-      this.playMidi(midi, progress);
+      this.playMidi(midi, progress, timeSignature);
     }, preClickTime);
   };
 
