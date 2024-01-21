@@ -176,4 +176,8 @@ const Container = styled.div`
     height: 8px;
     border-radius: 4px;
   }
+
+  .loop-icon {
+    user-select: none
+  }
 `;

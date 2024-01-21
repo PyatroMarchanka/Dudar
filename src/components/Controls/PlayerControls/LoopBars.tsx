@@ -27,9 +27,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   content: {
     display: "flex",
     justifyContent: "center",
+    userSelect: "none",
+    pointerEvents: "none",
   },
   title: {
-    textAlign: 'center'
+    textAlign: "center",
+  },
+  noSelect: {
+    userSelect: "none",
   }
 }));
 
@@ -67,11 +72,13 @@ export const LoopBars = ({ player }: Props) => {
     <>
       <Dialog
         maxWidth="xs"
-        className={"loop-menu"}
+        className={classes.noSelect}
         open={isLoopMenuOpen}
         onClose={() => setIsLoopMenuOpen(false)}
       >
-        <DialogTitle className={classes.title}>{t("looper.selectBarsCount")}</DialogTitle>
+        <DialogTitle className={classes.title}>
+          {t("looper.selectBarsCount")}
+        </DialogTitle>
         <DialogContent className={classes.content}>
           <Select
             id="bars-select"
@@ -88,7 +95,7 @@ export const LoopBars = ({ player }: Props) => {
           </Select>
         </DialogContent>
       </Dialog>
-      <IconButton onClick={onLoop} {...longPressEvent} className="icon">
+      <IconButton onClick={onLoop} {...longPressEvent} className="icon loop-icon">
         <Icon
           type="material"
           fill={isLoop ? mainColors.darkerGray : mainColors.lightGrey}
