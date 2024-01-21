@@ -33,6 +33,7 @@ interface Context {
   setTranspose: (num: number) => void;
   setSongNotes: (notes: SharpNotesEnum[]) => void;
   setIsPreclick: (bool: boolean) => void;
+  setLoopBars: (num: number) => void;
   setLoop: (bool: boolean) => void;
   setIsSongLoading: (bool: boolean) => void;
   setHolesMode: (mode: HolesModes) => void;
@@ -59,6 +60,7 @@ const store = createContext<Context>({
   setSongLength: (seconds: number) => {},
   setIsPreclick: (bool: boolean) => {},
   setLoop: (bool: boolean) => {},
+  setLoopBars: (num: number) => {},
   setIsSongLoading: (bool: boolean) => {},
   setHolesMode: (mode: HolesModes) => {},
   setSongTags: (tags: SongTags[]) => {},

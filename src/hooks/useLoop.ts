@@ -11,17 +11,17 @@ export const useLoop = (player: MidiPlayer | null) => {
   const onLoop = () => {
     if (loop) {
       setLoop(false);
-      player?.setLoop(false)
+      player?.setLoop(false);
     } else {
       setLoop(true);
-      player?.setLoop(true)
+      player?.setLoop(true);
       player?.setCurrentBarStart();
     }
   };
 
   useEffect(() => {
-    player?.setLoop(loop)
-  }, [player])
+    player?.setLoop(loop);
+  }, [player]);
 
   return {
     onLoop,
