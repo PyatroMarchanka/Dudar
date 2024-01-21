@@ -62,12 +62,6 @@ const ChangeLogPopup = (props: Props) => {
 
   return (
     <ChangeLogPopupContainer>
-      <div onClick={handleClickOpen}>
-        <IconButton  onClick={() => handleClickOpen()} className="close">
-          {InfoButton}
-        </IconButton>
-      </div>
-
       <Dialog maxWidth="xl" style={{}} disableEscapeKeyDown open={open} onClose={handleClose}>
         <DialogTitle>{t("about.updatesTitle")}</DialogTitle>
         <DialogContent>
