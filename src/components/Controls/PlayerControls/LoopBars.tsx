@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     justifyContent: "center",
     userSelect: "none",
-    pointerEvents: "none",
   },
   title: {
     textAlign: "center",
