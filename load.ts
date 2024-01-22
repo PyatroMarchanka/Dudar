@@ -473,6 +473,8 @@ const folders = [
   { path: "./public/midi/balkan", label: "Balkan" },
   { path: "./public/midi/schotland", label: "Schotland" },
   { path: "./public/midi/other", label: "Other" },
+  { path: "./public/midi/scandinavian", label: "Scandinavian" },
+  
 ];
 
 const initSongList = async () => {
