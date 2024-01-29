@@ -18,6 +18,7 @@ import { Icon } from "../../global/Icon";
 import { mainColors } from "../../../utils/theme";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
 import { store } from "../../../context";
+import styled from "styled-components";
 
 interface Props {
   player: MidiPlayer | null;
@@ -34,12 +35,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noSelect: {
     userSelect: "none",
-  }
+  },
 }));
 
 export const LoopBars = ({ player }: Props) => {
   const {
-    state: { loopBars, isPlaying },
+    state: { loopBars, isPlaying, loop },
     setLoopBars,
   } = useContext(store);
 
@@ -94,7 +95,13 @@ export const LoopBars = ({ player }: Props) => {
           </Select>
         </DialogContent>
       </Dialog>
-      <IconButton disabled={isPlaying} onClick={onLoop} {...longPressEvent} className="icon loop-icon">
+
+      <IconButton
+        onClick={onLoop}
+        {...longPressEvent}
+        className="icon loop-icon"
+      >
+        <LoopBarsCount active={loop}>{loopBars}</LoopBarsCount>
         <Icon
           type="material"
           fill={isLoop ? mainColors.darkerGray : mainColors.lightGrey}
@@ -105,3 +112,10 @@ export const LoopBars = ({ player }: Props) => {
     </>
   );
 };
+const LoopBarsCount = styled.div`
+  position: absolute;
+  font-size: 8px;
+
+  color: ${({ active }: { active: boolean }) =>
+    active ? mainColors.darkerGray : mainColors.greyColor};
+`;
