@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { store } from "../context";
 import { Song } from "../dataset/songs/interfaces";
 import { addMetronome, fixMidiDataOctaves } from "../utils/midiUtils";
+import { songApi } from "../api/songClient";
 
 export const useLoadSong = () => {
   const {
@@ -24,7 +25,7 @@ export const useLoadSong = () => {
         listsByBagpipe && setActiveSong(listsByBagpipe[bagpipeType][0]);
       }
       setIsSongLoading(true);
-      const file = await fetch(`midi/${song.pathName}`);
+      const file = await songApi.getSong(song);
       const buffer = await file.arrayBuffer();
 
       const songWithMetronome = await addMetronome(buffer, song.timeSignature);

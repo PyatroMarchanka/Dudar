@@ -48,7 +48,7 @@ export class MidiPlayer {
   transpose: number = 0;
   droneNote: number = 57;
   metronom: boolean = true;
-  loopData = { startLoopTicks: 0, endLoopTicks: 1920, loopBars: 1 };
+  loopData = { startLoopTicks: 0, endLoopTicks: 0, loopBars: 1 };
   loop: boolean = false;
   timeSignature: TimeSignatures = "4/4";
   barLength = 1;
@@ -116,18 +116,13 @@ export class MidiPlayer {
     // TODO: set count of beats according to the song time signature
     const ticksPerBar = (this.midiData?.header.ppq || 480) * 4;
     const currentBar = Math.trunc(tick / ticksPerBar);
-
-    if (this.loopData.startLoopTicks !== currentBar * ticksPerBar) {
-      this.loopData.startLoopTicks = currentBar * ticksPerBar;
-      this.loopData.endLoopTicks = (currentBar + 1) * ticksPerBar;
-    }
+    this.loopData.startLoopTicks = currentBar * ticksPerBar;
+    this.loopData.endLoopTicks =
+      (currentBar + this.loopData.loopBars) * ticksPerBar;
   }
 
   loopBar(tick: number) {
-    if (
-      this.loop &&
-      tick >= this.loopData.endLoopTicks * this.loopData.loopBars * this.barLength
-    ) {
+    if (this.loop && tick >= this.loopData.endLoopTicks * this.barLength) {
       this.setTick(this.loopData.startLoopTicks, true);
     }
   }
