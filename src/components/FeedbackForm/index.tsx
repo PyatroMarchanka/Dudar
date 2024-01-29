@@ -68,7 +68,7 @@ export const FeedbackForm = (props: Props) => {
         message={t("feedback.thanks")}
       />
       <Button color={mainColors.orange} onClick={() => setIsOpen(true)}>
-        {t("feedback.sendFeedback")}
+        {t("feedback.haveAQuestion")}
       </Button>
     </>
   );
