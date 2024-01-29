@@ -5,6 +5,7 @@ import { BagpipeTypes } from "../interfaces";
 import { getSongListWithBagpipeTypes } from "../utils/midiUtils";
 import { transliterateSongList, useIsCyrylicLang } from "../locales";
 import { getAvailableTagsFromLists, getFirstSongFromList } from "../dataset/songs/utils";
+import { songApi } from "../api/songClient";
 
 export const useSongList = (onStop: () => void) => {
   const {
@@ -18,10 +19,7 @@ export const useSongList = (onStop: () => void) => {
 
   const initSongList = useCallback(async () => {
     try {
-      const songListUrl = "midi/list.json";
-
-      const songListFromFile = await fetch(songListUrl);
-      const songList = await songListFromFile.json();
+      const songList = await songApi.getSongList();
 
       const sortedList = sortSongsByBagpipe(songList);
       const lists = sortSongsBySongType(sortedList[bagpipeType]);
