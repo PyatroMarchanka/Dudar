@@ -36,6 +36,7 @@
     "irish": "Irish",
     "balkan": "Balkan",
     "schotland": "Schotland",
+    "exercises": "Exercises",
     "other": "Other"
   },
   "languages": {
@@ -53,7 +54,8 @@
     "dance": "dance",
     "sweden": "sweden",
     "march": "march",
-    "schotland": "schotland"
+    "schotland": "schotland",
+    "exercise": "exercise"
   },
   "feedback": {
     "haveAQuestion": "Have a question?",

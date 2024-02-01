@@ -3,7 +3,7 @@ import { Song } from "../dataset/songs/interfaces";
 
 export const songClient = axios.create({
   baseURL:
-    "https://raw.githubusercontent.com/PyatroMarchanka/dudahero-midi/release/midi/",
+    "https://raw.githubusercontent.com/PyatroMarchanka/dudahero-midi/main/midi/",
 });
 
 export const songApi = {
@@ -16,7 +16,6 @@ export const songApi = {
   },
   getSongList: async (): Promise<Song[]> => {
     const res = await songClient.get("list.json");
-
     return res.data;
   },
 };
