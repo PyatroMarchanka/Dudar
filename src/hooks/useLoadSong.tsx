@@ -42,6 +42,7 @@ export const useLoadSong = () => {
       setIsSongLoading(false);
     } catch (error) {
       console.log(error);
+      listsByBagpipe && setActiveSong(listsByBagpipe[bagpipeType][0]);
     }
   };
 
