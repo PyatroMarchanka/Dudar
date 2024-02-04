@@ -41,6 +41,7 @@ export const useLoadSong = () => {
       setMidi(songWithMetronome);
       setIsSongLoading(false);
     } catch (error) {
+      listsByBagpipe && setActiveSong(listsByBagpipe[bagpipeType][0]);
       console.log(error);
     }
   };
