@@ -36,6 +36,7 @@
     "irish": "Irlandzkie",
     "balkan": "Bałkańskie",
     "schotland": "Szkockie",
+    "exercises": "Ćwiczenia",
     "other": "Inne"
   },
   "languages": {
@@ -53,7 +54,8 @@
     "dance": "taniec",
     "march": "marsz",
     "sweden": "szwedzkie",
-    "schotland": "szkockie"
+    "schotland": "szkockie",
+    "exercise": "ćwiczenia"
   },
   "feedback": {
     "haveAQuestion": "Masz pytanie?",

@@ -88,7 +88,9 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
         <Icon type="material" fill="#fff" Icon={Close} />
       </IconButton>
       <div className={classes.dudaRoot}>
-        <Typography className={classes.duda}>{t("songList.instrument")}</Typography>
+        <Typography className={classes.duda}>
+          {t("songList.instrument")}
+        </Typography>
         <Typography>{t(`dudas.${bagpipes[bagpipeType].name}`)}</Typography>
       </div>
       <SongTagsWrapper />
@@ -108,14 +110,20 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography className={classes.heading}>{t(`genres.${genre}`)}</Typography>
+              <Typography className={classes.heading}>
+                {t(`genres.${genre}`)}
+              </Typography>
             </AccordionSummary>
 
             <AccordionDetails classes={{ root: classes.detailsRoot }}>
               <List classes={{ padding: classes.list }}>
                 {listsByBagpipe![genre].map((song) => (
                   <div
-                    className={activeSong?.pathName === song.pathName ? classes.activeSong : ""}
+                    className={
+                      activeSong?.pathName === song.pathName
+                        ? classes.activeSong
+                        : ""
+                    }
                     key={song.name}
                   >
                     <IconButton
@@ -129,7 +137,13 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                         gtmPush({ song_name: song.name });
                       }}
                     >
-                      <Icon type={activeSong?.pathName === song.pathName ? "song-play" : "music"} />
+                      <Icon
+                        type={
+                          activeSong?.pathName === song.pathName
+                            ? "song-play"
+                            : "music"
+                        }
+                      />
                       <ListItem className="song-button-gtm" id={song.name}>
                         {song.name}
                       </ListItem>

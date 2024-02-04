@@ -36,6 +36,7 @@
     "irish": "Ірландскія",
     "balkan": "Балканскія",
     "schotland": "Шатландскія",
+    "exercises": "Прыктыкаванні",
     "other": "Іншыя"
   },
   "languages": {
@@ -53,7 +54,8 @@
     "dance": "танцы",
     "march": "марш",
     "sweden": "шведскія",
-    "schotland": "шатландскія"
+    "schotland": "шатландскія",
+    "exercise": "практыкаванне"
   },
   "feedback": {
     "haveAQuestion": "Ёсць пытанне?",
