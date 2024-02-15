@@ -55,7 +55,10 @@
     "march": "marsz",
     "sweden": "szwedzkie",
     "schotland": "szkockie",
-    "exercise": "ćwiczenia"
+    "exercise": "ćwiczenia",
+    "hard": "trudne",
+    "tune": "melodia"
+
   },
   "feedback": {
     "haveAQuestion": "Masz pytanie?",

@@ -55,7 +55,9 @@
     "march": "марш",
     "sweden": "шведскія",
     "schotland": "шатландскія",
-    "exercise": "практыкаванне"
+    "exercise": "практыкаванне",
+    "hard": "цяжкія",
+    "tune": "наігрыш"
   },
   "feedback": {
     "haveAQuestion": "Ёсць пытанне?",

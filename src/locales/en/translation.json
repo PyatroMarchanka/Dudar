@@ -55,7 +55,9 @@
     "sweden": "sweden",
     "march": "march",
     "schotland": "schotland",
-    "exercise": "exercise"
+    "exercise": "exercise",
+    "hard": "hard",
+    "tune": "tune"
   },
   "feedback": {
     "haveAQuestion": "Have a question?",
