@@ -64,14 +64,15 @@ export const About = () => {
           <Typography variant="body1">{t("mainPage.bagpipes")}</Typography>
           <ul>
             <li>
+              <Typography>{t("mainPage.belTradDuda")}</Typography>
+            </li>
+            <li>
               <Typography>{t("mainPage.highlander")}</Typography>
             </li>
             <li>
               <Typography>{t("mainPage.dudelsack")}</Typography>
             </li>
-            <li>
-              <Typography>{t("mainPage.belTradDuda")}</Typography>
-            </li>
+            
           </ul>
 
           <Typography variant="body1">{t("mainPage.other")}</Typography>
