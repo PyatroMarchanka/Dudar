@@ -10,7 +10,7 @@ export const Start = () => {
 
   useEffect(() => {
     if (isUserOnboardingCompleted) {
-      history.replace(routes.main);
+      history.replace(routes.app);
     }
   }, [history, isUserOnboardingCompleted]);
 

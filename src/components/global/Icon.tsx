@@ -30,8 +30,6 @@ interface Props {
   Icon?: any;
 }
 
-////wdvwvwvdwvw
-
 export const Icon = styled(
   ({ type, className, fill = theme.colors.black, disabled, Icon }: Props) => {
     const getClassName = () => `${className} ${disabled ? "disabled" : ""}`;

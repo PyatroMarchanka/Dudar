@@ -75,5 +75,17 @@
     "selectLanguage": "Select Language",
     "finish": "Finish",
     "skip": "Skip onboarding"
+  },
+  "mainPage": {
+    "title": "DudaHero: Where Tradition Meets Innovation",
+    "subtitle": "The app to learn how to play bagpipes. No music theory is needed anymore.",
+    "getStarted": "Get Started",
+    "aims": "Duda Hero aims to solve the challenge of finding a bagpipe teacher, especially for less common types of bagpipes.",
+    "bagpipes": "The next types of bagpipes are available to learn:",
+    "belTradDuda": "Belarusian Traditional Duda",
+    "dudelsack": "Dudelsack",
+    "highlander": "Great Highlander Bagpipe (Schotland)",
+    "other": "Other bagpipes types are in development!",
+    "melodies": "Now in the app you can find tutorials for at least 120 folk melodies from different countries, sorted by country of origin."
   }
 }
