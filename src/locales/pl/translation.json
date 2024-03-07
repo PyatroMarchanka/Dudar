@@ -58,7 +58,6 @@
     "exercise": "ćwiczenia",
     "hard": "trudne",
     "tune": "melodia"
-
   },
   "feedback": {
     "haveAQuestion": "Masz pytanie?",
@@ -76,5 +75,17 @@
     "selectLanguage": "Wybierz język",
     "finish": "Skończyć",
     "skip": "Pomiń wstęp"
+  },
+  "mainPage": {
+    "title": "DudaHero: Gdzie tradycja spotyka się z innowacją",
+    "subtitle": "Aplikacja do nauki gry na dudach. Nie jest już potrzebna teoria muzyki.",
+    "getStarted": "Rozpocznij",
+    "aims": "Duda Hero ma na celu rozwiązanie problemu znalezienia nauczyciela gry na dudach, szczególnie w przypadku mniej popularnych typów dud.",
+    "bagpipes": "Do nauki gry na dudach dostępne są typy dud:",
+    "belTradDuda": "Białoruska Tradycyjna Duda",
+    "Dudelsack": "Dudelsack",
+    "highlander": "Dudy szkockie",
+    "other": "Inne typy dud są w fazie rozwoju!",
+    "melodies": "Teraz w aplikacji możesz znaleźć tutoriale do co najmniej 120 melodii ludowych z różnych krajów, posortowanych według kraju pochodzenia."
   }
 }

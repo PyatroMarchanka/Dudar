@@ -4,56 +4,57 @@ import { mediaQueries } from "../../constants/style";
 import { Button } from "../global/Button";
 import { Logo } from "../global/Logo";
 import { routes } from "../../router/routes";
+import { useTranslation } from "react-i18next";
+import { useContext } from "react";
+import { store } from "../../context";
 
 export const About = () => {
+  const { t } = useTranslation("translation");
+  const {
+    state: { screenSize },
+  } = useContext(store);
+
   return (
     <Container>
       <LogoContainer>
-      <Logo variant="big" width={100} height={50} />
+        <Logo variant="big" width={150} height={75} />
       </LogoContainer>
       <ContentContainer>
         <Left>
           <Typography align="center" className="title" variant="h1">
-            DudaHero: Where Tradition Meets Innovation
+            {t("mainPage.title")}
           </Typography>
           <Typography align="center" className="subtitle" variant="h2">
-            The app to learn how to play bagpipes. No music theory is needed
-            anymore.
+            {t("mainPage.subtitle")}
           </Typography>
           <GetStarted>
             <a href={routes.start}>
               <Button className="getStarted" type="big">
-                Get Started
+                {t("mainPage.getStarted")}
               </Button>
             </a>
           </GetStarted>
 
-          <Typography variant="body1">
-            Duda Hero aims to solve the challenge of finding a bagpipe teacher,
-            especially for less common types of bagpipes.
-          </Typography>
-          <Typography variant="body1">
-            The next types of bagpipes are available to learn:
-          </Typography>
+          <Typography variant="body1">{t("mainPage.aims")}</Typography>
+          <Typography variant="body1">{t("mainPage.bagpipes")}</Typography>
           <ul>
             <li>
-              <Typography>Great Highlander Bagpipe (Schotland)</Typography>
+              <Typography>{t("mainPage.highlander")}</Typography>
             </li>
             <li>
-              <Typography>Dudelsack</Typography>
+              <Typography>{t("mainPage.dudelsack")}</Typography>
             </li>
             <li>
-              <Typography>Belarusian Duda</Typography>
+              <Typography>{t("mainPage.belTradDuda")}</Typography>
             </li>
           </ul>
-          <Typography variant="body1">
-            Now in the app you can find tutorials for at least 120 folk melodies
-            from different countries, sorted by country of origin.
-          </Typography>
+
+          <Typography variant="body1">{t("mainPage.other")}</Typography>
+          <Typography variant="body1">{t("mainPage.melodies")}</Typography>
         </Left>
         <Video
-          width="240"
-          height="440"
+          width={screenSize.width - 20}
+          height={screenSize.width * 1.78}
           src="https://www.youtube.com/embed/ARS6r732_pA"
         ></Video>
       </ContentContainer>
@@ -111,8 +112,6 @@ const Container = styled.div`
 
 const Video = styled.iframe`
   flex-basis: 50%;
-  width: 300px;
-  height: 534px;
   border: 0;
   margin-top: 30px;
 
