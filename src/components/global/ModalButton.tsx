@@ -11,7 +11,7 @@ import { Icon } from "./Icon";
 import { theme } from "../../utils/theme";
 
 interface Props {
-  buttonLabel: string;
+  icon: JSX.Element;
   dialogContent: JSX.Element;
 }
 
@@ -23,14 +23,14 @@ const useStyles = makeStyles(() =>
   })
 );
 
-export const ModalButton = ({ buttonLabel, dialogContent }: Props) => {
+export const ModalButton = ({ icon, dialogContent }: Props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <IconButton onClick={() => setOpen(true)} className="icon">
-        <Icon type="settings" fill={theme.colors.black} className="play-icon" />
+        {icon}
       </IconButton>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogContent className={classes.container}>

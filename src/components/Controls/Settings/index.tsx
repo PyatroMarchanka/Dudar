@@ -9,7 +9,7 @@ import { MainSettings } from "./MainSettings";
 import { useTranslation } from "react-i18next";
 
 interface Props {
-  midiPlayer: MidiPlayer | null;
+  midiPlayer?: MidiPlayer | null;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -93,5 +93,4 @@ const Title = styled.h3`
 const Content = styled.div`
   padding: 10px;
   z-index: 10;
-  
 `;

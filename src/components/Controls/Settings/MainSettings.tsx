@@ -17,9 +17,10 @@ import AvTimerIcon from "@material-ui/icons/AvTimer";
 import ImportExport from "@material-ui/icons/ImportExport";
 import { FeedbackForm } from "../../FeedbackForm";
 import { InstrumentTypes } from "./InstrumentTypes";
+import { Contacts } from "../../Contacts";
 
 type Props = {
-  midiPlayer: MidiPlayer | null;
+  midiPlayer?: MidiPlayer | null;
 };
 
 export const MainSettings = ({ midiPlayer }: Props) => {
@@ -39,11 +40,18 @@ export const MainSettings = ({ midiPlayer }: Props) => {
       <Line />
       <InstrumentTypes />
       <Line />
-      <Row>
-        <Icon type="material" fill={mainColors.darkerGray} Icon={ImportExport} />
-        <Title>{t("transposeMelody")}</Title>
-        <Transpose midiPlayer={midiPlayer} />
-      </Row>
+      {midiPlayer && (
+        <Row>
+          <Icon
+            type="material"
+            fill={mainColors.darkerGray}
+            Icon={ImportExport}
+          />
+          <Title>{t("transposeMelody")}</Title>
+          <Transpose midiPlayer={midiPlayer} />
+        </Row>
+      )}
+
       <Line />
       <Row>
         <Icon type="material" fill={mainColors.darkerGray} Icon={AvTimerIcon} />
@@ -56,64 +64,21 @@ export const MainSettings = ({ midiPlayer }: Props) => {
       </Row>
       <Line />
       <Row>
-        <Icon type="material" fill={mainColors.darkerGray} Icon={LanguageIcon} />
+        <Icon
+          type="material"
+          fill={mainColors.darkerGray}
+          Icon={LanguageIcon}
+        />
         <Title>{t("languages.lang")}</Title>
         <LanguageSelector />
       </Row>
       <Line />
-      <RowCentered>
-        <a
-          href="https://github.com/PyatroMarchanka/Dudar"
-          className="github-link"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <i className="fa fa-github fa_custom"></i>
-          <Typography className="title" variant="h5">
-            GitHub
-          </Typography>
-        </a>
-        <a
-          href="https://www.facebook.com/piatro.marchanka"
-          className="github-link"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <Icon className="fa_custom" type="facebook" fill={mainColors.darkerGray} />
-          <Typography className="title" variant="h5">
-            Facebook
-          </Typography>
-        </a>
-        <FeedbackForm />
-      </RowCentered>
+      <Contacts />
     </Container>
   );
 };
 
-const Container = styled.div`
-  .github-link {
-    padding: 20px 0;
-    display: flex;
-    justify-content: center;
-    color: ${mainColors.darkerGray};
-    text-decoration: none;
-    .title {
-      font-size: 15px;
-    }
-
-    .fa_custom {
-      font-size: 20px;
-      margin-right: 5px;
-      height: 20px;
-      width: 20px;
-    }
-  }
-
-  .facebook {
-    height: 30px;
-    width: 30px;
-  }
-`;
+const Container = styled.div``;
 
 const Row = styled.div`
   display: flex;

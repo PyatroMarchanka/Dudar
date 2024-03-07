@@ -7,6 +7,13 @@ import { routes } from "../../router/routes";
 import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { store } from "../../context";
+import { DonationButton } from "../global/DonationButton";
+import { Contacts } from "../Contacts";
+import { ModalButton } from "../global/ModalButton";
+import LanguageSelector from "../Controls/LanguageSelector";
+import { Icon } from "../global/Icon";
+import { mainColors } from "../../utils/theme";
+import LanguageIcon from "@material-ui/icons/Language";
 
 export const About = () => {
   const { t } = useTranslation("translation");
@@ -16,6 +23,24 @@ export const About = () => {
 
   return (
     <Container>
+      <SettingsContainer>
+        <ModalButton
+          icon={
+            <IconContainer>
+              <Icon type="material" fill={"black"} Icon={LanguageIcon} />
+            </IconContainer>
+          }
+          dialogContent={
+            <div>
+              <ModalTitle>
+                <Typography>{t("languages.lang")}</Typography>
+              </ModalTitle>
+              <LanguageSelector />
+            </div>
+          }
+        />
+        <DonationButton />
+      </SettingsContainer>
       <LogoContainer>
         <Logo variant="big" width={150} height={75} />
       </LogoContainer>
@@ -58,6 +83,7 @@ export const About = () => {
           src="https://www.youtube.com/embed/ARS6r732_pA"
         ></Video>
       </ContentContainer>
+      <Contacts />
     </Container>
   );
 };
@@ -125,4 +151,19 @@ const GetStarted = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+`;
+
+const SettingsContainer = styled.div`
+  position: fixed;
+  top: 5px;
+  right: 0px;
+`;
+
+const IconContainer = styled.div`
+  margin-right: 50px;
+`;
+
+const ModalTitle = styled.div`
+  display: flex;
+  justify-content: center;
 `;
