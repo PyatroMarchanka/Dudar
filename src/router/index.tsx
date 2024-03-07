@@ -8,13 +8,13 @@ export const AppRouter = () => {
   return (
     <Router>
       <Switch>
-        <Route path={routes.about}>
+        <Route exact path={routes.main}>
           <About />
         </Route>
-        <Route path={routes.start}>
+        <Route exact path={routes.start}>
           <Start />
         </Route>
-        <Route exact path={routes.main}>
+        <Route exact path={routes.app}>
           <Dudar />
         </Route>
       </Switch>

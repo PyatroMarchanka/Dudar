@@ -12,7 +12,10 @@ import { mainColors } from "../../utils/theme";
 import { StaticCanvas } from "../Canvas/StaticCanvas";
 import { BackCanvas } from "../Canvas/BackCanvas";
 import { DynamicCanvas } from "../Canvas/DynamicCanvas";
-import { convertMidiPitchToNote, getSongListWithBagpipeTypes } from "../../utils/midiUtils";
+import {
+  convertMidiPitchToNote,
+  getSongListWithBagpipeTypes,
+} from "../../utils/midiUtils";
 import { MidiPlayerComponent } from "../MidiPlayerComponent";
 import { useSongTitle } from "../../hooks/useSongTitle";
 import { BackdropSpinner } from "../global/BackdropSpinner";
@@ -20,6 +23,8 @@ import { DonationButton } from "../global/DonationButton";
 import { useHistory } from "react-router-dom";
 import { getUserOnboardingFinished } from "../../constants/localStorage";
 import ChangeLogPopup from "../ChangeLogPopup";
+import { Logo } from "../global/Logo";
+import { routes } from "../../router/routes";
 
 export const Dudar = () => {
   const history = useHistory();
@@ -33,14 +38,18 @@ export const Dudar = () => {
     octave: number;
   } | null>(null);
 
-  const isUserOnboardingCompleted = getUserOnboardingFinished()
+  const isUserOnboardingCompleted = getUserOnboardingFinished();
 
   const songTitle = useSongTitle();
   const handleNote = (event: any) => {
     setActiveNote(convertMidiPitchToNote(event.noteNumber));
   };
   const playerRef = useRef(null);
-  const { Player: midiPlayer } = useMidiPlayer(handleNote, setProgress, playerRef);
+  const { Player: midiPlayer } = useMidiPlayer(
+    handleNote,
+    setProgress,
+    playerRef
+  );
 
   const setDimensions = () => {
     const height = window.innerHeight;
@@ -60,7 +69,7 @@ export const Dudar = () => {
 
   useEffect(() => {
     if (!isUserOnboardingCompleted) {
-      history.replace("/start");
+      history.replace(routes.start);
     }
 
     getSongListWithBagpipeTypes();
@@ -82,6 +91,9 @@ export const Dudar = () => {
           <SongTitle>{songTitle || noSongsLabel}</SongTitle>
         </Header>
         <ChangeLogPopup />
+        <LogoContainer>
+          <Logo variant="small" width={26} height={40} />
+        </LogoContainer>
         <Settings midiPlayer={midiPlayer} />
       </SettingsButtons>
       <BagpipeContainer>
@@ -173,4 +185,8 @@ const Inputs = styled.div`
   &:last-child {
     justify-content: flex-start;
   }
+`;
+
+const LogoContainer = styled.div`
+  margin-left: 10px;
 `;
