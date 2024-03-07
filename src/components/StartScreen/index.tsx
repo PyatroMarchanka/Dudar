@@ -44,7 +44,7 @@ export const Onboarding = () => {
 
   const onFinish = () => {
     localStorage.setItem(userOnboardingFinished, "true");
-    history.push(routes.main);
+    history.push(routes.app);
   };
 
   return (
