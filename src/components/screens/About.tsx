@@ -81,7 +81,7 @@ export const About = () => {
         <Video
           width={screenSize.width - 20}
           height={screenSize.width * 1.78}
-          src="https://www.youtube.com/embed/ARS6r732_pA"
+          src="https://www.youtube.com/embed/wid676otpw4"
         ></Video>
       </ContentContainer>
       <Contacts />
