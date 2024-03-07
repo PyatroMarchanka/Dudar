@@ -8,8 +8,8 @@
   "semitones": "półton(y)",
   "gotIt": "Rozumiem",
   "looper": {
-    "selectBarsCount": "Выберыце колькасць тактаў для зацыклівання",
-    "bars": "такт(аў)"
+    "selectBarsCount": "Wybierz liczbę taktów muzycznych do zapętlenia",
+    "bars": "takt(y)"
   },
   "about": {
     "mainTitle": "Naucz się grać bez nut!\n Apka do nauki gry na dudach",
@@ -57,7 +57,8 @@
     "schotland": "szkockie",
     "exercise": "ćwiczenia",
     "hard": "trudne",
-    "tune": "melodia"
+    "tune": "melodia",
+    "cantiga": "cantiga"
   },
   "feedback": {
     "haveAQuestion": "Masz pytanie?",

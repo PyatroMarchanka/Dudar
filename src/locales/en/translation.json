@@ -8,8 +8,8 @@
   "semitones": "semitones",
   "gotIt": "Got it",
   "looper": {
-    "selectBarsCount": "Wybierz liczbę taktów muzycznych do zapętlenia",
-    "bars": "takt(y)"
+    "selectBarsCount": "Select the bars count to loop",
+    "bars": "bar(s)"
   },
   "about": {
     "mainTitle": "Learn to play without notes! Bagpipe and flute training app",
@@ -57,7 +57,8 @@
     "schotland": "schotland",
     "exercise": "exercise",
     "hard": "hard",
-    "tune": "tune"
+    "tune": "tune",
+    "cantiga": "cantiga"
   },
   "feedback": {
     "haveAQuestion": "Have a question?",
