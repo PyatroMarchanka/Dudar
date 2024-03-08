@@ -12,7 +12,6 @@ import { mediaQueries } from "../../constants/style";
 import { mainColors } from "../../utils/theme";
 import { store } from "../../context";
 import { useTranslation } from "react-i18next";
-import { gtmPush } from "../../utils/gtm";
 import { bagpipes } from "../../dataset/bagpipes";
 import { SongTagsWrapper } from "./SongTagsWrapper";
 
@@ -134,7 +133,6 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                         setActiveSong(song);
                         setOpen(false);
                         onStop();
-                        gtmPush({ song_name: song.name });
                       }}
                     >
                       <Icon
