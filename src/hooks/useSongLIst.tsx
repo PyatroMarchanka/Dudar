@@ -19,7 +19,6 @@ export const useSongList = (onStop: () => void) => {
   const initSongList = useCallback(async () => {
     try {
       const songList = await songApi.getSongList();
-      console.log('songList', songList)
       const sortedList = sortSongsByBagpipe(songList);
       const lists = sortSongsBySongType(sortedList[bagpipeType]);
       const transliteratedLists = !isCyrylicLang() ? transliterateSongList(lists) : lists;

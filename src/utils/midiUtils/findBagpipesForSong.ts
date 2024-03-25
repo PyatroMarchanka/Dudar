@@ -46,7 +46,6 @@ export const getSongListWithBagpipeTypes = async (): Promise<Song[]> => {
   const songListFromFile = await fetch(songListUrl);
   const songList: List = await songListFromFile.json();
   let updatedSongList: Song[] = [];
-  console.log('songList', songList)
   try {
     updatedSongList = await Promise.all(
       songList.map(async (song) => {

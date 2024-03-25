@@ -10,9 +10,7 @@ export const telegramClient = async (message: {
   name: string;
   type: FeedbackTypes;
 }) => {
-  const token = process.env.REACT_APP_TELEGRAM_TOKEN;
   const chat = process.env.REACT_APP_CHAT_ID;
-  console.log(process.env, token, chat);
   const url = `https://api.telegram.org/bot${process.env.REACT_APP_TELEGRAM_TOKEN}/sendMessage`;
 
   await axios.post(url, {
