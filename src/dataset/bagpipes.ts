@@ -17,8 +17,13 @@ const bagpipeNames = {
   [BagpipeTypes.BelarusianOpenDuda]: getTranslationKeyByBagpipeType(
     BagpipeTypes.BelarusianOpenDuda
   ),
-  [BagpipeTypes.Dudelsack]: getTranslationKeyByBagpipeType(BagpipeTypes.Dudelsack),
-  [BagpipeTypes.Highlander]: getTranslationKeyByBagpipeType(BagpipeTypes.Highlander),
+  [BagpipeTypes.Dudelsack]: getTranslationKeyByBagpipeType(
+    BagpipeTypes.Dudelsack
+  ),
+  [BagpipeTypes.Highlander]: getTranslationKeyByBagpipeType(
+    BagpipeTypes.Highlander
+  ),
+  [BagpipeTypes.Gaida]: getTranslationKeyByBagpipeType(BagpipeTypes.Gaida),
 };
 
 const getBagpipeData = (bagpipeType: BagpipeTypes): BagpipeConfig => {
@@ -35,11 +40,16 @@ const getBagpipeData = (bagpipeType: BagpipeTypes): BagpipeConfig => {
 };
 
 export const bagpipes: { [key: string]: BagpipeConfig } = {
-  [BagpipeTypes.BelarusianTraditionalDuda]: getBagpipeData(BagpipeTypes.BelarusianTraditionalDuda),
+  [BagpipeTypes.BelarusianTraditionalDuda]: getBagpipeData(
+    BagpipeTypes.BelarusianTraditionalDuda
+  ),
   [BagpipeTypes.BelarusianNONTraditionalDuda]: getBagpipeData(
     BagpipeTypes.BelarusianNONTraditionalDuda
   ),
-  [BagpipeTypes.BelarusianOpenDuda]: getBagpipeData(BagpipeTypes.BelarusianOpenDuda),
+  [BagpipeTypes.BelarusianOpenDuda]: getBagpipeData(
+    BagpipeTypes.BelarusianOpenDuda
+  ),
   [BagpipeTypes.Dudelsack]: getBagpipeData(BagpipeTypes.Dudelsack),
   [BagpipeTypes.Highlander]: getBagpipeData(BagpipeTypes.Highlander),
+  [BagpipeTypes.Gaida]: getBagpipeData(BagpipeTypes.Gaida),
 };

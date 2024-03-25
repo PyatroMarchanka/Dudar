@@ -130,6 +130,7 @@ export enum BagpipeTypes {
   BelarusianOpenDuda = "bod",
   Dudelsack = "ddl",
   Highlander = "ghb",
+  Gaida = 'gd'
 }
 
 export enum Languages {

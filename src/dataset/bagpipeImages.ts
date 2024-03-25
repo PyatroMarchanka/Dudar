@@ -77,6 +77,15 @@ const srcs = {
     blowImage: "/images/blow.svg",
     bgImage: "/images/scottish_back.png"
   },
+  [BagpipeTypes.Gaida]: {
+    mainPipe: "/images/gaida_side.png",
+    activeHoleImage: "/images/piston_open.svg",
+    backActiveHoleImage: "/images/piston_back_open.svg",
+    closedHoleImage: "/images/piston_closed.svg",
+    backClosedHoleImage: "/images/piston_back_closed.svg",
+    blowImage: "/images/blow.svg",
+    bgImage: "/images/bel_duda_back.png",
+  },
 };
 
 const getBagpipeImages = (bagpipeType: BagpipeTypes) => {
@@ -93,6 +102,7 @@ export const bagpipeImages = {
   [BagpipeTypes.BelarusianOpenDuda]: getBagpipeImages(BagpipeTypes.BelarusianOpenDuda),
   [BagpipeTypes.Dudelsack]: getBagpipeImages(BagpipeTypes.Dudelsack),
   [BagpipeTypes.Highlander]: getBagpipeImages(BagpipeTypes.Highlander),
+  [BagpipeTypes.Gaida]: getBagpipeImages(BagpipeTypes.Gaida)
 };
 
 const srcToImage = (src: string) => {

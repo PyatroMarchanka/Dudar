@@ -40,6 +40,9 @@ export const getTranslationKeyByBagpipeType = (type: BagpipeTypes) => {
     case BagpipeTypes.Highlander:
       return "highlander";
 
+    case BagpipeTypes.Gaida:
+      return "gaida";
+
     default:
       return "unknownBagpipe";
   }

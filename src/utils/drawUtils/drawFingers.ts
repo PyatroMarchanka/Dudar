@@ -52,6 +52,7 @@ const getHoleType = (
     },
     [BagpipeTypes.Dudelsack]: {},
     [BagpipeTypes.Highlander]: {},
+    [BagpipeTypes.Gaida]: {},
   };
 
   return map[bagpipeType][i] || "normal";

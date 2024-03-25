@@ -68,10 +68,27 @@ const highlanderNotes: BagpipeNotesMap = {
   [SharpNotesEnum.A5]: [],
 };
 
+const gaidaNotes: BagpipeNotesMap = {
+  [SharpNotesEnum["D4"]]: [0, 1, 2, 3, 4, 5, 6, 7],
+  [SharpNotesEnum["E4"]]: [0, 1, 2, 3, 4, 5, 6],
+  [SharpNotesEnum["F#4"]]: [0, 1, 2, 3, 4, 5],
+  [SharpNotesEnum["G4"]]: [0, 1, 2, 3, 4, 6],
+  [SharpNotesEnum["G#4"]]: [0, 2, 3, 4, 5],
+  [SharpNotesEnum.A4]: [0, 1, 2, 3, 5, 6],
+  [SharpNotesEnum["A#4"]]: [0, 2, 3, 5, 6],
+  [SharpNotesEnum.B4]: [0, 1, 2, 4, 5, 6],
+  [SharpNotesEnum.C5]: [0, 2, 4, 5, 6],
+  [SharpNotesEnum["C#5"]]: [0, 1, 3, 4, 5, 6],
+  [SharpNotesEnum.D5]: [0, 3, 4, 5, 6],
+  [SharpNotesEnum.E5]: [1, 2, 3, 4, 5, 6],
+};
+
 export const notesMaps = {
   [BagpipeTypes.BelarusianTraditionalDuda]: belarusianTraditionalDudaNotes,
-  [BagpipeTypes.BelarusianNONTraditionalDuda]: belarusianNONTraditionalDudaNotes,
+  [BagpipeTypes.BelarusianNONTraditionalDuda]:
+    belarusianNONTraditionalDudaNotes,
   [BagpipeTypes.BelarusianOpenDuda]: belarusianOpenDudaNotes,
   [BagpipeTypes.Dudelsack]: dudelsackNotes,
-  [BagpipeTypes.Highlander]: highlanderNotes
+  [BagpipeTypes.Highlander]: highlanderNotes,
+  [BagpipeTypes.Gaida]: gaidaNotes,
 };

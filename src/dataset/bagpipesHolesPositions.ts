@@ -88,9 +88,23 @@ const highlanderClosable = [
   { yPos: 140, leftMargin: 25, diameter: 25 },
 ].reverse();
 
+const gaidaClosable = [
+  { yPos: 610, leftMargin: 50, diameter: 25 },
+  { yPos: 528, leftMargin: 50, diameter: 25 },
+  { yPos: 467, leftMargin: 53, diameter: 20 },
+  { yPos: 400, leftMargin: 50, diameter: 25 },
+  { yPos: 298, leftMargin: 50, diameter: 25 },
+  { yPos: 222, leftMargin: 53, diameter: 20 },
+  { yPos: 146, leftMargin: 50, diameter: 25 },
+  { yPos: 100, leftMargin: 20, diameter: 25 },
+].reverse();
+
 const belarusianTraditionalHoles: BagpipeHolesPositions = {
   closable: belarusianTraditionalHolesClosable.map(applyCoefficientToHole),
-  linesYPositions: [...holesToLinesYPositions([...belarusianTraditionalHolesClosable]), coeff(570)],
+  linesYPositions: [
+    ...holesToLinesYPositions([...belarusianTraditionalHolesClosable]),
+    coeff(570),
+  ],
 };
 
 const belarusianNONTraditionalHoles: BagpipeHolesPositions = {
@@ -111,7 +125,8 @@ const belarusianOpenHoles: BagpipeHolesPositions = {
   closable: belarusianOpenHolesClosable.map(applyCoefficientToHole),
   blowImage: blowImageBelOpenDuda,
   linesYPositions: [
-    ...holesToLinesYPositions(belarusianOpenHolesClosable),coeff(570),
+    ...holesToLinesYPositions(belarusianOpenHolesClosable),
+    coeff(570),
   ],
 };
 
@@ -130,13 +145,25 @@ const blowImageHighlander = {
 const dudelsackHoles: BagpipeHolesPositions = {
   closable: dudelsackClosable.map(applyCoefficientToHole),
   blowImage: blowImageDudelsack,
-  linesYPositions: [blowImageDudelsack.yPos, ...holesToLinesYPositions(dudelsackClosable)],
+  linesYPositions: [
+    blowImageDudelsack.yPos,
+    ...holesToLinesYPositions(dudelsackClosable),
+  ],
 };
 
 const highlanderHoles: BagpipeHolesPositions = {
   closable: highlanderClosable.map(applyCoefficientToHole),
   blowImage: blowImageHighlander,
-  linesYPositions: [blowImageHighlander.yPos, ...holesToLinesYPositions(highlanderClosable)],
+  linesYPositions: [
+    blowImageHighlander.yPos,
+    ...holesToLinesYPositions(highlanderClosable),
+  ],
+};
+
+const gaidaHoles: BagpipeHolesPositions = {
+  closable: gaidaClosable.map(applyCoefficientToHole),
+  blowImage: blowImageHighlander,
+  linesYPositions: [...holesToLinesYPositions([...gaidaClosable]), coeff(670)],
 };
 
 export const holesPositions = {
@@ -145,4 +172,5 @@ export const holesPositions = {
   [BagpipeTypes.BelarusianOpenDuda]: belarusianOpenHoles,
   [BagpipeTypes.Dudelsack]: dudelsackHoles,
   [BagpipeTypes.Highlander]: highlanderHoles,
+  [BagpipeTypes.Gaida]: gaidaHoles,
 };

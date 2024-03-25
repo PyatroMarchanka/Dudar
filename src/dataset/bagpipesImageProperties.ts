@@ -112,4 +112,29 @@ export const bagpipesImagesProperties: {
       noteNameColor: "#000",
     },
   },
+  [BagpipeTypes.Gaida]: {
+    main_pipe: {
+      width: coeff(270),
+      heigth: coeff(800),
+      imageScale: coeff(200) / coeff(896),
+      leftMargin: coeff(-85),
+      topMargin: coeff(0),
+    },
+    bg: {
+      width: coeff(412),
+      heigth: coeff(800),
+      imageScale: coeff(412) / coeff(800),
+      leftMargin: coeff(75),
+      topMargin: coeff(100),
+    },
+    notes: {
+      lineHeight: 2,
+      brickhHeight: coeff(18),
+      brickHeightHalf: coeff(18 / 2),
+      notesScale: 0.3,
+      brickLeftMargin: 45,
+      notesNamesLeftMargin: coeff(5),
+      noteNameColor: "#000",
+    },
+  },
 };
