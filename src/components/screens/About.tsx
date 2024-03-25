@@ -46,10 +46,10 @@ export const About = () => {
       </LogoContainer>
       <ContentContainer>
         <Left>
-          <Typography align="center" className="title" variant="h1">
+          <Typography align="center" className="title" variant="h2">
             {t("mainPage.title")}
           </Typography>
-          <Typography align="center" className="subtitle" variant="h2">
+          <Typography align="center" className="subtitle" variant="h1">
             {t("mainPage.subtitle")}
           </Typography>
           <GetStarted>
