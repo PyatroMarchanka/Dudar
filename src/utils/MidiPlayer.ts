@@ -55,12 +55,19 @@ export class MidiPlayer {
   isPlaying = false;
   handleNotesMoving?: NotesMovingHandler;
 
-  constructor(playRef: any, bpm: number, metronom: boolean, loopBars: number) {
+  constructor(
+    playRef: any,
+    bpm: number,
+    metronom: boolean,
+    loopBars: number,
+    timeSignature?: TimeSignatures
+  ) {
     this.playRef = playRef;
     this.bpm = bpm;
     this.envelopes = {};
     this.metronom = metronom;
     this.loopData.loopBars = loopBars;
+    this.timeSignature = timeSignature || "4/4";
 
     if (this.playRef.current) {
       this.playRef.current?.setBand256(-5);
@@ -111,18 +118,28 @@ export class MidiPlayer {
     this.loopData.loopBars = num;
   }
 
+  setTimeSignature(timeSignature: TimeSignatures) {
+    this.timeSignature = timeSignature;
+    this.setCurrentBarStart();
+  }
+
   setCurrentBarStart() {
     const tick = Player.getCurrentTick();
-    // TODO: set count of beats according to the song time signature
-    const ticksPerBar = (this.midiData?.header.ppq || 480) * 4;
+    const [first, second] = this.timeSignature.split("/");
+    const ticksPerBar =
+      ((this.midiData?.header.ppq || 480) * +first) / (+second / 4);
     const currentBar = Math.trunc(tick / ticksPerBar);
     this.loopData.startLoopTicks = currentBar * ticksPerBar;
     this.loopData.endLoopTicks =
-      (currentBar + this.loopData.loopBars) * ticksPerBar;
+      this.loopData.startLoopTicks + this.loopData.loopBars * ticksPerBar;
   }
 
   loopBar(tick: number) {
-    if (this.loop && tick >= this.loopData.endLoopTicks * this.barLength) {
+    if (
+      this.loopData.endLoopTicks &&
+      this.loop &&
+      tick >= this.loopData.endLoopTicks
+    ) {
       this.setTick(this.loopData.startLoopTicks, true);
     }
   }
@@ -258,8 +275,6 @@ export class MidiPlayer {
     if (!midi) {
       return;
     }
-    const [first, second] = timeSignature.split("/");
-    this.barLength = +first / +second;
     this.isPlaying = true;
     Player.loadArrayBuffer(midi);
     Player.play();
