@@ -15,6 +15,9 @@ export const getLabelBySongType = (type: SongTypes) => {
     case SongTypes.Schotland:
       return "Schotland";
 
+    case SongTypes.Polish:
+      return "Polish";
+
     case SongTypes.Balkan:
       return "Balkan";
 

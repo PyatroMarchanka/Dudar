@@ -7,6 +7,7 @@ export enum SongTypes {
   Schotland = "schotland",
   Scandinavian = "scandinavian",
   Balkan = "balkan",
+  Polish = "polish",
   Other = "other",
 }
 
