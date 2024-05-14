@@ -72,11 +72,24 @@ export const About = () => {
             <li>
               <Typography>{t("mainPage.dudelsack")}</Typography>
             </li>
-            
           </ul>
 
           <Typography variant="body1">{t("mainPage.other")}</Typography>
           <Typography variant="body1">{t("mainPage.melodies")}</Typography>
+          <GetStarted>
+            <a
+              href="https://www.buymeacoffee.com/crazyguitarist"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                src="/images/bmc-brown.png"
+                alt="Buy Me A Coffee"
+                height="60px"
+                width="247px"
+              />
+            </a>
+          </GetStarted>
         </Left>
         <Video
           width={screenSize.width - 20}
