@@ -52,7 +52,7 @@ export const About = () => {
           <Typography align="center" className="subtitle" variant="h1">
             {t("mainPage.subtitle")}
           </Typography>
-          <LoginComponent />
+          {/* <LoginComponent /> */}
           <GetStarted>
             <a href={routes.start}>
               <Button className="getStarted" type="big">
