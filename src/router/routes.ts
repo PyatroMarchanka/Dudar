@@ -3,4 +3,5 @@ export const routes = {
   app: "/app",
   main: "/",
   about: "/about",
+  blog: 'blog'
 };

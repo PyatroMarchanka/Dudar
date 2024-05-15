@@ -9,8 +9,7 @@ const sampler = new Tone.Sampler({
     E5: "samples/E4.mp3",
     A5: "samples/A4.mp3",
   },
-  baseUrl: "",
-  
+  baseUrl: "/",
 }).toDestination();
 
 export const playNote = (note?: string, volume = 0.5) => {

@@ -1,28 +1,43 @@
 import { Midi } from "@tonejs/midi";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { store } from "../context";
 import { Song } from "../dataset/songs/interfaces";
 import { addMetronome, fixMidiDataOctaves } from "../utils/midiUtils";
 import { songApi } from "../api/songClient";
+import { useParams } from "react-router-dom";
+import {
+  findSongInListById,
+  getFirstSongFromList,
+} from "../dataset/songs/utils";
 
 export const useLoadSong = () => {
+  const params: any = useParams();
   const {
-    state: { activeSong, metronome, tempo, listsByBagpipe, bagpipeType },
+    state: { activeSong, metronome, tempo, listsByBagpipe },
     setMidi,
     setMidiData,
     setSongLength,
     setActiveSong,
     setIsSongLoading,
   } = useContext(store);
-
   const [lowestOctave, setLowestOctave] = useState(4);
 
-  const loadMidiSong = async (song: Song) => {
+  useEffect(() => {
+    if (!(params.id && listsByBagpipe)) return;
+
+    const songFromParam = findSongInListById(params.id, listsByBagpipe);
+
+    if (songFromParam) {
+      setActiveSong(songFromParam);
+    }
+  }, [params.id, listsByBagpipe]);
+
+  const loadMidiSong = useCallback(async (song: Song) => {
     try {
       if (!song.pathName) {
         console.log(`No song with this path in list \n ${song.pathName}`);
 
-        listsByBagpipe && setActiveSong(listsByBagpipe[bagpipeType][0]);
+        listsByBagpipe && setActiveSong(getFirstSongFromList(listsByBagpipe));
       }
       setIsSongLoading(true);
       const file = await songApi.getSong(song);
@@ -41,10 +56,10 @@ export const useLoadSong = () => {
       setMidi(songWithMetronome);
       setIsSongLoading(false);
     } catch (error) {
-      listsByBagpipe && setActiveSong(listsByBagpipe[bagpipeType][0]);
+      listsByBagpipe && setActiveSong(getFirstSongFromList(listsByBagpipe));
       console.log(error);
     }
-  };
+  }, [listsByBagpipe]);
 
   useEffect(() => {
     if (activeSong) {

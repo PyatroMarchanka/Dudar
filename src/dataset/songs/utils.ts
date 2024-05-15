@@ -10,6 +10,15 @@ export const getFirstSongFromList = (lists: SongListByBagpipe): Song => {
   return Object.values(lists)?.[0]?.[0];
 };
 
+export const findSongInListById = (
+  id: string,
+  lists: SongListByBagpipe
+): Song | undefined => {
+  const allSongs = Object.values(lists).flat();
+
+  return allSongs.find(song => song.id === id);
+};
+
 const fourToFourTicks = 480;
 
 const timeSignaturesToTicks = {
@@ -24,7 +33,9 @@ const timeSignaturesToTicks = {
   "10/8": (fourToFourTicks * 10) / 8,
   "11/8": (fourToFourTicks * 11) / 8,
 };
-export const getTicksPerBeatByTimeSignature = (timeSignature: TimeSignatures): number => {
+export const getTicksPerBeatByTimeSignature = (
+  timeSignature: TimeSignatures
+): number => {
   return timeSignaturesToTicks[timeSignature];
 };
 

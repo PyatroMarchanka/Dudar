@@ -30,6 +30,7 @@ export interface Song {
   timeSignature: TimeSignatures;
   pathName: string;
   labels: SongTags[]
+  id: string;
 }
 
 export type SongListByBagpipe = { [key: string]: Song[] };

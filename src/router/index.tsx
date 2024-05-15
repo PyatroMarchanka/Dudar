@@ -17,6 +17,9 @@ export const AppRouter = () => {
         <Route exact path={routes.app}>
           <Dudar />
         </Route>
+        <Route exact path={`${routes.app}/:id`}>
+          <Dudar />
+        </Route>
       </Switch>
     </Router>
   );

@@ -14,6 +14,8 @@ import { store } from "../../context";
 import { useTranslation } from "react-i18next";
 import { bagpipes } from "../../dataset/bagpipes";
 import { SongTagsWrapper } from "./SongTagsWrapper";
+import { useHistory } from "react-router-dom";
+import { routes } from "../../router/routes";
 
 interface Props {
   setOpen: (bool: boolean) => void;
@@ -75,8 +77,9 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
 
   const {
     state: { bagpipeType, listsByBagpipe, activeSong },
-    setActiveSong,
   } = useContext(store);
+  const history = useHistory();
+
 
   const classes = useStyles();
   const genres = Object.keys(listsByBagpipe || {});
@@ -130,7 +133,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                       className="songButton"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setActiveSong(song);
+                        history.push(`${routes.app}/${song.id}`)
                         setOpen(false);
                         onStop();
                       }}
