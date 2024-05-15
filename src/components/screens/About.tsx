@@ -12,8 +12,8 @@ import { Contacts } from "../Contacts";
 import { ModalButton } from "../global/ModalButton";
 import LanguageSelector from "../Controls/LanguageSelector";
 import { Icon } from "../global/Icon";
-import { mainColors } from "../../utils/theme";
 import LanguageIcon from "@material-ui/icons/Language";
+import { LoginComponent } from "../Login";
 
 export const About = () => {
   const { t } = useTranslation("translation");
@@ -52,6 +52,7 @@ export const About = () => {
           <Typography align="center" className="subtitle" variant="h1">
             {t("mainPage.subtitle")}
           </Typography>
+          <LoginComponent />
           <GetStarted>
             <a href={routes.start}>
               <Button className="getStarted" type="big">
