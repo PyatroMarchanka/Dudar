@@ -8,7 +8,6 @@ export const songClient = axios.create({
 
 export const songApi = {
   getSong: async (song: Song) => {
-    console.log('song', song.name)
     const res = await songClient.get(song.pathName, {
       responseType: "blob",
     });

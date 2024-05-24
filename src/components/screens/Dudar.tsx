@@ -24,12 +24,10 @@ import { Logo } from "../global/Logo";
 import { routes } from "../../router/routes";
 import { SongPage } from "./SongPage";
 import { userApi } from "../../api/user";
-import cookie from "react-cookies";
 
 export const Dudar = () => {
   const history = useHistory();
-  let { path, url } = useRouteMatch();
-  console.log(cookie.loadAll());
+  let { path } = useRouteMatch();
   const {
     state: { midiData, isSongLoading },
     setProgress,
