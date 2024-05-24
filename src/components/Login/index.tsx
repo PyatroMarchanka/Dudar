@@ -1,24 +1,16 @@
 import React, { useEffect } from "react";
-import { LoginButton, LogoutButton, clientId } from "../../api/googleApi";
-import { gapi } from "gapi-script";
+import { Button } from "../global/Button";
 
 interface Props {}
 
 export const LoginComponent = (props: Props) => {
-  useEffect(() => {
-    const start = () => {
-      gapi.client.init({
-        clientId,
-        scope: "",
-      });
-    };
-
-    gapi.load("client:auth2", start);
-  }, []);
+  console.log(`${process.env.REACT_APP_BACKEND_URL}/v1/auth/google`)
   return (
     <div>
-      <LoginButton />
-      <LogoutButton />
+      <a href={`${process.env.REACT_APP_BACKEND_URL}/v1/auth/google`}>
+        <Button>Sign in with Google</Button>
+      </a>
+      <Button>Logout</Button>
     </div>
   );
 };

@@ -12,22 +12,24 @@ import { mainColors } from "../../utils/theme";
 import { StaticCanvas } from "../Canvas/StaticCanvas";
 import { BackCanvas } from "../Canvas/BackCanvas";
 import { DynamicCanvas } from "../Canvas/DynamicCanvas";
-import {
-  convertMidiPitchToNote,
-  getSongListWithBagpipeTypes,
-} from "../../utils/midiUtils";
+import { convertMidiPitchToNote } from "../../utils/midiUtils";
 import { MidiPlayerComponent } from "../MidiPlayerComponent";
 import { useSongTitle } from "../../hooks/useSongTitle";
 import { BackdropSpinner } from "../global/BackdropSpinner";
 import { DonationButton } from "../global/DonationButton";
-import { useHistory } from "react-router-dom";
+import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { getUserOnboardingFinished } from "../../constants/localStorage";
 import ChangeLogPopup from "../ChangeLogPopup";
 import { Logo } from "../global/Logo";
 import { routes } from "../../router/routes";
+import { SongPage } from "./SongPage";
+import { userApi } from "../../api/user";
+import cookie from "react-cookies";
 
 export const Dudar = () => {
   const history = useHistory();
+  let { path, url } = useRouteMatch();
+  console.log(cookie.loadAll());
   const {
     state: { midiData, isSongLoading },
     setProgress,
@@ -64,6 +66,10 @@ export const Dudar = () => {
     }
   }, [midiPlayer, midiData]);
 
+  useEffect(() => {
+    userApi.getUserData();
+  }, []);
+
   useLocalStorage();
   useLoadSong();
 
@@ -71,8 +77,6 @@ export const Dudar = () => {
     if (!isUserOnboardingCompleted) {
       history.replace(routes.start);
     }
-
-    getSongListWithBagpipeTypes();
 
     setDimensions();
     window.addEventListener("resize", setDimensions);
@@ -96,15 +100,22 @@ export const Dudar = () => {
         </LogoContainer>
         <Settings midiPlayer={midiPlayer} />
       </SettingsButtons>
-      <BagpipeContainer>
-        <BackCanvas />
-        <DynamicCanvas player={midiPlayer} />
-        <StaticCanvas activeHole={activeNote} />
-      </BagpipeContainer>
-      <Inputs>
-        <PlayerControls player={midiPlayer} />
-      </Inputs>
-      <MidiPlayerComponent playerRef={playerRef} />
+      <Switch>
+        <Route path={`${path}/${routes.play}/:id`}>
+          <BagpipeContainer>
+            <BackCanvas />
+            <DynamicCanvas player={midiPlayer} />
+            <StaticCanvas activeHole={activeNote} />
+          </BagpipeContainer>
+          <Inputs>
+            <PlayerControls player={midiPlayer} />
+          </Inputs>
+          <MidiPlayerComponent playerRef={playerRef} />
+        </Route>
+        <Route path={`${path}/${routes.info}/:id`}>
+          <SongPage />
+        </Route>
+      </Switch>
     </Container>
   );
 };

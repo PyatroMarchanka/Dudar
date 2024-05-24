@@ -133,7 +133,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                       className="songButton"
                       onClick={(e) => {
                         e.stopPropagation();
-                        history.push(`${routes.app}/${song.id}`)
+                        history.push(`${routes.app}/${routes.info}/${song.id}`)
                         setOpen(false);
                         onStop();
                       }}

@@ -25,12 +25,16 @@ export type TimeSignatures =
 
 export interface Song {
   name: string;
-  type: SongTypes;
+  type: string;
   bagpipesToPlay: BagpipeTypes[];
   timeSignature: TimeSignatures;
   pathName: string;
-  labels: SongTags[]
+  labels: string[]
   id: string;
+  midiBy?: string;
+  lyric?: string;
+  about?: string;
+  originalTempo?: number;
 }
 
 export type SongListByBagpipe = { [key: string]: Song[] };

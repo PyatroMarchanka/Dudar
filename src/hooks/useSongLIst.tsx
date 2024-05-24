@@ -2,7 +2,6 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { store } from "../context";
 import { Song, SongListByBagpipe, SongListBySongType, SongTags } from "../dataset/songs/interfaces";
 import { BagpipeTypes } from "../interfaces";
-import { getSongListWithBagpipeTypes } from "../utils/midiUtils";
 import { transliterateSongList, useIsCyrylicLang } from "../locales";
 import { getAvailableTagsFromLists, getFirstSongFromList } from "../dataset/songs/utils";
 import { songApi } from "../api/songClient";

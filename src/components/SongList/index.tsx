@@ -38,7 +38,7 @@ export const SongList = ({ player }: Props) => {
 
   const onStop = () => {
     setIsPlaying(false);
-    player?.stop();
+    // player?.stop();
     setProgress(100);
   };
 
