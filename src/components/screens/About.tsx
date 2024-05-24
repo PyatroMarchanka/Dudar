@@ -13,7 +13,6 @@ import { ModalButton } from "../global/ModalButton";
 import LanguageSelector from "../Controls/LanguageSelector";
 import { Icon } from "../global/Icon";
 import LanguageIcon from "@material-ui/icons/Language";
-import { LoginComponent } from "../Login";
 
 export const About = () => {
   const { t } = useTranslation("translation");

@@ -5,6 +5,7 @@ import { store } from "../../context";
 import { findSongInListById } from "../../dataset/songs/utils";
 import { routes } from "../../router/routes";
 import { SongList } from "../SongList";
+import styled from "styled-components";
 
 interface Props {}
 
@@ -26,9 +27,26 @@ export const SongPage = (props: Props) => {
 
 
  return (
-    <div>
+    <Container>
       Song : {activeSong?.name}
-      <Link to={`${routes.play}/${params.id}`}>Play</Link>
-    </div>
+      <Link to={`${routes.app}/${routes.play}/${params.id}`}>Play</Link>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  flex-basis: 100%;
+  height: 100vh;
+
+  > div,
+  a {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
