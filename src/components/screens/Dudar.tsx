@@ -72,8 +72,6 @@ export const Dudar = () => {
       history.replace(routes.start);
     }
 
-    getSongListWithBagpipeTypes();
-
     setDimensions();
     window.addEventListener("resize", setDimensions);
 
