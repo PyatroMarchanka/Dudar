@@ -18,7 +18,7 @@
     "@types/styled-components": "^5.1.10",
     "axios": "^1.6.2",
     "gapi-script": "^1.2.0",
-    "i18next": "^22.4.11",
+    "i18next": "^22.4.15",
     "lodash": "^4.17.21",
     "midi-file": "^1.2.3",
     "midi-parse": "^0.0.6",
