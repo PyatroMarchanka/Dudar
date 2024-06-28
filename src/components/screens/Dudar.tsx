@@ -3,10 +3,6 @@ import styled, { createGlobalStyle } from "styled-components";
 import { SharpNotes } from "../../interfaces";
 import { PlayerControls } from "../Controls/PlayerControls";
 import { useMidiPlayer } from "../../hooks/useMidiPlayer";
-import { Settings } from "../Controls/Settings";
-import { SongList } from "../SongList";
-import { noSongsLabel, store } from "../../context";
-import { useLoadSong } from "../../hooks/useLoadSong";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { mainColors } from "../../utils/theme";
 import { StaticCanvas } from "../Canvas/StaticCanvas";
@@ -14,16 +10,17 @@ import { BackCanvas } from "../Canvas/BackCanvas";
 import { DynamicCanvas } from "../Canvas/DynamicCanvas";
 import { convertMidiPitchToNote } from "../../utils/midiUtils";
 import { MidiPlayerComponent } from "../MidiPlayerComponent";
-import { useSongTitle } from "../../hooks/useSongTitle";
 import { BackdropSpinner } from "../global/BackdropSpinner";
 import { DonationButton } from "../global/DonationButton";
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { getUserOnboardingFinished } from "../../constants/localStorage";
-import ChangeLogPopup from "../ChangeLogPopup";
-import { Logo } from "../global/Logo";
 import { routes } from "../../router/routes";
 import { SongPage } from "./SongPage";
 import { userApi } from "../../api/user";
+import { PlayPageHeader } from "../Dudar/PlayPage";
+import { InfoPageHeader } from "../Dudar/InfoPage";
+import { store } from "../../context";
+import { useDimensions } from "../../hooks/useDimensions";
 
 export const Dudar = () => {
   const history = useHistory();
@@ -31,32 +28,23 @@ export const Dudar = () => {
   const {
     state: { midiData, isSongLoading },
     setProgress,
-    setScreenSize,
   } = useContext(store);
   const [activeNote, setActiveNote] = useState<{
     note: SharpNotes;
     octave: number;
   } | null>(null);
-
   const isUserOnboardingCompleted = getUserOnboardingFinished();
 
-  const songTitle = useSongTitle();
   const handleNote = (event: any) => {
     setActiveNote(convertMidiPitchToNote(event.noteNumber));
   };
+
   const playerRef = useRef(null);
   const { Player: midiPlayer } = useMidiPlayer(
     handleNote,
     setProgress,
     playerRef
   );
-
-  const setDimensions = () => {
-    const height = window.innerHeight;
-    const width = window.innerWidth;
-
-    setScreenSize({ width, height });
-  };
 
   useEffect(() => {
     if (midiData) {
@@ -69,17 +57,12 @@ export const Dudar = () => {
   }, []);
 
   useLocalStorage();
-  useLoadSong();
+  useDimensions();
 
   useEffect(() => {
     if (!isUserOnboardingCompleted) {
       history.replace(routes.start);
     }
-
-    setDimensions();
-    window.addEventListener("resize", setDimensions);
-
-    return () => window.removeEventListener("resize", setDimensions);
   }, [history]);
 
   return (
@@ -87,19 +70,9 @@ export const Dudar = () => {
       <GlobalStyle />
       <DonationButton />
       <BackdropSpinner isOpen={isSongLoading} />
-      <SettingsButtons>
-        <SongList player={midiPlayer} />
-        <Header>
-          <SongTitle>{songTitle || noSongsLabel}</SongTitle>
-        </Header>
-        <ChangeLogPopup />
-        <LogoContainer>
-          <Logo variant="small" width={26} height={40} />
-        </LogoContainer>
-        <Settings midiPlayer={midiPlayer} />
-      </SettingsButtons>
       <Switch>
-        <Route path={`${path}/${routes.play}/:id`}>
+        <Route exact path={`${path}/${routes.play}/:id`}>
+          <PlayPageHeader midiPlayer={midiPlayer} />
           <BagpipeContainer>
             <BackCanvas />
             <DynamicCanvas player={midiPlayer} />
@@ -110,7 +83,8 @@ export const Dudar = () => {
           </Inputs>
           <MidiPlayerComponent playerRef={playerRef} />
         </Route>
-        <Route path={`${path}/${routes.info}/:id`}>
+        <Route exact path={`${path}/${routes.info}/:id`}>
+          <InfoPageHeader midiPlayer={midiPlayer} />
           <SongPage />
         </Route>
       </Switch>
@@ -124,16 +98,6 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const SettingsButtons = styled.div`
-  position: absolute;
-  display: flex;
-  top: 3px;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 12;
-  width: 100%;
-`;
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -144,21 +108,10 @@ const Container = styled.div`
     margin-top: auto;
     margin-bottom: 20px;
   }
-`;
 
-const Header = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  padding: 5px 0;
-`;
-
-const SongTitle = styled.h1`
-  font-size: 16px;
-  font-family: Arial, Helvetica, sans-serif;
-  text-align: center;
-  margin: 0;
-  max-width: 150px;
+  .button {
+    z-index: 1000;
+  }
 `;
 
 const BagpipeContainer = styled.div`
@@ -185,8 +138,6 @@ const Inputs = styled.div`
   justify-content: space-between;
   align-items: center;
 
-  /* background-color: ${mainColors.lightestGrey}; */
-
   &:first-child {
     justify-content: space-around;
   }
@@ -194,8 +145,4 @@ const Inputs = styled.div`
   &:last-child {
     justify-content: flex-start;
   }
-`;
-
-const LogoContainer = styled.div`
-  margin-left: 10px;
 `;

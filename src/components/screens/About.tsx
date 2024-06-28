@@ -13,12 +13,18 @@ import { ModalButton } from "../global/ModalButton";
 import LanguageSelector from "../Controls/LanguageSelector";
 import { Icon } from "../global/Icon";
 import LanguageIcon from "@material-ui/icons/Language";
+import { DonationButtonBig } from "../global/DonationButtonBig";
+import { useSongListShort } from "../../hooks/useSongLIst";
 
 export const About = () => {
   const { t } = useTranslation("translation");
   const {
-    state: { screenSize },
+    state: { screenSize, activeSong, listsByBagpipe },
   } = useContext(store);
+
+  useSongListShort();
+
+  console.log(activeSong);
 
   return (
     <Container>
@@ -53,7 +59,7 @@ export const About = () => {
           </Typography>
           {/* <LoginComponent /> */}
           <GetStarted>
-            <a href={routes.start}>
+            <a href={`${routes.app}/${routes.play}/${activeSong?.id}`}>
               <Button className="getStarted" type="big">
                 {t("mainPage.getStarted")}
               </Button>
@@ -76,20 +82,7 @@ export const About = () => {
 
           <Typography variant="body1">{t("mainPage.other")}</Typography>
           <Typography variant="body1">{t("mainPage.melodies")}</Typography>
-          <GetStarted>
-            <a
-              href="https://www.buymeacoffee.com/crazyguitarist"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                src="/images/bmc-brown.png"
-                alt="Buy Me A Coffee"
-                height="60px"
-                width="247px"
-              />
-            </a>
-          </GetStarted>
+          <DonationButtonBig />
         </Left>
         <Video
           width={screenSize.width - 20}

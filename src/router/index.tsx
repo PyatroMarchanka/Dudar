@@ -1,4 +1,8 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 import { Dudar } from "../components/screens/Dudar";
 import { About } from "../components/screens/About";
 import { Start } from "../components/screens/Start";
@@ -21,9 +25,7 @@ export const AppRouter = () => {
         <Route path={routes.login}>
           <LoginPage />
         </Route>
-        <Route path={routes.logout}>
-          Logout
-        </Route>
+        <Route path={routes.logout}>Logout</Route>
       </Switch>
     </Router>
   );

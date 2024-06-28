@@ -1,6 +1,6 @@
 import axios from "axios";
 import { links } from "./links";
-import cookie from "react-cookies";
+import cookie from 'react-cookies'
 
 export const userClient = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,

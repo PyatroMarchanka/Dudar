@@ -1,17 +1,57 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { store } from "../context";
-import { Song, SongListByBagpipe, SongListBySongType, SongTags } from "../dataset/songs/interfaces";
+import {
+  Song,
+  SongListByBagpipe,
+  SongListBySongType,
+  SongTags,
+} from "../dataset/songs/interfaces";
 import { BagpipeTypes } from "../interfaces";
 import { transliterateSongList, useIsCyrylicLang } from "../locales";
-import { getAvailableTagsFromLists, getFirstSongFromList } from "../dataset/songs/utils";
+import {
+  getAvailableTagsFromLists,
+  getFirstSongFromList,
+} from "../dataset/songs/utils";
 import { songApi } from "../api/songClient";
 
-export const useSongList = (onStop: () => void) => {
+export const useSongListShort = () => {
+  const {
+    setListsByBagpipe,
+    state: { bagpipeType },
+  } = useContext(store);
+
+  const initSongList = useCallback(async () => {
+    try {
+      const songList = await songApi.getSongList();
+
+      const sortedList = sortSongsByBagpipe(songList);
+      const lists = sortSongsBySongType(
+        sortedList[bagpipeType || BagpipeTypes.BelarusianTraditionalDuda]
+      );
+
+      setListsByBagpipe(lists);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [bagpipeType, setListsByBagpipe]);
+
+  useEffect(() => {
+    initSongList();
+  }, []);
+};
+
+export const useSongList = (onStop?: () => void) => {
   const {
     setListsByBagpipe,
     setActiveSong,
     setSongTags,
-    state: { bagpipeType, activeSong, listsByBagpipe, language, activeSongTags },
+    state: {
+      bagpipeType,
+      activeSong,
+      listsByBagpipe,
+      language,
+      activeSongTags,
+    },
   } = useContext(store);
 
   const isCyrylicLang = useIsCyrylicLang();
@@ -22,9 +62,15 @@ export const useSongList = (onStop: () => void) => {
 
       const sortedList = sortSongsByBagpipe(songList);
       const lists = sortSongsBySongType(sortedList[bagpipeType]);
-      const transliteratedLists = !isCyrylicLang() ? transliterateSongList(lists) : lists;
-      const sortedListsAlphabetically = sortListsAlphabetically(transliteratedLists);
-      const listsFeilteredByTags = filterSongsByTags(sortedListsAlphabetically, activeSongTags);
+      const transliteratedLists = !isCyrylicLang()
+        ? transliterateSongList(lists)
+        : lists;
+      const sortedListsAlphabetically =
+        sortListsAlphabetically(transliteratedLists);
+      const listsFeilteredByTags = filterSongsByTags(
+        sortedListsAlphabetically,
+        activeSongTags
+      );
       setListsByBagpipe(listsFeilteredByTags);
       handleActiveSong(bagpipeType, transliteratedLists);
     } catch (error) {
@@ -37,14 +83,19 @@ export const useSongList = (onStop: () => void) => {
       if (!listsByBagpipeLocal || !bagpipeType || !activeSong) {
         return;
       }
-      onStop();
+      if (onStop) {
+        onStop();
+      }
       const activeSongInNewList =
         activeSong &&
-        listsByBagpipeLocal[activeSong.type]?.find((song) => song.name === activeSong.name);
+        listsByBagpipeLocal[activeSong.type]?.find(
+          (song) => song.name === activeSong.name
+        );
       if (activeSongInNewList) {
         setActiveSong(activeSongInNewList);
       } else {
-        const firstSongInList = listsByBagpipeLocal[Object.keys(listsByBagpipeLocal)[0]][0];
+        const firstSongInList =
+          listsByBagpipeLocal[Object.keys(listsByBagpipeLocal)[0]][0];
         setActiveSong(firstSongInList);
       }
     },
@@ -68,7 +119,7 @@ export const useSongList = (onStop: () => void) => {
   }, [listsByBagpipe]);
 };
 
-const sortListsAlphabetically = (lists: SongListBySongType) => {
+export const sortListsAlphabetically = (lists: SongListBySongType) => {
   return Object.entries(lists).reduce((acc, cur) => {
     const [key, value] = cur;
     acc[key] = value.sort((a, b) => (a.name > b.name ? 1 : -1));
@@ -76,7 +127,7 @@ const sortListsAlphabetically = (lists: SongListBySongType) => {
   }, {} as SongListBySongType);
 };
 
-const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {
+export const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {
   const list: SongListByBagpipe = {};
   songs?.forEach((song) => {
     song.bagpipesToPlay.forEach((bagpipeType) => {
@@ -101,7 +152,7 @@ const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {
   return list;
 };
 
-const sortSongsBySongType = (songs: Song[]): SongListBySongType => {
+export const sortSongsBySongType = (songs: Song[]): SongListBySongType => {
   const list: SongListBySongType = {};
   songs?.forEach((song) => {
     if (song.type in list) {
@@ -114,12 +165,17 @@ const sortSongsBySongType = (songs: Song[]): SongListBySongType => {
   return list;
 };
 
-const filterSongsByTags = (lists: SongListBySongType, songTags: SongTags[]): SongListBySongType => {
+export const filterSongsByTags = (
+  lists: SongListBySongType,
+  songTags: SongTags[]
+): SongListBySongType => {
   if (!songTags.length) return lists;
 
   return Object.entries(lists).reduce((acc, cur) => {
     const [key, value] = cur;
-    const filteredList = value.filter((song) => songTags.every((tag) => song.labels.includes(tag)));
+    const filteredList = value.filter((song) =>
+      songTags.every((tag) => song.labels.includes(tag))
+    );
     if (filteredList.length) {
       acc[key] = filteredList;
     }

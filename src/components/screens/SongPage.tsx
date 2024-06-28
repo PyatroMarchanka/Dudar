@@ -1,17 +1,15 @@
-import { Drawer, SwipeableDrawer } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { store } from "../../context";
 import { findSongInListById } from "../../dataset/songs/utils";
 import { routes } from "../../router/routes";
-import { SongList } from "../SongList";
 import styled from "styled-components";
 
 interface Props {}
 
 export const SongPage = (props: Props) => {
   const params: any = useParams();
-
+  
   const {
     state: { activeSong, listsByBagpipe },
     setActiveSong,
@@ -22,7 +20,7 @@ export const SongPage = (props: Props) => {
     const song = findSongInListById(params.id, listsByBagpipe);
     if (song) {
       setActiveSong(song);
-    }
+    } 
   }, [params.id, listsByBagpipe]);
 
 

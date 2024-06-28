@@ -72,7 +72,6 @@ const Container = styled.div`
   .icon {
     transform: translate(13px, 0px);
   }
-  padding-right: 50px;
 `;
 
 const Header = styled.div`

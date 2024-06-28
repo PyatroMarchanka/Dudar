@@ -1,23 +1,19 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import { store } from "../../../context";
-import { bagpipes } from "../../../dataset/bagpipes";
-import { BagpipeTypes } from "../../../interfaces";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
 import { mainColors } from "../../../utils/theme";
 import { Icon } from "../../global/Icon";
 import Transpose from "../Transpose";
-import { RedRadio } from "../../global/RedRadioButton";
 import { RedCheckbox } from "../../global/RedCheckbox";
-import { Typography } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import LanguageSelector from "../LanguageSelector";
 import LanguageIcon from "@material-ui/icons/Language";
 import AvTimerIcon from "@material-ui/icons/AvTimer";
 import ImportExport from "@material-ui/icons/ImportExport";
-import { FeedbackForm } from "../../FeedbackForm";
 import { InstrumentTypes } from "./InstrumentTypes";
 import { Contacts } from "../../Contacts";
+import { DonationButtonBig } from "../../global/DonationButtonBig";
 
 type Props = {
   midiPlayer?: MidiPlayer | null;
@@ -33,6 +29,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
 
   return (
     <Container>
+      <DonationButtonBig />
       <Row>
         <Icon type="duda" className="duda" />
         <Title>{t("instrumentType")}</Title>
@@ -85,11 +82,6 @@ const Row = styled.div`
   align-items: center;
   padding-left: 20px;
   flex-wrap: wrap;
-`;
-
-const RowCentered = styled(Row)`
-  justify-content: space-between;
-  flex-wrap: nowrap;
 `;
 
 const Line = styled.div`

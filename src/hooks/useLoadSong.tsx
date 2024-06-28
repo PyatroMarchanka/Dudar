@@ -21,45 +21,59 @@ export const useLoadSong = () => {
     setIsSongLoading,
   } = useContext(store);
   const [lowestOctave, setLowestOctave] = useState(4);
+  const songId = params.id;
 
   useEffect(() => {
-    if (!(params.id && listsByBagpipe)) return;
+    if (!(songId && listsByBagpipe)) return;
 
-    const songFromParam = findSongInListById(params.id, listsByBagpipe);
-
+    const songFromParam = findSongInListById(songId, listsByBagpipe);
     if (songFromParam) {
       setActiveSong(songFromParam);
     }
-  }, [params.id, listsByBagpipe]);
+  }, [songId]);
 
-  const loadMidiSong = useCallback(async (song: Song) => {
-    try {
-      if (!song.pathName) {
-        console.log(`No song with this path in list \n ${song.pathName}`);
+  const loadMidiSong = useCallback(
+    async (song: Song) => {
+      try {
+        if (!song.pathName) {
+          console.log(`No song with this path in list \n ${song.pathName}`);
 
+          listsByBagpipe && setActiveSong(getFirstSongFromList(listsByBagpipe));
+        }
+        setIsSongLoading(true);
+        const file = await songApi.getSong(song);
+        const buffer = await file.arrayBuffer();
+
+        const songWithMetronome = await addMetronome(
+          buffer,
+          song.timeSignature
+        );
+
+        const midi = new Midi(songWithMetronome);
+        midi.header.setTempo(tempo / 2);
+
+        setSongLength(midi.header.ticksToSeconds(midi.durationTicks));
+
+        const { lowestOctave: lowestOctaveFromFile } = fixMidiDataOctaves(midi);
+        setLowestOctave(lowestOctaveFromFile);
+        setMidiData(midi);
+        setMidi(songWithMetronome);
+        setIsSongLoading(false);
+      } catch (error) {
         listsByBagpipe && setActiveSong(getFirstSongFromList(listsByBagpipe));
+        console.log(error);
       }
-      setIsSongLoading(true);
-      const file = await songApi.getSong(song);
-      const buffer = await file.arrayBuffer();
-
-      const songWithMetronome = await addMetronome(buffer, song.timeSignature);
-
-      const midi = new Midi(songWithMetronome);
-      midi.header.setTempo(tempo / 2);
-
-      setSongLength(midi.header.ticksToSeconds(midi.durationTicks));
-
-      const { lowestOctave: lowestOctaveFromFile } = fixMidiDataOctaves(midi);
-      setLowestOctave(lowestOctaveFromFile);
-      setMidiData(midi);
-      setMidi(songWithMetronome);
-      setIsSongLoading(false);
-    } catch (error) {
-      listsByBagpipe && setActiveSong(getFirstSongFromList(listsByBagpipe));
-      console.log(error);
-    }
-  }, [listsByBagpipe]);
+    },
+    [
+      listsByBagpipe,
+      setActiveSong,
+      setIsSongLoading,
+      setMidi,
+      setMidiData,
+      setSongLength,
+      tempo,
+    ]
+  );
 
   useEffect(() => {
     if (activeSong) {

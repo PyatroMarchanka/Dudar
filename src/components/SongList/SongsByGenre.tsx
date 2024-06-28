@@ -16,6 +16,7 @@ import { bagpipes } from "../../dataset/bagpipes";
 import { SongTagsWrapper } from "./SongTagsWrapper";
 import { useHistory } from "react-router-dom";
 import { routes } from "../../router/routes";
+import { Song } from "../../dataset/songs/interfaces";
 
 interface Props {
   setOpen: (bool: boolean) => void;
@@ -84,6 +85,13 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
   const classes = useStyles();
   const genres = Object.keys(listsByBagpipe || {});
 
+  const onSongClick = (e: any, song: Song) => {
+    e.stopPropagation();
+    history.push(`${routes.app}/${routes.play}/${song.id}`)
+    setOpen(false);
+    onStop();
+  }
+
   return (
     <Content>
       <IconButton className="close" onClick={() => setOpen(false)}>
@@ -95,7 +103,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
         </Typography>
         <Typography>{t(`dudas.${bagpipes[bagpipeType].name}`)}</Typography>
       </div>
-      <SongTagsWrapper />
+     
 
       {genres.map((genre) => (
         <div key={genre} className={classes.root}>
@@ -131,12 +139,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                     <IconButton
                       classes={{ root: classes.buttonRoot }}
                       className="songButton"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        history.push(`${routes.app}/${routes.info}/${song.id}`)
-                        setOpen(false);
-                        onStop();
-                      }}
+                      onClick={e => onSongClick(e, song)}
                     >
                       <Icon
                         type={
@@ -156,6 +159,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
           </Accordion>
         </div>
       ))}
+       <SongTagsWrapper />
     </Content>
   );
 };
