@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { IconButton, Typography } from "@material-ui/core";
 import styled from "styled-components";
 import { mediaQueries } from "../../constants/style";
 import { Button } from "../global/Button";
@@ -13,27 +13,31 @@ import { ModalButton } from "../global/ModalButton";
 import LanguageSelector from "../Controls/LanguageSelector";
 import { Icon } from "../global/Icon";
 import LanguageIcon from "@material-ui/icons/Language";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { DonationButtonBig } from "../global/DonationButtonBig";
 import { useSongListShort } from "../../hooks/useSongLIst";
+import { useHistory } from "react-router-dom";
+import { getFirstSongFromList } from "../../dataset/songs/utils";
 
 export const About = () => {
   const { t } = useTranslation("translation");
   const {
     state: { screenSize, activeSong, listsByBagpipe },
   } = useContext(store);
+  const history = useHistory();
 
   useSongListShort();
-
-  console.log(activeSong);
+  const songId =
+    activeSong?.id || (listsByBagpipe && getFirstSongFromList(listsByBagpipe).id);
 
   return (
     <Container>
       <SettingsContainer>
         <ModalButton
           icon={
-            <IconContainer>
+            <IconButton className="iconButton">
               <Icon type="material" fill={"black"} Icon={LanguageIcon} />
-            </IconContainer>
+            </IconButton>
           }
           dialogContent={
             <div>
@@ -44,6 +48,12 @@ export const About = () => {
             </div>
           }
         />
+        <IconButton
+          className="iconButton"
+          onClick={() => history.push(routes.login)}
+        >
+          <Icon type="material" fill={"black"} Icon={AccountCircleIcon} />
+        </IconButton>
         <DonationButton />
       </SettingsContainer>
       <LogoContainer>
@@ -59,7 +69,7 @@ export const About = () => {
           </Typography>
           {/* <LoginComponent /> */}
           <GetStarted>
-            <a href={`${routes.app}/${routes.play}/${activeSong?.id}`}>
+            <a href={`${routes.app}/${routes.play}/${songId}`}>
               <Button className="getStarted" type="big">
                 {t("mainPage.getStarted")}
               </Button>
@@ -162,12 +172,18 @@ const GetStarted = styled.div`
 
 const SettingsContainer = styled.div`
   position: fixed;
+
   top: 5px;
   right: 0px;
-`;
+  padding-right: 10px;
 
-const IconContainer = styled.div`
-  margin-right: 50px;
+  .login {
+    position: relative;
+  }
+
+  .iconButton {
+    padding: 0;
+  }
 `;
 
 const ModalTitle = styled.div`

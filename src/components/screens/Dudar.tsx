@@ -3,7 +3,6 @@ import styled, { createGlobalStyle } from "styled-components";
 import { SharpNotes } from "../../interfaces";
 import { PlayerControls } from "../Controls/PlayerControls";
 import { useMidiPlayer } from "../../hooks/useMidiPlayer";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { mainColors } from "../../utils/theme";
 import { StaticCanvas } from "../Canvas/StaticCanvas";
 import { BackCanvas } from "../Canvas/BackCanvas";
@@ -56,7 +55,6 @@ export const Dudar = () => {
     userApi.getUserData();
   }, []);
 
-  useLocalStorage();
   useDimensions();
 
   useEffect(() => {

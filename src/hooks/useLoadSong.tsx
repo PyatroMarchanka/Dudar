@@ -9,6 +9,8 @@ import {
   findSongInListById,
   getFirstSongFromList,
 } from "../dataset/songs/utils";
+import { useSongList } from "./useSongLIst";
+import { useSong } from "./useSong";
 
 export const useLoadSong = () => {
   const params: any = useParams();
@@ -21,6 +23,8 @@ export const useLoadSong = () => {
     setIsSongLoading,
   } = useContext(store);
   const [lowestOctave, setLowestOctave] = useState(4);
+  useSongList();
+  useSong()
   const songId = params.id;
 
   useEffect(() => {

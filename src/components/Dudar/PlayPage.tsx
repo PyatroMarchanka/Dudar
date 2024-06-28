@@ -1,4 +1,3 @@
-import React from "react";
 import {
   useHistory,
   useParams,
@@ -38,8 +37,6 @@ export const PlayPageHeader = ({ midiPlayer }: Props) => {
       <IconButton
         className="button"
         onClick={() => {
-          console.log("params", params);
-
           const songId = params.id;
           history.push(`${routes.app}/${routes.info}/${songId}`);
         }}
