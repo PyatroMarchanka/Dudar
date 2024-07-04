@@ -45,15 +45,17 @@ export const Onboarding = () => {
   const stepComponent = getStepComponent(step);
   const history = useHistory();
   const {
-    state: { listsByBagpipe },
+    state: { listsByBagpipe, activeSong },
   } = useContext(store);
 
   useSongListShort();
 
   const onFinish = () => {
     localStorage.setItem(userOnboardingFinished, "true");
-    const firstSong = getFirstSongFromList(listsByBagpipe!);
-    history.push(`${routes.app}/${routes.play}/${firstSong?.id}`);
+    if(listsByBagpipe){
+      const firstSong = getFirstSongFromList(listsByBagpipe!);
+      history.push(`${routes.app}/${routes.play}/${firstSong?.id}`);
+    }
   };
 
   return (

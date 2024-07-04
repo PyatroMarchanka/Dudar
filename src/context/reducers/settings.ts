@@ -17,7 +17,8 @@ interface Action {
     | "SET_LANGUAGE"
     | "SET_SONG_TAGS"
     | "SET_ACTIVE_SONG_TAGS"
-    | "SET_HOLES_MODE";
+    | "SET_HOLES_MODE"
+    | "SET_USER_DATA";
 
   payload?: any;
 }
@@ -38,6 +39,7 @@ export interface SettingsState {
   holesMode: HolesModes;
   songTags: SongTags[];
   activeSongTags: SongTags[];
+  userData: any;
 }
 const userData = getUserDataFromLocal();
 
@@ -48,6 +50,7 @@ export const settingsInitialState: SettingsState = {
   loop: false,
   songTags: [],
   activeSongTags: [],
+  userData: false,
   ...userData,
 };
 
@@ -135,6 +138,12 @@ export const useSettingsReducer = () => {
             ...state,
             holesMode: action.payload,
           };
+
+        case "SET_USER_DATA":
+          return {
+            ...state,
+            userData: action.payload,
+          };
         default:
           return state;
       }
@@ -194,6 +203,10 @@ export const useSettingsReducer = () => {
     dispatch({ type: "SET_ACTIVE_SONG_TAGS", payload: tags });
   };
 
+  const setUserData = (data: any) => {
+    dispatch({ type: "SET_USER_DATA", payload: data });
+  };
+
   return {
     state,
     setMetronome,
@@ -209,5 +222,6 @@ export const useSettingsReducer = () => {
     setHolesMode,
     setSongTags,
     setActiveSongTags,
+    setUserData,
   };
 };

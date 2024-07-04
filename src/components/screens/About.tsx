@@ -5,7 +5,7 @@ import { Button } from "../global/Button";
 import { Logo } from "../global/Logo";
 import { routes } from "../../router/routes";
 import { useTranslation } from "react-i18next";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { store } from "../../context";
 import { DonationButton } from "../global/DonationButton";
 import { Contacts } from "../Contacts";
@@ -18,17 +18,29 @@ import { DonationButtonBig } from "../global/DonationButtonBig";
 import { useSongListShort } from "../../hooks/useSongLIst";
 import { useHistory } from "react-router-dom";
 import { getFirstSongFromList } from "../../dataset/songs/utils";
+import { useFetchGoogleUserProfile } from "../../hooks/useGoogleProfile";
+import { mainColors } from "../../utils/theme";
+import { userApi } from "../../api/user";
+import { BagpipeTypes } from "../../interfaces";
 
 export const About = () => {
   const { t } = useTranslation("translation");
   const {
-    state: { screenSize, activeSong, listsByBagpipe },
+    state: { screenSize, activeSong, listsByBagpipe, userData },
   } = useContext(store);
   const history = useHistory();
-
   useSongListShort();
   const songId =
-    activeSong?.id || (listsByBagpipe && getFirstSongFromList(listsByBagpipe).id);
+    activeSong?.id ||
+    (listsByBagpipe && getFirstSongFromList(listsByBagpipe).id);
+
+  useFetchGoogleUserProfile();
+  console.log("userData", userData);
+  useEffect(() => {
+    userApi.updateUserSettings({
+      bagpipe: BagpipeTypes.BelarusianNONTraditionalDuda,
+    });
+  }, []);
 
   return (
     <Container>
@@ -48,12 +60,17 @@ export const About = () => {
             </div>
           }
         />
-        <IconButton
-          className="iconButton"
-          onClick={() => history.push(routes.login)}
-        >
-          <Icon type="material" fill={"black"} Icon={AccountCircleIcon} />
-        </IconButton>
+        {userData ? (
+          <UserImage src={userData.picture} />
+        ) : (
+          <IconButton
+            className="iconButton"
+            onClick={() => history.push(routes.login)}
+          >
+            <Icon type="material" fill={"black"} Icon={AccountCircleIcon} />
+          </IconButton>
+        )}
+
         <DonationButton />
       </SettingsContainer>
       <LogoContainer>
@@ -104,6 +121,18 @@ export const About = () => {
     </Container>
   );
 };
+
+const UserImage = styled.img`
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid ${mainColors.orange};
+  width: 30px;
+  height: 30px;
+  &:hover {
+    cursor: pointer;
+    border: 2px solid ${mainColors.darkOrange};
+  }
+`;
 
 const Left = styled.div`
   flex-basis: 50%;
@@ -172,6 +201,8 @@ const GetStarted = styled.div`
 
 const SettingsContainer = styled.div`
   position: fixed;
+  display: flex;
+  align-items: center;
 
   top: 5px;
   right: 0px;
