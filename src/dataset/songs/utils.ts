@@ -16,18 +16,19 @@ export const findSongInListById = (
 ): Song | undefined => {
   const allSongs = Object.values(lists).flat();
 
-  return allSongs.find(song => song.id === id);
+  return allSongs.find((song) => song.id === id);
 };
 
-const fourToFourTicks = 480;
+const fourToFourTicks = 480 * 4;
 
 const timeSignaturesToTicks = {
-  "3/4": (fourToFourTicks * 3) / 2,
+  "3/4": (fourToFourTicks * 3) / 4,
   "4/4": (fourToFourTicks * 4) / 4,
   "5/4": (fourToFourTicks * 5) / 4,
   "6/4": (fourToFourTicks * 6) / 4,
   "6/8": (fourToFourTicks * 6) / 4,
   "7/8": (fourToFourTicks * 7) / 8,
+  "5/8": (fourToFourTicks * 5) / 8,
   "8/8": (fourToFourTicks * 8) / 8,
   "9/8": (fourToFourTicks * 9) / 8,
   "10/8": (fourToFourTicks * 10) / 8,
