@@ -12,4 +12,5 @@ export interface UserSettings {
     tempo?: number;
     userPreclick?: boolean;
     language?: Languages;
+    transpose?: number;
 }

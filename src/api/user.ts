@@ -19,8 +19,8 @@ export const userApi = {
         userId: cookie.load("userId"),
       },
     });
-    console.log("res.data", res);
-    return res.data;
+
+  return res.data;
   },
 
   updateUserSettings: async (data: UserSettings) => {
@@ -34,7 +34,7 @@ export const userApi = {
         userId: cookie.load("userId"),
       },
     });
-    console.log("res.data", res);
+
     return res.data;
   },
 };

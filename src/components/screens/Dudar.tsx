@@ -15,11 +15,11 @@ import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { getUserOnboardingFinished } from "../../constants/localStorage";
 import { routes } from "../../router/routes";
 import { SongPage } from "./SongPage";
-import { userApi } from "../../api/user";
 import { PlayPageHeader } from "../Dudar/PlayPage";
 import { InfoPageHeader } from "../Dudar/InfoPage";
 import { store } from "../../context";
 import { useDimensions } from "../../hooks/useDimensions";
+import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 
 export const Dudar = () => {
   const history = useHistory();
@@ -51,11 +51,8 @@ export const Dudar = () => {
     }
   }, [midiPlayer, midiData]);
 
-  useEffect(() => {
-    userApi.getUserData();
-  }, []);
-
   useDimensions();
+  useGoogleProfile()
 
   useEffect(() => {
     if (!isUserOnboardingCompleted) {

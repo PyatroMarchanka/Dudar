@@ -6,10 +6,11 @@ import { RedRadio } from "../../global/RedRadioButton";
 import styled from "styled-components";
 import { mainColors } from "../../../utils/theme";
 import { bagpipes } from "../../../dataset/bagpipes";
+import { useUpdateUserSettings } from "../../../hooks/useGoogleProfile";
 
 export const InstrumentTypes = () => {
   const { t } = useTranslation("translation");
-
+  const { updateUserSettings } = useUpdateUserSettings();
   const {
     state: { bagpipeType },
     setBagpipeType,
@@ -19,6 +20,7 @@ export const InstrumentTypes = () => {
 
   const onChange = (bagpipeType: BagpipeTypes) => {
     setBagpipeType(bagpipeType);
+    updateUserSettings({bagpipe: bagpipeType})
   };
 
   return (

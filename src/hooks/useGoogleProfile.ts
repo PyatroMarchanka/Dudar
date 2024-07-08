@@ -1,43 +1,58 @@
-// useFetchGoogleUserProfile.ts
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { store } from "../context";
 import { userApi } from "../api/user";
+import { User, UserSettings } from "../interfaces/user";
+import { useChangeLanguage } from "../locales";
 
-export const useFetchGoogleUserProfile = () => {
+export const useGoogleProfile = () => {
   const {
     setUserData,
     setBagpipeType,
     setIsPreclick,
     setLanguage,
     setTempo,
+    setTranspose,
   } = useContext(store);
 
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const changeLanguage = useChangeLanguage();
 
-  const setAllUserData = (userData: any) => {
+  const setAllUserData = (userData: User) => {
     if (!userData) {
       return;
     }
-    setBagpipeType(userData.settings.bagpipe);
-    setIsPreclick(userData.settings.userPreclick);
-    setTempo(userData.settings.tempo);
-    setLanguage(userData.settings.language);
+    const { bagpipe, userPreclick, tempo, transpose, language } =
+      userData.settings!;
+    if (bagpipe) {
+      setBagpipeType(bagpipe);
+    }
+    if (userPreclick) {
+      setIsPreclick(userPreclick);
+    }
+    if (tempo) {
+      setTempo(tempo);
+    }
+    if (transpose) {
+      setTranspose(transpose);
+    }
+    if (language) {
+      setLanguage(language);
+      changeLanguage(language);
+    }
   };
 
   const fetchUserProfile = async () => {
     try {
       const response = await userApi.getUserData();
 
-      if (!response) {
-        throw new Error("Failed to fetch user profile");
-      }
-
       const data = response;
       setUserData(data);
-      setAllUserData(data);
+
+      if (data) {
+        setAllUserData(data);
+      }
     } catch (err) {
-      setError((err as Error).message);
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -47,5 +62,28 @@ export const useFetchGoogleUserProfile = () => {
     fetchUserProfile();
   }, []);
 
-  return { loading, error };
+  return { loading };
+};
+
+export const useUpdateUserSettings = () => {
+  const {
+    state: { tempo, language, isPreclick, transpose, bagpipeType },
+  } = useContext(store);
+
+  const updateUserSettings = useCallback(
+    async (settings: UserSettings) => {
+      const newSettings = {
+        tempo,
+        transpose,
+        userPreclick: isPreclick,
+        bagpipe: bagpipeType,
+        language,
+        ...settings,
+      };
+      await userApi.updateUserSettings(newSettings);
+    },
+    [tempo, language, isPreclick, transpose, bagpipeType]
+  );
+
+  return { updateUserSettings };
 };

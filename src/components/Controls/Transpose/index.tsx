@@ -6,6 +6,7 @@ import { useSelectStyles } from "../../global/selectStyles";
 import { transposeNote, transposeNoteDoReMi } from "../../../utils/midiUtils";
 import { useTranslation } from "react-i18next";
 import { transliterate, useIsCyrylicLang } from "../../../locales";
+import { useUpdateUserSettings } from "../../../hooks/useGoogleProfile";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
@@ -23,6 +24,7 @@ const Transpose = ({ midiPlayer }: Props) => {
   } = useContext(store);
   const { t } = useTranslation();
   const isCyrylicLang = useIsCyrylicLang();
+  const { updateUserSettings } = useUpdateUserSettings();
 
   const setTranspose = (num: number) => {
     setTransposeCtx(num);
@@ -45,7 +47,9 @@ const Transpose = ({ midiPlayer }: Props) => {
         return (
           <MenuItem key={option.label} value={option.value}>
             <b>{`${transposeNote("A", +option.label)} - ${doRemiLabel}`}</b>
-            {` : ${option.label > 0 ? `+${option.label}` : option.label} ${t("semitones")}`}
+            {` : ${option.label > 0 ? `+${option.label}` : option.label} ${t(
+              "semitones"
+            )}`}
           </MenuItem>
         );
       }),
@@ -61,6 +65,7 @@ const Transpose = ({ midiPlayer }: Props) => {
         onChange={(e) => {
           setTranspose && setTranspose(Number(e.target.value));
           setValue(Number(e.target.value));
+          updateUserSettings({transpose: Number(e.target.value)})
         }}
       >
         {options}

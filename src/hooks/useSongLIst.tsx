@@ -13,6 +13,8 @@ import {
   getFirstSongFromList,
 } from "../dataset/songs/utils";
 import { songApi } from "../api/songClient";
+import { useHistory } from "react-router-dom";
+import { routes } from "../router/routes";
 
 export const useSongListShort = () => {
   const {
@@ -41,6 +43,7 @@ export const useSongListShort = () => {
 };
 
 export const useSongList = (onStop?: () => void) => {
+  const history = useHistory();
   const {
     setListsByBagpipe,
     setActiveSong,
@@ -96,7 +99,7 @@ export const useSongList = (onStop?: () => void) => {
       } else {
         const firstSongInList =
           listsByBagpipeLocal[Object.keys(listsByBagpipeLocal)[0]][0];
-        setActiveSong(firstSongInList);
+        history.push(`${routes.app}/${routes.play}/${firstSongInList.id}`);
       }
     },
     [activeSong, setActiveSong, listsByBagpipe, onStop]

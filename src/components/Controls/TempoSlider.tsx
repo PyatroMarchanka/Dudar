@@ -14,6 +14,7 @@ import { store } from "../../context";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { theme } from "../../utils/theme";
 import { Icon } from "../global/Icon";
+import { useUpdateUserSettings } from "../../hooks/useGoogleProfile";
 
 interface Props {
   player: MidiPlayer | null;
@@ -35,6 +36,7 @@ export const TempoSlider = ({ player }: Props) => {
     setTempo,
     setMetronome,
   } = useContext(store);
+  const { updateUserSettings } = useUpdateUserSettings();
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -76,6 +78,9 @@ export const TempoSlider = ({ player }: Props) => {
             onChange={(e, value) => {
               setTempo(value as number);
               player?.checkTempo(value as number);
+            }}
+            onChangeCommitted={(e, value) => {
+              updateUserSettings({ tempo: value as number });
             }}
             value={tempo}
             defaultValue={tempo}

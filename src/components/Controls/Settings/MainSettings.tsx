@@ -14,6 +14,7 @@ import ImportExport from "@material-ui/icons/ImportExport";
 import { InstrumentTypes } from "./InstrumentTypes";
 import { Contacts } from "../../Contacts";
 import { DonationButtonBig } from "../../global/DonationButtonBig";
+import { useUpdateUserSettings } from "../../../hooks/useGoogleProfile";
 
 type Props = {
   midiPlayer?: MidiPlayer | null;
@@ -26,6 +27,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
     state: { isPreclick },
     setIsPreclick,
   } = useContext(store);
+  const { updateUserSettings } = useUpdateUserSettings();
 
   return (
     <Container>
@@ -55,7 +57,10 @@ export const MainSettings = ({ midiPlayer }: Props) => {
         <Title>{t("preclick")}</Title>
         <RedCheckbox
           checked={isPreclick}
-          onChange={() => setIsPreclick(!isPreclick)}
+          onChange={() => {
+            setIsPreclick(!isPreclick);
+            updateUserSettings({ userPreclick: !isPreclick });
+          }}
           name="checkedG"
         />
       </Row>

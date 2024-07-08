@@ -21,10 +21,19 @@ export const useLoadSong = () => {
     setSongLength,
     setActiveSong,
     setIsSongLoading,
+    setIsPlaying,
+    setProgress,
   } = useContext(store);
+
+  const onStop = () => {
+    setIsPlaying(false);
+    setProgress(100);
+  };
+
+  useSongList(onStop);
+
   const [lowestOctave, setLowestOctave] = useState(4);
-  useSongList();
-  useSong()
+  useSong();
   const songId = params.id;
 
   useEffect(() => {

@@ -1,6 +1,5 @@
 import { useReducer } from "react";
 import { BagpipeTypes, HolesModes, Languages } from "../../interfaces";
-import { getUserDataFromLocal } from "../../hooks/useLocalStorage";
 import { SongTags } from "../../dataset/songs/interfaces";
 
 interface Action {
@@ -41,7 +40,15 @@ export interface SettingsState {
   activeSongTags: SongTags[];
   userData: any;
 }
-const userData = getUserDataFromLocal();
+const userData = {
+  tempo: 200,
+  transpose: 0,
+  isPreclick: false,
+  bagpipeType: BagpipeTypes.BelarusianTraditionalDuda,
+  language: Languages.English,
+  holesMode: HolesModes.Fingers,
+  loopBars: 1,
+};
 
 export const settingsInitialState: SettingsState = {
   metronome: true,

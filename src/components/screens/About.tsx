@@ -5,7 +5,7 @@ import { Button } from "../global/Button";
 import { Logo } from "../global/Logo";
 import { routes } from "../../router/routes";
 import { useTranslation } from "react-i18next";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { store } from "../../context";
 import { DonationButton } from "../global/DonationButton";
 import { Contacts } from "../Contacts";
@@ -18,10 +18,8 @@ import { DonationButtonBig } from "../global/DonationButtonBig";
 import { useSongListShort } from "../../hooks/useSongLIst";
 import { useHistory } from "react-router-dom";
 import { getFirstSongFromList } from "../../dataset/songs/utils";
-import { useFetchGoogleUserProfile } from "../../hooks/useGoogleProfile";
+import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { mainColors } from "../../utils/theme";
-import { userApi } from "../../api/user";
-import { BagpipeTypes } from "../../interfaces";
 
 export const About = () => {
   const { t } = useTranslation("translation");
@@ -34,22 +32,14 @@ export const About = () => {
     activeSong?.id ||
     (listsByBagpipe && getFirstSongFromList(listsByBagpipe).id);
 
-  useFetchGoogleUserProfile();
-  console.log("userData", userData);
-  useEffect(() => {
-    userApi.updateUserSettings({
-      bagpipe: BagpipeTypes.BelarusianNONTraditionalDuda,
-    });
-  }, []);
+  useGoogleProfile();
 
   return (
     <Container>
       <SettingsContainer>
         <ModalButton
           icon={
-            <IconButton className="iconButton">
               <Icon type="material" fill={"black"} Icon={LanguageIcon} />
-            </IconButton>
           }
           dialogContent={
             <div>

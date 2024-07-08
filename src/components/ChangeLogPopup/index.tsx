@@ -5,14 +5,12 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  IconButton,
 } from "@material-ui/core";
 import { theme } from "../../utils/theme";
 import { Icon } from "../global/Icon";
 import InfoIcon from "@material-ui/icons/Info";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
-import { updatesAlertId } from "../../constants/localStorage";
 import styled from "styled-components";
 
 interface UpdatedContentProps {}
@@ -50,11 +48,10 @@ const ChangeLogPopup = (props: Props) => {
   const InfoButton = <Icon type="material" fill={theme.colors.black} Icon={InfoIcon} />;
 
   useEffect(() => {
-    const isAlertClosed = localStorage.getItem(updatesAlertId);
+    const isAlertClosed = true;
 
     if (!isAlertClosed) {
       setOpen(true);
-      localStorage.setItem(updatesAlertId, "closed");
     } else {
       handleClose();
     }
