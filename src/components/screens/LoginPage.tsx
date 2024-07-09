@@ -9,10 +9,12 @@ import { useContext } from "react";
 import { store } from "../../context";
 import { useSongListShort } from "../../hooks/useSongLIst";
 import { getFirstSongFromList } from "../../dataset/songs/utils";
+import { useTranslation } from "react-i18next";
 
 interface Props {}
 
 export const LoginPage = (props: Props) => {
+  const { t } = useTranslation("translation");
   const history = useHistory();
   const {
     state: { activeSong, listsByBagpipe },
@@ -28,7 +30,7 @@ export const LoginPage = (props: Props) => {
     <Container>
       <Logo width={200} height={100} variant="big" />
       <Typography className="title" variant="h1">
-        Log In
+        {t('login.login')}
       </Typography>
       <div>
         <LoginComponent />
@@ -38,10 +40,10 @@ export const LoginPage = (props: Props) => {
           onClick={() => history.push(`${routes.app}/${routes.play}/${songId}`)}
           type="big"
         >
-          Skip
+           {t('login.skip')}
         </Button>
         <Button onClick={() => history.push(routes.main)} type="big">
-          Main page
+        {t('login.mainPage')}
         </Button>
       </div>
     </Container>

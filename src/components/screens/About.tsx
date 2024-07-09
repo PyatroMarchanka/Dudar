@@ -20,6 +20,7 @@ import { useHistory } from "react-router-dom";
 import { getFirstSongFromList } from "../../dataset/songs/utils";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { mainColors } from "../../utils/theme";
+import { links } from "../../api/links";
 
 export const About = () => {
   const { t } = useTranslation("translation");
@@ -38,9 +39,7 @@ export const About = () => {
     <Container>
       <SettingsContainer>
         <ModalButton
-          icon={
-              <Icon type="material" fill={"black"} Icon={LanguageIcon} />
-          }
+          icon={<Icon type="material" fill={"black"} Icon={LanguageIcon} />}
           dialogContent={
             <div>
               <ModalTitle>
@@ -51,7 +50,21 @@ export const About = () => {
           }
         />
         {userData ? (
-          <UserImage src={userData.picture} />
+          <ModalButton
+            icon={<UserImage src={userData.picture} />}
+            dialogContent={
+              <div>
+                <ModalTitle>
+                  <a href={links.logout}>
+                    <Button className="getStarted" type="big">
+                      {t("login.logout")}
+                    </Button>
+                  </a>
+                </ModalTitle>
+                <LanguageSelector />
+              </div>
+            }
+          />
         ) : (
           <IconButton
             className="iconButton"

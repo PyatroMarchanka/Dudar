@@ -91,5 +91,12 @@
     "highlander": "Dudy szkockie",
     "other": "Inne typy dud są w fazie rozwoju!",
     "melodies": "Teraz w aplikacji możesz znaleźć tutoriale do co najmniej 120 melodii ludowych z różnych krajów, posortowanych według kraju pochodzenia."
+  },
+  "login": {
+    "skip": "Pomiń",
+    "login":"Zaloguj sie",
+    "logout":"Wyloguj",
+    "mainPage": "Strona główna",
+    "googleLogin": "Zaloguj sie przez Google"
   }
 }

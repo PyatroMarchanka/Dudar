@@ -42,3 +42,7 @@ export const userApi = {
 export const login = async () => {
   return await userClient.get(links.login);
 };
+
+export const logout = async () => {
+  return await userClient.get(links.logout);
+};

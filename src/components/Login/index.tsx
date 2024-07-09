@@ -2,17 +2,19 @@ import React from "react";
 import styled from "styled-components";
 import { Icon } from "../global/Icon";
 import { mainColors } from "../../utils/theme";
+import { links } from "../../api/links";
+import { useTranslation } from "react-i18next";
 
 interface Props {}
 
 export const LoginComponent = (props: Props) => {
-  console.log(`${process.env.REACT_APP_BACKEND_URL}/v1/auth/google`);
+  const { t } = useTranslation("translation");
   return (
     <div>
-      <a href={`${process.env.REACT_APP_BACKEND_URL}/v1/auth/google`}>
+      <a href={links.login}>
         <GoogleButton>
           <Icon className="icon" type="google" />
-          Sign in with Google
+          {t("login.googleLogin")}
         </GoogleButton>
       </a>
     </div>
