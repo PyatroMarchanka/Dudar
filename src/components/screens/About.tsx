@@ -61,7 +61,6 @@ export const About = () => {
                     </Button>
                   </a>
                 </ModalTitle>
-                <LanguageSelector />
               </div>
             }
           />
