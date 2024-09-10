@@ -11,17 +11,6 @@ export const Contacts = ({}: Props) => {
   return (
     <RowCentered>
       <a
-        href="https://github.com/PyatroMarchanka/Dudar"
-        className="github-link"
-        target="_blank"
-        rel="noreferrer"
-      >
-        <i className="fa fa-github fa_custom"></i>
-        <Typography className="title" variant="h5">
-          GitHub
-        </Typography>
-      </a>
-      <a
         href="https://www.facebook.com/piatro.marchanka"
         className="github-link"
         target="_blank"
@@ -33,7 +22,7 @@ export const Contacts = ({}: Props) => {
           fill={mainColors.darkerGray}
         />
         <Typography className="title" variant="h5">
-          Facebook
+          Piatro Marchanka
         </Typography>
       </a>
       <FeedbackForm />

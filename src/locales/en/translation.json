@@ -60,7 +60,8 @@
     "exercise": "exercise",
     "hard": "hard",
     "tune": "tune",
-    "cantiga": "cantiga"
+    "cantiga": "cantiga",
+    "serbian": "serbian"
   },
   "feedback": {
     "haveAQuestion": "Have a question?",
@@ -90,5 +91,12 @@
     "highlander": "Great Highlander Bagpipe (Schotland)",
     "other": "Other bagpipes types are in development!",
     "melodies": "Now in the app you can find tutorials for at least 120 folk melodies from different countries, sorted by country of origin."
+  },
+  "login": {
+    "skip": "Skip",
+    "login":"Login",
+    "logout":"Logout",
+    "mainPage": "Main Page",
+    "googleLogin": "Sign in with Google"
   }
 }

@@ -1,7 +1,6 @@
 import { Midi } from "@tonejs/midi";
 import { useReducer } from "react";
 import { Song, SongListByBagpipe } from "../../dataset/songs/interfaces";
-import { getUserDataFromLocal } from "../../hooks/useLocalStorage";
 import { SharpNotesEnum } from "../../interfaces";
 
 interface Action {
@@ -130,7 +129,11 @@ export const usePlayerReducer = () => {
     });
   };
 
-  const setProgress = (percent: number, time?: number, timeRemaining?: number) => {
+  const setProgress = (
+    percent: number,
+    time?: number,
+    timeRemaining?: number
+  ) => {
     dispatch({
       type: "SET_PROGRESS",
       payload: { percent: 100 - percent, time, timeRemaining },

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ChooseLanguage } from "./ChooseLanguage";
 import { ChooseBagpipe } from "./ChooseBagpipe";
 import { ChooseTuning } from "./ChooseTuning";
@@ -9,6 +9,9 @@ import { useHistory } from "react-router-dom";
 import { userOnboardingFinished } from "../../constants/localStorage";
 import { routes } from "../../router/routes";
 import { mainColors } from "../../utils/theme";
+import { store } from "../../context";
+import { useSongListShort } from "../../hooks/useSongLIst";
+import { getFirstSongFromList } from "../../dataset/songs/utils";
 
 enum OnbordingSteps {
   Language = "language",
@@ -41,10 +44,18 @@ export const Onboarding = () => {
   const [step, setStep] = useState<number>(0);
   const stepComponent = getStepComponent(step);
   const history = useHistory();
+  const {
+    state: { listsByBagpipe, activeSong },
+  } = useContext(store);
+
+  useSongListShort();
 
   const onFinish = () => {
     localStorage.setItem(userOnboardingFinished, "true");
-    history.push(routes.app);
+    if(listsByBagpipe){
+      const firstSong = getFirstSongFromList(listsByBagpipe!);
+      history.push(`${routes.app}/${routes.play}/${firstSong?.id}`);
+    }
   };
 
   return (
@@ -52,10 +63,14 @@ export const Onboarding = () => {
       {stepComponent}
       <Buttons>
         {step > 0 && (
-          <Button onClick={() => setStep(step - 1)}>{t("onboarding.previousStep")}</Button>
+          <Button onClick={() => setStep(step - 1)}>
+            {t("onboarding.previousStep")}
+          </Button>
         )}
         {step < onbordingSteps.length - 1 && (
-          <Button onClick={() => setStep(step + 1)}>{t("onboarding.nextStep")}</Button>
+          <Button onClick={() => setStep(step + 1)}>
+            {t("onboarding.nextStep")}
+          </Button>
         )}
         {step === onbordingSteps.length - 1 && (
           <Button onClick={onFinish}>{t("onboarding.finish")}</Button>

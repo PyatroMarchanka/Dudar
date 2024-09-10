@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { IconButton, Typography } from "@material-ui/core";
 import styled from "styled-components";
 import { mediaQueries } from "../../constants/style";
 import { Button } from "../global/Button";
@@ -13,23 +13,33 @@ import { ModalButton } from "../global/ModalButton";
 import LanguageSelector from "../Controls/LanguageSelector";
 import { Icon } from "../global/Icon";
 import LanguageIcon from "@material-ui/icons/Language";
-import { LoginComponent } from "../Login";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import { DonationButtonBig } from "../global/DonationButtonBig";
+import { useSongListShort } from "../../hooks/useSongLIst";
+import { useHistory } from "react-router-dom";
+import { getFirstSongFromList } from "../../dataset/songs/utils";
+import { useGoogleProfile } from "../../hooks/useGoogleProfile";
+import { mainColors } from "../../utils/theme";
+import { links } from "../../api/links";
 
 export const About = () => {
   const { t } = useTranslation("translation");
   const {
-    state: { screenSize },
+    state: { screenSize, activeSong, listsByBagpipe, userData },
   } = useContext(store);
+  const history = useHistory();
+  useSongListShort();
+  const songId =
+    activeSong?.id ||
+    (listsByBagpipe && getFirstSongFromList(listsByBagpipe).id);
+
+  useGoogleProfile();
 
   return (
     <Container>
       <SettingsContainer>
         <ModalButton
-          icon={
-            <IconContainer>
-              <Icon type="material" fill={"black"} Icon={LanguageIcon} />
-            </IconContainer>
-          }
+          icon={<Icon type="material" fill={"black"} Icon={LanguageIcon} />}
           dialogContent={
             <div>
               <ModalTitle>
@@ -39,6 +49,30 @@ export const About = () => {
             </div>
           }
         />
+        {userData ? (
+          <ModalButton
+            icon={<UserImage src={userData.picture} />}
+            dialogContent={
+              <div>
+                <ModalTitle>
+                  <a href={links.logout}>
+                    <Button className="getStarted" type="big">
+                      {t("login.logout")}
+                    </Button>
+                  </a>
+                </ModalTitle>
+              </div>
+            }
+          />
+        ) : (
+          <IconButton
+            className="iconButton"
+            onClick={() => history.push(routes.login)}
+          >
+            <Icon type="material" fill={"black"} Icon={AccountCircleIcon} />
+          </IconButton>
+        )}
+
         <DonationButton />
       </SettingsContainer>
       <LogoContainer>
@@ -54,7 +88,7 @@ export const About = () => {
           </Typography>
           {/* <LoginComponent /> */}
           <GetStarted>
-            <a href={routes.start}>
+            <a href={`${routes.app}/${routes.play}/${songId}`}>
               <Button className="getStarted" type="big">
                 {t("mainPage.getStarted")}
               </Button>
@@ -77,20 +111,7 @@ export const About = () => {
 
           <Typography variant="body1">{t("mainPage.other")}</Typography>
           <Typography variant="body1">{t("mainPage.melodies")}</Typography>
-          <GetStarted>
-            <a
-              href="https://www.buymeacoffee.com/crazyguitarist"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                src="/images/bmc-brown.png"
-                alt="Buy Me A Coffee"
-                height="60px"
-                width="247px"
-              />
-            </a>
-          </GetStarted>
+          <DonationButtonBig />
         </Left>
         <Video
           width={screenSize.width - 20}
@@ -102,6 +123,18 @@ export const About = () => {
     </Container>
   );
 };
+
+const UserImage = styled.img`
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid ${mainColors.orange};
+  width: 30px;
+  height: 30px;
+  &:hover {
+    cursor: pointer;
+    border: 2px solid ${mainColors.darkOrange};
+  }
+`;
 
 const Left = styled.div`
   flex-basis: 50%;
@@ -170,12 +203,20 @@ const GetStarted = styled.div`
 
 const SettingsContainer = styled.div`
   position: fixed;
+  display: flex;
+  align-items: center;
+
   top: 5px;
   right: 0px;
-`;
+  padding-right: 10px;
 
-const IconContainer = styled.div`
-  margin-right: 50px;
+  .login {
+    position: relative;
+  }
+
+  .iconButton {
+    padding: 0;
+  }
 `;
 
 const ModalTitle = styled.div`

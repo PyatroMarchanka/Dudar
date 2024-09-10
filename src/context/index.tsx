@@ -1,9 +1,22 @@
 import { Midi } from "@tonejs/midi";
 import { createContext, useEffect } from "react";
 import { Song, SongListByBagpipe, SongTags } from "../dataset/songs/interfaces";
-import { BagpipeTypes, HolesModes, Languages, SharpNotesEnum } from "../interfaces";
-import { SettingsState, settingsInitialState, useSettingsReducer } from "./reducers/settings";
-import { PlayerState, playerInitialState, usePlayerReducer } from "./reducers/player";
+import {
+  BagpipeTypes,
+  HolesModes,
+  Languages,
+  SharpNotesEnum,
+} from "../interfaces";
+import {
+  SettingsState,
+  settingsInitialState,
+  useSettingsReducer,
+} from "./reducers/settings";
+import {
+  PlayerState,
+  playerInitialState,
+  usePlayerReducer,
+} from "./reducers/player";
 import { useChangeLanguage } from "../locales";
 
 export const noSongsLabel = "No song selected";
@@ -39,6 +52,7 @@ interface Context {
   setHolesMode: (mode: HolesModes) => void;
   setSongTags: (tags: SongTags[]) => void;
   setActiveSongTags: (tags: SongTags[]) => void;
+  setUserData: (data: any) => void;
 }
 
 const store = createContext<Context>({
@@ -65,6 +79,7 @@ const store = createContext<Context>({
   setHolesMode: (mode: HolesModes) => {},
   setSongTags: (tags: SongTags[]) => {},
   setActiveSongTags: (tags: SongTags[]) => {},
+  setUserData: (data: any) => {},
 });
 const { Provider } = store;
 
