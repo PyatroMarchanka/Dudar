@@ -14,6 +14,7 @@ import { MidiPlayer } from "../../utils/MidiPlayer";
 import { useLoadSong } from "../../hooks/useLoadSong";
 import Modal from "../global/Modal";
 import { SongPage } from "../screens/SongPage";
+import { useEffect } from "react";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
@@ -22,6 +23,10 @@ interface Props {
 export const PlayPageHeader = ({ midiPlayer }: Props) => {
   const songTitle = useSongTitle();
   useLoadSong();
+
+  useEffect(() => {
+    document.title = songTitle || noSongsLabel;
+  }, [songTitle]);
 
   return (
     <SettingsButtons className="settingsButtons">
