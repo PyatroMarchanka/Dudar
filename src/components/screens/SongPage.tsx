@@ -5,6 +5,7 @@ import { findSongInListById } from "../../dataset/songs/utils";
 import styled, { createGlobalStyle } from "styled-components";
 import { Typography } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
+import { getTranslationKeyByBagpipeType } from "../../interfaces/enumUtils";
 
 interface Props {}
 
@@ -50,7 +51,15 @@ export const SongPage = (props: Props) => {
       {activeSong?.bagpipesToPlay && (
         <SongProperty>
           <Typography>
-            {t(`songInfo.bagpipesToPlay`)}: <b>{activeSong?.bagpipesToPlay}</b>
+            {t(`songInfo.bagpipesToPlay`)}:
+            {activeSong?.bagpipesToPlay
+              .filter((bagpipe) => (bagpipe as any) !== "gd")
+              .map((bagpipe) => getTranslationKeyByBagpipeType(bagpipe))
+              .map((bagpipe) => (
+                <div>
+                  <b>{t(`dudas.${bagpipe}`)}</b>
+                </div>
+              ))}
           </Typography>
         </SongProperty>
       )}
