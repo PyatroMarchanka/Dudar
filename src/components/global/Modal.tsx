@@ -1,9 +1,9 @@
-import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import styled from 'styled-components';
-import { CSSProperties } from '@material-ui/core/styles/withStyles';
+import React from "react";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import styled from "styled-components";
+import { CSSProperties } from "@material-ui/core/styles/withStyles";
 
 interface Props {
   title: string;
@@ -11,9 +11,17 @@ interface Props {
   children: any;
   className?: string;
   style?: CSSProperties;
+  maxWidth?: "xs" | "sm" | "md" | "lg" | "xl" | false;
 }
 
-export default function Modal({ triggerComponent, children, title, className, style }: Props) {
+export default function Modal({
+  triggerComponent,
+  children,
+  title,
+  className,
+  style,
+  maxWidth = "xs",
+}: Props) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -29,7 +37,7 @@ export default function Modal({ triggerComponent, children, title, className, st
       <div onClick={handleClickOpen}>{triggerComponent}</div>
 
       <Dialog
-        maxWidth='xl'
+        maxWidth={maxWidth}
         style={style || {}}
         className={className}
         disableEscapeKeyDown

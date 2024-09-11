@@ -1,17 +1,15 @@
 import React, { useContext, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { store } from "../../context";
 import { findSongInListById } from "../../dataset/songs/utils";
-import { routes } from "../../router/routes";
 import styled, { createGlobalStyle } from "styled-components";
 import { Typography } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
-import { Button } from "../global/Button";
 
 interface Props {}
 
 export const SongPage = (props: Props) => {
-  const { t, i18n } = useTranslation("translation");
+  const { t } = useTranslation("translation");
   const params: any = useParams();
 
   const {
@@ -61,12 +59,6 @@ export const SongPage = (props: Props) => {
           </Typography>
         </SongProperty>
       )}
-      <Link
-        className="playLink"
-        to={`${routes.app}/${routes.play}/${params.id}`}
-      >
-        <Button type="big">{t(`songInfo.back`).toUpperCase()}</Button>
-      </Link>
     </Container>
   );
 };
@@ -78,12 +70,11 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Container = styled.div`
-  margin-top: 7rem;
   display: flex;
+  padding: 20px;
   align-items: center;
   flex-direction: column;
   flex-basis: 100%;
-  height: 100vh;
 
   .title {
     font-size: 1.5rem;
