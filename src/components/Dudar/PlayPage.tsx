@@ -29,7 +29,7 @@ export const PlayPageHeader = ({ midiPlayer }: Props) => {
   useLoadSong();
 
   return (
-    <SettingsButtons>
+    <SettingsButtons className="settingsButtons">
       <SongList player={midiPlayer} />
       <Header>
         <SongTitle>{songTitle || noSongsLabel}</SongTitle>

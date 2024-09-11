@@ -98,5 +98,13 @@
     "logout": "Выйсці",
     "mainPage": "Галоўная старонка",
     "googleLogin": "Увайсці праз Google"
+  },
+  "songInfo": {
+    "name": "Назва",
+    "tags": "Тэгі",
+    "originalTempo": "Арыгінальны тэмп",
+    "transcribedBy": "Транскрыбаваў",
+    "timeSignature": "Музычны памер",
+    "back": "Назад"
   }
 }
