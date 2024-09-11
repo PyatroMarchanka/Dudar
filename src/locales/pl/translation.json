@@ -94,9 +94,22 @@
   },
   "login": {
     "skip": "Pomiń",
-    "login":"Zaloguj sie",
-    "logout":"Wyloguj",
+    "login": "Zaloguj sie",
+    "logout": "Wyloguj",
     "mainPage": "Strona główna",
     "googleLogin": "Zaloguj sie przez Google"
+  },
+  "songInfo": {
+    "name": "Nazwa",
+    "tags": "Tagi",
+    "originalTempo": "Oryginalne tempo",
+    "transcribedBy": "Transkrypcja",
+    "timeSignature": "Metrum",
+    "back": "Wróć",
+    "type": "Typ",
+    "about": "Informacje",
+    "bagpipesToPlay": "Dudy do gry",
+    "lyrics": "Tekst piosenki"
+    
   }
 }

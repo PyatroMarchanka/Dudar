@@ -1,7 +1,3 @@
-import {
-  useHistory,
-  useParams,
-} from "react-router-dom";
 import styled from "styled-components";
 import { SongList } from "../SongList";
 import { IconButton } from "@material-ui/core";
@@ -16,38 +12,45 @@ import { Settings } from "../Controls/Settings";
 import { Header, SettingsButtons, SongTitle } from "./common";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { useLoadSong } from "../../hooks/useLoadSong";
-import { routes } from "../../router/routes";
+import Modal from "../global/Modal";
+import { SongPage } from "../screens/SongPage";
+import { useEffect } from "react";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
 }
 
 export const PlayPageHeader = ({ midiPlayer }: Props) => {
-  const history = useHistory();
-  const params: any = useParams();
   const songTitle = useSongTitle();
   useLoadSong();
 
+  useEffect(() => {
+    document.title = songTitle || noSongsLabel;
+  }, [songTitle]);
+
   return (
-    <SettingsButtons>
+    <SettingsButtons className="settingsButtons">
       <SongList player={midiPlayer} />
       <Header>
         <SongTitle>{songTitle || noSongsLabel}</SongTitle>
       </Header>
-      <IconButton
-        className="button"
-        onClick={() => {
-          const songId = params.id;
-          history.push(`${routes.app}/${routes.info}/${songId}`);
-        }}
+      <Modal
+        title="Song info"
+        maxWidth="md"
+        triggerComponent={
+          <IconButton className="button" onClick={() => {}}>
+            <Icon
+              type="material"
+              fill={theme.colors.black}
+              className="play-icon"
+              Icon={Info}
+            />
+          </IconButton>
+        }
       >
-        <Icon
-          type="material"
-          fill={theme.colors.black}
-          className="play-icon"
-          Icon={Info}
-        />
-      </IconButton>
+        <SongPage />
+      </Modal>
+
       <ChangeLogPopup />
       <LogoContainer>
         <Logo variant="small" width={26} height={40} />

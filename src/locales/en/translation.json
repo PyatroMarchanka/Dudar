@@ -80,6 +80,19 @@
     "finish": "Finish",
     "skip": "Skip onboarding"
   },
+  "songInfo":{
+    "name": "Name",
+    "tags": "Tags",
+    "originalTempo": "Original tempo",
+    "transcribedBy": "Transcribed by",
+    "timeSignature": "Time signature",
+    "back": "Back",
+    "type": "Type",
+    "about": "About",
+    "bagpipesToPlay": "Bagpipes to play",
+    "lyrics": "Lyrics"
+
+  },
   "mainPage": {
     "title": "DudaHero: Where Tradition Meets Innovation",
     "subtitle": "The app to learn how to play bagpipes. No music theory is needed anymore.",

@@ -2,6 +2,7 @@ import { parseMidi, MidiData, writeMidi } from "midi-file";
 import { toArrayBuffer } from "../commonUtils";
 import { getTicksPerBeatByTimeSignature } from "../../dataset/songs/utils";
 import { TimeSignatures } from "../../dataset/songs/interfaces";
+import { Buffer } from "buffer";
 
 export const addMetronome = async (songBuffer: ArrayBuffer, timeSignature: TimeSignatures) => {
   // METRONOME ADDING
