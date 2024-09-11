@@ -33,17 +33,40 @@ export const SongPage = (props: Props) => {
           {t(`songInfo.name`)} : <b>{activeSong?.name}</b>
         </Typography>
       </Typography>
+      {activeSong?.type && (
+        <SongProperty>
+          <Typography>
+            {t(`songInfo.type`)}: <b>{activeSong?.type}</b>
+          </Typography>
+        </SongProperty>
+      )}
+      {activeSong?.about && (
+        <SongProperty>
+          <Typography>
+            {t(`songInfo.about`)}: <b>{activeSong?.about}</b>
+          </Typography>
+        </SongProperty>
+      )}
+      {activeSong?.bagpipesToPlay && (
+        <SongProperty>
+          <Typography>
+            {t(`songInfo.bagpipesToPlay`)}: <b>{activeSong?.bagpipesToPlay}</b>
+          </Typography>
+        </SongProperty>
+      )}
+      {activeSong?.lyric && (
+        <SongProperty>
+          <Typography>
+            {t(`songInfo.lyric`)}: <b>{activeSong?.lyric}</b>
+          </Typography>
+        </SongProperty>
+      )}
       <SongProperty>
         <Typography>
           {t(`songInfo.timeSignature`)}: <b>{activeSong?.timeSignature}</b>
         </Typography>
       </SongProperty>
-      <SongProperty>
-        <Typography>
-          {t(`songInfo.tags`)}:
-          <b> {activeSong?.labels.map((tag) => t(`tags.${tag}`))}</b>
-        </Typography>
-      </SongProperty>
+
       {activeSong?.originalTempo && (
         <SongProperty>
           <Typography>
@@ -59,6 +82,13 @@ export const SongPage = (props: Props) => {
           </Typography>
         </SongProperty>
       )}
+
+      <SongProperty>
+        <Typography>
+          {t(`songInfo.tags`)}:
+          <b> {activeSong?.labels.map((tag) => t(`tags.${tag}`))}</b>
+        </Typography>
+      </SongProperty>
     </Container>
   );
 };

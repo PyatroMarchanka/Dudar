@@ -105,6 +105,11 @@
     "originalTempo": "Oryginalne tempo",
     "transcribedBy": "Transkrypcja",
     "timeSignature": "Metrum",
-    "back": "Wróć"
+    "back": "Wróć",
+    "type": "Typ",
+    "about": "Informacje",
+    "bagpipesToPlay": "Dudy do gry",
+    "lyrics": "Tekst piosenki"
+    
   }
 }

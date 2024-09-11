@@ -86,7 +86,12 @@
     "originalTempo": "Original tempo",
     "transcribedBy": "Transcribed by",
     "timeSignature": "Time signature",
-    "back": "Back"
+    "back": "Back",
+    "type": "Type",
+    "about": "About",
+    "bagpipesToPlay": "Bagpipes to play",
+    "lyrics": "Lyrics"
+
   },
   "mainPage": {
     "title": "DudaHero: Where Tradition Meets Innovation",
