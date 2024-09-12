@@ -34,6 +34,7 @@ export const About = () => {
     (listsByBagpipe && getFirstSongFromList(listsByBagpipe).id);
 
   useGoogleProfile();
+  console.log('userData', userData)
 
   return (
     <Container>

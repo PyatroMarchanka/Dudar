@@ -5,10 +5,12 @@ import { User, UserSettings } from "../interfaces/user";
 
 export const userClient = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
+  withCredentials: true,
 });
 
 export const userApi = {
   getUserData: async (): Promise<User | undefined> => {
+    console.log('getUserData cookie.load("jwtToken")', cookie.load("jwtToken"))
     if (!cookie.load("jwtToken")) {
       return;
     }
@@ -24,6 +26,7 @@ export const userApi = {
   },
 
   updateUserSettings: async (data: UserSettings) => {
+    console.log('updateUserSettings cookie.load("jwtToken")', cookie.load("jwtToken"))
     if (!cookie.load("jwtToken")) {
       return;
     }
