@@ -8,6 +8,7 @@ export const userClient = axios.create({
   withCredentials: true,
 });
 
+
 export const userApi = {
   getUserData: async (): Promise<User | undefined> => {
     console.log('getUserData cookie.load("jwtToken")', cookie.load("jwtToken"));
