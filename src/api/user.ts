@@ -10,7 +10,7 @@ export const userClient = axios.create({
 
 export const userApi = {
   getUserData: async (): Promise<User | undefined> => {
-    console.log('getUserData cookie.load("jwtToken")', cookie.load("jwtToken"))
+    console.log('getUserData cookie.load("jwtToken")', cookie.load("jwtToken"));
     if (!cookie.load("jwtToken")) {
       return;
     }
@@ -20,13 +20,17 @@ export const userApi = {
         Authorization: `Bearer ${cookie.load("jwtToken")}`,
         userId: cookie.load("userId"),
       },
+      withCredentials: true,
     });
 
-  return res.data;
+    return res.data;
   },
 
   updateUserSettings: async (data: UserSettings) => {
-    console.log('updateUserSettings cookie.load("jwtToken")', cookie.load("jwtToken"))
+    console.log(
+      'updateUserSettings cookie.load("jwtToken")',
+      cookie.load("jwtToken")
+    );
     if (!cookie.load("jwtToken")) {
       return;
     }
@@ -36,6 +40,7 @@ export const userApi = {
         Authorization: `Bearer ${cookie.load("jwtToken")}`,
         userId: cookie.load("userId"),
       },
+      withCredentials: true,
     });
 
     return res.data;
@@ -43,9 +48,9 @@ export const userApi = {
 };
 
 export const login = async () => {
-  return await userClient.get(links.login);
+  return await userClient.get(links.login, { withCredentials: true });
 };
 
 export const logout = async () => {
-  return await userClient.get(links.logout);
+  return await userClient.get(links.logout, { withCredentials: true });
 };
