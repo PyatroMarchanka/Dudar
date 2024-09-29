@@ -43,13 +43,14 @@ const Transpose = ({ midiPlayer }: Props) => {
         const doRemiLabel = !isCyrylicLang()
           ? transliterate(transposeNoteDoReMi("Ля", +option.label))
           : transposeNoteDoReMi("Ля", +option.label);
+        const octave = option.label <= -10 ? 3 : option.label <= 2 ? 4 : 5;
 
         return (
           <MenuItem key={option.label} value={option.value}>
-            <b>{`${transposeNote("A", +option.label)} - ${doRemiLabel}`}</b>
-            {` : ${option.label > 0 ? `+${option.label}` : option.label} ${t(
-              "semitones"
-            )}`}
+            <b>{`${transposeNote(
+              "A",
+              +option.label
+            )}${octave} - ${doRemiLabel}`}</b>
           </MenuItem>
         );
       }),
@@ -65,7 +66,7 @@ const Transpose = ({ midiPlayer }: Props) => {
         onChange={(e) => {
           setTranspose && setTranspose(Number(e.target.value));
           setValue(Number(e.target.value));
-          updateUserSettings({transpose: Number(e.target.value)})
+          updateUserSettings({ transpose: Number(e.target.value) });
         }}
       >
         {options}
