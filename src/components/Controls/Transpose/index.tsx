@@ -26,6 +26,8 @@ const Transpose = ({ midiPlayer }: Props) => {
   const isCyrylicLang = useIsCyrylicLang();
   const { updateUserSettings } = useUpdateUserSettings();
 
+
+  
   const setTranspose = (num: number) => {
     setTransposeCtx(num);
     if (isPlaying) {
