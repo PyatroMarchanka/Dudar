@@ -1,8 +1,39 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { store } from "../context";
-import { userApi } from "../api/user";
-import { User, UserSettings } from "../interfaces/user";
+import { localstorageUserApi as userApi } from "../api/user";
+import { defaultUser, User, UserSettings } from "../interfaces/user";
 import { useChangeLanguage } from "../locales";
+
+export const useUpdateUserSettings = () => {
+  const {
+    state: {
+      tempo,
+      language,
+      isPreclick,
+      transpose,
+      bagpipeType,
+      isSilentMode,
+    },
+  } = useContext(store);
+
+  const updateUserSettings = useCallback(
+    async (settings: Partial<UserSettings>) => {
+      const newSettings: UserSettings = {
+        tempo,
+        transpose,
+        isPreclick,
+        bagpipeType,
+        language,
+        isSilentMode,
+        ...settings,
+      };
+      userApi.updateUserSettings({ settings: newSettings });
+    },
+    [tempo, language, isPreclick, transpose, bagpipeType]
+  );
+
+  return { updateUserSettings };
+};
 
 export const useGoogleProfile = () => {
   const {
@@ -12,22 +43,30 @@ export const useGoogleProfile = () => {
     setLanguage,
     setTempo,
     setTranspose,
+    setIsSilentMode,
   } = useContext(store);
 
   const [loading, setLoading] = useState(true);
   const changeLanguage = useChangeLanguage();
+  const { updateUserSettings } = useUpdateUserSettings();
 
   const setAllUserData = (userData: User) => {
     if (!userData) {
       return;
     }
-    const { bagpipe, userPreclick, tempo, transpose, language } =
-      userData.settings!;
-    if (bagpipe) {
-      setBagpipeType(bagpipe);
+    const {
+      bagpipeType,
+      isPreclick,
+      tempo,
+      transpose,
+      language,
+      isSilentMode,
+    } = userData.settings!;
+    if (bagpipeType) {
+      setBagpipeType(bagpipeType);
     }
-    if (userPreclick) {
-      setIsPreclick(userPreclick);
+    if (isPreclick) {
+      setIsPreclick(isPreclick);
     }
     if (tempo) {
       setTempo(tempo);
@@ -39,17 +78,23 @@ export const useGoogleProfile = () => {
       setLanguage(language);
       changeLanguage(language);
     }
+    if (isSilentMode) {
+      setIsSilentMode(isSilentMode);
+    }
   };
 
   const fetchUserProfile = async () => {
     try {
-      const response = await userApi.getUserData();
+      const response = userApi.getUserData();
 
       const data = response;
       setUserData(data);
-
+      console.log("data", data);
       if (data) {
         setAllUserData(data);
+      } else {
+        setAllUserData(defaultUser);
+        updateUserSettings(defaultUser.settings!);
       }
     } catch (err) {
       console.log(err);
@@ -63,28 +108,4 @@ export const useGoogleProfile = () => {
   }, []);
 
   return { loading };
-};
-
-export const useUpdateUserSettings = () => {
-  const {
-    state: { tempo, language, isPreclick, transpose, bagpipeType, isSilentMode },
-  } = useContext(store);
-
-  const updateUserSettings = useCallback(
-    async (settings: UserSettings) => {
-      const newSettings = {
-        tempo,
-        transpose,
-        userPreclick: isPreclick,
-        bagpipe: bagpipeType,
-        language,
-        isSilentMode,
-        ...settings,
-      };
-      await userApi.updateUserSettings(newSettings);
-    },
-    [tempo, language, isPreclick, transpose, bagpipeType]
-  );
-
-  return { updateUserSettings };
 };

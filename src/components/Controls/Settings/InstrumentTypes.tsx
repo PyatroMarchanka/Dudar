@@ -20,7 +20,7 @@ export const InstrumentTypes = () => {
 
   const onChange = (bagpipeType: BagpipeTypes) => {
     setBagpipeType(bagpipeType);
-    updateUserSettings({bagpipe: bagpipeType})
+    updateUserSettings({ bagpipeType: bagpipeType });
   };
 
   return (

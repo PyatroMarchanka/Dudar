@@ -1,6 +1,7 @@
 import { useReducer } from "react";
 import { BagpipeTypes, HolesModes, Languages } from "../../interfaces";
 import { SongTags } from "../../dataset/songs/interfaces";
+import { localstorageUserApi } from "../../api/user";
 
 interface Action {
   type:
@@ -42,15 +43,7 @@ export interface SettingsState {
   userData: any;
   isSilentMode: boolean;
 }
-const userData = {
-  tempo: 240,
-  transpose: 0,
-  isPreclick: false,
-  bagpipeType: BagpipeTypes.BelarusianTraditionalDuda,
-  language: Languages.English,
-  holesMode: HolesModes.Fingers,
-  loopBars: 1,
-};
+const userData = localstorageUserApi.getUserData();
 
 export const settingsInitialState: SettingsState = {
   metronome: true,
@@ -60,8 +53,9 @@ export const settingsInitialState: SettingsState = {
   songTags: [],
   activeSongTags: [],
   userData: false,
-  isSilentMode: false,
-  ...userData,
+  loopBars: 1,
+  holesMode: HolesModes.Fingers,
+  ...userData.settings,
 };
 
 export const useSettingsReducer = () => {

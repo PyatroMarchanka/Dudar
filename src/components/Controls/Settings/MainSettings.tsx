@@ -64,7 +64,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
           checked={isPreclick}
           onChange={() => {
             setIsPreclick(!isPreclick);
-            updateUserSettings({ userPreclick: !isPreclick });
+            updateUserSettings({ isPreclick: !isPreclick });
           }}
           name="checkedG"
         />
@@ -77,7 +77,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
           checked={isSilentMode}
           onChange={() => {
             setIsSilentMode(!isSilentMode);
-            updateUserSettings({ isSilentMode: !isSilentMode });
+            updateUserSettings({ isPreclick: !isSilentMode });
           }}
           name="checkedG"
         />
