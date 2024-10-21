@@ -24,7 +24,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
   const { t } = useTranslation("translation");
 
   const {
-    state: { isPreclick, isSilentMode },
+    state: { isPreclick, isSilentMode, bagpipeType },
     setIsPreclick,
     setIsSilentMode,
   } = useContext(store);
@@ -33,6 +33,10 @@ export const MainSettings = ({ midiPlayer }: Props) => {
   useEffect(() => {
     midiPlayer?.setIsSilentMode(isSilentMode);
   }, [isSilentMode]);
+
+  useEffect(() => {
+    midiPlayer?.setBagpipeType(bagpipeType);
+  }, [bagpipeType]);
 
   return (
     <Container>

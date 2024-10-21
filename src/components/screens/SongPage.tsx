@@ -95,7 +95,7 @@ export const SongPage = (props: Props) => {
       <SongProperty>
         <Typography>
           {t(`songInfo.tags`)}:
-          <b> {activeSong?.labels.map((tag) => t(`tags.${tag}`))}</b>
+          <b> {activeSong?.labels.map((tag) => t(`tags.${tag}`)).join(', ')}</b>
         </Typography>
       </SongProperty>
     </Container>

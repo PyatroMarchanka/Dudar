@@ -7,7 +7,7 @@ import {
   stopNote,
 } from "./midiUtils/sampler";
 import { midiNumbersToNotes } from "./midiUtils/notesToMidiNumbers";
-import { SharpNotesEnum } from "../interfaces";
+import { BagpipeTypes, SharpNotesEnum } from "../interfaces";
 import { TimeSignatures } from "../dataset/songs/interfaces";
 
 export type MidiNoteHandler = (note: number) => void;
@@ -54,6 +54,7 @@ export class MidiPlayer {
   droneNote: number = 57;
   metronom: boolean = true;
   isSilentMode: boolean = false;
+  bagpipeType: BagpipeTypes;
   loopData = { startLoopTicks: 0, endLoopTicks: 0, loopBars: 1 };
   loop: boolean = false;
   timeSignature: TimeSignatures = "4/4";
@@ -66,6 +67,7 @@ export class MidiPlayer {
     bpm: number,
     metronom: boolean,
     loopBars: number,
+    bagpipeType: BagpipeTypes = BagpipeTypes.BelarusianTraditionalDuda,
     timeSignature?: TimeSignatures
   ) {
     this.playRef = playRef;
@@ -74,6 +76,7 @@ export class MidiPlayer {
     this.metronom = metronom;
     this.loopData.loopBars = loopBars;
     this.timeSignature = timeSignature || "4/4";
+    this.bagpipeType = bagpipeType;
 
     if (this.playRef.current) {
       this.playRef.current?.setBand256(-5);
@@ -124,6 +127,14 @@ export class MidiPlayer {
     this.loopData.loopBars = num;
   }
 
+  setBagpipeType(bagpipeType: BagpipeTypes) {
+    if (this.bagpipeType === bagpipeType) {
+      return;
+    }
+    this.stopAllNotes();
+    this.bagpipeType = bagpipeType;
+  }
+
   setTimeSignature(timeSignature: TimeSignatures) {
     this.timeSignature = timeSignature;
     this.setCurrentBarStart();
@@ -134,8 +145,8 @@ export class MidiPlayer {
 
     if (isSilentMode) {
       this.stopAllNotes();
-    } else if(this.isPlaying) {
-      this.playDrone(this.droneNote);
+    } else if (this.isPlaying) {
+      this.playDrone(this.droneNote); 
     }
   }
 
@@ -214,9 +225,12 @@ export class MidiPlayer {
     }
   };
 
-  keyDown(note: number, volume = 0.7) {
-    // @ts-ignore
-    playNote(midiNumbersToNotes[note + this.transpose + 12], volume);
+  keyDown(note: number, volume = 0.5) {
+    playNote(
+      this.bagpipeType,
+      (midiNumbersToNotes as any)[note + this.transpose + 12],
+      volume
+    );
     this.envelopes[note] = note;
   }
 
@@ -226,8 +240,10 @@ export class MidiPlayer {
         this.envelopes[noteNumber].cancel();
         this.envelopes[noteNumber] = null;
       } else {
-        // @ts-ignore
-        stopNote(midiNumbersToNotes[noteNumber + this.transpose + 12]);
+        stopNote(
+          this.bagpipeType,
+          (midiNumbersToNotes as any)[noteNumber + this.transpose + 12]
+        );
       }
     }
   }
@@ -273,12 +289,13 @@ export class MidiPlayer {
   };
 
   playDrone = (note: number) => {
-    this.keyUp(note);
-    this.keyDown(note, 0.5);
+    const droneNote = this.bagpipeType === BagpipeTypes.Dudelsack ? note - 12 : note;
+    this.keyUp(droneNote);
+    this.keyDown(droneNote, 0.5);
 
     setTimeout(() => {
       if (this.isPlaying) {
-        this.playDrone(note);
+        this.playDrone(droneNote);
       }
     }, droneFileLengthMs);
   };
@@ -344,6 +361,7 @@ export class MidiPlayer {
       Object.values(this.envelopes).forEach((num) => {
         if (typeof num === "number") {
           stopNote(
+            this.bagpipeType,
             midiNumbersToNotes[
               (num + this.transpose + 12) as keyof typeof midiNumbersToNotes
             ]
