@@ -4,6 +4,7 @@
   "instrumentType": "Typ instrumentu",
   "transposeMelody": "Transponuj",
   "preclick": "Wstępne odliczanie",
+  "silentMode": "Cichy tryb (tylko metronom)",
   "noIcon": "Brak ikony",
   "semitones": "półton(y)",
   "gotIt": "Rozumiem",

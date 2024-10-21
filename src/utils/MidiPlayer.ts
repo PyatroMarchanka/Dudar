@@ -1,6 +1,11 @@
 import MidiPlayerLib from "midi-player-js";
 import { Midi } from "@tonejs/midi";
-import { droneFileLengthMs, playNote, stopNote } from "./midiUtils/sampler";
+import {
+  droneFileLengthMs,
+  playNote,
+  // samplerPlayDrumLoop,
+  stopNote,
+} from "./midiUtils/sampler";
 import { midiNumbersToNotes } from "./midiUtils/notesToMidiNumbers";
 import { SharpNotesEnum } from "../interfaces";
 import { TimeSignatures } from "../dataset/songs/interfaces";
@@ -48,6 +53,7 @@ export class MidiPlayer {
   transpose: number = 0;
   droneNote: number = 57;
   metronom: boolean = true;
+  isSilentMode: boolean = false;
   loopData = { startLoopTicks: 0, endLoopTicks: 0, loopBars: 1 };
   loop: boolean = false;
   timeSignature: TimeSignatures = "4/4";
@@ -100,7 +106,7 @@ export class MidiPlayer {
     Player.on("midiEvent", (event: MidiEvent) => {
       if (event.noteNumber === 33 && this.metronom) {
         this.handleMetronomeEvent(event);
-      } else {
+      } else if (!this.isSilentMode) {
         this.handleSamplerEvent(event, handleNote);
       }
     });
@@ -121,6 +127,16 @@ export class MidiPlayer {
   setTimeSignature(timeSignature: TimeSignatures) {
     this.timeSignature = timeSignature;
     this.setCurrentBarStart();
+  }
+
+  setIsSilentMode(isSilentMode: boolean) {
+    this.isSilentMode = isSilentMode;
+
+    if (isSilentMode) {
+      this.stopAllNotes();
+    } else if(this.isPlaying) {
+      this.playDrone(this.droneNote);
+    }
   }
 
   setCurrentBarStart() {
@@ -267,6 +283,10 @@ export class MidiPlayer {
     }, droneFileLengthMs);
   };
 
+  // playDrumLoop = () => {
+  //   samplerPlayDrumLoop();
+  // };
+
   playMidi = (
     midi: ArrayBuffer | null,
     progress: number,
@@ -283,6 +303,7 @@ export class MidiPlayer {
     }
 
     this.playDrone(this.droneNote);
+    // this.playDrumLoop();
   };
 
   playWithPreclick = (
