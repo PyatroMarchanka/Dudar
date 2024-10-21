@@ -34,7 +34,6 @@ export const About = () => {
     (listsByBagpipe && getFirstSongFromList(listsByBagpipe).id);
 
   useGoogleProfile();
-  console.log('userData', userData)
 
   return (
     <Container>
@@ -50,7 +49,7 @@ export const About = () => {
             </div>
           }
         />
-        {userData ? (
+        {userData.picture ? (
           <ModalButton
             icon={<UserImage src={userData.picture} />}
             dialogContent={

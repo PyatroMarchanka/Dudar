@@ -13,8 +13,9 @@ export const useMidiPlayer = (
   playerRef: any
 ) => {
   const {
-    state: { tempo, metronome, loopBars, activeSong },
-    setIsPlaying, setLoop
+    state: { tempo, metronome, loopBars, activeSong, bagpipeType },
+    setIsPlaying,
+    setLoop,
   } = useContext(store);
   const [midiPlayer, setMidiPlayer] = useState<MidiPlayer | null>(null);
   const isUserOnboardingCompleted = getUserOnboardingFinished();
@@ -29,7 +30,8 @@ export const useMidiPlayer = (
         playerRef,
         tempo,
         metronome,
-        loopBars
+        loopBars,
+        bagpipeType
       );
       player.initPlayer(handleNote, handleProgress, switchIsPlaying);
       setMidiPlayer(player);
