@@ -4,6 +4,7 @@
   "instrumentType": "Instrument Type",
   "transposeMelody": "Transpose melody",
   "preclick": "Preclick",
+  "silentMode": "Silent mode (metronome only)",
   "noIcon": "No icon",
   "semitones": "semitones",
   "gotIt": "Got it",

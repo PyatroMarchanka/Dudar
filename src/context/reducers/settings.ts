@@ -1,6 +1,7 @@
 import { useReducer } from "react";
 import { BagpipeTypes, HolesModes, Languages } from "../../interfaces";
 import { SongTags } from "../../dataset/songs/interfaces";
+import { localstorageUserApi } from "../../api/user";
 
 interface Action {
   type:
@@ -17,7 +18,8 @@ interface Action {
     | "SET_SONG_TAGS"
     | "SET_ACTIVE_SONG_TAGS"
     | "SET_HOLES_MODE"
-    | "SET_USER_DATA";
+    | "SET_USER_DATA"
+    | "SET_IS_SILENT_MODE";
 
   payload?: any;
 }
@@ -39,16 +41,9 @@ export interface SettingsState {
   songTags: SongTags[];
   activeSongTags: SongTags[];
   userData: any;
+  isSilentMode: boolean;
 }
-const userData = {
-  tempo: 200,
-  transpose: 0,
-  isPreclick: false,
-  bagpipeType: BagpipeTypes.BelarusianTraditionalDuda,
-  language: Languages.English,
-  holesMode: HolesModes.Fingers,
-  loopBars: 1,
-};
+const userData = localstorageUserApi.getUserData();
 
 export const settingsInitialState: SettingsState = {
   metronome: true,
@@ -58,7 +53,9 @@ export const settingsInitialState: SettingsState = {
   songTags: [],
   activeSongTags: [],
   userData: false,
-  ...userData,
+  loopBars: 1,
+  holesMode: HolesModes.Fingers,
+  ...userData.settings,
 };
 
 export const useSettingsReducer = () => {
@@ -151,6 +148,12 @@ export const useSettingsReducer = () => {
             ...state,
             userData: action.payload,
           };
+
+        case "SET_IS_SILENT_MODE":
+          return {
+            ...state,
+            isSilentMode: action.payload,
+          };
         default:
           return state;
       }
@@ -213,6 +216,10 @@ export const useSettingsReducer = () => {
   const setUserData = (data: any) => {
     dispatch({ type: "SET_USER_DATA", payload: data });
   };
+  const setIsSilentMode = (bool: boolean) => {
+    dispatch({ type: "SET_IS_SILENT_MODE", payload: bool });
+  }
+
 
   return {
     state,
@@ -230,5 +237,6 @@ export const useSettingsReducer = () => {
     setSongTags,
     setActiveSongTags,
     setUserData,
+    setIsSilentMode
   };
 };

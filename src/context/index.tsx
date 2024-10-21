@@ -53,6 +53,7 @@ interface Context {
   setSongTags: (tags: SongTags[]) => void;
   setActiveSongTags: (tags: SongTags[]) => void;
   setUserData: (data: any) => void;
+  setIsSilentMode: (bool: boolean) => void;
 }
 
 const store = createContext<Context>({
@@ -80,6 +81,7 @@ const store = createContext<Context>({
   setSongTags: (tags: SongTags[]) => {},
   setActiveSongTags: (tags: SongTags[]) => {},
   setUserData: (data: any) => {},
+  setIsSilentMode: (bool: boolean) => {},
 });
 const { Provider } = store;
 
