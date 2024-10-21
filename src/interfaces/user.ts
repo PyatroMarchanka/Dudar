@@ -13,4 +13,5 @@ export interface UserSettings {
     userPreclick?: boolean;
     language?: Languages;
     transpose?: number;
+    isSilentMode?: boolean;
 }

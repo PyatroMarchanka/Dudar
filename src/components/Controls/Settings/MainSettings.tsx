@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components";
 import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
@@ -24,10 +24,15 @@ export const MainSettings = ({ midiPlayer }: Props) => {
   const { t } = useTranslation("translation");
 
   const {
-    state: { isPreclick },
+    state: { isPreclick, isSilentMode },
     setIsPreclick,
+    setIsSilentMode,
   } = useContext(store);
   const { updateUserSettings } = useUpdateUserSettings();
+
+  useEffect(() => {
+    midiPlayer?.setIsSilentMode(isSilentMode);
+  }, [isSilentMode]);
 
   return (
     <Container>
@@ -60,6 +65,19 @@ export const MainSettings = ({ midiPlayer }: Props) => {
           onChange={() => {
             setIsPreclick(!isPreclick);
             updateUserSettings({ userPreclick: !isPreclick });
+          }}
+          name="checkedG"
+        />
+      </Row>
+      <Line />
+      <Row>
+        <Icon type="material" fill={mainColors.darkerGray} Icon={AvTimerIcon} />
+        <Title>{t("silentMode")}</Title>
+        <RedCheckbox
+          checked={isSilentMode}
+          onChange={() => {
+            setIsSilentMode(!isSilentMode);
+            updateUserSettings({ isSilentMode: !isSilentMode });
           }}
           name="checkedG"
         />

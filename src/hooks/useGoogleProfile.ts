@@ -67,7 +67,7 @@ export const useGoogleProfile = () => {
 
 export const useUpdateUserSettings = () => {
   const {
-    state: { tempo, language, isPreclick, transpose, bagpipeType },
+    state: { tempo, language, isPreclick, transpose, bagpipeType, isSilentMode },
   } = useContext(store);
 
   const updateUserSettings = useCallback(
@@ -78,6 +78,7 @@ export const useUpdateUserSettings = () => {
         userPreclick: isPreclick,
         bagpipe: bagpipeType,
         language,
+        isSilentMode,
         ...settings,
       };
       await userApi.updateUserSettings(newSettings);
