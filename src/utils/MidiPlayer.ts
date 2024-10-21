@@ -131,6 +131,12 @@ export class MidiPlayer {
 
   setIsSilentMode(isSilentMode: boolean) {
     this.isSilentMode = isSilentMode;
+
+    if (isSilentMode) {
+      this.stopAllNotes();
+    } else if(this.isPlaying) {
+      this.playDrone(this.droneNote);
+    }
   }
 
   setCurrentBarStart() {
