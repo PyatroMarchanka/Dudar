@@ -3,7 +3,7 @@ import { Midi } from "@tonejs/midi";
 import {
   droneFileLengthMs,
   playNote,
-  samplerPlayDrumLoop,
+  // samplerPlayDrumLoop,
   stopNote,
 } from "./midiUtils/sampler";
 import { midiNumbersToNotes } from "./midiUtils/notesToMidiNumbers";
