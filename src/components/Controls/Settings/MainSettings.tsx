@@ -11,6 +11,7 @@ import LanguageSelector from "../LanguageSelector";
 import LanguageIcon from "@material-ui/icons/Language";
 import AvTimerIcon from "@material-ui/icons/AvTimer";
 import ImportExport from "@material-ui/icons/ImportExport";
+import VolumeOff from "@material-ui/icons/VolumeOff";
 import { InstrumentTypes } from "./InstrumentTypes";
 import { Contacts } from "../../Contacts";
 import { DonationButtonBig } from "../../global/DonationButtonBig";
@@ -75,7 +76,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
       </Row>
       <Line />
       <Row>
-        <Icon type="material" fill={mainColors.darkerGray} Icon={AvTimerIcon} />
+        <Icon type="material" fill={mainColors.darkerGray} Icon={VolumeOff} />
         <Title>{t("silentMode")}</Title>
         <RedCheckbox
           checked={isSilentMode}
@@ -108,7 +109,8 @@ const Row = styled.div`
   display: flex;
   align-items: center;
   padding-left: 20px;
-  flex-wrap: wrap;
+  padding-right: 20px;
+  flex-wrap: nowrap;
 `;
 
 const Line = styled.div`
