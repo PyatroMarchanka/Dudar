@@ -289,9 +289,10 @@ export class MidiPlayer {
   };
 
   playDrone = (note: number) => {
-    const droneNote = this.bagpipeType === BagpipeTypes.Dudelsack ? note - 12 : note;
+    const lowDroneBagpipes = [BagpipeTypes.Dudelsack, BagpipeTypes.Highlander];
+    const droneNote = lowDroneBagpipes.includes(this.bagpipeType) ? note - 12 : note;  
     this.keyUp(droneNote);
-    this.keyDown(droneNote, 0.5);
+    this.keyDown(droneNote, 0.3);
 
     setTimeout(() => {
       if (this.isPlaying) {

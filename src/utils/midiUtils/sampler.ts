@@ -42,7 +42,6 @@ const dudelsackSamplerSampler = new Tone.Sampler({
     "F#5": "samples/ddl/F#5.mp3",
     G2: "samples/ddl/G3.mp3",
     G5: "samples/ddl/G5.mp3",
-    
   },
   baseUrl: "/",
 }).toDestination();
@@ -58,12 +57,15 @@ export const playNote = (
 
   switch (bagpipeType) {
     case BagpipeTypes.BelarusianTraditionalDuda:
-      belTradSamplerSampler.triggerAttack([note], undefined, volume);
+      belTradSamplerSampler.triggerAttack([note], undefined, 1);
       break;
     case BagpipeTypes.BelarusianOpenDuda:
       sampler.triggerAttack([note], undefined, volume);
       break;
     case BagpipeTypes.Dudelsack:
+      dudelsackSamplerSampler.triggerAttack([note], undefined, volume);
+      break;
+    case BagpipeTypes.Highlander:
       dudelsackSamplerSampler.triggerAttack([note], undefined, volume);
       break;
     default:
@@ -84,6 +86,9 @@ export const stopNote = (bagpipeType: BagpipeTypes, note?: string) => {
       sampler.triggerRelease([note]);
       break;
     case BagpipeTypes.Dudelsack:
+      dudelsackSamplerSampler.triggerRelease([note]);
+      break;
+    case BagpipeTypes.Highlander:
       dudelsackSamplerSampler.triggerRelease([note]);
       break;
     default:
