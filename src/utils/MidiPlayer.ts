@@ -1,7 +1,7 @@
 import MidiPlayerLib from "midi-player-js";
 import { Midi } from "@tonejs/midi";
 import {
-  droneFileLengthMs,
+  getDroneLength,
   playNote,
   // samplerPlayDrumLoop,
   stopNote,
@@ -146,7 +146,7 @@ export class MidiPlayer {
     if (isSilentMode) {
       this.stopAllNotes();
     } else if (this.isPlaying) {
-      this.playDrone(this.droneNote); 
+      this.playDrone(this.droneNote);
     }
   }
 
@@ -290,7 +290,9 @@ export class MidiPlayer {
 
   playDrone = (note: number) => {
     const lowDroneBagpipes = [BagpipeTypes.Dudelsack, BagpipeTypes.Highlander];
-    const droneNote = lowDroneBagpipes.includes(this.bagpipeType) ? note - 12 : note;  
+    const droneNote = lowDroneBagpipes.includes(this.bagpipeType)
+      ? note - 12
+      : note;
     this.keyUp(droneNote);
     this.keyDown(droneNote, 0.3);
 
@@ -298,7 +300,7 @@ export class MidiPlayer {
       if (this.isPlaying) {
         this.playDrone(droneNote);
       }
-    }, droneFileLengthMs);
+    }, getDroneLength(this.bagpipeType));
   };
 
   // playDrumLoop = () => {

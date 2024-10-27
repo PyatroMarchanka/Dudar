@@ -96,4 +96,21 @@ export const stopNote = (bagpipeType: BagpipeTypes, note?: string) => {
   }
 };
 
-export const droneFileLengthMs = 60400;
+export const bndDroneFileLengthMs = 60400;
+export const bdDroneFileLengthMs = 33000;
+export const ddlDroneFileLengthMs = 54000;
+
+export const getDroneLength = (bagpipeType: BagpipeTypes) => {
+  switch (bagpipeType) {
+    case BagpipeTypes.BelarusianTraditionalDuda:
+      return bndDroneFileLengthMs;
+    case BagpipeTypes.BelarusianOpenDuda:
+      return bdDroneFileLengthMs;
+    case BagpipeTypes.Dudelsack:
+      return ddlDroneFileLengthMs;
+    case BagpipeTypes.Highlander:
+      return ddlDroneFileLengthMs;
+    default:
+      return bndDroneFileLengthMs;
+  }
+};
