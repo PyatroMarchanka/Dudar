@@ -6,6 +6,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import { Typography } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { getTranslationKeyByBagpipeType } from "../../interfaces/enumUtils";
+import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 
 interface Props {}
 
@@ -25,6 +26,8 @@ export const SongPage = (props: Props) => {
       setActiveSong(song);
     }
   }, [params.id, listsByBagpipe]);
+
+  useGoogleProfile()
 
   return (
     <Container>

@@ -1,7 +1,7 @@
 import { useReducer } from "react";
 import { BagpipeTypes, HolesModes, Languages } from "../../interfaces";
 import { SongTags } from "../../dataset/songs/interfaces";
-import { localstorageUserApi } from "../../api/user";
+import { defaultUser, User } from "../../interfaces/user";
 
 interface Action {
   type:
@@ -19,7 +19,8 @@ interface Action {
     | "SET_ACTIVE_SONG_TAGS"
     | "SET_HOLES_MODE"
     | "SET_USER_DATA"
-    | "SET_IS_SILENT_MODE";
+    | "SET_IS_SILENT_MODE"
+    | "SET_USER_LAST_SONG_URL";
 
   payload?: any;
 }
@@ -40,10 +41,10 @@ export interface SettingsState {
   holesMode: HolesModes;
   songTags: SongTags[];
   activeSongTags: SongTags[];
-  userData: any;
-  isSilentMode: boolean;
+  userData: User | null;
+  isSilentMode?: boolean;
+  userLastSongUrl?: string;
 }
-const userData = localstorageUserApi.getUserData();
 
 export const settingsInitialState: SettingsState = {
   metronome: true,
@@ -52,10 +53,10 @@ export const settingsInitialState: SettingsState = {
   loop: false,
   songTags: [],
   activeSongTags: [],
-  userData: false,
+  userData: null,
   loopBars: 1,
   holesMode: HolesModes.Fingers,
-  ...userData.settings,
+  ...defaultUser.settings,
 };
 
 export const useSettingsReducer = () => {
@@ -154,6 +155,12 @@ export const useSettingsReducer = () => {
             ...state,
             isSilentMode: action.payload,
           };
+
+        case "SET_USER_LAST_SONG_URL":
+          return {
+            ...state,
+            userLastSongUrl: action.payload,
+          };
         default:
           return state;
       }
@@ -218,8 +225,11 @@ export const useSettingsReducer = () => {
   };
   const setIsSilentMode = (bool: boolean) => {
     dispatch({ type: "SET_IS_SILENT_MODE", payload: bool });
-  }
+  };
 
+  const setUserLastSongUrl = (url: string) => {
+    dispatch({ type: "SET_USER_LAST_SONG_URL", payload: url });
+  };
 
   return {
     state,
@@ -237,6 +247,7 @@ export const useSettingsReducer = () => {
     setSongTags,
     setActiveSongTags,
     setUserData,
-    setIsSilentMode
+    setIsSilentMode,
+    setUserLastSongUrl,
   };
 };

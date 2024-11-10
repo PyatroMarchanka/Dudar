@@ -32,7 +32,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
   const { updateUserSettings } = useUpdateUserSettings();
 
   useEffect(() => {
-    midiPlayer?.setIsSilentMode(isSilentMode);
+    midiPlayer?.setIsSilentMode(!!isSilentMode);
   }, [isSilentMode]);
 
   useEffect(() => {

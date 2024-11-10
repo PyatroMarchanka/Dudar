@@ -13,7 +13,8 @@ export interface UserSettings {
   isPreclick: boolean;
   language: Languages;
   transpose: number;
-  isSilentMode: boolean;
+  isSilentMode?: boolean;
+  lastSongUrl?: string;
 }
 
 export const defaultUser: User = {

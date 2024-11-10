@@ -25,11 +25,18 @@ import { links } from "../../api/links";
 export const About = () => {
   const { t } = useTranslation("translation");
   const {
-    state: { screenSize, activeSong, listsByBagpipe, userData },
+    state: {
+      screenSize,
+      activeSong,
+      listsByBagpipe,
+      userData,
+      userLastSongUrl,
+    },
   } = useContext(store);
   const history = useHistory();
   useSongListShort();
   const songId =
+    userLastSongUrl ||
     activeSong?.id ||
     (listsByBagpipe && getFirstSongFromList(listsByBagpipe).id);
 
@@ -49,9 +56,9 @@ export const About = () => {
             </div>
           }
         />
-        {userData.picture ? (
+        {userData?.picture ? (
           <ModalButton
-            icon={<UserImage src={userData.picture} />}
+            icon={<UserImage src={userData?.picture} />}
             dialogContent={
               <div>
                 <ModalTitle>

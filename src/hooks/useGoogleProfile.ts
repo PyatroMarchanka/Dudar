@@ -1,36 +1,13 @@
-import { useState, useEffect, useContext, useCallback } from "react";
+import { useState, useEffect, useContext } from "react";
 import { store } from "../context";
-import { localstorageUserApi as userApi } from "../api/user";
 import { defaultUser, User, UserSettings } from "../interfaces/user";
 import { useChangeLanguage } from "../locales";
+import { userApi } from "../api/user";
 
 export const useUpdateUserSettings = () => {
-  const {
-    state: {
-      tempo,
-      language,
-      isPreclick,
-      transpose,
-      bagpipeType,
-      isSilentMode,
-    },
-  } = useContext(store);
-
-  const updateUserSettings = useCallback(
-    async (settings: Partial<UserSettings>) => {
-      const newSettings: UserSettings = {
-        tempo,
-        transpose,
-        isPreclick,
-        bagpipeType,
-        language,
-        isSilentMode,
-        ...settings,
-      };
-      userApi.updateUserSettings({ settings: newSettings });
-    },
-    [tempo, language, isPreclick, transpose, bagpipeType]
-  );
+  const updateUserSettings = async (settings: Partial<UserSettings>) => {
+    await userApi.updateUserSettings(settings);
+  };
 
   return { updateUserSettings };
 };
@@ -44,6 +21,7 @@ export const useGoogleProfile = () => {
     setTempo,
     setTranspose,
     setIsSilentMode,
+    setUserLastSongUrl,
   } = useContext(store);
 
   const [loading, setLoading] = useState(true);
@@ -61,6 +39,7 @@ export const useGoogleProfile = () => {
       transpose,
       language,
       isSilentMode,
+      lastSongUrl,
     } = userData.settings!;
     if (bagpipeType) {
       setBagpipeType(bagpipeType);
@@ -81,15 +60,16 @@ export const useGoogleProfile = () => {
     if (isSilentMode) {
       setIsSilentMode(isSilentMode);
     }
+    if (lastSongUrl) {
+      setUserLastSongUrl(lastSongUrl);
+    }
   };
 
   const fetchUserProfile = async () => {
     try {
-      const response = userApi.getUserData();
-
+      const response = await userApi.getUserData();
       const data = response;
       setUserData(data);
-      console.log("data", data);
       if (data) {
         setAllUserData(data);
       } else {

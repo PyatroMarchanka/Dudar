@@ -49,15 +49,10 @@ export const userApi = {
     return res.data;
   },
 
-  updateUserSettings: async (data: UserSettings) => {
-    console.log(
-      'updateUserSettings cookie.load("jwtToken")',
-      cookie.load("jwtToken")
-    );
+  updateUserSettings: async (data: Partial<UserSettings>) => {
     if (!cookie.load("jwtToken")) {
       return;
     }
-
     const res = await userClient.post(links.updateSettings, data, {
       headers: {
         Authorization: `Bearer ${cookie.load("jwtToken")}`,

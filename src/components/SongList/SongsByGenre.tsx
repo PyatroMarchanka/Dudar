@@ -17,7 +17,8 @@ import { SongTagsWrapper } from "./SongTagsWrapper";
 import { useHistory } from "react-router-dom";
 import { routes } from "../../router/routes";
 import { Song } from "../../dataset/songs/interfaces";
-
+import { useUserLastSong } from "../../hooks/useUserLastSong";
+  
 interface Props {
   setOpen: (bool: boolean) => void;
   onStop: () => void;
@@ -75,22 +76,23 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const SongsByGenre = ({ setOpen, onStop }: Props) => {
   const { t } = useTranslation("translation");
-
   const {
     state: { bagpipeType, listsByBagpipe, activeSong },
   } = useContext(store);
   const history = useHistory();
 
+  const { updateUserLastSong } = useUserLastSong();
 
   const classes = useStyles();
   const genres = Object.keys(listsByBagpipe || {});
 
   const onSongClick = (e: any, song: Song) => {
     e.stopPropagation();
-    history.push(`${routes.app}/${routes.play}/${song.id}`)
+    history.push(`${routes.app}/${routes.play}/${song.id}`);
+    updateUserLastSong(song.id);
     setOpen(false);
     onStop();
-  }
+  };
 
   return (
     <Content>
@@ -103,7 +105,6 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
         </Typography>
         <Typography>{t(`dudas.${bagpipes[bagpipeType].name}`)}</Typography>
       </div>
-     
 
       {genres.map((genre) => (
         <div key={genre} className={classes.root}>
@@ -139,7 +140,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                     <IconButton
                       classes={{ root: classes.buttonRoot }}
                       className="songButton"
-                      onClick={e => onSongClick(e, song)}
+                      onClick={(e) => onSongClick(e, song)}
                     >
                       <Icon
                         type={
@@ -159,7 +160,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
           </Accordion>
         </div>
       ))}
-       <SongTagsWrapper />
+      <SongTagsWrapper />
     </Content>
   );
 };
