@@ -1,24 +1,17 @@
-import { useCallback, useContext, useEffect } from "react";
+import { useContext } from "react";
 import { userApi } from "../api/user";
 import { store } from "../context";
 
 export const useUserLastSong = () => {
-  const {
-    state: { activeSong },
+  const { setUserLastSongUrl } = useContext(store);
 
-    setUserLastSongUrl,
-  } = useContext(store);
+  const updateUserLastSong = async (userLastSongUrl: string) => {
+    setUserLastSongUrl(userLastSongUrl);
 
-  const updateUserLastSong = useCallback(
-    async (userLastSongUrl: string) => {
-      setUserLastSongUrl(userLastSongUrl);
-
-      await userApi.updateUserSettings({
-        lastSongUrl: userLastSongUrl,
-      });
-    },
-    [setUserLastSongUrl]
-  );
+    await userApi.updateUserSettings({
+      lastSongUrl: userLastSongUrl,
+    });
+  };
 
   return { updateUserLastSong };
 };

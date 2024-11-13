@@ -34,7 +34,7 @@ interface Context {
   setLanguage: (lang: Languages) => void;
   setMetronome: (bool: boolean) => void;
   setMidiData: (midi: Midi) => void;
-  setActiveSong: (song: Song) => void;
+  setActiveSong: (song: Song | null) => void;
   setSongLength: (seconds: number) => void;
   setProgress: (percent: number, time?: number, timeRemaining?: number) => void;
   setTempo: (bpm: number) => void;
@@ -55,6 +55,7 @@ interface Context {
   setUserData: (data: any) => void;
   setIsSilentMode: (bool: boolean) => void;
   setUserLastSongUrl: (url: string) => void;
+  setIsSongUnavailable: (bool: boolean) => void;
 }
 
 const store = createContext<Context>({
@@ -63,7 +64,7 @@ const store = createContext<Context>({
   setLanguage: (lang: Languages) => {},
   setMetronome: (bool: boolean) => {},
   setMidiData: (midi: Midi) => {},
-  setActiveSong: (song: Song) => {},
+  setActiveSong: (song: Song | null) => {},
   setProgress: (percent: number, time?: number, timeRemaining?: number) => {},
   setTempo: (bpm: number) => {},
   togglePianoRoll: (value: boolean) => {},
@@ -84,6 +85,7 @@ const store = createContext<Context>({
   setUserData: (data: any) => {},
   setIsSilentMode: (bool: boolean) => {},
   setUserLastSongUrl: (url: string) => {},
+  setIsSongUnavailable: (bool: boolean) => {},
 });
 const { Provider } = store;
 

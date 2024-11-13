@@ -20,12 +20,19 @@ import { InfoPageHeader } from "../Dudar/InfoPage";
 import { store } from "../../context";
 import { useDimensions } from "../../hooks/useDimensions";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
+import { NoSong } from "../NoSong";
 
 export const Dudar = () => {
   const history = useHistory();
   let { path } = useRouteMatch();
   const {
-    state: { midiData, isSongLoading },
+    state: {
+      midiData,
+      isSongLoading,
+      bagpipeType,
+      activeSong,
+      isSongUnavailable,
+    },
     setProgress,
   } = useContext(store);
   const [activeNote, setActiveNote] = useState<{
@@ -52,13 +59,15 @@ export const Dudar = () => {
   }, [midiPlayer, midiData]);
 
   useDimensions();
-  useGoogleProfile()
+  useGoogleProfile();
 
   useEffect(() => {
     if (!isUserOnboardingCompleted) {
       history.replace(routes.start);
     }
   }, [history]);
+
+  console.log("isSongUnavailable", isSongUnavailable);
 
   return (
     <Container>
@@ -68,15 +77,21 @@ export const Dudar = () => {
       <Switch>
         <Route exact path={`${path}/${routes.play}/:id`}>
           <PlayPageHeader midiPlayer={midiPlayer} />
-          <BagpipeContainer>
-            <BackCanvas />
-            <DynamicCanvas player={midiPlayer} />
-            <StaticCanvas activeHole={activeNote} />
-          </BagpipeContainer>
-          <Inputs>
-            <PlayerControls player={midiPlayer} />
-          </Inputs>
-          <MidiPlayerComponent playerRef={playerRef} />
+          {isSongUnavailable || !bagpipeType ? (
+            <NoSong />
+          ) : (
+            <>
+              <BagpipeContainer>
+                <BackCanvas />
+                <DynamicCanvas player={midiPlayer} />
+                <StaticCanvas activeHole={activeNote} />
+              </BagpipeContainer>
+              <Inputs>
+                <PlayerControls player={midiPlayer} />
+              </Inputs>
+              <MidiPlayerComponent playerRef={playerRef} />
+            </>
+          )}
         </Route>
         <Route exact path={`${path}/${routes.info}/:id`}>
           <InfoPageHeader midiPlayer={midiPlayer} />

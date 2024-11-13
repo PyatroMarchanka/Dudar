@@ -18,7 +18,7 @@ import { useHistory } from "react-router-dom";
 import { routes } from "../../router/routes";
 import { Song } from "../../dataset/songs/interfaces";
 import { useUserLastSong } from "../../hooks/useUserLastSong";
-  
+
 interface Props {
   setOpen: (bool: boolean) => void;
   onStop: () => void;
@@ -89,10 +89,12 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
   const onSongClick = (e: any, song: Song) => {
     e.stopPropagation();
     history.push(`${routes.app}/${routes.play}/${song.id}`);
-    updateUserLastSong(song.id);
+    updateUserLastSong(song.id)
     setOpen(false);
     onStop();
   };
+
+  if (!bagpipeType) return null;
 
   return (
     <Content>

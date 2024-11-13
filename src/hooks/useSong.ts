@@ -1,19 +1,14 @@
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { store } from "../context";
-import {
-  findSongInListById,
-  getFirstSongFromList,
-} from "../dataset/songs/utils";
-import { routes } from "../router/routes";
+import { findSongInListById } from "../dataset/songs/utils";
 
 export const useSong = () => {
   const {
     state: { listsByBagpipe },
     setActiveSong,
+    setIsSongUnavailable
   } = useContext(store);
-  const history = useHistory();
-
   const params: any = useParams();
 
   useEffect(() => {
@@ -22,9 +17,10 @@ export const useSong = () => {
 
       if (songFromParam) {
         setActiveSong(findSongInListById(params.id, listsByBagpipe)!);
+        setIsSongUnavailable(false);
       } else {
-        const firstSong = getFirstSongFromList(listsByBagpipe);
-        history.push(`${routes.app}/${routes.play}/${firstSong.id}`);
+        setActiveSong(null);
+        setIsSongUnavailable(true);
       }
     }
   }, [listsByBagpipe, params.id]);

@@ -13,7 +13,8 @@ interface Action {
     | "SET_LISTS_BY_BAGPIPE"
     | "SET_SONG_NOTES"
     | "SET_IS_SONG_LOADING"
-    | "SET_SONG_LENGTH";
+    | "SET_SONG_LENGTH"
+    | "SET_IS_SONG_UNAVAILABLE";
 
   payload?: any;
 }
@@ -24,12 +25,13 @@ export interface PlayerState {
   midiData: Midi | null;
   songNotes: SharpNotesEnum[] | null;
   midi: ArrayBuffer | null;
-  activeSong: Song | undefined;
+  activeSong: Song | null;
   songLength?: number;
   progress?: { percent: number; time?: number; timeRemaining?: number };
   isPlaying: boolean;
   listsByBagpipe: SongListByBagpipe | null;
   isSongLoading: boolean;
+  isSongUnavailable?: boolean;
 }
 
 export const playerInitialState: PlayerState = {
@@ -40,8 +42,9 @@ export const playerInitialState: PlayerState = {
   isPlaying: false,
   listsByBagpipe: null,
   songLength: 0,
-  activeSong: undefined,
+  activeSong: null,
   isSongLoading: false,
+  isSongUnavailable: false,
 };
 
 export const usePlayerReducer = () => {
@@ -110,6 +113,12 @@ export const usePlayerReducer = () => {
           isSongLoading: action.payload,
         };
 
+      case "SET_IS_SONG_UNAVAILABLE":
+        return {
+          ...state,
+          isSongUnavailable: action.payload,
+        };
+
       default:
         return state;
     }
@@ -122,7 +131,7 @@ export const usePlayerReducer = () => {
   const setMidiData = (midi: Midi) => {
     dispatch({ type: "SET_MIDI_DATA", payload: midi });
   };
-  const setActiveSong = (song: Song) => {
+  const setActiveSong = (song: Song | null) => {
     dispatch({
       type: "SET_ACTIVE_SONG",
       payload: song,
@@ -160,6 +169,10 @@ export const usePlayerReducer = () => {
     dispatch({ type: "SET_IS_SONG_LOADING", payload: bool });
   };
 
+  const setIsSongUnavailable = (bool: boolean) => {
+    dispatch({ type: "SET_IS_SONG_UNAVAILABLE", payload: bool });
+  };
+
   return {
     state,
     setMidi,
@@ -171,5 +184,6 @@ export const usePlayerReducer = () => {
     setSongNotes,
     setSongLength,
     setIsSongLoading,
+    setIsSongUnavailable,
   };
 };
