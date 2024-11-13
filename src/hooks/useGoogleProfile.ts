@@ -3,6 +3,7 @@ import { store } from "../context";
 import { defaultUser, User, UserSettings } from "../interfaces/user";
 import { useChangeLanguage } from "../locales";
 import { userApi } from "../api/user";
+import { BagpipeTypes } from "../interfaces";
 
 export const useUpdateUserSettings = () => {
   const updateUserSettings = async (settings: Partial<UserSettings>) => {
@@ -73,7 +74,12 @@ export const useGoogleProfile = () => {
       if (data) {
         setAllUserData(data);
       } else {
-        setAllUserData(defaultUser);
+        const settings = {
+          ...defaultUser.settings!,
+          bagpipeType: BagpipeTypes.BelarusianTraditionalDuda,
+        } as UserSettings;
+
+        setAllUserData({...defaultUser, settings});
         updateUserSettings(defaultUser.settings!);
       }
     } catch (err) {

@@ -34,7 +34,7 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
 
     //RENDER
     const render = () => {
-      drawDynamic(context!, bagpipeType, tick, midiData, previousNotes, nextNotes, nextToNextNotes, activeSong);
+      drawDynamic(context!, bagpipeType, tick, midiData, previousNotes, nextNotes, nextToNextNotes, activeSong!);
       animationFrameId = window.requestAnimationFrame(render);
     };
     render();

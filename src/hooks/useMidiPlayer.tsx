@@ -39,12 +39,18 @@ export const useMidiPlayer = (
   }, []);
 
   useEffect(() => {
+    if (midiPlayer && bagpipeType) {
+      midiPlayer.setBagpipeType(bagpipeType);
+    }
+  }, [bagpipeType, midiPlayer]);
+
+  useEffect(() => {
     if (activeSong && midiPlayer) {
       midiPlayer.setLoop(false);
       setLoop(false);
       midiPlayer?.setTimeSignature(activeSong?.timeSignature);
     }
-  }, [activeSong]);
+  }, [activeSong, midiPlayer]);
 
   return { Player: midiPlayer, setMidiPlayer };
 };

@@ -1,20 +1,19 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { store } from "../context";
-import {
-  Song,
-  SongListByBagpipe,
-  SongListBySongType,
-  SongTags,
-} from "../dataset/songs/interfaces";
+import { SongListByBagpipe } from "../dataset/songs/interfaces";
 import { BagpipeTypes } from "../interfaces";
-import { transliterateSongList, useIsCyrylicLang } from "../locales";
+import { useIsCyrylicLang } from "../locales";
 import {
   getAvailableTagsFromLists,
-  getFirstSongFromList,
 } from "../dataset/songs/utils";
 import { songApi } from "../api/songClient";
 import { useHistory } from "react-router-dom";
 import { routes } from "../router/routes";
+import {
+  getSonglist,
+  sortSongsByBagpipe,
+  sortSongsBySongType,
+} from "../utils/songlistUtils";
 
 export const useSongListShort = () => {
   const {
@@ -48,6 +47,7 @@ export const useSongList = (onStop?: () => void) => {
     setListsByBagpipe,
     setActiveSong,
     setSongTags,
+    setIsSongUnavailable,
     state: {
       bagpipeType,
       activeSong,
@@ -61,20 +61,12 @@ export const useSongList = (onStop?: () => void) => {
 
   const initSongList = useCallback(async () => {
     try {
-      const songList = await songApi.getSongList();
-
-      const sortedList = sortSongsByBagpipe(songList);
-      const lists = sortSongsBySongType(sortedList[bagpipeType]);
-      const transliteratedLists = !isCyrylicLang()
-        ? transliterateSongList(lists)
-        : lists;
-      const sortedListsAlphabetically =
-        sortListsAlphabetically(transliteratedLists);
-      const listsFeilteredByTags = filterSongsByTags(
-        sortedListsAlphabetically,
+      const { lists, transliteratedLists } = await getSonglist(
+        bagpipeType,
+        isCyrylicLang(),
         activeSongTags
       );
-      setListsByBagpipe(listsFeilteredByTags);
+      setListsByBagpipe(lists);
       handleActiveSong(bagpipeType, transliteratedLists);
     } catch (error) {
       console.log(error);
@@ -92,25 +84,17 @@ export const useSongList = (onStop?: () => void) => {
       const activeSongInNewList =
         activeSong &&
         listsByBagpipeLocal[activeSong.type]?.find(
-          (song) => song.name === activeSong.name
+          (song) => song.id.split('-bd').join('') === activeSong.id.split('-bd').join('')
         );
+
       if (activeSongInNewList) {
-        setActiveSong(activeSongInNewList);
+        history.push(`${routes.app}/${routes.play}/${activeSongInNewList.id}`);
       } else {
-        const firstSongInList =
-          listsByBagpipeLocal[Object.keys(listsByBagpipeLocal)[0]][0];
-        history.push(`${routes.app}/${routes.play}/${firstSongInList.id}`);
+        setIsSongUnavailable(true);
       }
     },
-    [activeSong, setActiveSong, listsByBagpipe, onStop]
+    [activeSong,bagpipeType, setActiveSong, listsByBagpipe, onStop]
   );
-
-  useEffect(() => {
-    if (!activeSong && listsByBagpipe) {
-      const firstSongInList = getFirstSongFromList(listsByBagpipe);
-      setActiveSong(firstSongInList);
-    }
-  }, [activeSong, listsByBagpipe]);
 
   useEffect(() => {
     initSongList();
@@ -120,68 +104,4 @@ export const useSongList = (onStop?: () => void) => {
     const tags = getAvailableTagsFromLists(listsByBagpipe);
     setSongTags(tags);
   }, [listsByBagpipe]);
-};
-
-export const sortListsAlphabetically = (lists: SongListBySongType) => {
-  return Object.entries(lists).reduce((acc, cur) => {
-    const [key, value] = cur;
-    acc[key] = value.sort((a, b) => (a.name > b.name ? 1 : -1));
-    return acc;
-  }, {} as SongListBySongType);
-};
-
-export const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {
-  const list: SongListByBagpipe = {};
-  songs?.forEach((song) => {
-    song.bagpipesToPlay.forEach((bagpipeType) => {
-      if (list[bagpipeType]) {
-        const isAlreadyInList = !!list[bagpipeType].find(
-          (songFromList) => songFromList.name === song.name
-        );
-        const isSpecialForBagpipe = song.pathName.includes(`-${bagpipeType}`);
-
-        if (!isAlreadyInList) {
-          list[bagpipeType].push(song);
-        } else if (isSpecialForBagpipe) {
-          list[bagpipeType] = list[bagpipeType].slice(0, -1);
-          list[bagpipeType].push(song);
-        }
-      } else {
-        list[bagpipeType] = [song];
-      }
-    });
-  });
-
-  return list;
-};
-
-export const sortSongsBySongType = (songs: Song[]): SongListBySongType => {
-  const list: SongListBySongType = {};
-  songs?.forEach((song) => {
-    if (song.type in list) {
-      list[song.type].push(song);
-    } else {
-      list[song.type] = [song];
-    }
-  });
-
-  return list;
-};
-
-export const filterSongsByTags = (
-  lists: SongListBySongType,
-  songTags: SongTags[]
-): SongListBySongType => {
-  if (!songTags.length) return lists;
-
-  return Object.entries(lists).reduce((acc, cur) => {
-    const [key, value] = cur;
-    const filteredList = value.filter((song) =>
-      songTags.every((tag) => song.labels.includes(tag))
-    );
-    if (filteredList.length) {
-      acc[key] = filteredList;
-    }
-    return acc;
-  }, {} as SongListBySongType);
 };

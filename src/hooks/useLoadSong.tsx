@@ -35,15 +35,13 @@ export const useLoadSong = () => {
   const [lowestOctave, setLowestOctave] = useState(4);
   useSong();
   const songId = params.id;
-
   useEffect(() => {
     if (!(songId && listsByBagpipe)) return;
-
     const songFromParam = findSongInListById(songId, listsByBagpipe);
     if (songFromParam) {
       setActiveSong(songFromParam);
     }
-  }, [songId]);
+  }, [songId, listsByBagpipe]);
 
   const loadMidiSong = useCallback(
     async (song: Song) => {

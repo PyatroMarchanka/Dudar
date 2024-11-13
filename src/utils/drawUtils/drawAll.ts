@@ -47,7 +47,7 @@ export const drawStatic = (
     drawClosedHoles(ctx, bagpipeType);
   }
   drawNotesNames(ctx, bagpipeType, notesToLineIdx);
-
+  
   if (activeNote) {
     if (!isFingersAnimation) {
       drawActiveHoles(ctx!, bagpipeType, activeNote);

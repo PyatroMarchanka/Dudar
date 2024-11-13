@@ -14,9 +14,8 @@ export const useSong = () => {
   useEffect(() => {
     if (listsByBagpipe) {
       const songFromParam = findSongInListById(params.id, listsByBagpipe);
-
       if (songFromParam) {
-        setActiveSong(findSongInListById(params.id, listsByBagpipe)!);
+        setActiveSong(songFromParam);
         setIsSongUnavailable(false);
       } else {
         setActiveSong(null);

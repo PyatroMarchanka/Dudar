@@ -67,8 +67,6 @@ export const Dudar = () => {
     }
   }, [history]);
 
-  console.log("isSongUnavailable", isSongUnavailable);
-
   return (
     <Container>
       <GlobalStyle />
