@@ -45,7 +45,6 @@ export const userApi = {
       },
       withCredentials: true,
     });
-
     return res.data;
   },
 
@@ -67,6 +66,10 @@ export const userApi = {
 
 export const login = async () => {
   return await userClient.get(links.login, { withCredentials: true });
+};
+
+export const loginServer = async (body: any) => {
+  return await userClient.post(links.loginServer, body);
 };
 
 export const logout = async () => {

@@ -4,6 +4,7 @@ import { Icon } from "../global/Icon";
 import { mainColors } from "../../utils/theme";
 import { links } from "../../api/links";
 import { useTranslation } from "react-i18next";
+import GoogleAuth from "./GoogleLogin";
 
 interface Props {}
 
@@ -11,12 +12,14 @@ export const LoginComponent = (props: Props) => {
   const { t } = useTranslation("translation");
   return (
     <div>
-      <a href={links.login}>
+      <GoogleAuth />
+      {/* <a href={links.login}>
+
         <GoogleButton>
           <Icon className="icon" type="google" />
           {t("login.googleLogin")}
         </GoogleButton>
-      </a>
+      </a> */}
     </div>
   );
 };
