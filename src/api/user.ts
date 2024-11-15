@@ -69,7 +69,7 @@ export const login = async () => {
 };
 
 export const loginServer = async (body: any) => {
-  return await userClient.post(links.loginServer, body);
+  return await userClient.post(links.loginServer, body, { withCredentials: true });
 };
 
 export const logout = async () => {
