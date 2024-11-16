@@ -5,6 +5,7 @@ import translationEN from "./locales/en/translation.json";
 import translationBE from "./locales/be/translation.json";
 import translationPL from "./locales/pl/translation.json";
 import { Languages } from "./interfaces";
+export const fallbackLanguage = Languages.English;
 
 // the translations
 const resources = {
@@ -26,8 +27,8 @@ i18n
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
     resources,
-    lng: Languages.English,
-    fallbackLng: Languages.English,
+    lng: fallbackLanguage,
+    fallbackLng: fallbackLanguage,
     debug: true,
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default

@@ -3,7 +3,9 @@ import { store } from "../context";
 import { defaultUser, User, UserSettings } from "../interfaces/user";
 import { useChangeLanguage } from "../locales";
 import { userApi } from "../api/user";
-import { BagpipeTypes } from "../interfaces";
+import { BagpipeTypes, Languages } from "../interfaces";
+import { fallbackLanguage } from "../i18n";
+import { getUserLanguage } from "../constants/localStorage";
 
 export const useUpdateUserSettings = () => {
   const updateUserSettings = async (settings: Partial<UserSettings>) => {
@@ -57,6 +59,11 @@ export const useGoogleProfile = () => {
     if (language) {
       setLanguage(language);
       changeLanguage(language);
+    } else {
+      const localLanguage: Languages | null = getUserLanguage() as Languages;
+
+      setLanguage(localLanguage || fallbackLanguage);
+      changeLanguage(localLanguage || fallbackLanguage);
     }
     if (isSilentMode) {
       setIsSilentMode(isSilentMode);
@@ -79,7 +86,7 @@ export const useGoogleProfile = () => {
           bagpipeType: BagpipeTypes.BelarusianTraditionalDuda,
         } as UserSettings;
 
-        setAllUserData({...defaultUser, settings});
+        setAllUserData({ ...defaultUser, settings });
         updateUserSettings(defaultUser.settings!);
       }
     } catch (err) {

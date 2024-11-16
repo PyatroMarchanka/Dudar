@@ -6,6 +6,7 @@ import { useChangeLanguage } from "../../../locales";
 import { Languages } from "../../../interfaces";
 import { useTranslation } from "react-i18next";
 import { useUpdateUserSettings } from "../../../hooks/useGoogleProfile";
+import { userLanguage } from "../../../constants/localStorage";
 
 interface Props {}
 
@@ -16,7 +17,6 @@ const LanguageSelector = ({}: Props) => {
   } = useContext(store);
   const { t } = useTranslation();
   const { updateUserSettings } = useUpdateUserSettings();
-  
 
   const changeLanguage = useChangeLanguage();
   const options = Object.values(Languages).map((lang) => ({
@@ -33,7 +33,8 @@ const LanguageSelector = ({}: Props) => {
       onChange={(e) => {
         changeLanguage(e.target.value as Languages);
         setLanguage(e.target.value as Languages);
-        updateUserSettings({language: e.target.value as Languages})
+        localStorage.setItem(userLanguage, e.target.value as string);
+        updateUserSettings({ language: e.target.value as Languages });
       }}
     >
       {options.map((option) => (
