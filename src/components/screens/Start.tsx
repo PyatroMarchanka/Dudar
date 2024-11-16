@@ -2,14 +2,18 @@ import { useHistory } from "react-router-dom";
 import { Onboarding } from "../StartScreen";
 import { getUserOnboardingFinished } from "../../constants/localStorage";
 import { routes } from "../../router/routes";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { store } from "../../context";
 
 export const Start = () => {
   const history = useHistory();
+  const {
+    state: { userData },
+  } = useContext(store);
   const isUserOnboardingCompleted = getUserOnboardingFinished();
 
   useEffect(() => {
-    if (isUserOnboardingCompleted) {
+    if (userData || isUserOnboardingCompleted) {
       history.replace(routes.app);
     }
   }, [history, isUserOnboardingCompleted]);
