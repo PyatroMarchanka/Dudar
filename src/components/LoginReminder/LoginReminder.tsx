@@ -30,14 +30,14 @@ const LoginReminder: React.FC<{ open: boolean; onClose: () => void }> = ({
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>
         <AccountCircleIcon className={classes.icon} />
-        {t("reminderTitle")}
+        {t("login.reminderTitle")}
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>{t("reminderText")}</DialogContentText>
+        <DialogContentText>{t("login.reminderText")}</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
-          {t("cancel")}
+          {t("login.cancel")}
         </Button>
         <Button
           onClick={() => {
@@ -46,7 +46,7 @@ const LoginReminder: React.FC<{ open: boolean; onClose: () => void }> = ({
           }}
           color="primary"
         >
-          {t("login")}
+          {t("login.login")}
         </Button>
       </DialogActions>
     </Dialog>
