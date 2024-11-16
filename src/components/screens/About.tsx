@@ -102,9 +102,9 @@ export const About = () => {
             </a>
           </GetStarted>
 
-          <Typography variant="h4">{`${t(
+            <Typography align="center" variant="h4">{`${t(
             "mainPage.songsCount"
-          )} - ${196}`}</Typography>
+            )} - ${196}`}</Typography>
           <Typography variant="body1">{t("mainPage.aims")}</Typography>
           <Typography variant="body1">{t("mainPage.bagpipes")}</Typography>
           <ul>
