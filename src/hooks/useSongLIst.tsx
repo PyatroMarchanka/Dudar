@@ -16,7 +16,7 @@ import {
 export const useSongListShort = () => {
   const {
     setListsByBagpipe,
-    state: { bagpipeType },
+    state: { bagpipeType, listsByBagpipe},
   } = useContext(store);
   const [allSongs, setAllSongs] = useState<Song[]>();
 
@@ -31,7 +31,7 @@ export const useSongListShort = () => {
 
   const initSongList = useCallback(async () => {
     try {
-      if (!allSongs) return;
+      if (!allSongs || listsByBagpipe) return;
 
       const sortedList = sortSongsByBagpipe(allSongs);
       const lists = sortSongsBySongType(
@@ -42,11 +42,11 @@ export const useSongListShort = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [bagpipeType, setListsByBagpipe]);
+  }, [bagpipeType, setListsByBagpipe, listsByBagpipe, allSongs]);
 
   useEffect(() => {
     initSongList();
-  }, [initSongList]);
+  }, [allSongs, bagpipeType]);
 
   useEffect(() => {
     loadAllSongs();
