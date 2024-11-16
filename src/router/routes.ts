@@ -8,4 +8,5 @@ export const routes = {
   blog: "blog",
   login: "/login",
   logout: "/logout",
+  admin: "/admin",
 };

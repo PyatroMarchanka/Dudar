@@ -1,9 +1,14 @@
 import axios from "axios";
 import { Song } from "../dataset/songs/interfaces";
+import { links } from "./links";
 
 export const songClient = axios.create({
   baseURL:
     "https://raw.githubusercontent.com/PyatroMarchanka/dudahero-midi/main/midi/",
+});
+
+export const songServerClient = axios.create({
+  baseURL: process.env.REACT_APP_BACKEND_URL,
 });
 
 export const songApi = {
@@ -15,8 +20,13 @@ export const songApi = {
     return res.data;
   },
   getSongList: async (): Promise<Song[]> => {
-    const res = await songClient.get("list.json");
+    const res = await songServerClient.get(links.songs);
+    return res.data;
+  },
+  updateSong: async (song: Song) => {
+    if(!song._id) return;
 
+    const res = await songServerClient.put(`${links.songs}/${song._id}`, song);
     return res.data;
   },
 };

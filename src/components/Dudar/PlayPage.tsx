@@ -36,7 +36,7 @@ export const PlayPageHeader = ({ midiPlayer }: Props) => {
       </Header>
       <Modal
         title="Song info"
-        maxWidth="md"
+        maxWidth="xl"
         triggerComponent={
           <IconButton className="button" onClick={() => {}}>
             <Icon
