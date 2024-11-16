@@ -29,4 +29,8 @@ export const songApi = {
     const res = await songServerClient.put(`${links.songs}/${song._id}`, song);
     return res.data;
   },
+  getSongData: async (_id: string) => {
+    const res = await songServerClient.get(`${links.songs}/${_id}`);
+    return res.data;
+  }
 };

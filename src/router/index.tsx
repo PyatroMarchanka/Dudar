@@ -4,13 +4,13 @@ import { About } from "../components/screens/About";
 import { Start } from "../components/screens/Start";
 import { routes } from "./routes";
 import { LoginPage } from "../components/screens/LoginPage";
-import { Admin } from "../components/screens/Admin";
+import Admin from "../components/Admin";
 
 export const AppRouter = () => {
   return (
     <Router>
       <Switch>
-        <Route exact path={routes.admin}>
+        <Route path={routes.admin}>
           <Admin />
         </Route>
         <Route exact path={routes.main}>

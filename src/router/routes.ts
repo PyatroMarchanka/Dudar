@@ -9,4 +9,5 @@ export const routes = {
   login: "/login",
   logout: "/logout",
   admin: "/admin",
+  adminSong: "/admin/song",
 };

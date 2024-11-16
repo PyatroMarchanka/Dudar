@@ -37,6 +37,7 @@ export interface Song {
   about?: string;
   originalTempo?: number;
   links: SongLink[];
+  transcribedBy?: string;
 }
 
 
