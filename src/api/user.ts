@@ -34,9 +34,9 @@ export const localstorageUserApi = {
 
 export const userApi = {
   getUserData: async (): Promise<User | undefined> => {
-    if (!cookie.load("jwtToken")) {
-      return;
-    }
+    // if (!cookie.load("jwtToken")) {
+    //   return;
+    // }
 
     const res = await userClient.get(links.profile, {
       headers: {
@@ -49,9 +49,9 @@ export const userApi = {
   },
 
   updateUserSettings: async (data: Partial<UserSettings>) => {
-    if (!cookie.load("jwtToken")) {
-      return;
-    }
+    // if (!cookie.load("jwtToken")) {
+    //   return;
+    // }
     const res = await userClient.post(links.updateSettings, data, {
       headers: {
         Authorization: `Bearer ${cookie.load("jwtToken")}`,
