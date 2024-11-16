@@ -1,4 +1,5 @@
 import { BagpipeTypes, Languages } from ".";
+import { getUserLanguage } from "../constants/localStorage";
 
 export interface User {
   name?: string;
@@ -22,7 +23,7 @@ export const defaultUser: User = {
     bagpipeType: BagpipeTypes.BelarusianTraditionalDuda,
     tempo: 240,
     isPreclick: false,
-    language: Languages.English,
+    language: getUserLanguage() || Languages.English,
     transpose: 0,
     isSilentMode: false,
   },
