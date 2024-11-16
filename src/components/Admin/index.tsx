@@ -20,13 +20,29 @@ const Admin = () => {
     songApi.getSongList().then(setSongs);
   }, []);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredSongs = songs.filter((song) =>
+    song.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Router>
       <Container>
         <Switch>
           <Route exact path="/admin">
-          <Link to="/">To Main Page</Link>
+            <Link to="/">To Main Page</Link>
             <h1>Song List</h1>
+            <SearchInput
+              type="text"
+              placeholder="Search songs..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
             <Table>
               <thead>
                 <tr>
@@ -41,7 +57,7 @@ const Admin = () => {
                 </tr>
               </thead>
               <tbody>
-                {songs.map((song) => (
+                {filteredSongs.map((song) => (
                   <tr key={song._id}>
                     <td>
                       <Link to={`/admin/song/${song._id}`}>{song.name}</Link>
@@ -68,6 +84,23 @@ const Admin = () => {
 };
 
 export default Admin;
+
+const SearchInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  margin: 20px 0;
+  box-sizing: border-box;
+  border: 2px solid #009879;
+  border-radius: 4px;
+  font-size: 1em;
+  outline: none;
+  transition: border-color 0.3s;
+
+  &:focus {
+    border-color: #005f56;
+  }
+`;
+
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;

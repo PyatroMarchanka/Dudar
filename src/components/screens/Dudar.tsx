@@ -21,6 +21,8 @@ import { store } from "../../context";
 import { useDimensions } from "../../hooks/useDimensions";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { NoSong } from "../NoSong";
+import LoginReminder from "../LoginReminder/LoginReminder";
+import { LoginReminderConntainer } from "../LoginReminder";
 
 export const Dudar = () => {
   const history = useHistory();
@@ -70,6 +72,7 @@ export const Dudar = () => {
   return (
     <Container>
       <GlobalStyle />
+      <LoginReminderConntainer />
       <DonationButton />
       <BackdropSpinner isOpen={isSongLoading} />
       <Switch>

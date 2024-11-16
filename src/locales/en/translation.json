@@ -81,7 +81,7 @@
     "finish": "Finish",
     "skip": "Skip onboarding"
   },
-  "songInfo":{
+  "songInfo": {
     "name": "Name",
     "tags": "Tags",
     "originalTempo": "Original tempo",
@@ -93,7 +93,6 @@
     "bagpipesToPlay": "Bagpipes to play",
     "lyrics": "Lyrics",
     "links": "Links"
-
   },
   "mainPage": {
     "title": "DudaHero: Where Tradition Meets Innovation",
@@ -109,9 +108,12 @@
   },
   "login": {
     "skip": "Skip",
-    "login":"Login",
-    "logout":"Logout",
+    "login": "Login",
+    "logout": "Logout",
     "mainPage": "Main Page",
-    "googleLogin": "Sign in with Google"
+    "googleLogin": "Sign in with Google",
+    "reminderTitle": "Reminder to Login",
+    "reminderText": "Logging in will help you save your settings, instrument type, tuning, and open the last played song on start. In the future, you will be able to write comments and see other users' playing progress and experience.",
+    "cancel": "Cancel"
   }
 }

@@ -98,7 +98,11 @@
     "login": "Zaloguj sie",
     "logout": "Wyloguj",
     "mainPage": "Strona główna",
-    "googleLogin": "Zaloguj sie przez Google"
+    "googleLogin": "Zaloguj sie przez Google",
+    "reminderTitle": "Zaloguj się, aby ułatwić korzystanie z Duda Hero",
+    "reminderText": "Zalogowanie pomoże Ci zapisać ustawienia, typ instrumentu, strojenie i otworzyć ostatnio grany utwór przy starcie. W przyszłości będziesz mógł pisać komentarze i zobaczyć postępy i doświadczenie innych użytkowników.",
+    "cancel": "Anuluj"
+
   },
   "songInfo": {
     "name": "Nazwa",
