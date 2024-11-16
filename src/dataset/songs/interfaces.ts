@@ -24,6 +24,7 @@ export type TimeSignatures =
   | "11/8";
 
 export interface Song {
+  _id?: string;
   name: string;
   type: string;
   bagpipesToPlay: BagpipeTypes[];
@@ -35,6 +36,20 @@ export interface Song {
   lyric?: string;
   about?: string;
   originalTempo?: number;
+  links: SongLink[];
+}
+
+
+export interface SongLink {
+  type: LinkTypes;
+  name: string;
+  url: string;
+}
+
+export enum LinkTypes {
+  Audio = "audio",
+  Video = "video",
+  Other = "other",
 }
 
 export type SongListByBagpipe = { [key: string]: Song[] };

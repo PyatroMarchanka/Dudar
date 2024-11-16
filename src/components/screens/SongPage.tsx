@@ -27,7 +27,7 @@ export const SongPage = (props: Props) => {
     }
   }, [params.id, listsByBagpipe]);
 
-  useGoogleProfile()
+  useGoogleProfile();
 
   return (
     <Container>
@@ -95,10 +95,28 @@ export const SongPage = (props: Props) => {
         </SongProperty>
       )}
 
+      {activeSong?.links?.length ? (
+        <SongProperty>
+          <Typography>
+            {t(`songInfo.links`)}:
+            {activeSong?.links.map((link) => (
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={link.url}
+                key={link.url}
+              >
+                <b>{link.name}</b>
+              </a>
+            ))}
+          </Typography>
+        </SongProperty>
+      ) : null}
+
       <SongProperty>
         <Typography>
           {t(`songInfo.tags`)}:
-          <b> {activeSong?.labels.map((tag) => t(`tags.${tag}`)).join(', ')}</b>
+          <b> {activeSong?.labels.map((tag) => t(`tags.${tag}`)).join(", ")}</b>
         </Typography>
       </SongProperty>
     </Container>

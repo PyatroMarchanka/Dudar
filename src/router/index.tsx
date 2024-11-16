@@ -1,18 +1,18 @@
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Dudar } from "../components/screens/Dudar";
 import { About } from "../components/screens/About";
 import { Start } from "../components/screens/Start";
 import { routes } from "./routes";
 import { LoginPage } from "../components/screens/LoginPage";
+import { Admin } from "../components/screens/Admin";
 
 export const AppRouter = () => {
   return (
     <Router>
       <Switch>
+        <Route exact path={routes.admin}>
+          <Admin />
+        </Route>
         <Route exact path={routes.main}>
           <About />
         </Route>
