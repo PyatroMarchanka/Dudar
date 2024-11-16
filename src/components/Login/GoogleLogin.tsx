@@ -19,7 +19,6 @@ const GoogleAuth = () => {
       client_id: cred.clientId,
     });
 
-    console.log("res", res.data);
     setUserData(res.data);
     // history.push(routes.main);
 
@@ -28,7 +27,6 @@ const GoogleAuth = () => {
     <GoogleOAuthProvider clientId={clientId}>
       <GoogleLogin
         onSuccess={async (credentialResponse) => {
-          console.log(credentialResponse);
           onSuccess(credentialResponse);
         }}
         onError={() => {

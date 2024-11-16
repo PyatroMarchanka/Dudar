@@ -41,11 +41,6 @@ export const About = () => {
     (listsByBagpipe && getFirstSongFromList(listsByBagpipe).id);
 
   useGoogleProfile();
-  console.log("listsByBagpipe", listsByBagpipe);
-
-  const songsCount = listsByBagpipe
-    ? Object.values(listsByBagpipe).reduce((acc, list) => acc + list.length, 0)
-    : 0;
 
   return (
     <Container>

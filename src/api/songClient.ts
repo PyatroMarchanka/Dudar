@@ -20,9 +20,7 @@ export const songApi = {
     return res.data;
   },
   getSongList: async (): Promise<Song[]> => {
-    console.log('getSongList')
     const res = await songServerClient.get(links.songs);
-    console.log('res', res)
     return res.data;
   },
   updateSong: async (song: Song) => {

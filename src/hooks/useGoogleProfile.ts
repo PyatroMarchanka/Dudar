@@ -70,7 +70,6 @@ export const useGoogleProfile = () => {
     try {
       const response = await userApi.getUserData();
       const data = response;
-      console.log('data', data);
       setUserData(data);
       if (data) {
         setAllUserData(data);
