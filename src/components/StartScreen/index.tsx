@@ -45,7 +45,7 @@ export const Onboarding = () => {
   const stepComponent = getStepComponent(step);
   const history = useHistory();
   const {
-    state: { listsByBagpipe, activeSong },
+    state: { listsByBagpipe },
   } = useContext(store);
 
   useSongListShort();

@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { loginServer } from "../../api/user";
+import { store } from "../../context";
+import { useHistory } from "react-router-dom";
+import { routes } from "../../router/routes";
 
 const GoogleAuth = () => {
+  const {
+    setUserData
+  } = useContext(store);
+  const history = useHistory();
+
   const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || "";
 
   const onSuccess = async (cred: any) => {
@@ -12,6 +20,9 @@ const GoogleAuth = () => {
     });
 
     console.log("res", res.data);
+    setUserData(res.data);
+    history.push(routes.main);
+
   };
   return (
     <GoogleOAuthProvider clientId={clientId}>
@@ -24,14 +35,6 @@ const GoogleAuth = () => {
           console.log("Login Failed");
         }}
       />
-      <button
-        onClick={() => {
-          console.log("check");
-          console.log(document.cookie);
-        }}
-      >
-        check
-      </button>
     </GoogleOAuthProvider>
   );
 };
