@@ -21,7 +21,7 @@ const GoogleAuth = () => {
 
     console.log("res", res.data);
     setUserData(res.data);
-    history.push(routes.main);
+    // history.push(routes.main);
 
   };
   return (
