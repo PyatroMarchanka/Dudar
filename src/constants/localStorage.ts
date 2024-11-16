@@ -7,4 +7,4 @@ export const getUserOnboardingFinished = () =>
   !!localStorage.getItem(userOnboardingFinished);
 
 export const getUserLanguage = (): Languages | null =>
-  !!localStorage.getItem(userLanguage) as unknown as Languages;
+  localStorage.getItem(userLanguage) as unknown as Languages;

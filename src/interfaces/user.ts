@@ -17,7 +17,6 @@ export interface UserSettings {
   isSilentMode?: boolean;
   lastSongUrl?: string;
 }
-
 export const defaultUser: User = {
   settings: {
     bagpipeType: BagpipeTypes.BelarusianTraditionalDuda,

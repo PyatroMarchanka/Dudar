@@ -61,9 +61,8 @@ export const useGoogleProfile = () => {
       changeLanguage(language);
     } else {
       const localLanguage: Languages | null = getUserLanguage() as Languages;
-
-      setLanguage(localLanguage || fallbackLanguage);
-      changeLanguage(localLanguage || fallbackLanguage);
+      setLanguage(localLanguage ? localLanguage : fallbackLanguage);
+      changeLanguage(localLanguage ? localLanguage : fallbackLanguage);
     }
     if (isSilentMode) {
       setIsSilentMode(isSilentMode);
