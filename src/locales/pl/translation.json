@@ -91,7 +91,8 @@
     "Dudelsack": "Dudelsack",
     "highlander": "Dudy szkockie",
     "other": "Inne typy dud są w fazie rozwoju!",
-    "melodies": "Teraz w aplikacji możesz znaleźć tutoriale do co najmniej 120 melodii ludowych z różnych krajów, posortowanych według kraju pochodzenia."
+    "melodies": "Teraz w aplikacji możesz znaleźć tutoriale do co najmniej 180 melodii ludowych z różnych krajów, posortowanych według kraju pochodzenia.",
+    "songsCount": "Wszystkie melodie"
   },
   "login": {
     "skip": "Pomiń",
@@ -100,7 +101,7 @@
     "mainPage": "Strona główna",
     "googleLogin": "Zaloguj sie przez Google",
     "reminderTitle": "Zaloguj się, aby ułatwić korzystanie z Duda Hero",
-    "reminderText": "Zalogowanie pomoże Ci zapisać ustawienia, typ instrumentu, strojenie i otworzyć ostatnio grany utwór przy starcie. W przyszłości będziesz mógł pisać komentarze i zobaczyć postępy i doświadczenie innych użytkowników.",
+    "reminderText": "Zalogowanie pomoże Ci zapisać ustawienia, język, typ instrumentu, strojenie i otworzyć ostatnio grany utwór przy starcie. W przyszłości będziesz mógł pisać komentarze i zobaczyć postępy i doświadczenie innych użytkowników.",
     "cancel": "Anuluj"
 
   },
@@ -116,6 +117,10 @@
     "bagpipesToPlay": "Dudy do gry",
     "lyrics": "Tekst piosenki",
     "links": "Linki"
-    
+  },
+  "noSong": {
+    "title": "Utwór niedostępny",
+    "text": "Wybrany utwór nie może być odtworzony na wybranym instrumencie.",
+    "tryChange": "Proszę spróbować zmienić utwór lub dostosować ustawienia instrumentu."
   }
 }

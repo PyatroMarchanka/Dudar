@@ -104,7 +104,8 @@
     "dudelsack": "Dudelsack",
     "highlander": "Great Highlander Bagpipe (Schotland)",
     "other": "Other bagpipes types are in development!",
-    "melodies": "Now in the app you can find tutorials for at least 120 folk melodies from different countries, sorted by country of origin."
+    "melodies": "Now in the app you can find tutorials for at least 120 folk melodies from different countries, sorted by country of origin.",
+    "songsCount": "All melodies count"
   },
   "login": {
     "skip": "Skip",
@@ -113,7 +114,12 @@
     "mainPage": "Main Page",
     "googleLogin": "Sign in with Google",
     "reminderTitle": "Reminder to Login",
-    "reminderText": "Logging in will help you save your settings, instrument type, tuning, and open the last played song on start. In the future, you will be able to write comments and see other users' playing progress and experience.",
+    "reminderText": "Logging in will help you save your settings, language, instrument type, tuning, and open the last played song on start. In the future, you will be able to write comments and see other users' playing progress and experience.",
     "cancel": "Cancel"
+  },
+  "noSong": {
+    "title": "Song Unavailable",
+    "text":"The selected song cannot be played on the chosen instrument.",
+    "tryChange": "Please try changing the song or adjust the instrument settings."
   }
 }

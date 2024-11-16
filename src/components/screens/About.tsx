@@ -41,6 +41,11 @@ export const About = () => {
     (listsByBagpipe && getFirstSongFromList(listsByBagpipe).id);
 
   useGoogleProfile();
+  console.log("listsByBagpipe", listsByBagpipe);
+
+  const songsCount = listsByBagpipe
+    ? Object.values(listsByBagpipe).reduce((acc, list) => acc + list.length, 0)
+    : 0;
 
   return (
     <Container>
@@ -102,6 +107,9 @@ export const About = () => {
             </a>
           </GetStarted>
 
+          <Typography variant="h4">{`${t(
+            "mainPage.songsCount"
+          )} - ${196}`}</Typography>
           <Typography variant="body1">{t("mainPage.aims")}</Typography>
           <Typography variant="body1">{t("mainPage.bagpipes")}</Typography>
           <ul>

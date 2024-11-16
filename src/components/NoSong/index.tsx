@@ -1,17 +1,15 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 
 export const NoSong: React.FC = () => {
+  const { t } = useTranslation("translation");
+
   return (
     <Container>
-      <h1>Song Unavailable</h1>
-      <Message>
-        The selected song cannot be played on the chosen instrument.
-      </Message>
-      <Message>
-        Please try changing the song or adjust the instrument settings.
-      </Message>
-     
+      <h1>{t("noSong.title")}</h1>
+      <Message>{t("noSong.text")}</Message>
+      <Message>{t("noSong.tryChange")}</Message>
     </Container>
   );
 };

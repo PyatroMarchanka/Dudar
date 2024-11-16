@@ -19,7 +19,7 @@ export const localstorageUserApi = {
     return userObj;
   },
 
-  updateUserSettings: (data: {settings: Partial<UserSettings>}) => {
+  updateUserSettings: (data: { settings: Partial<UserSettings> }) => {
     const user = localStorage.getItem("user");
     if (!user) {
       localStorage.setItem("user", JSON.stringify(data));
@@ -34,33 +34,35 @@ export const localstorageUserApi = {
 
 export const userApi = {
   getUserData: async (): Promise<User | undefined> => {
-    // if (!cookie.load("jwtToken")) {
-    //   return;
-    // }
-
-    const res = await userClient.get(links.profile, {
-      headers: {
-        Authorization: `Bearer ${cookie.load("jwtToken")}`,
-        userId: cookie.load("userId"),
-      },
-      withCredentials: true,
-    });
-    return res.data;
+    try {
+      const res = await userClient.get(links.profile, {
+        headers: {
+          Authorization: `Bearer ${cookie.load("jwtToken")}`,
+          userId: cookie.load("userId"),
+        },
+        withCredentials: true,
+      });
+      return res.data;
+    } catch (error) {
+      console.log("error", error);
+      return;
+    }
   },
 
   updateUserSettings: async (data: Partial<UserSettings>) => {
-    // if (!cookie.load("jwtToken")) {
-    //   return;
-    // }
-    const res = await userClient.post(links.updateSettings, data, {
-      headers: {
-        Authorization: `Bearer ${cookie.load("jwtToken")}`,
-        userId: cookie.load("userId"),
-      },
-      withCredentials: true,
-    });
+    try {
+      const res = await userClient.post(links.updateSettings, data, {
+        headers: {
+          Authorization: `Bearer ${cookie.load("jwtToken")}`,
+          userId: cookie.load("userId"),
+        },
+        withCredentials: true,
+      });
 
-    return res.data;
+      return res.data;
+    } catch (error) {
+      console.log("error", error);
+    }
   },
 };
 
@@ -69,7 +71,9 @@ export const login = async () => {
 };
 
 export const loginServer = async (body: any) => {
-  return await userClient.post(links.loginServer, body, { withCredentials: true });
+  return await userClient.post(links.loginServer, body, {
+    withCredentials: true,
+  });
 };
 
 export const logout = async () => {

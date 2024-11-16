@@ -4,17 +4,18 @@ import LoginReminder from "./LoginReminder";
 
 export const LoginReminderConntainer: React.FC = () => {
   const {
-    state: { userData },
+    state: { userData,  },
   } = useContext(store);
-  const [isOpen, setIsOpen] = useState(!!userData);
+  console.log('userData', userData);
+  const [isOpen, setIsOpen] = useState(!userData);
   const handleClose = () => {
     setIsOpen(false);
   };
 
   useEffect(() => {
-    setIsOpen(!!userData);
+    setIsOpen(!userData);
   }, [userData]);
-
+  console.log('isOpen', isOpen);
   return (
     <>{!!userData && <LoginReminder open={isOpen} onClose={handleClose} />}</>
   );
