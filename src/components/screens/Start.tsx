@@ -13,7 +13,7 @@ export const Start = () => {
   const isUserOnboardingCompleted = getUserOnboardingFinished();
 
   useEffect(() => {
-    if (userData || isUserOnboardingCompleted) {
+    if (isUserOnboardingCompleted) {
       history.replace(routes.app);
     }
   }, [history, isUserOnboardingCompleted]);

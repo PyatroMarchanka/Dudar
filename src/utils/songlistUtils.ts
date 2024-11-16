@@ -75,17 +75,19 @@ export const filterSongsByTags = (
   }, {} as SongListBySongType);
 };
 
-export const getSonglist = async (
+export const getSonglist = (
   bagpipeType: BagpipeTypes,
   isCyrylic: boolean,
-  activeSongTags: SongTags[]
+  activeSongTags: SongTags[],
+  songList: Song[]
 ) => {
-  const songList = await songApi.getSongList();
-
   const sortedList = sortSongsByBagpipe(songList);
   const lists = sortSongsBySongType(sortedList[bagpipeType]);
   const transliteratedLists = isCyrylic ? lists : transliterateSongList(lists);
   const sortedListsAlphabetically =
     sortListsAlphabetically(transliteratedLists);
-  return {lists: filterSongsByTags(sortedListsAlphabetically, activeSongTags), transliteratedLists};
+  return {
+    lists: filterSongsByTags(sortedListsAlphabetically, activeSongTags),
+    transliteratedLists,
+  };
 };
