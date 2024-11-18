@@ -82,6 +82,7 @@
     "skip": "Skip onboarding"
   },
   "songInfo": {
+    "title": "Song info",
     "name": "Name",
     "tags": "Tags",
     "originalTempo": "Original tempo",

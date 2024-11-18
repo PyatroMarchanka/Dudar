@@ -29,76 +29,94 @@ export const SongPage = (props: Props) => {
 
   useGoogleProfile();
 
+  console.log("activeSong", activeSong);
+
   return (
     <Container>
       <GlobalStyle />
-      <Typography className="title" variant="h1">
-        <Typography>
-          {t(`songInfo.name`)} : <b>{activeSong?.name}</b>
+      <SongProperty className="title">
+        <Typography align="center" variant="h6">
+          {t(`songInfo.name`)} :
         </Typography>
-      </Typography>
+        <Typography>
+          <b>{activeSong?.name}</b>
+        </Typography>
+      </SongProperty>
       {activeSong?.type && (
         <SongProperty>
+          <Typography align="center" variant="h6">
+            {t(`songInfo.type`)}:
+          </Typography>
           <Typography>
-            {t(`songInfo.type`)}: <b>{activeSong?.type}</b>
+            <b>{t(`genres.${activeSong?.type}`)}</b>
           </Typography>
         </SongProperty>
       )}
       {activeSong?.about && (
         <SongProperty>
+          <Typography align="center" variant="h6">
+            {t(`songInfo.about`)}:
+          </Typography>
           <Typography>
-            {t(`songInfo.about`)}: <b>{activeSong?.about}</b>
+            <b>{activeSong?.about}</b>
           </Typography>
         </SongProperty>
       )}
       {activeSong?.bagpipesToPlay && (
         <SongProperty>
-          <Typography>
+          <Typography align="center" variant="h6">
             {t(`songInfo.bagpipesToPlay`)}:
+          </Typography>
+          <Typography>
             {activeSong?.bagpipesToPlay
               .filter((bagpipe) => (bagpipe as any) !== "gd")
               .map((bagpipe) => getTranslationKeyByBagpipeType(bagpipe))
               .map((bagpipe) => (
-                <div>
-                  <b>{t(`dudas.${bagpipe}`)}</b>
-                </div>
+                <Typography>{t(`dudas.${bagpipe}`)}</Typography>
               ))}
           </Typography>
         </SongProperty>
       )}
-      {activeSong?.lyric && (
+      {activeSong?.lyrycs && (
         <SongProperty>
-          <Typography>
-            {t(`songInfo.lyric`)}: <b>{activeSong?.lyric}</b>
+          <Typography align="center" variant="h6">
+            {t(`songInfo.lyrics`)}:
           </Typography>
+          {activeSong?.lyrycs.split("\n").map((line) => (
+            <Typography variant="body2">{line}</Typography>
+          ))}
         </SongProperty>
       )}
       <SongProperty>
-        <Typography>
+        <Typography align="center" variant="h6">
           {t(`songInfo.timeSignature`)}: <b>{activeSong?.timeSignature}</b>
         </Typography>
       </SongProperty>
 
       {activeSong?.originalTempo && (
         <SongProperty>
-          <Typography>
-            {" "}
-            {t(`songInfo.originalTempo`)}: <b>{activeSong?.originalTempo}</b>
+          <Typography align="center" variant="h6">
+          {t(`songInfo.originalTempo`)}: <b>{activeSong?.originalTempo}</b>
           </Typography>
         </SongProperty>
       )}
-      {activeSong?.midiBy && (
+      {activeSong?.transcribedBy && (
         <SongProperty>
+          <Typography align="center" variant="h6">
+            {t(`songInfo.transcribedBy`)}:
+          </Typography>
           <Typography>
-            {t(`songInfo.transcribedBy`)}: <b>{activeSong?.midiBy}</b>
+            <b>{activeSong?.transcribedBy}</b>
           </Typography>
         </SongProperty>
       )}
 
       {activeSong?.links?.length ? (
         <SongProperty>
-          <Typography>
+          <Typography align="center" variant="h6">
             {t(`songInfo.links`)}:
+          </Typography>
+          <Typography>
             {activeSong?.links.map((link) => (
               <a
                 target="_blank"
@@ -114,8 +132,10 @@ export const SongPage = (props: Props) => {
       ) : null}
 
       <SongProperty>
-        <Typography>
+        <Typography align="center" variant="h6">
           {t(`songInfo.tags`)}:
+        </Typography>
+        <Typography>
           <b> {activeSong?.labels.map((tag) => t(`tags.${tag}`)).join(", ")}</b>
         </Typography>
       </SongProperty>
@@ -142,9 +162,6 @@ const Container = styled.div`
   > div,
   a {
     margin-top: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
   .playLink {
     text-decoration: none;
@@ -155,6 +172,6 @@ const Container = styled.div`
 `;
 
 const SongProperty = styled.div`
-  display: flex;
-  justify-content: center;
+  /* display: flex;
+  justify-content: center; */
 `;

@@ -15,6 +15,7 @@ import { useLoadSong } from "../../hooks/useLoadSong";
 import Modal from "../global/Modal";
 import { SongPage } from "../screens/SongPage";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
@@ -23,6 +24,7 @@ interface Props {
 export const PlayPageHeader = ({ midiPlayer }: Props) => {
   const songTitle = useSongTitle();
   useLoadSong();
+  const {t} = useTranslation("translation");
 
   useEffect(() => {
     document.title = songTitle || noSongsLabel;
@@ -35,7 +37,7 @@ export const PlayPageHeader = ({ midiPlayer }: Props) => {
         <SongTitle>{songTitle || noSongsLabel}</SongTitle>
       </Header>
       <Modal
-        title="Song info"
+        title={t("songInfo.title")}
         maxWidth="xl"
         triggerComponent={
           <IconButton className="button" onClick={() => {}}>

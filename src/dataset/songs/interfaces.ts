@@ -32,7 +32,6 @@ export interface Song {
   pathName: string;
   labels: string[]
   id: string;
-  midiBy?: string;
   lyric?: string;
   about?: string;
   originalTempo?: number;

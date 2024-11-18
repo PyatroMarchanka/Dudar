@@ -106,6 +106,7 @@
 
   },
   "songInfo": {
+    "title": "Informacje o utworze",
     "name": "Nazwa",
     "tags": "Tagi",
     "originalTempo": "Oryginalne tempo",
