@@ -16,6 +16,7 @@ import { InstrumentTypes } from "./InstrumentTypes";
 import { Contacts } from "../../Contacts";
 import { DonationButtonBig } from "../../global/DonationButtonBig";
 import { useUpdateUserSettings } from "../../../hooks/useGoogleProfile";
+import { Link } from "react-router-dom";
 
 type Props = {
   midiPlayer?: MidiPlayer | null;
@@ -99,6 +100,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
       </Row>
       <Line />
       <Contacts />
+      <Link to="/admin">Anmin Panel</Link>
     </Container>
   );
 };

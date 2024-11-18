@@ -38,6 +38,7 @@ export interface Song {
   originalTempo?: number;
   links: SongLink[];
   transcribedBy?: string;
+  lyrycs?: string;
 }
 
 

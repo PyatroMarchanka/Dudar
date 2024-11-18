@@ -26,7 +26,7 @@ export const songApi = {
   updateSong: async (song: Song) => {
     if(!song._id) return;
 
-    const res = await songServerClient.put(`${links.songs}/${song._id}`, song);
+    const res = await songServerClient.put(`${links.adminSong}/${song._id}`, song, {withCredentials: true});
     return res.data;
   },
   getSongData: async (_id: string) => {

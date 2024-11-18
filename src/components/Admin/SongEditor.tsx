@@ -6,14 +6,17 @@ import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { LinksEditor } from "./LinksEditor";
 import { Button } from "../global/Button";
-import { IconButton } from "@material-ui/core";
+import { IconButton, Input, Typography } from "@material-ui/core";
 import { Icon } from "../global/Icon";
+import { useTranslation } from "react-i18next";
+import { getTranslationKeyByBagpipeType } from "../../interfaces/enumUtils";
 
 export const SongEditor: React.FC = () => {
   const [song, setSong] = useState<Song | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [initialSong, setInitialSong] = useState<Song>();
   const params: any = useParams();
+  const { t } = useTranslation("translation");
 
   const isSaveDisabled = () => {
     if (!song || !initialSong) return true;
@@ -45,7 +48,7 @@ export const SongEditor: React.FC = () => {
   const handleSave = async () => {
     if (song) {
       try {
-        console.log(song)
+        console.log(song);
         await songApi.updateSong(song);
         alert("Song updated successfully!");
       } catch (error) {
@@ -62,15 +65,18 @@ export const SongEditor: React.FC = () => {
     return <div>No song found</div>;
   }
 
-  const fieldsOrder = [
+  const fieldsInOrder = [
     "name",
     "pathName",
     "about",
+    "lyrycs",
     "originalTempo",
     "labels",
     "timeSignature",
     "transcribedBy",
   ];
+
+  const multiLineFields = ["about", "lyrycs"];
 
   const typeSwitchInput = () => {
     return (
@@ -111,11 +117,13 @@ export const SongEditor: React.FC = () => {
           handleChange({ name: "links", value: links })
         }
       />
-      {fieldsOrder.map((key) => (
+      {fieldsInOrder.map((key) => (
         <FormGroup key={key}>
-          <Label>{key}:</Label>
+          <Label key={key}>{key}:</Label>
           <Input
+            multiline={multiLineFields.includes(key)}
             type="text"
+            className="input"
             name={key}
             value={(song as any)[key as keyof Song]}
             onChange={(e) =>
@@ -124,6 +132,14 @@ export const SongEditor: React.FC = () => {
           />
         </FormGroup>
       ))}
+      <FormGroup>
+        <Label>Bagpipes to Play:</Label>
+        {song.bagpipesToPlay.map((type) => (
+          <Typography key={type} variant="body1">
+            {t(`dudas.${getTranslationKeyByBagpipeType(type)}`)}
+          </Typography>
+        ))}
+      </FormGroup>
       <Button disabled={!isSaveDisabled()} onClick={handleSave}>
         Save
       </Button>
@@ -169,6 +185,11 @@ const FormGroup = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  .input {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 40px;
+  }
   /* max-width: 400px; */
 `;
 
@@ -177,14 +198,4 @@ const Label = styled.label`
   font-size: 14px;
   color: #666;
   margin-bottom: 5px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  max-width: 400px;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
 `;
