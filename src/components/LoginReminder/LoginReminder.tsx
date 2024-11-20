@@ -25,6 +25,7 @@ const LoginReminder: React.FC<{ open: boolean; onClose: () => void }> = ({
   const classes = useStyles();
   const { t } = useTranslation("translation");
   const histoty = useHistory();
+  
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>

@@ -1,5 +1,4 @@
 import React, {
-  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -17,8 +16,7 @@ import { convertMidiPitchToNote } from "../../utils/midiUtils";
 import { MidiPlayerComponent } from "../MidiPlayerComponent";
 import { BackdropSpinner } from "../global/BackdropSpinner";
 import { DonationButton } from "../global/DonationButton";
-import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
-import { getUserOnboardingFinished } from "../../constants/localStorage";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { routes } from "../../router/routes";
 import { SongPage } from "./SongPage";
 import { PlayPageHeader } from "../Dudar/PlayPage";
@@ -27,29 +25,24 @@ import { store } from "../../context";
 import { useDimensions } from "../../hooks/useDimensions";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { NoSong } from "../NoSong";
-import LoginReminder from "../LoginReminder/LoginReminder";
-import { LoginReminderConntainer } from "../LoginReminder";
+import { LoginReminderContainer } from "../LoginReminder";
+import { useStopOnVisibilitiyChange } from "../../hooks/useStopOnVisibilitiyChange";
 
 export const Dudar = () => {
-  const history = useHistory();
   let { path } = useRouteMatch();
   const {
     state: {
       midiData,
       isSongLoading,
       bagpipeType,
-      isPlaying,
       isSongUnavailable,
     },
     setProgress,
-    setIsPlaying
   } = useContext(store);
   const [activeNote, setActiveNote] = useState<{
     note: SharpNotes;
     octave: number;
   } | null>(null);
-  const isUserOnboardingCompleted = getUserOnboardingFinished();
-
   const handleNote = (event: any) => {
     setActiveNote(convertMidiPitchToNote(event.noteNumber));
   };
@@ -69,32 +62,12 @@ export const Dudar = () => {
 
   useDimensions();
   useGoogleProfile();
-
-  useEffect(() => {
-    if (!isUserOnboardingCompleted) {
-      history.replace(routes.start);
-    }
-  }, [history]);
-
-  const onWindowChange = useCallback(() => {
-    if (document.visibilityState === "hidden") {
-      midiPlayer?.pause();
-      setIsPlaying(false)
-    }
-  }, [midiPlayer, isPlaying]);
-
-  useEffect(() => {
-    document.addEventListener("visibilitychange", onWindowChange);
-
-    return () => {
-      document.removeEventListener("visibilitychange", onWindowChange);
-    };
-  }, [midiPlayer, onWindowChange]);
+  useStopOnVisibilitiyChange(midiPlayer)
 
   return (
     <Container>
       <GlobalStyle />
-      <LoginReminderConntainer />
+      <LoginReminderContainer />
       <DonationButton />
       <BackdropSpinner isOpen={isSongLoading} />
       <Switch>

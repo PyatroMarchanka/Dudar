@@ -25,6 +25,7 @@ export const useGoogleProfile = () => {
     setTranspose,
     setIsSilentMode,
     setUserLastSongUrl,
+    setIsUserLoggedIn
   } = useContext(store);
 
   const [loading, setLoading] = useState(true);
@@ -79,6 +80,7 @@ export const useGoogleProfile = () => {
       setUserData(data);
       if (data) {
         setAllUserData(data);
+        setIsUserLoggedIn(true);
       } else {
         const settings = {
           ...defaultUser.settings!,

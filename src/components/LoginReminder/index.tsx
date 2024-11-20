@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { store } from "../../context";
 import LoginReminder from "./LoginReminder";
 
-export const LoginReminderConntainer: React.FC = () => {
+export const LoginReminderContainer: React.FC = () => {
   const {
     state: { userData,  },
   } = useContext(store);

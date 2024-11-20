@@ -35,8 +35,6 @@ export const SongPage = (props: Props) => {
 
   useGoogleProfile();
 
-  console.log("activeSong", activeSong);
-
   const LinkIcon = ({ type }: { type: LinkTypes }) => {
     const IconComponent =
       type === LinkTypes.Video
