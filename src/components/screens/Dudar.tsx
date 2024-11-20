@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { SharpNotes } from "../../interfaces";
 import { PlayerControls } from "../Controls/PlayerControls";
@@ -32,10 +38,11 @@ export const Dudar = () => {
       midiData,
       isSongLoading,
       bagpipeType,
-      activeSong,
+      isPlaying,
       isSongUnavailable,
     },
     setProgress,
+    setIsPlaying
   } = useContext(store);
   const [activeNote, setActiveNote] = useState<{
     note: SharpNotes;
@@ -68,6 +75,21 @@ export const Dudar = () => {
       history.replace(routes.start);
     }
   }, [history]);
+
+  const onWindowChange = useCallback(() => {
+    if (document.visibilityState === "hidden") {
+      midiPlayer?.pause();
+      setIsPlaying(false)
+    }
+  }, [midiPlayer, isPlaying]);
+
+  useEffect(() => {
+    document.addEventListener("visibilitychange", onWindowChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", onWindowChange);
+    };
+  }, [midiPlayer, onWindowChange]);
 
   return (
     <Container>
