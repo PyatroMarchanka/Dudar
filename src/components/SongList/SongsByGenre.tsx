@@ -5,7 +5,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import { IconButton, List, ListItem } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
+import { Close, Videocam, TextFields } from "@material-ui/icons";
 import { Icon } from "../global/Icon";
 import styled from "styled-components";
 import { mediaQueries } from "../../constants/style";
@@ -16,7 +16,7 @@ import { bagpipes } from "../../dataset/bagpipes";
 import { SongTagsWrapper } from "./SongTagsWrapper";
 import { useHistory } from "react-router-dom";
 import { routes } from "../../router/routes";
-import { Song } from "../../dataset/songs/interfaces";
+import { LinkTypes, Song } from "../../dataset/songs/interfaces";
 import { useUserLastSong } from "../../hooks/useUserLastSong";
 
 interface Props {
@@ -62,6 +62,10 @@ const useStyles = makeStyles((theme: Theme) =>
     activeSong: {
       backgroundColor: mainColors.darkRed,
       borderRadius: "4px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      width: "100%",
     },
     list: {
       width: "100%",
@@ -69,6 +73,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     buttonRoot: {
       padding: "5px",
+    },
+    listItem: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      width: "100%",
     },
     detailsRoot: { padding: "0px 16px 16px" },
   })
@@ -89,10 +99,12 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
   const onSongClick = (e: any, song: Song) => {
     e.stopPropagation();
     history.push(`${routes.app}/${routes.play}/${song.id}`);
-    updateUserLastSong(song.id)
+    updateUserLastSong(song.id);
     setOpen(false);
     onStop();
   };
+
+  console.log("song.links", listsByBagpipe);
 
   if (!bagpipeType) return null;
 
@@ -135,7 +147,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                     className={
                       activeSong?.pathName === song.pathName
                         ? classes.activeSong
-                        : ""
+                        : classes.listItem
                     }
                     key={song.name}
                   >
@@ -154,6 +166,23 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                       <ListItem className="song-button-gtm" id={song.name}>
                         {song.name}
                       </ListItem>
+                      {song.links.some(
+                        (link) => link.type === LinkTypes.Video
+                      ) && (
+                        <Icon
+                          className="videoIcon"
+                          fill={mainColors.lightestGrey}
+                          type="material"
+                          Icon={Videocam}
+                        />
+                      )}
+                      {song.lyrycs && (
+                        <Icon
+                          className="video-icon"
+                          type="lyrycs"
+                          fill={mainColors.lightestGrey}
+                        />
+                      )}
                     </IconButton>
                   </div>
                 ))}
@@ -184,5 +213,12 @@ const Content = styled.div`
   .songButton {
     color: white;
     font-size: 16px;
+    width: 100%;
+  }
+
+  .video-icon {
+    align-self: self-start;
+    width: 35px;
+    height: 35px;
   }
 `;

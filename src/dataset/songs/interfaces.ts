@@ -32,7 +32,6 @@ export interface Song {
   pathName: string;
   labels: string[]
   id: string;
-  lyric?: string;
   about?: string;
   originalTempo?: number;
   links: SongLink[];
@@ -48,9 +47,9 @@ export interface SongLink {
 }
 
 export enum LinkTypes {
-  Audio = "audio",
-  Video = "video",
-  Other = "other",
+  Audio = "Audio",
+  Video = "Video",
+  Other = "Other",
 }
 
 export type SongListByBagpipe = { [key: string]: Song[] };

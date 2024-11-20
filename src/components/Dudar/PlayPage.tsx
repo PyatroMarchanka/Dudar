@@ -3,7 +3,7 @@ import { SongList } from "../SongList";
 import { IconButton } from "@material-ui/core";
 import { Icon } from "../global/Icon";
 import { theme } from "../../utils/theme";
-import Info from "@material-ui/icons/Info";
+import HelpOutline from "@material-ui/icons/HelpOutline";
 import ChangeLogPopup from "../ChangeLogPopup";
 import { noSongsLabel } from "../../context";
 import { useSongTitle } from "../../hooks/useSongTitle";
@@ -45,7 +45,7 @@ export const PlayPageHeader = ({ midiPlayer }: Props) => {
               type="material"
               fill={theme.colors.black}
               className="play-icon"
-              Icon={Info}
+              Icon={HelpOutline}
             />
           </IconButton>
         }

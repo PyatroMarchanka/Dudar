@@ -20,7 +20,8 @@ interface Action {
     | "SET_HOLES_MODE"
     | "SET_USER_DATA"
     | "SET_IS_SILENT_MODE"
-    | "SET_USER_LAST_SONG_URL";
+    | "SET_USER_LAST_SONG_URL"
+    | "SET_USER_LOGGED_IN";
 
   payload?: any;
 }
@@ -44,6 +45,7 @@ export interface SettingsState {
   userData: User | null;
   isSilentMode?: boolean;
   userLastSongUrl?: string;
+  isUserLoggedIn?: boolean;
 }
 
 export const settingsInitialState: SettingsState = {
@@ -56,6 +58,7 @@ export const settingsInitialState: SettingsState = {
   userData: null,
   loopBars: 1,
   holesMode: HolesModes.Fingers,
+  isUserLoggedIn: false,
   ...defaultUser.settings,
 };
 
@@ -161,6 +164,11 @@ export const useSettingsReducer = () => {
             ...state,
             userLastSongUrl: action.payload,
           };
+        case "SET_USER_LOGGED_IN":
+          return {
+            ...state,
+            isUserLoggedIn: action.payload,
+          };
         default:
           return state;
       }
@@ -231,6 +239,10 @@ export const useSettingsReducer = () => {
     dispatch({ type: "SET_USER_LAST_SONG_URL", payload: url });
   };
 
+  const setIsUserLoggedIn = (bool: boolean) => {
+    dispatch({ type: "SET_USER_LOGGED_IN", payload: bool });
+  };
+
   return {
     state,
     setMetronome,
@@ -249,5 +261,6 @@ export const useSettingsReducer = () => {
     setUserData,
     setIsSilentMode,
     setUserLastSongUrl,
+    setIsUserLoggedIn,
   };
 };

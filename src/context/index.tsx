@@ -56,6 +56,7 @@ interface Context {
   setIsSilentMode: (bool: boolean) => void;
   setUserLastSongUrl: (url: string) => void;
   setIsSongUnavailable: (bool: boolean) => void;
+  setIsUserLoggedIn: (bool: boolean) => void;
 }
 
 const store = createContext<Context>({
@@ -86,6 +87,7 @@ const store = createContext<Context>({
   setIsSilentMode: (bool: boolean) => {},
   setUserLastSongUrl: (url: string) => {},
   setIsSongUnavailable: (bool: boolean) => {},
+  setIsUserLoggedIn: (bool: boolean) => {},
 });
 const { Provider } = store;
 
