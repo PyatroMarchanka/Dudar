@@ -296,11 +296,17 @@ export class MidiPlayer {
     this.keyUp(droneNote);
     this.keyDown(droneNote, 0.3);
 
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       if (this.isPlaying) {
         this.playDrone(droneNote);
       }
     }, getDroneLength(this.bagpipeType));
+    this.envelopes[drone] = timeout;
+  };
+
+  stopDrone = () => {
+    this.keyUp(this.droneNote);
+    clearTimeout(this.envelopes[drone]);
   };
 
   // playDrumLoop = () => {
@@ -373,13 +379,14 @@ export class MidiPlayer {
           this.stopMidiNote(num);
         }
       });
+      this.stopDrone();
     }
   };
 
   pause = () => {
     this.isPlaying = false;
     this.playRef.current?.cancelQueue();
-    Player.pause();
     this.stopAllNotes();
+    Player.pause();
   };
 }

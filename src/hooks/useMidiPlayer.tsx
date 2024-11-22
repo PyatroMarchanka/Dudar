@@ -16,6 +16,7 @@ export const useMidiPlayer = (
     state: { tempo, metronome, loopBars, activeSong, bagpipeType },
     setIsPlaying,
     setLoop,
+    setProgress
   } = useContext(store);
   const [midiPlayer, setMidiPlayer] = useState<MidiPlayer | null>(null);
   const isUserOnboardingCompleted = getUserOnboardingFinished();
@@ -25,7 +26,15 @@ export const useMidiPlayer = (
   };
 
   useEffect(() => {
+    if (document.visibilityState === "hidden") {
+      midiPlayer?.stop();
+      setIsPlaying(false);
+      setProgress(0);
+      return;
+    }
+
     if (isUserOnboardingCompleted) {
+      midiPlayer?.stop();
       let player: MidiPlayer | null = new MidiPlayer(
         playerRef,
         tempo,
@@ -36,7 +45,7 @@ export const useMidiPlayer = (
       player.initPlayer(handleNote, handleProgress, switchIsPlaying);
       setMidiPlayer(player);
     }
-  }, []);
+  }, [document.visibilityState]);
 
   useEffect(() => {
     if (midiPlayer && bagpipeType) {

@@ -16,7 +16,7 @@ import { convertMidiPitchToNote } from "../../utils/midiUtils";
 import { MidiPlayerComponent } from "../MidiPlayerComponent";
 import { BackdropSpinner } from "../global/BackdropSpinner";
 import { DonationButton } from "../global/DonationButton";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import { routes } from "../../router/routes";
 import { SongPage } from "./SongPage";
 import { PlayPageHeader } from "../Dudar/PlayPage";
@@ -26,7 +26,7 @@ import { useDimensions } from "../../hooks/useDimensions";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { NoSong } from "../NoSong";
 import { LoginReminderContainer } from "../LoginReminder";
-import { useStopOnVisibilitiyChange } from "../../hooks/useStopOnVisibilitiyChange";
+import { getUserOnboardingFinished } from "../../constants/localStorage";
 
 export const Dudar = () => {
   let { path } = useRouteMatch();
@@ -46,6 +46,8 @@ export const Dudar = () => {
   const handleNote = (event: any) => {
     setActiveNote(convertMidiPitchToNote(event.noteNumber));
   };
+  const history = useHistory();
+  const isUserOnboardingCompleted = getUserOnboardingFinished();
 
   const playerRef = useRef(null);
   const { Player: midiPlayer } = useMidiPlayer(
@@ -62,7 +64,12 @@ export const Dudar = () => {
 
   useDimensions();
   useGoogleProfile();
-  useStopOnVisibilitiyChange(midiPlayer)
+
+  useEffect(() => {
+    if (!isUserOnboardingCompleted) {
+      history.replace(routes.start);
+    }
+  }, [history]);
 
   return (
     <Container>
