@@ -47,7 +47,7 @@ const dudelsackSamplerSampler = new Tone.Sampler({
 }).toDestination();
 
 const resume = async (sampler: Tone.Sampler) => {
-  if (sampler.context.state === "suspended") {
+  if (sampler.context.state !== "running") {
     window.dispatchEvent(new CustomEvent("log", { detail: "Resuming audio" }));
     sampler.context.resume();
   }
