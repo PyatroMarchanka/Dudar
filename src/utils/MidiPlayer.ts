@@ -91,6 +91,7 @@ export class MidiPlayer {
     switchIsPlaying: () => void
   ) => {
     console.log("initPlayer");
+    Player = new MidiPlayerLib.Player(function (event: any) {});
     Player.on("playing", ({ tick }: any) => {
       handleProgress(
         Player.getSongPercentRemaining(),

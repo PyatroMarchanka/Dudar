@@ -6,6 +6,7 @@ import {
 } from "../utils/MidiPlayer";
 import { store } from "../context";
 import { getUserOnboardingFinished } from "../constants/localStorage";
+import ContinueModal from "../components/global/ContinueModal";
 
 export const useMidiPlayer = (
   handleNote: MidiNoteHandler,
@@ -16,36 +17,48 @@ export const useMidiPlayer = (
     state: { tempo, metronome, loopBars, activeSong, bagpipeType },
     setIsPlaying,
     setLoop,
-    setProgress
   } = useContext(store);
   const [midiPlayer, setMidiPlayer] = useState<MidiPlayer | null>(null);
   const isUserOnboardingCompleted = getUserOnboardingFinished();
+  const [isCountinueModalOpen, setIsCountinueModalOpen] = useState(false);
 
   const switchIsPlaying = () => {
     setIsPlaying(false);
   };
 
+  const initPlayer = () => {
+    setMidiPlayer(null);
+    midiPlayer?.stop();
+    let player: MidiPlayer | null = new MidiPlayer(
+      playerRef,
+      tempo,
+      metronome,
+      loopBars,
+      bagpipeType
+    );
+    player.initPlayer(handleNote, handleProgress, switchIsPlaying);
+    setMidiPlayer(player);
+  };
+
   useEffect(() => {
     if (document.visibilityState === "hidden") {
-      midiPlayer?.stop();
+      midiPlayer?.pause();
       setIsPlaying(false);
-      setProgress(0);
+      setIsCountinueModalOpen(true);
       return;
     }
 
     if (isUserOnboardingCompleted) {
-      midiPlayer?.stop();
-      let player: MidiPlayer | null = new MidiPlayer(
-        playerRef,
-        tempo,
-        metronome,
-        loopBars,
-        bagpipeType
-      );
-      player.initPlayer(handleNote, handleProgress, switchIsPlaying);
-      setMidiPlayer(player);
+      initPlayer();
     }
   }, [document.visibilityState]);
+
+  const continueElement = (
+    <ContinueModal
+      open={isCountinueModalOpen}
+      setOpen={setIsCountinueModalOpen}
+    />
+  );
 
   useEffect(() => {
     if (midiPlayer && bagpipeType) {
@@ -61,5 +74,5 @@ export const useMidiPlayer = (
     }
   }, [activeSong, midiPlayer]);
 
-  return { Player: midiPlayer, setMidiPlayer };
+  return { Player: midiPlayer, setMidiPlayer, continueElement };
 };

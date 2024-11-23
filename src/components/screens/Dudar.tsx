@@ -1,9 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { SharpNotes } from "../../interfaces";
 import { PlayerControls } from "../Controls/PlayerControls";
@@ -31,12 +26,7 @@ import { getUserOnboardingFinished } from "../../constants/localStorage";
 export const Dudar = () => {
   let { path } = useRouteMatch();
   const {
-    state: {
-      midiData,
-      isSongLoading,
-      bagpipeType,
-      isSongUnavailable,
-    },
+    state: { midiData, isSongLoading, bagpipeType, isSongUnavailable },
     setProgress,
   } = useContext(store);
   const [activeNote, setActiveNote] = useState<{
@@ -50,7 +40,7 @@ export const Dudar = () => {
   const isUserOnboardingCompleted = getUserOnboardingFinished();
 
   const playerRef = useRef(null);
-  const { Player: midiPlayer } = useMidiPlayer(
+  const { Player: midiPlayer, continueElement } = useMidiPlayer(
     handleNote,
     setProgress,
     playerRef
@@ -74,6 +64,7 @@ export const Dudar = () => {
   return (
     <Container>
       <GlobalStyle />
+      {continueElement}
       <LoginReminderContainer />
       <DonationButton />
       <BackdropSpinner isOpen={isSongLoading} />

@@ -53,7 +53,6 @@ export const Icon = styled(
             className={getClassName()}
             role="img"
             focusable="false"
-            aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 14 14"
           >
@@ -543,7 +542,6 @@ export const Icon = styled(
             fill={fill}
             className={className}
             focusable="false"
-            aria-hidden="true"
             viewBox="0 0 24 24"
             data-testid="LyricsIcon"
             aria-label="fontSize large"
