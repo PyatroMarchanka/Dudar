@@ -38,7 +38,6 @@ export const useMidiPlayer = (
     );
     player.initPlayer(handleNote, handleProgress, switchIsPlaying);
     setMidiPlayer(player);
-    window.dispatchEvent(new CustomEvent('log', { detail: 'Midi player initialized' }));
   };
 
   useEffect(() => {
