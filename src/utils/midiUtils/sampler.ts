@@ -46,6 +46,12 @@ const dudelsackSamplerSampler = new Tone.Sampler({
   baseUrl: "/",
 }).toDestination();
 
+const resume = async (sampler: Tone.Sampler) => {
+  if (sampler.context.state === "suspended") {
+    window.dispatchEvent(new CustomEvent("log", { detail: "Resuming audio" }));
+    sampler.context.resume();
+  }
+};
 export const playNote = (
   bagpipeType: BagpipeTypes,
   note?: string,
@@ -57,15 +63,19 @@ export const playNote = (
 
   switch (bagpipeType) {
     case BagpipeTypes.BelarusianTraditionalDuda:
+      resume(belTradSamplerSampler);
       belTradSamplerSampler.triggerAttack([note], undefined, 1);
       break;
     case BagpipeTypes.BelarusianOpenDuda:
+      resume(sampler);
       sampler.triggerAttack([note], undefined, volume);
       break;
     case BagpipeTypes.Dudelsack:
+      resume(dudelsackSamplerSampler);
       dudelsackSamplerSampler.triggerAttack([note], undefined, volume);
       break;
     case BagpipeTypes.Highlander:
+      resume(dudelsackSamplerSampler);
       dudelsackSamplerSampler.triggerAttack([note], undefined, volume);
       break;
     default:

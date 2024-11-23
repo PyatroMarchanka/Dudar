@@ -29,7 +29,7 @@ const Logger: React.FC = () => {
 const styles = {
     container: {
         position: 'fixed' as 'fixed',
-        bottom: 0,
+        top: '40px',
         right: 0,
         width: '300px',
         maxHeight: '200px',
