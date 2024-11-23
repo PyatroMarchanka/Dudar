@@ -14,6 +14,7 @@ import { secondsToTime } from "../../../utils/textUtils";
 import { Preclick } from "../../Preclick";
 import { LoopBars } from "./LoopBars";
 import { gtmPush } from "../../../utils/gtm";
+import { songApi } from "../../../api/songClient";
 
 interface Props {
   player: MidiPlayer | null;
@@ -49,6 +50,7 @@ export const PlayerControls = ({ player }: Props) => {
     if (play) {
       play && play(midi, progress?.percent || 0, activeSong!.timeSignature);
       gtmPush({ song_name: activeSong!.name });
+      songApi.updateSongViewsCount(activeSong!);
     }
   };
 

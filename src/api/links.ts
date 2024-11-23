@@ -8,7 +8,8 @@ const authLinks = {
 }
 const songsLinks = {
   songs: `${process.env.REACT_APP_BACKEND_URL}/v1/songs`,
-  song: `${process.env.REACT_APP_BACKEND_URL}/v1/song`
+  song: `${process.env.REACT_APP_BACKEND_URL}/v1/song`,
+  songViews: `${process.env.REACT_APP_BACKEND_URL}/v1/songs/plays`
 }
 
 const adminLinks = {

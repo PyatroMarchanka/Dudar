@@ -24,13 +24,26 @@ export const songApi = {
     return res.data;
   },
   updateSong: async (song: Song) => {
-    if(!song._id) return;
+    if (!song._id) return;
 
-    const res = await songServerClient.put(`${links.adminSong}/${song._id}`, song, {withCredentials: true});
+    const res = await songServerClient.put(
+      `${links.adminSong}/${song._id}`,
+      song,
+      { withCredentials: true }
+    );
     return res.data;
   },
   getSongData: async (_id: string) => {
     const res = await songServerClient.get(`${links.songs}/${_id}`);
     return res.data;
-  }
+  },
+  updateSongViewsCount: async (song: Song) => {
+    if (!song._id) return;
+
+    const res = await songServerClient.put(
+      `${links.songViews}/${song._id}`,
+      song,
+    );
+    return res.data;
+  },
 };
