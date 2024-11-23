@@ -22,6 +22,7 @@ import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { NoSong } from "../NoSong";
 import { LoginReminderContainer } from "../LoginReminder";
 import { getUserOnboardingFinished } from "../../constants/localStorage";
+import Logger from "../global/Logger";
 
 export const Dudar = () => {
   let { path } = useRouteMatch();
@@ -67,6 +68,7 @@ export const Dudar = () => {
       {continueElement}
       <LoginReminderContainer />
       <DonationButton />
+      <Logger />
       <BackdropSpinner isOpen={isSongLoading} />
       <Switch>
         <Route exact path={`${path}/${routes.play}/:id`}>
