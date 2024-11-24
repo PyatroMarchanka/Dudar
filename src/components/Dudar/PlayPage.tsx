@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import { SongList } from "../SongList";
-import { IconButton } from "@material-ui/core";
+import { IconButton, makeStyles, SwipeableDrawer } from "@material-ui/core";
 import { Icon } from "../global/Icon";
-import { theme } from "../../utils/theme";
+import { mainColors, theme } from "../../utils/theme";
 import HelpOutline from "@material-ui/icons/HelpOutline";
+import { Close } from "@material-ui/icons";
 import ChangeLogPopup from "../ChangeLogPopup";
 import { noSongsLabel } from "../../context";
 import { useSongTitle } from "../../hooks/useSongTitle";
@@ -16,15 +17,38 @@ import Modal from "../global/Modal";
 import { SongPage } from "../screens/SongPage";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { SongPageModal } from "../global/SongPageModal";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
 }
 
+const useStyles = makeStyles(() => ({
+  container: {
+    width: 200,
+    display: "flex",
+    justifyContent: "center",
+  },
+  content: {
+    width: 300,
+    display: "flex",
+    margin: 0,
+    justifyContent: "flex-start",
+  },
+  list: {
+    width: 250,
+  },
+  root: {
+    backgroundColor: mainColors.darkestRed,
+    color: "#fff",
+  },
+}));
+
 export const PlayPageHeader = ({ midiPlayer }: Props) => {
   const songTitle = useSongTitle();
   useLoadSong();
-  const {t} = useTranslation("translation");
+  const { t } = useTranslation("translation");
+  const classes = useStyles();
 
   useEffect(() => {
     document.title = songTitle || noSongsLabel;
@@ -36,7 +60,8 @@ export const PlayPageHeader = ({ midiPlayer }: Props) => {
       <Header>
         <SongTitle>{songTitle || noSongsLabel}</SongTitle>
       </Header>
-      <Modal
+      {/* <Modal
+        fullScreen={true}
         title={t("songInfo.title")}
         maxWidth="xl"
         triggerComponent={
@@ -50,8 +75,17 @@ export const PlayPageHeader = ({ midiPlayer }: Props) => {
           </IconButton>
         }
       >
+        <IconButton onClick={}>
+          <Icon
+            type="material"
+            fill={theme.colors.black}
+            className="play-icon"
+            Icon={Close}
+          />
+        </IconButton>
         <SongPage />
-      </Modal>
+      </Modal> */}
+      <SongPageModal />
 
       <ChangeLogPopup />
       <LogoContainer>

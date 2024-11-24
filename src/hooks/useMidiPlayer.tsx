@@ -14,7 +14,7 @@ export const useMidiPlayer = (
   playerRef: any
 ) => {
   const {
-    state: { tempo, metronome, loopBars, activeSong, bagpipeType },
+    state: { tempo, metronome, loopBars, activeSong, bagpipeType, isPlaying },
     setIsPlaying,
     setLoop,
   } = useContext(store);
@@ -43,8 +43,12 @@ export const useMidiPlayer = (
   useEffect(() => {
     if (document.visibilityState === "hidden") {
       midiPlayer?.pause();
+      
+      if (isPlaying) {
+
+        setIsCountinueModalOpen(true);
+      }
       setIsPlaying(false);
-      setIsCountinueModalOpen(true);
       return;
     }
 

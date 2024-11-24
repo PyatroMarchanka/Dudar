@@ -1,6 +1,7 @@
 import { Box, Modal, Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { Button } from "./Button";
+import { useTranslation } from "react-i18next";
 
 const modalStyle = {
   position: "absolute" as "absolute",
@@ -20,20 +21,7 @@ interface Props {
 }
 
 const ContinueModal: React.FC<Props> = ({ open, setOpen }) => {
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        setOpen(true);
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [document.visibilityState]);
-
+  const { t } = useTranslation("translation");
   const handleClose = () => {
     setOpen(false);
   };
@@ -47,10 +35,10 @@ const ContinueModal: React.FC<Props> = ({ open, setOpen }) => {
     >
       <Box sx={modalStyle}>
         <Typography variant="h6" component="h2">
-          Welcome Back!
+          {t("continueModal.title")}
         </Typography>
-        <Typography>You have returned to the application.</Typography>
-        <Button onClick={handleClose}>Close</Button>
+        <Typography>{t("continueModal.body")}</Typography>
+        <Button onClick={handleClose}>Ok</Button>
       </Box>
     </Modal>
   );

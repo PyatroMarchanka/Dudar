@@ -62,7 +62,9 @@
     "hard": "trudne",
     "tune": "melodia",
     "cantiga": "cantiga",
-    "serbian": "serbskie"
+    "serbian": "serbskie",
+    "top10": "top 10"
+
   },
   "feedback": {
     "haveAQuestion": "Masz pytanie?",
@@ -123,5 +125,9 @@
     "title": "Utwór niedostępny",
     "text": "Wybrany utwór nie może być odtworzony na wybranym instrumencie.",
     "tryChange": "Proszę spróbować zmienić utwór lub dostosować ustawienia instrumentu."
+  },
+  "continueModal": {
+    "title": "Witamy z powrotem!",
+    "body": "Znów jesteś w aplikacji."
   }
 }

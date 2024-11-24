@@ -89,10 +89,6 @@ export const Dudar = () => {
             </>
           )}
         </Route>
-        <Route exact path={`${path}/${routes.info}/:id`}>
-          <InfoPageHeader midiPlayer={midiPlayer} />
-          <SongPage />
-        </Route>
       </Switch>
     </Container>
   );

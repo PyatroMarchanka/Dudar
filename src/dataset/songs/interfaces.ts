@@ -37,6 +37,14 @@ export interface Song {
   links: SongLink[];
   transcribedBy?: string;
   lyrycs?: string;
+  stats: IStats
+}
+
+
+export interface IStats {
+  views: number;
+  likes: number;
+  lastViewed: Date;
 }
 
 

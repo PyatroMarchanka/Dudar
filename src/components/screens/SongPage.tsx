@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { store } from "../../context";
 import { findSongInListById } from "../../dataset/songs/utils";
 import styled, { createGlobalStyle } from "styled-components";
-import { Typography } from "@material-ui/core";
+import { IconButton, Typography } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { getTranslationKeyByBagpipeType } from "../../interfaces/enumUtils";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
@@ -14,9 +14,11 @@ import Audiotrack from "@material-ui/icons/Audiotrack";
 import Info from "@material-ui/icons/Info";
 import { Icon } from "../global/Icon";
 
-interface Props {}
+interface Props {
+  onClose: () => void;
+}
 
-export const SongPage = (props: Props) => {
+export const SongPage = ({ onClose }: Props) => {
   const { t } = useTranslation("translation");
   const params: any = useParams();
 
@@ -54,6 +56,9 @@ export const SongPage = (props: Props) => {
 
   return (
     <Container>
+      <IconButton onClick={onClose} className="back">
+        <Icon type="back" fill={"black"} />
+      </IconButton>
       <GlobalStyle />
       <SongProperty className="title">
         <Typography align="center" variant="h6">
@@ -190,11 +195,10 @@ const Container = styled.div`
   a {
     margin-top: 50px;
   }
-  .playLink {
-    text-decoration: none;
-    color: black;
-    margin-top: auto;
-    margin-bottom: 20px;
+  .back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
   }
 `;
 

@@ -5,7 +5,6 @@ import { mainColors } from "../../utils/theme";
 import { SongTags } from "../../dataset/songs/interfaces";
 import { Typography } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
-import { getAvailableTagsFromLists } from "../../dataset/songs/utils";
 
 interface Props {}
 
@@ -14,9 +13,11 @@ export const SongTagsWrapper = (props: Props) => {
     state: { songTags },
   } = useContext(store);
 
+  const top10Tag = "top10";
+  const tagsToShow = [top10Tag, ...songTags] as SongTags[];
   return (
     <div>
-      {songTags.map((tag) => (
+      {tagsToShow.map((tag) => (
         <TagComponent key={tag} tag={tag} />
       ))}
     </div>

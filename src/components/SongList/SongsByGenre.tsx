@@ -5,7 +5,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import { IconButton, List, ListItem } from "@material-ui/core";
-import { Close, Videocam, TextFields } from "@material-ui/icons";
+import { Close, Videocam } from "@material-ui/icons";
 import { Icon } from "../global/Icon";
 import styled from "styled-components";
 import { mediaQueries } from "../../constants/style";
@@ -50,10 +50,6 @@ const useStyles = makeStyles((theme: Theme) =>
         marginBottom: "5px",
       },
     },
-    dudaRoot: {
-      marginTop: "60px",
-      marginLeft: "20px",
-    },
     duda: {},
     heading: {
       fontWeight: "bold",
@@ -72,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: "0px",
     },
     buttonRoot: {
-      padding: "5px",
+      padding: "5px 20px 5px 5px",
     },
     listItem: {
       display: "flex",
@@ -80,7 +76,10 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "space-between",
       width: "100%",
     },
-    detailsRoot: { padding: "0px 16px 16px" },
+    playsCount: {
+      paddingRight: "10px",
+    },
+    detailsRoot: { padding: "0px 0px 16px 5px" },
   })
 );
 
@@ -110,14 +109,16 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
 
   return (
     <Content>
-      <IconButton className="close" onClick={() => setOpen(false)}>
-        <Icon type="material" fill="#fff" Icon={Close} />
-      </IconButton>
-      <div className={classes.dudaRoot}>
-        <Typography className={classes.duda}>
-          {t("songList.instrument")}
-        </Typography>
-        <Typography>{t(`dudas.${bagpipes[bagpipeType].name}`)}</Typography>
+      <div className="row">
+        <IconButton onClick={() => setOpen(false)}>
+          <Icon type="material" fill="#fff" Icon={Close} />
+        </IconButton>
+        <div>
+          <Typography className={classes.duda}>
+            {t("songList.instrument")}
+          </Typography>
+          <Typography>{t(`dudas.${bagpipes[bagpipeType].name}`)}</Typography>
+        </div>
       </div>
 
       {genres.map((genre) => (
@@ -139,7 +140,6 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                 {t(`genres.${genre}`)}
               </Typography>
             </AccordionSummary>
-
             <AccordionDetails classes={{ root: classes.detailsRoot }}>
               <List classes={{ padding: classes.list }}>
                 {listsByBagpipe![genre].map((song) => (
@@ -151,18 +151,20 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                     }
                     key={song.name}
                   >
+                    {song.stats.views > 0 && (
+                      <Typography
+                        variant="subtitle1"
+                        className={classes.playsCount}
+                      >
+                        {song.stats.views}
+                      </Typography>
+                    )}
                     <IconButton
                       classes={{ root: classes.buttonRoot }}
                       className="songButton"
                       onClick={(e) => onSongClick(e, song)}
                     >
-                      <Icon
-                        type={
-                          activeSong?.pathName === song.pathName
-                            ? "song-play"
-                            : "music"
-                        }
-                      />
+                      <Icon type="song-play" />
                       <ListItem className="song-button-gtm" id={song.name}>
                         {song.name}
                       </ListItem>
@@ -201,14 +203,15 @@ const Content = styled.div`
     width: 100vw;
   }
 
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 100%;
+  }
+
   width: 300px;
   z-index: 10;
-  .close {
-    position: absolute;
-    left: 10px;
-    margin-top: 10px;
-    z-index: 100;
-  }
 
   .songButton {
     color: white;

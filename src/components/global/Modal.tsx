@@ -12,6 +12,7 @@ interface Props {
   className?: string;
   style?: CSSProperties;
   maxWidth?: "xs" | "sm" | "md" | "lg" | "xl" | false;
+  fullScreen?: boolean;
 }
 
 export default function Modal({
@@ -21,6 +22,7 @@ export default function Modal({
   className,
   style,
   maxWidth = "xs",
+  fullScreen = false,
 }: Props) {
   const [open, setOpen] = React.useState(false);
 
@@ -37,6 +39,7 @@ export default function Modal({
       <div onClick={handleClickOpen}>{triggerComponent}</div>
 
       <Dialog
+        fullScreen={fullScreen}
         maxWidth={maxWidth}
         style={style || {}}
         className={className}

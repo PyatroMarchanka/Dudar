@@ -62,7 +62,8 @@
     "hard": "hard",
     "tune": "tune",
     "cantiga": "cantiga",
-    "serbian": "serbian"
+    "serbian": "serbian",
+    "top10": "top 10"
   },
   "feedback": {
     "haveAQuestion": "Have a question?",
@@ -120,7 +121,11 @@
   },
   "noSong": {
     "title": "Song Unavailable",
-    "text":"The selected song cannot be played on the chosen instrument.",
+    "text": "The selected song cannot be played on the chosen instrument.",
     "tryChange": "Please try changing the song or adjust the instrument settings."
+  },
+  "continueModal": {
+    "title": "Welcome back!",
+    "body": "You have returned to the application."
   }
 }
