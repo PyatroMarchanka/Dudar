@@ -29,7 +29,12 @@ export const songApi = {
     const res = await songServerClient.put(
       `${links.adminSong}/${song._id}`,
       song,
-      { withCredentials: true, headers: { "Content-Type": "application/json" } }
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
     return res.data;
   },
