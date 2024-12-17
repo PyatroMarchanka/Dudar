@@ -151,7 +151,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                     }
                     key={song.name}
                   >
-                    {song.stats.views > 0 && (
+                    {song.stats?.views > 0 && (
                       <Typography
                         variant="subtitle1"
                         className={classes.playsCount}
