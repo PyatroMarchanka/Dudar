@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import styled from "styled-components";
 import { SongEditor } from "./SongEditor";
 import { songApi } from "../../api/songClient";
-import { Song } from "../../dataset/songs/interfaces";
+import { Song, SongTypes } from "../../dataset/songs/interfaces";
 
 const Container = styled.div`
   display: flex;
@@ -15,19 +15,38 @@ const Container = styled.div`
 
 const Admin = () => {
   const [songs, setSongs] = useState<Song[]>([]);
+  const [typeFilter, setTypeFilter] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     songApi.getSongList().then(setSongs);
   }, []);
 
-  const [searchTerm, setSearchTerm] = useState("");
-
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredSongs = songs.filter((song) =>
-    song.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const handleTypeFilterChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setTypeFilter(event.target.value);
+  };
+
+  const filteredSongs = songs
+    .filter((song) =>
+      song.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter((song) => (typeFilter ? song.type === typeFilter : true));
+
+  const TypeFilter = () => (
+    <select value={typeFilter} onChange={handleTypeFilterChange}>
+      <option value="">All Types</option>
+      {Object.values(SongTypes).map((type) => (
+        <option key={type} value={type}>
+          {type}
+        </option>
+      ))}
+    </select>
   );
 
   return (
@@ -37,6 +56,7 @@ const Admin = () => {
           <Route exact path="/admin">
             <Link to="/">To Main Page</Link>
             <h1>Song List</h1>
+            <TypeFilter />
             <SearchInput
               type="text"
               placeholder="Search songs..."
@@ -47,6 +67,7 @@ const Admin = () => {
               <thead>
                 <tr>
                   <th>Name</th>
+                  <th>Type</th>
                   <th>Path Name</th>
                   <th>About</th>
                   <th>Original Tempo</th>
@@ -62,6 +83,7 @@ const Admin = () => {
                     <td>
                       <Link to={`/admin/song/${song._id}`}>{song.name}</Link>
                     </td>
+                    <td>{song.type}</td>
                     <td>{song.pathName ? "X" : ""}</td>
                     <td>{song.about ? "X" : ""}</td>
                     <td>{song.originalTempo ? "X" : ""}</td>
