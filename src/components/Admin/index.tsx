@@ -66,6 +66,7 @@ const Admin = () => {
             <Table>
               <thead>
                 <tr>
+                  <th>№</th>
                   <th>Name</th>
                   <th>Type</th>
                   <th>Path Name</th>
@@ -78,8 +79,9 @@ const Admin = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredSongs.map((song) => (
+                {filteredSongs.map((song, id) => (
                   <tr key={song._id}>
+                    <td>{id}</td>
                     <td>
                       <Link to={`/admin/song/${song._id}`}>{song.name}</Link>
                     </td>
