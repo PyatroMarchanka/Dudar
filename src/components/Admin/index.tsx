@@ -17,6 +17,9 @@ const Admin = () => {
   const [songs, setSongs] = useState<Song[]>([]);
   const [typeFilter, setTypeFilter] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortConfig, setSortConfig] = useState<{ key: keyof Song }>({
+    key: "name",
+  });
 
   useEffect(() => {
     songApi.getSongList().then(setSongs);
@@ -36,7 +39,10 @@ const Admin = () => {
     .filter((song) =>
       song.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .filter((song) => (typeFilter ? song.type === typeFilter : true));
+    .filter((song) => (typeFilter ? song.type === typeFilter : true))
+    .sort((a, b) =>
+      (a[sortConfig.key] as any) > (b[sortConfig.key] as any) ? 1 : -1
+    );
 
   const TypeFilter = () => (
     <select value={typeFilter} onChange={handleTypeFilterChange}>
@@ -67,8 +73,8 @@ const Admin = () => {
               <thead>
                 <tr>
                   <th>№</th>
-                  <th>Name</th>
-                  <th>Type</th>
+                  <th onClick={() => setSortConfig({ key: "name" })}>Name</th>
+                  <th onClick={() => setSortConfig({ key: "type" })}>Type</th>
                   <th>Path Name</th>
                   <th>About</th>
                   <th>Original Tempo</th>
