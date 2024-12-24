@@ -2,7 +2,7 @@
   "tempo": "Tempo",
   "settings": "Settings",
   "instrumentType": "Instrument Type",
-  "transposeMelody": "Transpose melody",
+  "transposeMelody": "Bagpipe tonality",
   "preclick": "Preclick",
   "silentMode": "Silent mode (metronome only)",
   "noIcon": "No icon",

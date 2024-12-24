@@ -61,7 +61,6 @@ export const MainSettings = ({ midiPlayer }: Props) => {
           <Transpose midiPlayer={midiPlayer} />
         </Row>
       )}
-
       <Line />
       <Row>
         <Icon type="material" fill={mainColors.darkerGray} Icon={AvTimerIcon} />

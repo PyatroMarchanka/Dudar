@@ -16,7 +16,12 @@ export const InstrumentTypes = () => {
     setBagpipeType,
   } = useContext(store);
 
-  const bagpipeTypes = Object.values(BagpipeTypes);
+  const bagpipeTypes = [
+    BagpipeTypes.BelarusianTraditionalDuda,
+    BagpipeTypes.BelarusianOpenDuda,
+    BagpipeTypes.Dudelsack,
+    BagpipeTypes.Highlander,
+  ];
 
   const onChange = (bagpipeType: BagpipeTypes) => {
     setBagpipeType(bagpipeType);
