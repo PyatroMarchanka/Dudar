@@ -5,6 +5,7 @@ import { Start } from "../components/screens/Start";
 import { routes } from "./routes";
 import { LoginPage } from "../components/screens/LoginPage";
 import Admin from "../components/Admin";
+import EDuda from "../components/screens/Eduda";
 
 export const AppRouter = () => {
   return (
@@ -24,6 +25,9 @@ export const AppRouter = () => {
         </Route>
         <Route path={routes.login}>
           <LoginPage />
+        </Route>
+        <Route path={routes.eduda}>
+          <EDuda />
         </Route>
         <Route path={routes.logout}>Logout</Route>
       </Switch>
