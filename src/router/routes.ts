@@ -1,5 +1,6 @@
 export const routes = {
   start: "/start",
+  eduda: "/eduda",
   app: "/app",
   info: "info",
   play: "play",
