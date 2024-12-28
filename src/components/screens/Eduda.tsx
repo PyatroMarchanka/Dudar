@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as Tone from "tone";
+let isSoundEnabled = false;
 
 const EDuda = () => {
   const [bleState, setBleState] = useState("Disconnected");
@@ -9,7 +10,6 @@ const EDuda = () => {
   const [level, setLevel] = useState(10);
   const [progress, setProgress] = useState("");
   const [currentNote, setCurrentNote] = useState("");
-  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
 
   const bleServer = useRef<any>(null);
   const bleServiceFound = useRef<any>(null);
@@ -109,24 +109,22 @@ const EDuda = () => {
     }
 
     setCurrentNote(noteToPlay);
-
     if (newValue === "111111111" || newValue === "111111110") {
-      setIsSoundEnabled(true);
+      isSoundEnabled = true;
+      droneSynth.current.triggerRelease("A2", now);
+      droneSynth.current.triggerAttack("A2", now);
     } else if (
       newValue === "000000000" ||
       (isSoundEnabled && newValue[0] === "0")
     ) {
-      setIsSoundEnabled(false);
+      isSoundEnabled = false;
       synth.current.releaseAll();
       droneSynth.current.releaseAll();
       return;
     }
 
     if (!isSoundEnabled) return;
-
-    droneSynth.current.triggerRelease("A2", now);
-    droneSynth.current.triggerAttack("A2", now);
-    synth.current.triggerRelease(currentNote);
+    synth.current.releaseAll();
     synth.current.triggerAttack(noteToPlay, now);
   };
 
