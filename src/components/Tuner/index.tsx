@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { Button } from "../global/Button";
 import { use } from "i18next";
 import { set } from "lodash";
+import { Typography } from "@material-ui/core";
 
 interface Props {}
 interface Data {
@@ -66,11 +67,12 @@ export const Tuner = ({}: Props) => {
   const [dataToShow, setDataToShow] = useState<Data | null>(null);
 
   const handleClick = () => {
-    if (isTunerOn) {
+    if (isTunerOn && tuner.isOn) {
       tuner.stop();
-    } else {
+    } else if (!tuner.isOn) {
       tuner.start();
     }
+
     setIsTunerOn(!isTunerOn);
   };
 
@@ -172,9 +174,12 @@ export const Tuner = ({}: Props) => {
         {isTunerOn ? "Disable Tuner" : "Enable Tuner"}
       </Button>
 
-      {data && isTunerOn && (
-        <canvas ref={canvasRef} width={canvasWidth} height={60} />
-      )}
+      {isTunerOn &&
+        (data ? (
+          <canvas ref={canvasRef} width={canvasWidth} height={60} />
+        ) : (
+          <Typography>Waiting for data...</Typography>
+        ))}
     </Container>
   );
 };
@@ -184,4 +189,6 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  color: #333;
+  font-family: Arial, Helvetica, sans-serif;
 `;
