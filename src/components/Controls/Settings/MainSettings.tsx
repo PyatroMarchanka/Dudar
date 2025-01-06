@@ -17,6 +17,7 @@ import { Contacts } from "../../Contacts";
 import { DonationButtonBig } from "../../global/DonationButtonBig";
 import { useUpdateUserSettings } from "../../../hooks/useGoogleProfile";
 import { Link } from "react-router-dom";
+import { Tuner } from "../../Tuner";
 
 type Props = {
   midiPlayer?: MidiPlayer | null;
@@ -43,6 +44,7 @@ export const MainSettings = ({ midiPlayer }: Props) => {
   return (
     <Container>
       <DonationButtonBig />
+      <Tuner />
       <Row>
         <Icon type="duda" className="duda" />
         <Title>{t("instrumentType")}</Title>
