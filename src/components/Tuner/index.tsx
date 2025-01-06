@@ -66,11 +66,13 @@ export const Tuner = ({}: Props) => {
   const [isTunerOn, setIsTunerOn] = useState(false);
   const [dataToShow, setDataToShow] = useState<Data | null>(null);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (isTunerOn && tuner.isOn) {
       tuner.stop();
+      await navigator.mediaDevices.getUserMedia({ audio: false });
     } else if (!tuner.isOn) {
       tuner.start();
+      await navigator.mediaDevices.getUserMedia({ audio: true });
     }
 
     setIsTunerOn(!isTunerOn);
@@ -152,7 +154,8 @@ export const Tuner = ({}: Props) => {
         ctx.textAlign = "center";
         ctx.fillText(dataToShow.note, canvasRef.current.width / 2, 30);
         ctx.fillText(
-          dataToShow.diff.toString(),
+          (Math.round(dataToShow.diff) > 0 ? "+" : "") +
+            Math.round(dataToShow.diff).toString(),
           canvasRef.current.width / 2,
           50
         );
