@@ -56,12 +56,6 @@ export const Dudar = () => {
   useDimensions();
   useGoogleProfile();
 
-  useEffect(() => {
-    if (!isUserOnboardingCompleted) {
-      history.replace(routes.start);
-    }
-  }, [history]);
-
   return (
     <Container>
       <GlobalStyle />

@@ -12,11 +12,11 @@ export const Start = () => {
   } = useContext(store);
   const isUserOnboardingCompleted = getUserOnboardingFinished();
 
-  useEffect(() => {
-    if (isUserOnboardingCompleted) {
-      history.replace(routes.app);
-    }
-  }, [history, isUserOnboardingCompleted]);
+  // useEffect(() => {
+  //   if (isUserOnboardingCompleted) {
+  //     history.replace(routes.app);
+  //   }
+  // }, [history, isUserOnboardingCompleted]);
 
   return <Onboarding />;
 };
