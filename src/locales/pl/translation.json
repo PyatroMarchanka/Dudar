@@ -7,6 +7,9 @@
   "silentMode": "Cichy tryb (tylko metronom)",
   "noIcon": "Brak ikony",
   "semitones": "półton(y)",
+  "tuner": "Tuner",
+  "disableTuner": "Wyłącz tuner",
+  "enableTuner": "Włącz tuner",
   "gotIt": "Rozumiem",
   "looper": {
     "selectBarsCount": "Wybierz liczbę taktów muzycznych do zapętlenia",

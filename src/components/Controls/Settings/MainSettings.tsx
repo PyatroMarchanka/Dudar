@@ -44,12 +44,14 @@ export const MainSettings = ({ midiPlayer }: Props) => {
   return (
     <Container>
       <DonationButtonBig />
-      <Tuner />
+      <Row>
+        <Tuner />
+      </Row>
+      <Line />
       <Row>
         <Icon type="duda" className="duda" />
         <Title>{t("instrumentType")}</Title>
       </Row>
-      <Line />
       <InstrumentTypes />
       <Line />
       {midiPlayer && (

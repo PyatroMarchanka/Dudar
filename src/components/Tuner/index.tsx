@@ -2,8 +2,10 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import createTuner from "@pedroloch/tuner";
 import styled from "styled-components";
-import { Button } from "../global/Button";
 import { Typography } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
+import { mainColors } from "../../utils/theme";
+import { Icon } from "../global/Icon";
 
 interface Props {}
 interface Data {
@@ -26,12 +28,12 @@ export const Tuner = ({}: Props) => {
   const [data, setData] = useState<Data | null>(null);
   const [isTunerOn, setIsTunerOn] = useState(false);
   const [dataToShow, setDataToShow] = useState<Data | null>(null);
+  const { t } = useTranslation("translation");
 
   const handleClick = async () => {
     if (isTunerOn) {
       tuner.stop();
       stream?.getTracks().forEach((track) => track.stop());
-
     } else if (!tuner.isOn) {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       await tuner.start();
@@ -84,6 +86,9 @@ export const Tuner = ({}: Props) => {
       clearInterval(interval);
       setDataToShow(null);
       setData(null);
+      tuner.stop();
+      setIsTunerOn(false);
+      stream?.getTracks().forEach((track) => track.stop());
     };
   }, []);
 
@@ -119,21 +124,30 @@ export const Tuner = ({}: Props) => {
 
   return (
     <Container>
-      <Button onClick={handleClick}>
-        {isTunerOn ? "Disable Tuner" : "Enable Tuner"}
-      </Button>
+      <Row>
+        <Icon
+          fill={mainColors.darkerGray}
+          type="tuning-fork"
+          className="duda"
+        />
+        <Title onClick={handleClick}>
+          {isTunerOn ? t("disableTuner") : t("enableTuner")}
+        </Title>
+      </Row>
       {isTunerOn && dataToShow && (
-        <Wrapper isGreen={isGreen}>
-          <MovingBarContainer>
-            <MovingBar
-              isGreen={isGreen}
-              translateX={(tunerWidth / 2) * (dataToShow.diff / 100) || 0}
-              width={20}
-            />
-            {verticalLines(tunerWidth / 10, 10)}
-          </MovingBarContainer>
-          <Typography variant="h4">{dataToShow?.note}</Typography>
-          <Typography variant="h5">{dataToShow?.diff}</Typography>
+        <Wrapper>
+          <TunerContainer isGreen={isGreen}>
+            <MovingBarContainer>
+              <MovingBar
+                isGreen={isGreen}
+                translateX={(tunerWidth / 2) * (dataToShow.diff / 100) || 0}
+                width={20}
+              />
+              {verticalLines(tunerWidth / 10, 10)}
+            </MovingBarContainer>
+            <Typography variant="h4">{dataToShow?.note}</Typography>
+            <Typography variant="h5">{dataToShow?.diff}</Typography>
+          </TunerContainer>
         </Wrapper>
       )}
     </Container>
@@ -141,15 +155,18 @@ export const Tuner = ({}: Props) => {
 };
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  width: 100%; ;
   color: #333;
   font-family: Arial, Helvetica, sans-serif;
 `;
 
-const Wrapper = styled.div<{ isGreen: boolean }>`
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  `;
+
+const TunerContainer = styled.div<{ isGreen: boolean }>`
   position: relative;
   width: ${tunerWidth}px;
   display: flex;
@@ -158,6 +175,7 @@ const Wrapper = styled.div<{ isGreen: boolean }>`
   justify-content: center;
   color: ${({ isGreen }) => (isGreen ? "#4caf50" : "#f44336")};
   margin-top: 20px;
+  margin-bottom: 20px;
 `;
 
 const MovingBar = styled.div<{
@@ -180,4 +198,18 @@ const MovingBarContainer = styled.div`
   border-radius: 5px;
   margin-bottom: 10px;
   overflow: hidden;
+`;
+
+const Title = styled.h3`
+  color: ${mainColors.midGrey};
+  font-weight: 600;
+  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-left: 20px;
+`;
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
 `;

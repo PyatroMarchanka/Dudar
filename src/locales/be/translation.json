@@ -6,6 +6,9 @@
   "preclick": "Прэклік",
   "silentMode": "Рэжым без гуку (толькі метраном)",
   "noIcon": "Няма іконкі",
+  "tuner": "Цюнэр",
+  "disableTuner": "Адключыць цюнэр",
+  "enableTuner":"Уключыць цюнэр",
   "semitones": "паўтон(аў)",
   "gotIt": "Зразумела",
   "looper": {

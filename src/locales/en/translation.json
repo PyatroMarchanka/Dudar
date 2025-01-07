@@ -7,6 +7,9 @@
   "silentMode": "Silent mode (metronome only)",
   "noIcon": "No icon",
   "semitones": "semitones",
+  "tuner": "Tuner",
+  "disableTuner": "Disable Tuner",
+  "enableTuner": "Enable Tuner",
   "gotIt": "Got it",
   "looper": {
     "selectBarsCount": "Select the bars count to loop",
