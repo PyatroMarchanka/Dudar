@@ -86,7 +86,9 @@ export const Tuner = ({}: Props) => {
       clearInterval(interval);
       setDataToShow(null);
       setData(null);
-      tuner.stop();
+      if (tuner.isOn) {
+        tuner.stop();
+      }
       setIsTunerOn(false);
       stream?.getTracks().forEach((track) => track.stop());
     };
@@ -155,7 +157,7 @@ export const Tuner = ({}: Props) => {
 };
 
 const Container = styled.div`
-  width: 100%; ;
+  width: 100%;
   color: #333;
   font-family: Arial, Helvetica, sans-serif;
 `;
@@ -164,7 +166,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  `;
+`;
 
 const TunerContainer = styled.div<{ isGreen: boolean }>`
   position: relative;
