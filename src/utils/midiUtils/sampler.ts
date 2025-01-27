@@ -112,9 +112,10 @@ export const ddlDroneFileLengthMs = 54000;
 export const getDroneLength = (bagpipeType: BagpipeTypes) => {
   switch (bagpipeType) {
     case BagpipeTypes.BelarusianTraditionalDuda:
-      return bndDroneFileLengthMs;
-    case BagpipeTypes.BelarusianOpenDuda:
       return bdDroneFileLengthMs;
+    case BagpipeTypes.BelarusianOpenDuda:
+    case BagpipeTypes.BelarusianNONTraditionalDuda:
+      return bndDroneFileLengthMs;
     case BagpipeTypes.Dudelsack:
       return ddlDroneFileLengthMs;
     case BagpipeTypes.Highlander:

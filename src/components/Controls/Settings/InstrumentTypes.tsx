@@ -19,6 +19,7 @@ export const InstrumentTypes = () => {
   const bagpipeTypes = [
     BagpipeTypes.BelarusianTraditionalDuda,
     BagpipeTypes.BelarusianOpenDuda,
+    BagpipeTypes.BelarusianNONTraditionalDuda,
     BagpipeTypes.Dudelsack,
     BagpipeTypes.Highlander,
   ];
