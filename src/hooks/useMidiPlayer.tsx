@@ -19,7 +19,6 @@ export const useMidiPlayer = (
     setLoop,
   } = useContext(store);
   const [midiPlayer, setMidiPlayer] = useState<MidiPlayer | null>(null);
-  const isUserOnboardingCompleted = getUserOnboardingFinished();
   const [isCountinueModalOpen, setIsCountinueModalOpen] = useState(false);
 
   const switchIsPlaying = () => {
@@ -43,18 +42,15 @@ export const useMidiPlayer = (
   useEffect(() => {
     if (document.visibilityState === "hidden") {
       midiPlayer?.pause();
-      
-      if (isPlaying) {
 
+      if (isPlaying) {
         setIsCountinueModalOpen(true);
       }
       setIsPlaying(false);
       return;
     }
 
-    if (isUserOnboardingCompleted) {
-      initPlayer();
-    }
+    initPlayer();
   }, [document.visibilityState]);
 
   const continueElement = (
