@@ -11,4 +11,5 @@ export const routes = {
   logout: "/logout",
   admin: "/admin",
   adminSong: "/admin/song",
+  playlists: "/playlists",
 };

@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Dudar } from "../components/screens/Dudar";
 import { About } from "../components/screens/About";
-import { Start } from "../components/screens/Start";
 import { routes } from "./routes";
 import { LoginPage } from "../components/screens/LoginPage";
 import Admin from "../components/Admin";
 import EDuda from "../components/screens/Eduda";
+import { Playlists } from "../components/Playlist/Playlists";
 
 export const AppRouter = () => {
   return (
@@ -22,6 +22,9 @@ export const AppRouter = () => {
         </Route>
         <Route path={routes.login}>
           <LoginPage />
+        </Route>
+        <Route path={routes.playlists}>
+          <Playlists />
         </Route>
         <Route path={routes.eduda}>
           <EDuda />
