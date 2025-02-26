@@ -3,6 +3,7 @@ import Close from "@material-ui/icons/Close";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Icon } from "../global/Icon";
+import { theme } from "../../utils/theme";
 
 export interface Song {
   name: string;
@@ -53,9 +54,10 @@ export const SongItem = ({
       key={song.name}
       onClick={() => onSongClick(song.name)}
     >
-      {song.name}
+      {!isEdited && <Title>{song.name}</Title>}
       {isEdited && (
-        <div>
+        <Content>
+          <Title>{song.name}</Title>
           <TagContainer>
             {tags.map((tag) => (
               <Chip
@@ -75,7 +77,7 @@ export const SongItem = ({
           >
             Save Tags
           </Button>
-        </div>
+        </Content>
       )}
       <IconButton onClick={() => onRemoveSong(song.name)}>
         <Icon type="material" Icon={Close} />
@@ -83,6 +85,17 @@ export const SongItem = ({
     </SongItemStyled>
   );
 };
+
+const Title = styled.div`
+  margin: 20px 0;
+`;
+
+const Content = styled.div`
+  display: flex;
+  @media ${theme.breakpoints.belowTablet} {
+    flex-direction: column;
+  }
+`;
 
 const SongItemStyled = styled.li<{ isActive: boolean }>`
   display: flex;

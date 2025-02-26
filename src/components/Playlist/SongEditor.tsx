@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Song, SongItem } from "./SongItem";
 import { AddNewSong } from "./AddNewSong";
@@ -10,7 +10,7 @@ interface SongEditorProps {
   onRemoveSong: (songName: string) => void;
   onUpdatedSong: (song: Song) => void;
   editingSong: string | null;
-  setEditingSong: React.Dispatch<React.SetStateAction<string | null>>
+  setEditingSong: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export const SongEditor: React.FC<SongEditorProps> = ({
@@ -20,9 +20,8 @@ export const SongEditor: React.FC<SongEditorProps> = ({
   onUpdatedSong,
   onRemoveSong,
   editingSong,
-  setEditingSong
+  setEditingSong,
 }) => {
-  const [songTags, setSongTags] = useState<string[]>([]);
   const handleAddSong = (song: Song) => {
     if (song.name.trim() === "") return;
     onAddSong(song);
@@ -33,31 +32,25 @@ export const SongEditor: React.FC<SongEditorProps> = ({
       setEditingSong(null);
     } else {
       setEditingSong(song);
-      setSongTags(songs.find((s) => s.name === song)?.tags || []);
     }
   };
 
   return (
     <Container>
-      <>
-        <AddNewSong
-          tags={tags}
-          handleAddSong={handleAddSong}
-        />
-        <SongList>
-          {songs.map((song) => (
-            <SongItem
-              key={song.name}
-              song={song}
-              isEdited={editingSong === song.name}
-              onSongClick={onSongClick}
-              onUpdatedSong={onUpdatedSong}
-              tags={tags}
-              onRemoveSong={onRemoveSong}
-            />
-          ))}
-        </SongList>
-      </>
+      <AddNewSong tags={tags} handleAddSong={handleAddSong} />
+      <SongList>
+        {songs.map((song) => (
+          <SongItem
+            key={song.name}
+            song={song}
+            isEdited={editingSong === song.name}
+            onSongClick={onSongClick}
+            onUpdatedSong={onUpdatedSong}
+            tags={tags}
+            onRemoveSong={onRemoveSong}
+          />
+        ))}
+      </SongList>
     </Container>
   );
 };

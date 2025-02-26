@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
-import { PlaylistCreator } from "./PlaylistEditor";
 import { SongEditor } from "./SongEditor";
 import { store } from "../../context";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { TagEditor } from "./TagEditor";
 import { AppBar, Tabs, Tab, Box } from "@material-ui/core";
+import { PlaylistCreator } from "./PlaylistCreator";
+import { createGlobalStyle } from "styled-components";
 
 interface Props {}
 
@@ -38,7 +39,7 @@ export const Playlists = (props: Props) => {
 
   const [tags, setTags] = useState(uniqueTags);
   const [songs, setSongs] = useState(sortSongs(initialSongs));
-  const [editedSong, setEditedSong] = useState<string| null>(null)
+  const [editedSong, setEditedSong] = useState<string | null>(null);
 
   const [playlists, setPlaylists] = useState([
     {
@@ -97,7 +98,7 @@ export const Playlists = (props: Props) => {
         aria-labelledby={`tab-${index}`}
         {...other}
       >
-        {value === index && <Box p={3}>{children}</Box>}
+        {value === index && <Box p={0}>{children}</Box>}
       </div>
     );
   };
@@ -117,8 +118,15 @@ export const Playlists = (props: Props) => {
 
   return (
     <div>
+      <GlobalStyle />
       <AppBar position="static">
-        <Tabs centered value={value} onChange={handleChange} aria-label="playlist tabs">
+        <Tabs
+          variant="fullWidth"
+          centered
+          value={value}
+          onChange={handleChange}
+          aria-label="playlist tabs"
+        >
           <Tab label="Playlists" {...ariaProps(0)} />
           <Tab label="Songs" {...ariaProps(1)} />
           <Tab label="Tags" {...ariaProps(2)} />
@@ -129,6 +137,7 @@ export const Playlists = (props: Props) => {
           allSongs={songs}
           playlists={playlists}
           onAddPlaylist={onAddPlaylist}
+          tags={tags}
         />
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -148,3 +157,9 @@ export const Playlists = (props: Props) => {
     </div>
   );
 };
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0;
+  }
+`;
