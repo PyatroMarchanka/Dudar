@@ -4,8 +4,8 @@ import {
   Close,
   ExpandMore,
   ExpandLess,
-  Create,
   CloseRounded,
+  AddBoxOutlined,
 } from "@material-ui/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { PlaylistSong } from "../../dataset/songs/interfaces";
@@ -26,7 +26,6 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
   const [songs, setSongs] = useState<PlaylistSong[]>([]);
   const [playlistTitle, setPlaylistTitle] = useState<string>("");
   const [selectedPlaylist, setSelectedPlaylist] = useState<number | null>(null);
-  const [isPlaylistOpen, setIsPlaylistOpen] = useState<boolean>(false);
   const [isAddPlaylistOpen, setIsAddPlaylistOpen] = useState(false);
   const [isSongsInPlaylistOpen, setIsSongsInPlaylistOpen] = useState(false);
 
@@ -52,116 +51,117 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
     setSelectedPlaylist(index);
     setSongs(playlists[index].songs);
     setPlaylistTitle(playlists[index].title);
+    setIsAddPlaylistOpen(true);
   };
 
   return (
     <Container>
-      <PlaylistHeader onClick={() => setIsPlaylistOpen(!isPlaylistOpen)}>
-        <Typography variant="h3">Playlist Editor</Typography>
-        <IconButton>
-          {isPlaylistOpen ? <ExpandLess /> : <ExpandMore />}
-        </IconButton>
-      </PlaylistHeader>
-
-      {isPlaylistOpen && (
-        <>
-          <Row>
-            {isAddPlaylistOpen || selectedPlaylist !== null ? (
-              <>
-                <TextField
-                  label="Playlist Title"
-                  value={playlistTitle}
-                  onChange={(e) => setPlaylistTitle(e.target.value)}
-                  fullWidth
-                  margin="normal"
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => onAddPlaylist({ title: playlistTitle, songs })}
-                >
-                  {selectedPlaylist !== null
-                    ? "Save Playlist"
-                    : "Create Playlist"}
-                </Button>
-              </>
-            ) : null}
-            <IconButton
-              onClick={() => setIsAddPlaylistOpen(!isAddPlaylistOpen)}
-            >
-              <Icon
-                type="material"
-                Icon={isAddPlaylistOpen ? CloseRounded : Create}
-              />
-            </IconButton>
-          </Row>
-          {selectedPlaylist !== null ? (
+      <>
+        <Row>
+          {isAddPlaylistOpen ? (
             <>
-              <PlaylistHeader
-                onClick={() => setIsSongsInPlaylistOpen(!isSongsInPlaylistOpen)}
+              <TextField
+                label="Playlist Title"
+                value={playlistTitle}
+                onChange={(e) => setPlaylistTitle(e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => onAddPlaylist({ title: playlistTitle, songs })}
               >
-                <Typography variant="h6">Songs in Playlist</Typography>
-                <IconButton>
-                  {isPlaylistOpen ? <ExpandLess /> : <ExpandMore />}
-                </IconButton>
-              </PlaylistHeader>
-
-              {isSongsInPlaylistOpen && (
-                <SongSelectionContainer>
-                  {allSongs.map((song) => (
-                    <Button key={song.name} onClick={() => handleAddSong(song)}>
-                      {song.name}
-                    </Button>
-                  ))}
-                </SongSelectionContainer>
-              )}
+                {selectedPlaylist !== null ? "Save" : "Create"}
+              </Button>
             </>
           ) : null}
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable droppableId="songs">
-              {(provided: any) => (
-                <SongList {...provided.droppableProps} ref={provided.innerRef}>
-                  {songs.map((song, index) => (
-                    <Draggable
-                      key={song.name}
-                      draggableId={song.name}
-                      index={index}
-                    >
-                      {(provided: any) => (
-                        <SongItem
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <SongTitle>
-                            {index + 1}. {song.name}
-                          </SongTitle>
-                          <IconButton
-                            onClick={() => handleRemoveSong(song.name)}
-                          >
-                            <Close />
-                          </IconButton>
-                        </SongItem>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </SongList>
-              )}
-            </Droppable>
-          </DragDropContext>
-          <PlaylistList>
-            {playlists.map((playlist, index) => (
-              <PlaylistItem
-                key={index}
-                onClick={() => handlePlaylistClick(index)}
-              >
-                {playlist.title}
-              </PlaylistItem>
-            ))}
-          </PlaylistList>
-        </>
-      )}
+          <IconButton
+            onClick={() => {
+              if (isAddPlaylistOpen && selectedPlaylist !== null) {
+                setIsAddPlaylistOpen(!isAddPlaylistOpen);
+                setIsSongsInPlaylistOpen(!isSongsInPlaylistOpen);
+                setSelectedPlaylist(null);
+                setSongs([]);
+                setPlaylistTitle("");
+              } else {
+                setIsAddPlaylistOpen(!isAddPlaylistOpen);
+              }
+            }}
+          >
+            <Icon
+              type="material"
+              Icon={isAddPlaylistOpen ? CloseRounded : AddBoxOutlined}
+            />
+          </IconButton>
+        </Row>
+        {!songs.length && selectedPlaylist !== null && <Typography>No songs in playlist</Typography>}
+        {selectedPlaylist !== null ? (
+          <>
+            <PlaylistHeader
+              onClick={() => {
+                setIsSongsInPlaylistOpen(!isSongsInPlaylistOpen);
+              }}
+            >
+              <Typography variant="h6">Add songs</Typography>
+              <IconButton>
+                {isSongsInPlaylistOpen ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
+            </PlaylistHeader>
+
+            {isSongsInPlaylistOpen && (
+              <SongSelectionContainer>
+                {allSongs.map((song) => (
+                  <Button key={song.name} onClick={() => handleAddSong(song)}>
+                    {song.name}
+                  </Button>
+                ))}
+              </SongSelectionContainer>
+            )}
+          </>
+        ) : null}
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="songs">
+            {(provided: any) => (
+              <SongList {...provided.droppableProps} ref={provided.innerRef}>
+                {songs.map((song, index) => (
+                  <Draggable
+                    key={song.name}
+                    draggableId={song.name}
+                    index={index}
+                  >
+                    {(provided: any) => (
+                      <SongItem
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <SongTitle>
+                          {index + 1}. {song.name}
+                        </SongTitle>
+                        <IconButton onClick={() => handleRemoveSong(song.name)}>
+                          <Close />
+                        </IconButton>
+                      </SongItem>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </SongList>
+            )}
+          </Droppable>
+        </DragDropContext>
+        <PlaylistList>
+          {playlists.map((playlist, index) => (
+            <PlaylistItem
+              key={index}
+              onClick={() => handlePlaylistClick(index)}
+            >
+              {playlist.title}
+            </PlaylistItem>
+          ))}
+        </PlaylistList>
+      </>
     </Container>
   );
 };

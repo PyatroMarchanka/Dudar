@@ -17,7 +17,6 @@ export const TagEditor: React.FC<TagEditorProps> = ({
   onRemoveTag,
 }) => {
   const [newTag, setNewTag] = useState<string>("");
-  const [isPlaylistOpen, setIsPlaylistOpen] = useState<boolean>(false);
 
   const handleAddTag = () => {
     if (newTag.trim() === "") return;
@@ -27,37 +26,29 @@ export const TagEditor: React.FC<TagEditorProps> = ({
 
   return (
     <Container>
-      <PlaylistHeader onClick={() => setIsPlaylistOpen(!isPlaylistOpen)}>
-        <Typography variant="h3">Tags Editor</Typography>
-        <IconButton>
-          {isPlaylistOpen ? <ExpandLess /> : <ExpandMore />}
-        </IconButton>
-      </PlaylistHeader>
-      {isPlaylistOpen && (
-        <>
-          <InputContainer>
-            <TextField
-              label="New Tag"
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-              variant="outlined"
-            />
-            <Button onClick={handleAddTag} variant="contained" color="primary">
-              Add Tag
-            </Button>
-          </InputContainer>
-          <TagList>
-            {tags.map((tag) => (
-              <Tag key={tag}>
-                <TagText>{tag}</TagText>
-                <IconButton onClick={() => onRemoveTag(tag)}>
-                  <Icon type="material" Icon={Close} />
-                </IconButton>
-              </Tag>
-            ))}
-          </TagList>
-        </>
-      )}
+      <>
+        <InputContainer>
+          <TextField
+            label="New Tag"
+            value={newTag}
+            onChange={(e) => setNewTag(e.target.value)}
+            variant="outlined"
+          />
+          <Button onClick={handleAddTag} variant="contained" color="primary">
+            Add Tag
+          </Button>
+        </InputContainer>
+        <TagList>
+          {tags.map((tag) => (
+            <Tag key={tag}>
+              <TagText>{tag}</TagText>
+              <IconButton onClick={() => onRemoveTag(tag)}>
+                <Icon type="material" Icon={Close} />
+              </IconButton>
+            </Tag>
+          ))}
+        </TagList>
+      </>
     </Container>
   );
 };
@@ -93,12 +84,4 @@ const Tag = styled.div`
 
 const TagText = styled.span`
   margin-right: 5px;
-`;
-
-const PlaylistHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  margin-top: 20px;
 `;
