@@ -39,6 +39,14 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
     }
   };
 
+  const goBack = () => {
+    setIsAddPlaylistOpen(false);
+    setIsSongsInPlaylistOpen(false);
+    setSelectedPlaylist(null);
+    setSongs([]);
+    setPlaylistTitle("");
+  };
+
   const handleRemoveSong = (id: string) => {
     setSongs(songs.filter((song) => song.name !== id));
   };
@@ -82,11 +90,18 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
             >
               {selectedPlaylist !== null ? "Save" : "Create"}
             </Button>
+            {
+              <Button variant="contained" color="secondary" onClick={goBack}>
+                Back
+              </Button>
+            }
           </>
         ) : (
           <Row>
-            <Typography variant="h6">Create Playlist</Typography>
-            <IconButton
+            <Button
+              type="button"
+              variant="contained"
+              color="primary"
               onClick={() => {
                 if (isAddPlaylistOpen && selectedPlaylist !== null) {
                   setIsAddPlaylistOpen(!isAddPlaylistOpen);
@@ -99,11 +114,13 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
                 }
               }}
             >
+              <Typography variant="h6">Create Playlist</Typography>
               <Icon
+                fill="white"
                 type="material"
                 Icon={isAddPlaylistOpen ? CloseRounded : AddBoxOutlined}
               />
-            </IconButton>
+            </Button>
           </Row>
         )}
       </Row>
