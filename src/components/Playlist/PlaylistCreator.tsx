@@ -7,16 +7,21 @@ import {
   CloseRounded,
   AddBoxOutlined,
 } from "@material-ui/icons";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { PlaylistSong } from "../../dataset/songs/interfaces";
-import { IconButton, Typography, Button, TextField } from "@material-ui/core";
+import { IPlaylist, PlaylistSong } from "../../dataset/songs/interfaces";
+import { IconButton, Typography, Button } from "@material-ui/core";
 import { Icon } from "../global/Icon";
 import { TagList } from "./TagList";
+import { PlaylistForm } from "./PlaylistForm";
+import { PlaylistList } from "./PlaylistList";
+import { SongSelection } from "./SongSelection";
+import { DraggableSongList } from "./DraggableSongList";
+import { Container, Row, PlaylistHeader } from "./StyledComponents";
 
 interface PlaylistCreatorProps {
   allSongs: PlaylistSong[];
-  playlists: { title: string; songs: PlaylistSong[] }[];
-  onAddPlaylist: (playlist: { title: string; songs: PlaylistSong[] }) => void;
+  playlists: IPlaylist[];
+  onAddPlaylist: (playlist: IPlaylist) => void;
+  onRemovePlaylist: (_id: string) => void;
   tags: string[];
 }
 
@@ -24,6 +29,7 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
   allSongs,
   playlists,
   onAddPlaylist,
+  onRemovePlaylist,
   tags,
 }) => {
   const [songs, setSongs] = useState<PlaylistSong[]>([]);
@@ -62,8 +68,12 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
   const handlePlaylistClick = (index: number) => {
     setSelectedPlaylist(index);
     setSongs(playlists[index].songs);
-    setPlaylistTitle(playlists[index].title);
+    setPlaylistTitle(playlists[index].name);
     setIsAddPlaylistOpen(true);
+  };
+
+  const onDeleteClick = (_id: string) => {
+    onRemovePlaylist(_id);
   };
 
   const filteredSongs = allSongs.filter((song) => {
@@ -75,27 +85,20 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
     <Container>
       <Row>
         {isAddPlaylistOpen ? (
-          <>
-            <TextField
-              label="Playlist Title"
-              value={playlistTitle}
-              onChange={(e) => setPlaylistTitle(e.target.value)}
-              fullWidth
-              margin="normal"
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => onAddPlaylist({ title: playlistTitle, songs })}
-            >
-              {selectedPlaylist !== null ? "Save" : "Create"}
-            </Button>
-            {
-              <Button variant="contained" color="secondary" onClick={goBack}>
-                Back
-              </Button>
-            }
-          </>
+          <PlaylistForm
+            playlistTitle={playlistTitle}
+            setPlaylistTitle={setPlaylistTitle}
+            onSave={() => {
+              onAddPlaylist({
+                ...playlists[selectedPlaylist!],
+                name: playlistTitle,
+                songs,
+              });
+              goBack();
+            }}
+            onCancel={goBack}
+            isEditing={selectedPlaylist !== null}
+          />
         ) : (
           <Row>
             <Button
@@ -125,16 +128,11 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
         )}
       </Row>
       {!isAddPlaylistOpen && (
-        <PlaylistList>
-          {playlists.map((playlist, index) => (
-            <PlaylistItem
-              key={playlist.title}
-              onClick={() => handlePlaylistClick(index)}
-            >
-              <Typography variant="h6">{playlist.title}</Typography>
-            </PlaylistItem>
-          ))}
-        </PlaylistList>
+        <PlaylistList
+          onDeleteClick={onDeleteClick}
+          playlists={playlists}
+          onPlaylistClick={handlePlaylistClick}
+        />
       )}
       {!songs.length && selectedPlaylist !== null && (
         <Typography>No songs in playlist</Typography>
@@ -164,117 +162,19 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
                   setTagsFilters((prev) => prev.filter((t) => t !== tag));
                 }}
               />
-              <SongSelectionContainer>
-                {filteredSongs.map((song) => (
-                  <Button key={song.name} onClick={() => handleAddSong(song)}>
-                    {song.name}
-                  </Button>
-                ))}
-              </SongSelectionContainer>
+              <SongSelection
+                filteredSongs={filteredSongs}
+                handleAddSong={handleAddSong}
+              />
             </>
           )}
         </>
       ) : null}
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="songs">
-          {(provided: any) => (
-            <SongList {...provided.droppableProps} ref={provided.innerRef}>
-              {songs.map((song, index) => (
-                <Draggable
-                  key={song.name}
-                  draggableId={song.name}
-                  index={index}
-                >
-                  {(provided: any) => (
-                    <SongItem
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <SongTitle>
-                        <Typography variant="body1">
-                          {index + 1}. {song.name}
-                        </Typography>
-                      </SongTitle>
-                      <IconButton onClick={() => handleRemoveSong(song.name)}>
-                        <Close />
-                      </IconButton>
-                    </SongItem>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </SongList>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <DraggableSongList
+        songs={songs}
+        onDragEnd={handleDragEnd}
+        onRemoveSong={handleRemoveSong}
+      />
     </Container>
   );
 };
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 20px;
-`;
-
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 20px;
-`;
-
-const SongSelectionContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  margin-bottom: 20px;
-  gap: 10px;
-`;
-
-const SongList = styled.ul`
-  list-style: none;
-  padding: 0;
-`;
-
-const SongItem = styled.li`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px;
-  border-bottom: 1px solid #ccc;
-  background-color: #f9f9f9;
-  margin-bottom: 5px;
-`;
-
-const SongTitle = styled.span`
-  flex-grow: 1;
-`;
-
-const PlaylistHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  margin-top: 20px;
-`;
-
-const PlaylistList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin-top: 10px;
-`;
-
-const PlaylistItem = styled.li`
-  margin: 10px;
-  padding: 10px;
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-  background-color: #f0f0f0;
-  border-radius: 10px;
-  &:hover {
-    background-color: rgba(9, 6, 6, 0.2);
-  }
-
-  transition: background-color 0.3s ease-in-out;
-`;

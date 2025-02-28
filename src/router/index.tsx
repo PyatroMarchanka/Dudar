@@ -5,7 +5,7 @@ import { routes } from "./routes";
 import { LoginPage } from "../components/screens/LoginPage";
 import Admin from "../components/Admin";
 import EDuda from "../components/screens/Eduda";
-import { Playlists } from "../components/Playlist/Playlists";
+import { Playlists } from "../components/Playlist";
 
 export const AppRouter = () => {
   return (

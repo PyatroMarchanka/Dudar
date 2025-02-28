@@ -4,18 +4,14 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Icon } from "../global/Icon";
 import { theme } from "../../utils/theme";
-
-export interface Song {
-  name: string;
-  tags: string[];
-}
+import { PlaylistSong } from "../../dataset/songs/interfaces";
 
 interface Props {
-  song: Song;
+  song: PlaylistSong;
   isEdited: boolean;
   onRemoveSong: (songName: string) => void;
   onSongClick: (song: string) => void;
-  onUpdatedSong: (song: Song) => void;
+  onUpdatedSong: (song: PlaylistSong) => void;
   tags: string[];
 }
 

@@ -75,7 +75,8 @@ export enum SongTags {
 export interface IPlaylist {
   name: string;
   songs: PlaylistSong[];
-  userId: string;
+  userId?: string;
+  _id?: string;
 }
 
 export interface PlaylistSong {

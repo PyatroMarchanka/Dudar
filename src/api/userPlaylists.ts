@@ -22,7 +22,8 @@ export const userPlaylistApi = {
 
   createPlaylist: async (data: IPlaylist): Promise<any> => {
     try {
-      const res = await userClient.post(links.playlist, data, {
+      console.log('createPlaylist data', data)
+      const res = await userClient.post(links.playlists, data, {
         headers: {
           Authorization: `Bearer ${cookie.load("jwtToken")}`,
           userId: cookie.load("userId"),
@@ -51,6 +52,7 @@ export const userPlaylistApi = {
   },
 
   updatePlaylist: async (id: string, data: IPlaylist): Promise<any> => {
+    console.log('updatePlaylist data', data, `${links.playlist}/${id}`)
     try {
       const res = await userClient.put(`${links.playlist}/${id}`, data, {
         headers: {

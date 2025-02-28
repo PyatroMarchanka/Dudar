@@ -1,14 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import { Song, SongItem } from "./SongItem";
+import { SongItem } from "./SongItem";
 import { AddNewSong } from "./AddNewSong";
+import { PlaylistSong } from "../../dataset/songs/interfaces";
 
 interface SongEditorProps {
-  songs: Song[];
+  songs: PlaylistSong[];
   tags: string[];
-  onAddSong: (song: Song) => void;
+  onAddSong: (song: PlaylistSong) => void;
   onRemoveSong: (songName: string) => void;
-  onUpdatedSong: (song: Song) => void;
+  onUpdatedSong: (song: PlaylistSong) => void;
   editingSong: string | null;
   setEditingSong: React.Dispatch<React.SetStateAction<string | null>>;
 }
@@ -22,7 +23,7 @@ export const SongEditor: React.FC<SongEditorProps> = ({
   editingSong,
   setEditingSong,
 }) => {
-  const handleAddSong = (song: Song) => {
+  const handleAddSong = (song: PlaylistSong) => {
     if (song.name.trim() === "") return;
     onAddSong(song);
   };

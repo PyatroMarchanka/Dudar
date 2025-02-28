@@ -1,17 +1,17 @@
 import { Button, Chip, TextField } from "@material-ui/core";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Song } from "./SongItem";
 import { Close } from "@material-ui/icons";
 import { theme } from "../../utils/theme";
+import { PlaylistSong } from "../../dataset/songs/interfaces";
 
 interface Props {
   tags: string[];
-  handleAddSong: (song: Song) => void;
+  handleAddSong: (song: PlaylistSong) => void;
 }
 
 export const AddNewSong = ({ tags, handleAddSong }: Props) => {
-  const [newSong, setNewSong] = useState<Song>({ name: "", tags: [] });
+  const [newSong, setNewSong] = useState<PlaylistSong>({ name: "", tags: [] });
   return (
     <InputContainer>
       <TextField
@@ -36,7 +36,7 @@ export const AddNewSong = ({ tags, handleAddSong }: Props) => {
                 ? () =>
                     setNewSong({
                       ...newSong,
-                      tags: newSong.tags.filter((t) => t !== tag),
+                      tags: newSong.tags.filter((t: string) => t !== tag),
                     })
                 : undefined
             }
