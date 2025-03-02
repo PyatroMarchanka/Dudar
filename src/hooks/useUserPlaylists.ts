@@ -18,7 +18,6 @@ export const useUserPlaylists = () => {
     try {
       const { playlists, songs, tags } =
         await userPlaylistApi.getAllPlaylists();
-      console.log(playlists, songs, tags);
       setPlaylists(playlists);
       setSongs(songs);
       setTags(tags);
@@ -48,7 +47,6 @@ export const useUserPlaylists = () => {
 
   const updatePlaylists = useCallback(
     async (id: string, data: IPlaylist) => {
-      console.log("updatePlaylists data", data, id);
       setLoading(true);
       setError(null);
 

@@ -103,8 +103,6 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
     onStop();
   };
 
-  console.log("song.links", listsByBagpipe);
-
   if (!bagpipeType) return null;
 
   return (

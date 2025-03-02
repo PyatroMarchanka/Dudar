@@ -48,7 +48,6 @@ export const SongEditor: React.FC = () => {
   const handleSave = async () => {
     if (song) {
       try {
-        console.log(song);
         await songApi.updateSong(song);
         alert("Song updated successfully!");
       } catch (error) {
