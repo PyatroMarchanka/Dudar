@@ -110,7 +110,8 @@
     "highlander": "Great Highlander Bagpipe (Schotland)",
     "other": "Other bagpipes types are in development!",
     "melodies": "Now in the app you can find tutorials for at least 120 folk melodies from different countries, sorted by country of origin.",
-    "songsCount": "All melodies count"
+    "songsCount": "All melodies count",
+    "playlists": "Playlists Editor"
   },
   "login": {
     "skip": "Skip",

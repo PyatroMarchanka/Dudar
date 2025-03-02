@@ -1,4 +1,4 @@
-import { IconButton, Typography } from "@material-ui/core";
+import { IconButton, Link, Typography } from "@material-ui/core";
 import styled from "styled-components";
 import { mediaQueries } from "../../constants/style";
 import { Button } from "../global/Button";
@@ -102,9 +102,9 @@ export const About = () => {
             </a>
           </GetStarted>
 
-            <Typography align="center" variant="h4">{`${t(
+          <Typography align="center" variant="h4">{`${t(
             "mainPage.songsCount"
-            )} - ${196}`}</Typography>
+          )} - ${196}`}</Typography>
           <Typography variant="body1">{t("mainPage.aims")}</Typography>
           <Typography variant="body1">{t("mainPage.bagpipes")}</Typography>
           <ul>
@@ -121,6 +121,11 @@ export const About = () => {
 
           <Typography variant="body1">{t("mainPage.other")}</Typography>
           <Typography variant="body1">{t("mainPage.melodies")}</Typography>
+          <a href={routes.playlists}>
+              <Button className="getStarted" type="primary">
+                {t("mainPage.playlists")}
+              </Button>
+            </a>
           <DonationButtonBig />
         </Left>
         <Video
