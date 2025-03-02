@@ -10,7 +10,7 @@ interface Props {
   handleAddSong: (song: PlaylistSong) => void;
 }
 
-export const AddNewSong = ({ tags, handleAddSong }: Props) => {
+export const AddNewSong = ({ tags = [], handleAddSong }: Props) => {
   const [newSong, setNewSong] = useState<PlaylistSong>({ name: "", tags: [] });
   return (
     <InputContainer>
@@ -45,7 +45,6 @@ export const AddNewSong = ({ tags, handleAddSong }: Props) => {
           />
         ))}
       </Tags>
-
       <Button
         onClick={() => {
           handleAddSong(newSong);
@@ -65,6 +64,7 @@ const InputContainer = styled.div`
   align-items: center;
   flex-wrap: wrap;
   margin-bottom: 20px;
+  gap: 10px;
 `;
 
 const Tags = styled.div`

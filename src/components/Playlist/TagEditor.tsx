@@ -10,7 +10,7 @@ interface TagEditorProps {
 }
 
 export const TagEditor: React.FC<TagEditorProps> = ({
-  tags,
+  tags = [],
   onAddTag,
   onRemoveTag,
 }) => {

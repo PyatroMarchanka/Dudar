@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from "react";
-import { store } from "../context";
+import { useEffect, useState } from "react";
 import { useGoogleProfile } from "./useGoogleProfile";
 import { useUserPlaylists } from "./useUserPlaylists";
 import { IPlaylist, PlaylistSong } from "../dataset/songs/interfaces";
@@ -9,17 +8,11 @@ const sortSongs = (songs: { name: string; tags: string[] }[]) => {
 };
 
 export const usePlaylists = () => {
-  const {
-    state: { userData },
-  } = useContext(store);
-
   useGoogleProfile();
   const {
     playlists: loadedPlaylists,
     songs: loadedSongs,
     tags: loadedTags,
-    loading,
-    error,
     updatePlaylists,
     createPlaylist,
     deletePlaylist,

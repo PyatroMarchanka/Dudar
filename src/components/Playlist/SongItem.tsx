@@ -18,7 +18,7 @@ interface Props {
 export const SongItem = ({
   song,
   isEdited,
-  tags,
+  tags = [],
   onSongClick,
   onUpdatedSong,
   onRemoveSong,

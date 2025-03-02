@@ -12,7 +12,7 @@ interface Props {
 export const TagList = ({
   onRemoveTag = () => {},
   onTagClick = () => {},
-  tags,
+  tags = [],
   tagsFilters
 }: Props) => {
   return (
