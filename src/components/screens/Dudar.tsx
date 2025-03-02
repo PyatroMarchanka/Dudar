@@ -11,17 +11,14 @@ import { convertMidiPitchToNote } from "../../utils/midiUtils";
 import { MidiPlayerComponent } from "../MidiPlayerComponent";
 import { BackdropSpinner } from "../global/BackdropSpinner";
 import { DonationButton } from "../global/DonationButton";
-import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { routes } from "../../router/routes";
-import { SongPage } from "./SongPage";
 import { PlayPageHeader } from "../Dudar/PlayPage";
-import { InfoPageHeader } from "../Dudar/InfoPage";
 import { store } from "../../context";
 import { useDimensions } from "../../hooks/useDimensions";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { NoSong } from "../NoSong";
 import { LoginReminderContainer } from "../LoginReminder";
-import { getUserOnboardingFinished } from "../../constants/localStorage";
 import Logger from "../global/Logger";
 
 export const Dudar = () => {
@@ -37,8 +34,6 @@ export const Dudar = () => {
   const handleNote = (event: any) => {
     setActiveNote(convertMidiPitchToNote(event.noteNumber));
   };
-  const history = useHistory();
-  const isUserOnboardingCompleted = getUserOnboardingFinished();
 
   const playerRef = useRef(null);
   const { Player: midiPlayer, continueElement } = useMidiPlayer(

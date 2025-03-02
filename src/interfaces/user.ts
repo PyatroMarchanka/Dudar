@@ -6,6 +6,7 @@ export interface User {
   email?: string;
   picture?: string;
   settings: UserSettings;
+  _id?: string;
 }
 
 export interface UserSettings {

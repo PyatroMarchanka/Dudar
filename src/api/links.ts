@@ -12,6 +12,10 @@ const songsLinks = {
   songViews: `${process.env.REACT_APP_BACKEND_URL}/v1/songs/plays`
 }
 
+const playlistsLinks = {
+  playlists: `${process.env.REACT_APP_BACKEND_URL}/v1/playlists`,
+}
+
 const adminLinks = {
   adminSong: `${process.env.REACT_APP_BACKEND_URL}/v1/admin/song`
 }
@@ -19,5 +23,6 @@ const adminLinks = {
 export const links = {
   ...authLinks,
   ...songsLinks,
-  ...adminLinks
+  ...adminLinks,
+  ...playlistsLinks
 }

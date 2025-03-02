@@ -13,9 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-interface UpdatedContentProps {}
-
-export const UpdatesContent = ({}: UpdatedContentProps) => {
+export const UpdatesContent = () => {
   const { t } = useTranslation("translation");
 
   const updatesList = (

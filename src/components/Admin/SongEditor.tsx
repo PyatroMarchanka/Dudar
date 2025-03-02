@@ -39,7 +39,7 @@ export const SongEditor: React.FC = () => {
     };
 
     fetchSong();
-  }, []);
+  }, [params.id]);
 
   const handleChange = ({ name, value }: { name: string; value: any }) => {
     setSong((prevSong) => (prevSong ? { ...prevSong, [name]: value } : null));
@@ -48,7 +48,6 @@ export const SongEditor: React.FC = () => {
   const handleSave = async () => {
     if (song) {
       try {
-        console.log(song);
         await songApi.updateSong(song);
         alert("Song updated successfully!");
       } catch (error) {

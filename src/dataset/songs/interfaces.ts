@@ -71,3 +71,21 @@ export enum SongTags {
   Dance = "dance",
   Kaliady = "kaliady",
 }
+
+export interface IPlaylist {
+  name: string;
+  songsIds: string[];
+  userId?: string;
+  _id?: string;
+}
+
+export interface PlaylistSong {
+  _id?: string;
+  name: string;
+  tags: string[];
+}
+
+export interface PlaylistTags {
+  userId: string;
+  tags: string[];
+}
