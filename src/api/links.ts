@@ -14,8 +14,6 @@ const songsLinks = {
 
 const playlistsLinks = {
   playlists: `${process.env.REACT_APP_BACKEND_URL}/v1/playlists`,
-  playlist: `${process.env.REACT_APP_BACKEND_URL}/v1/playlists`
-  
 }
 
 const adminLinks = {

@@ -74,12 +74,13 @@ export enum SongTags {
 
 export interface IPlaylist {
   name: string;
-  songs: PlaylistSong[];
+  songsIds: string[];
   userId?: string;
   _id?: string;
 }
 
 export interface PlaylistSong {
+  _id?: string;
   name: string;
   tags: string[];
 }

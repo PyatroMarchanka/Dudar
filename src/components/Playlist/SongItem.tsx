@@ -25,6 +25,12 @@ export const SongItem = ({
 }: Props) => {
   const [editedTags, setEditedTags] = useState<string[]>(song.tags);
 
+  const onDeleteTag = (tag: string) => {
+    const newTags = editedTags.filter((t) => t !== tag);
+    setEditedTags(newTags);
+    onUpdatedSong({ ...song, tags: newTags });
+  };
+
   const onTagClick = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     tag: string
@@ -33,15 +39,9 @@ export const SongItem = ({
     setEditedTags((prev) => {
       if (prev.includes(tag)) return prev;
       const newTags = [...prev, tag];
-      onUpdatedSong({ name: song.name, tags: newTags });
+      onUpdatedSong({ ...song, name: song.name, tags: newTags });
       return newTags;
     });
-  };
-
-  const onDeleteTag = (tag: string) => {
-    const newTags = editedTags.filter((t) => t !== tag);
-    setEditedTags(newTags);
-    onUpdatedSong({ name: song.name, tags: newTags });
   };
 
   return (
@@ -66,16 +66,15 @@ export const SongItem = ({
               />
             ))}
           </TagContainer>
-          <Button
-            onClick={() => onUpdatedSong({ name: song.name, tags: editedTags })}
-            variant="contained"
-            color="primary"
-          >
-            Save Tags
-          </Button>
         </Content>
       )}
-      <IconButton onClick={() => onRemoveSong(song.name)}>
+      <IconButton
+        onClick={(e) => {
+          e.stopPropagation();
+          if (!song._id) return;
+          onRemoveSong(song._id);
+        }}
+      >
         <Icon type="material" Icon={Close} />
       </IconButton>
     </SongItemStyled>

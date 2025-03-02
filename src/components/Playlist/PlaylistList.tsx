@@ -23,7 +23,7 @@ export const PlaylistList: React.FC<PlaylistListProps> = ({
       {playlists.map((playlist, index) => (
         <PlaylistItem
           onClick={() => onPlaylistClick(index)}
-          key={playlist.name}
+          key={playlist._id}
         >
           <Typography variant="h6">{playlist.name}</Typography>
           <IconButton

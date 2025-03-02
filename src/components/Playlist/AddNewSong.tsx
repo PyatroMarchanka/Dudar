@@ -47,7 +47,10 @@ export const AddNewSong = ({ tags, handleAddSong }: Props) => {
       </Tags>
 
       <Button
-        onClick={() => handleAddSong(newSong)}
+        onClick={() => {
+          handleAddSong(newSong);
+          setNewSong({ name: "", tags: [] });
+        }}
         variant="contained"
         color="primary"
       >

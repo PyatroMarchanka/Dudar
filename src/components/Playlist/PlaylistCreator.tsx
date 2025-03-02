@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import {
-  Close,
   ExpandMore,
   ExpandLess,
   CloseRounded,
@@ -38,9 +36,8 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
   const [isAddPlaylistOpen, setIsAddPlaylistOpen] = useState(false);
   const [isSongsInPlaylistOpen, setIsSongsInPlaylistOpen] = useState(false);
   const [tagsFilters, setTagsFilters] = useState<string[]>([]);
-
   const handleAddSong = (song: PlaylistSong) => {
-    if (!songs.find((s) => s.name === song.name)) {
+    if (!songs?.find((s) => s._id === song._id)) {
       setSongs([...songs, song]);
     }
   };
@@ -67,7 +64,12 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
 
   const handlePlaylistClick = (index: number) => {
     setSelectedPlaylist(index);
-    setSongs(playlists[index].songs);
+
+    const songs = playlists[index].songsIds
+      .map((id) => allSongs.find((song) => song._id === id))
+      .filter(Boolean) as PlaylistSong[];
+    setSongs(songs);
+
     setPlaylistTitle(playlists[index].name);
     setIsAddPlaylistOpen(true);
   };
@@ -77,7 +79,7 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
   };
 
   const filteredSongs = allSongs.filter((song) => {
-    if (!tagsFilters.length) return true;
+    if (!tagsFilters?.length) return true;
     return tagsFilters.every((tag) => song.tags.includes(tag));
   });
 
@@ -92,7 +94,7 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
               onAddPlaylist({
                 ...playlists[selectedPlaylist!],
                 name: playlistTitle,
-                songs,
+                songsIds: [],
               });
               goBack();
             }}
@@ -134,7 +136,7 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
           onPlaylistClick={handlePlaylistClick}
         />
       )}
-      {!songs.length && selectedPlaylist !== null && (
+      {!songs?.length && selectedPlaylist !== null && (
         <Typography>No songs in playlist</Typography>
       )}
       {selectedPlaylist !== null ? (

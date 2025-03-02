@@ -1,9 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { userPlaylistApi } from "../api/userPlaylists";
-import { IPlaylist } from "../dataset/songs/interfaces";
+import {
+  IPlaylist,
+  PlaylistSong,
+} from "../dataset/songs/interfaces";
 
 export const useUserPlaylists = () => {
   const [playlists, setPlaylists] = useState<IPlaylist[]>([]);
+  const [songs, setSongs] = useState<PlaylistSong[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -11,10 +16,12 @@ export const useUserPlaylists = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await userPlaylistApi.getAllPlaylists();
-      if (data) {
-        setPlaylists(data);
-      }
+      const { playlists, songs, tags } =
+        await userPlaylistApi.getAllPlaylists();
+      console.log(playlists, songs, tags);
+      setPlaylists(playlists);
+      setSongs(songs);
+      setTags(tags);
     } catch (err) {
       setError("Failed to load playlists");
     } finally {
@@ -41,7 +48,7 @@ export const useUserPlaylists = () => {
 
   const updatePlaylists = useCallback(
     async (id: string, data: IPlaylist) => {
-      console.log('updatePlaylists data', data, id)
+      console.log("updatePlaylists data", data, id);
       setLoading(true);
       setError(null);
 
@@ -74,9 +81,90 @@ export const useUserPlaylists = () => {
     [fetchPlaylists]
   );
 
+  const addSong = useCallback(
+    async (song: PlaylistSong) => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        await userPlaylistApi.addSongToPlaylist(song);
+        await fetchPlaylists();
+      } catch (err) {
+        setError("Failed to add song to playlist");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchPlaylists]
+  );
+
+  const deleteSong = useCallback(
+    async (songId: string) => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        await userPlaylistApi.deleteSongFromPlaylist(songId);
+        await fetchPlaylists();
+      } catch (err) {
+        setError("Failed to delete song from playlist");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchPlaylists]
+  );
+
+  const updateSong = useCallback(
+    async (song: PlaylistSong) => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        await userPlaylistApi.updateSongInPlaylist(song._id!, song);
+        await fetchPlaylists();
+      } catch (err) {
+        setError("Failed to update song in playlist");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchPlaylists]
+  );
+
+  const updateTags = useCallback(
+    async (tags: string[]) => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        await userPlaylistApi.addTagToPlaylistSong(tags);
+        await fetchPlaylists();
+      } catch (err) {
+        setError("Failed to add tag to playlist song");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchPlaylists]
+  );
+
   useEffect(() => {
     fetchPlaylists();
   }, [fetchPlaylists]);
 
-  return { playlists, loading, error, updatePlaylists, createPlaylist, deletePlaylist };
+  return {
+    playlists,
+    songs,
+    tags,
+    loading,
+    error,
+    updatePlaylists,
+    createPlaylist,
+    deletePlaylist,
+    updateTags,
+    addSong,
+    deleteSong,
+    updateSong,
+  };
 };

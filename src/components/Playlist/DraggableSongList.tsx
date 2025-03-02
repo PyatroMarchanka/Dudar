@@ -21,7 +21,7 @@ export const DraggableSongList: React.FC<DraggableSongListProps> = ({
       <Droppable droppableId="songs">
         {(provided: any) => (
           <SongList {...provided.droppableProps} ref={provided.innerRef}>
-            {songs.map((song, index) => (
+            {songs?.map((song, index) => (
               <Draggable key={song.name} draggableId={song.name} index={index}>
                 {(provided: any) => (
                   <SongItem
