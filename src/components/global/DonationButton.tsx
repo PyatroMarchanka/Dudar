@@ -25,7 +25,7 @@ export const DonationButton = () => {
     if (
       donationButton &&
       (path.pathname.includes(`${routes.app}/${routes.play}`) ||
-        path.pathname.includes(routes.main))
+        path.pathname.includes(routes.main) || path.pathname.includes(routes.playlists))
     ) {
       donationButton.style.display = "none";
     } else if (donationButton) {

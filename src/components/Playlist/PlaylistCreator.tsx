@@ -4,6 +4,7 @@ import {
   ExpandLess,
   CloseRounded,
   AddBoxOutlined,
+  FileCopy,
 } from "@material-ui/icons";
 import { IPlaylist, PlaylistSong } from "../../dataset/songs/interfaces";
 import { IconButton, Typography, Button } from "@material-ui/core";
@@ -14,6 +15,8 @@ import { PlaylistList } from "./PlaylistList";
 import { SongSelection } from "./SongSelection";
 import { DraggableSongList } from "./DraggableSongList";
 import { Container, Row, PlaylistHeader } from "./StyledComponents";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { CopyButton } from "./CopyButton";
 
 interface PlaylistCreatorProps {
   allSongs: PlaylistSong[];
@@ -132,6 +135,7 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
       </Row>
       {!isAddPlaylistOpen && (
         <PlaylistList
+          allSongs={allSongs}
           onDeleteClick={onDeleteClick}
           playlists={playlists}
           onPlaylistClick={handlePlaylistClick}
@@ -140,6 +144,7 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
       {!songs?.length && selectedPlaylist !== null && (
         <Typography>No songs in playlist</Typography>
       )}
+
       {selectedPlaylist !== null ? (
         <>
           <PlaylistHeader
@@ -152,6 +157,7 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
               {isSongsInPlaylistOpen ? <ExpandLess /> : <ExpandMore />}
             </IconButton>
           </PlaylistHeader>
+
           {isSongsInPlaylistOpen && (
             <>
               <TagList
@@ -166,7 +172,7 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
                 }}
               />
               <SongSelection
-              addedSongs={songs}
+                addedSongs={songs}
                 filteredSongs={filteredSongs}
                 handleAddSong={handleAddSong}
               />

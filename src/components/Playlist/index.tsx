@@ -8,6 +8,7 @@ import { usePlaylists } from "../../hooks/usePlaylists";
 import { TabPanel } from "./TabPanel";
 import { Home } from "@material-ui/icons";
 import { Link } from "react-router-dom";
+import { DonationButton } from "../global/DonationButton";
 
 interface Props {}
 
@@ -33,9 +34,12 @@ export const Playlists = (props: Props) => {
     setActiveTab(newValue);
   };
 
+
+
   return (
     <Container>
       <GlobalStyle />
+      <DonationButton/>
       <AppBar position="static">
         <Tabs
           variant="fullWidth"
@@ -95,6 +99,7 @@ const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
   }
+
 `;
 
 const ariaProps = (index: any) => {

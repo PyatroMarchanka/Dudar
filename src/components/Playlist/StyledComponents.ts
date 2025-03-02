@@ -55,6 +55,7 @@ export const PlaylistListContainer = styled.ul`
 
 export const PlaylistItem = styled.li`
   display: flex;
+  width: 100%;
   justify-content: space-between;
   margin: 10px;
   padding: 10px;

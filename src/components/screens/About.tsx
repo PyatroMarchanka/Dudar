@@ -121,11 +121,13 @@ export const About = () => {
 
           <Typography variant="body1">{t("mainPage.other")}</Typography>
           <Typography variant="body1">{t("mainPage.melodies")}</Typography>
-          <a href={routes.playlists}>
+          <Row>
+            <a href={routes.playlists}>
               <Button className="getStarted" type="primary">
                 {t("mainPage.playlists")}
               </Button>
             </a>
+          </Row>
           <DonationButtonBig />
         </Left>
         <Video
@@ -149,6 +151,12 @@ const UserImage = styled.img`
     cursor: pointer;
     border: 2px solid ${mainColors.darkOrange};
   }
+`;
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Left = styled.div`
