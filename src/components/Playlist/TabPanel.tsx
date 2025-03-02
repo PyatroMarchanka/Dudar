@@ -1,5 +1,6 @@
 import React from "react";
 import { Box } from "@material-ui/core";
+import styled from "styled-components";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -11,7 +12,7 @@ export const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <Container
       role="tabpanel"
       hidden={value !== index}
       id={`tabpanel-${index}`}
@@ -19,6 +20,8 @@ export const TabPanel = (props: TabPanelProps) => {
       {...other}
     >
       {value === index && <Box p={0}>{children}</Box>}
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div``;

@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { SongEditor } from "./SongEditor";
 import { TagEditor } from "./TagEditor";
-import { AppBar, Tabs, Tab } from "@material-ui/core";
+import { AppBar, Tabs, Tab, IconButton } from "@material-ui/core";
 import { PlaylistCreator } from "./PlaylistCreator";
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { usePlaylists } from "../../hooks/usePlaylists";
 import { TabPanel } from "./TabPanel";
+import { Home } from "@material-ui/icons";
+import { Link } from "react-router-dom";
+import { Icon } from "../global/Icon";
 
 interface Props {}
 
@@ -22,7 +25,7 @@ export const Playlists = (props: Props) => {
     onAddSong,
     onUpdatedSong,
     onRemoveSong,
-    onRemovePlaylist
+    onRemovePlaylist,
   } = usePlaylists();
 
   const [activeTab, setActiveTab] = useState(0);
@@ -32,7 +35,7 @@ export const Playlists = (props: Props) => {
   };
 
   return (
-    <div>
+    <Container>
       <GlobalStyle />
       <AppBar position="static">
         <Tabs
@@ -70,9 +73,24 @@ export const Playlists = (props: Props) => {
       <TabPanel value={activeTab} index={2}>
         <TagEditor tags={tags} onAddTag={onAddTag} onRemoveTag={onRemoveTag} />
       </TabPanel>
-    </div>
+      <Link className="back" to="/">
+        <Home fontSize="large" />
+      </Link>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  height: 100vh;
+  position: relative;
+
+  .back {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    z-index: 1000;
+  }
+`;
 
 const GlobalStyle = createGlobalStyle`
   body {
