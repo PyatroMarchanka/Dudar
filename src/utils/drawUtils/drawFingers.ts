@@ -1,7 +1,6 @@
 import { imagesTree } from "../../dataset/bagpipeImages";
 import { bagpipes } from "../../dataset/bagpipes";
-import { BagpipeTypes, Hole, SharpNotes, SharpNotesEnum } from "../../interfaces";
-import { NotesMap } from "./drawBagpipe";
+import { BagpipeTypes, SharpNotes, SharpNotesEnum } from "../../interfaces";
 
 type HoleType = "normal" | "double" | "doubleHalf";
 

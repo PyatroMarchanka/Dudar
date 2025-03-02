@@ -39,7 +39,7 @@ export const SongEditor: React.FC = () => {
     };
 
     fetchSong();
-  }, []);
+  }, [params.id]);
 
   const handleChange = ({ name, value }: { name: string; value: any }) => {
     setSong((prevSong) => (prevSong ? { ...prevSong, [name]: value } : null));

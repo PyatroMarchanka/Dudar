@@ -29,18 +29,3 @@ const Message = styled.p`
   font-size: 1.2rem;
   margin: 1rem 0;
 `;
-
-const Button = styled.button`
-  padding: 0.5rem 1rem;
-  margin: 0.5rem;
-  font-size: 1rem;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 0.25rem;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
