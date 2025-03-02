@@ -36,6 +36,7 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
   const [isAddPlaylistOpen, setIsAddPlaylistOpen] = useState(false);
   const [isSongsInPlaylistOpen, setIsSongsInPlaylistOpen] = useState(false);
   const [tagsFilters, setTagsFilters] = useState<string[]>([]);
+
   const handleAddSong = (song: PlaylistSong) => {
     if (!songs?.find((s) => s._id === song._id)) {
       setSongs([...songs, song]);
@@ -94,7 +95,7 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
               onAddPlaylist({
                 ...playlists[selectedPlaylist!],
                 name: playlistTitle,
-                songsIds: [],
+                songsIds: songs.map((song) => song._id!),
               });
               goBack();
             }}
@@ -165,6 +166,7 @@ export const PlaylistCreator: React.FC<PlaylistCreatorProps> = ({
                 }}
               />
               <SongSelection
+              addedSongs={songs}
                 filteredSongs={filteredSongs}
                 handleAddSong={handleAddSong}
               />

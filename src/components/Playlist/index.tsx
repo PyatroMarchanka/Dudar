@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { SongEditor } from "./SongEditor";
 import { TagEditor } from "./TagEditor";
-import { AppBar, Tabs, Tab, IconButton } from "@material-ui/core";
+import { AppBar, Tabs, Tab } from "@material-ui/core";
 import { PlaylistCreator } from "./PlaylistCreator";
 import styled, { createGlobalStyle } from "styled-components";
 import { usePlaylists } from "../../hooks/usePlaylists";
 import { TabPanel } from "./TabPanel";
 import { Home } from "@material-ui/icons";
 import { Link } from "react-router-dom";
-import { Icon } from "../global/Icon";
 
 interface Props {}
 
