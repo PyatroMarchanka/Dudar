@@ -44,7 +44,6 @@ export const usePlaylists = () => {
   }, [loadedTags]);
 
   const onAddPlaylist = async (playlist: IPlaylist) => {
-   
     if (playlist._id) {
       await updatePlaylists(playlist._id, playlist);
     } else {
@@ -58,7 +57,7 @@ export const usePlaylists = () => {
   };
 
   const onAddTag = async (tag: string) => {
-    if (tags.includes(tag)) return;
+    if (tags?.includes(tag)) return;
     const newTags = [...tags, tag];
     setTags(newTags);
 
