@@ -21,7 +21,8 @@ interface Action {
     | "SET_USER_DATA"
     | "SET_IS_SILENT_MODE"
     | "SET_USER_LAST_SONG_URL"
-    | "SET_USER_LOGGED_IN";
+    | "SET_USER_LOGGED_IN"
+    | "SET_IS_MUSIC_SHEETS";
 
   payload?: any;
 }
@@ -46,6 +47,7 @@ export interface SettingsState {
   isSilentMode?: boolean;
   userLastSongUrl?: string;
   isUserLoggedIn?: boolean;
+  isMusicSheets?: boolean;
 }
 
 export const settingsInitialState: SettingsState = {
@@ -59,6 +61,7 @@ export const settingsInitialState: SettingsState = {
   loopBars: 1,
   holesMode: HolesModes.Fingers,
   isUserLoggedIn: false,
+  isMusicSheets: false,
   ...defaultUser.settings,
 };
 
@@ -169,6 +172,11 @@ export const useSettingsReducer = () => {
             ...state,
             isUserLoggedIn: action.payload,
           };
+        case "SET_IS_MUSIC_SHEETS":
+          return {
+            ...state,
+            isMusicSheets: action.payload,
+          };
         default:
           return state;
       }
@@ -243,6 +251,10 @@ export const useSettingsReducer = () => {
     dispatch({ type: "SET_USER_LOGGED_IN", payload: bool });
   };
 
+  const setIsMusicSheet = (bool: boolean) => {
+    dispatch({ type: "SET_IS_MUSIC_SHEETS", payload: bool });
+  };
+
   return {
     state,
     setMetronome,
@@ -262,5 +274,6 @@ export const useSettingsReducer = () => {
     setIsSilentMode,
     setUserLastSongUrl,
     setIsUserLoggedIn,
+    setIsMusicSheet,
   };
 };

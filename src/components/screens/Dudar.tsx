@@ -20,11 +20,18 @@ import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { NoSong } from "../NoSong";
 import { LoginReminderContainer } from "../LoginReminder";
 import Logger from "../global/Logger";
+import MusicSheet from "../MusicSheets";
 
 export const Dudar = () => {
   let { path } = useRouteMatch();
   const {
-    state: { midiData, isSongLoading, bagpipeType, isSongUnavailable },
+    state: {
+      midiData,
+      isSongLoading,
+      bagpipeType,
+      isSongUnavailable,
+      isMusicSheets,
+    },
     setProgress,
   } = useContext(store);
   const [activeNote, setActiveNote] = useState<{
@@ -51,6 +58,22 @@ export const Dudar = () => {
   useDimensions();
   useGoogleProfile();
 
+  const PlayerComponent = isMusicSheets ? (
+    <MusicSheet midiFile={midiData} player={midiPlayer} />
+  ) : (
+    <>
+      <BagpipeContainer>
+        <BackCanvas />
+        <DynamicCanvas player={midiPlayer} />
+        <StaticCanvas activeHole={activeNote} />
+      </BagpipeContainer>
+      <Inputs>
+        <PlayerControls player={midiPlayer} />
+      </Inputs>
+      <MidiPlayerComponent playerRef={playerRef} />
+    </>
+  );
+
   return (
     <Container>
       <GlobalStyle />
@@ -62,21 +85,7 @@ export const Dudar = () => {
       <Switch>
         <Route exact path={`${path}/${routes.play}/:id`}>
           <PlayPageHeader midiPlayer={midiPlayer} />
-          {isSongUnavailable || !bagpipeType ? (
-            <NoSong />
-          ) : (
-            <>
-              <BagpipeContainer>
-                <BackCanvas />
-                <DynamicCanvas player={midiPlayer} />
-                <StaticCanvas activeHole={activeNote} />
-              </BagpipeContainer>
-              <Inputs>
-                <PlayerControls player={midiPlayer} />
-              </Inputs>
-              <MidiPlayerComponent playerRef={playerRef} />
-            </>
-          )}
+          {isSongUnavailable || !bagpipeType ? <NoSong /> : PlayerComponent}
         </Route>
       </Switch>
     </Container>
