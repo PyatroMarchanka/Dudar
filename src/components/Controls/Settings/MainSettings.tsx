@@ -18,6 +18,9 @@ import { DonationButtonBig } from "../../global/DonationButtonBig";
 import { useUpdateUserSettings } from "../../../hooks/useGoogleProfile";
 import { Link } from "react-router-dom";
 import { Tuner } from "../../Tuner";
+import { Typography } from "@material-ui/core";
+import { MusicNote } from "@material-ui/icons";
+import { Views } from "../../../interfaces/user";
 
 type Props = {
   midiPlayer?: MidiPlayer | null;
@@ -27,9 +30,10 @@ export const MainSettings = ({ midiPlayer }: Props) => {
   const { t } = useTranslation("translation");
 
   const {
-    state: { isPreclick, isSilentMode, bagpipeType },
+    state: { isPreclick, isSilentMode, bagpipeType, isMusicSheets },
     setIsPreclick,
     setIsSilentMode,
+    setIsMusicSheet,
   } = useContext(store);
   const { updateUserSettings } = useUpdateUserSettings();
 
@@ -80,6 +84,21 @@ export const MainSettings = ({ midiPlayer }: Props) => {
       </Row>
       <Line />
       <Row>
+        <Icon type="material" fill={mainColors.darkerGray} Icon={MusicNote} />
+        <Title>{t("musicSheetsSettings")}</Title>
+        <RedCheckbox
+          checked={isMusicSheets}
+          onChange={() => {
+            setIsMusicSheet(!isMusicSheets);
+            updateUserSettings({
+              view: isMusicSheets ? Views.MusicSheets : Views.Bagpipe,
+            });
+          }}
+          name="checkedG"
+        />
+      </Row>
+      <Line />
+      <Row>
         <Icon type="material" fill={mainColors.darkerGray} Icon={VolumeOff} />
         <Title>{t("silentMode")}</Title>
         <RedCheckbox
@@ -103,7 +122,15 @@ export const MainSettings = ({ midiPlayer }: Props) => {
       </Row>
       <Line />
       <Contacts />
-      <Link to="/admin">Anmin Panel</Link>
+
+      <Typography variant="h5" component="div">
+        <Link
+          to="/admin"
+          style={{ textDecoration: "none", color: mainColors.darkerGray }}
+        >
+          Admin Panel
+        </Link>
+      </Typography>
     </Container>
   );
 };

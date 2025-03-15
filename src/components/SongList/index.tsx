@@ -1,4 +1,8 @@
-import { SwipeableDrawer, IconButton, makeStyles, Theme } from "@material-ui/core";
+import {
+  SwipeableDrawer,
+  IconButton,
+  makeStyles,
+} from "@material-ui/core";
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import { store } from "../../context";
@@ -7,6 +11,7 @@ import { MidiPlayer } from "../../utils/MidiPlayer";
 import { mainColors, theme } from "../../utils/theme";
 import { Icon } from "../global/Icon";
 import { SongsByGenre } from "./SongsByGenre";
+import ListIcon from "@material-ui/icons/Menu";
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -61,8 +66,18 @@ export const SongList = ({ player }: Props) => {
         <SongsByGenre setOpen={setOpen} onStop={onStop} />
       </SwipeableDrawer>
       <IconButton onClick={() => setOpen(true)} className="icon">
-        <Icon type="hamb" fill={theme.colors.black} className="desktop" />
-        <Icon type="hamb" fill={theme.colors.white} className="mobile" />
+        <Icon
+          type="material"
+          Icon={ListIcon}
+          fill={theme.colors.black}
+          className="desktop icon-button"
+        />
+        <Icon
+          type="material"
+          Icon={ListIcon}
+          fill={theme.colors.black}
+          className="mobile icon-button"
+        />
       </IconButton>
     </Container>
   );
@@ -71,6 +86,11 @@ export const SongList = ({ player }: Props) => {
 const Container = styled.div`
   .icon {
     transform: translate(13px, 0px);
+  }
+
+  .icon-button {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 20%;
   }
 
   .desktop {
@@ -83,6 +103,7 @@ const Container = styled.div`
 
   .mobile {
     display: none;
+    
 
     @media ${theme.breakpoints.belowTablet} {
       display: block;

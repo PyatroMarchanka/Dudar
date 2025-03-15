@@ -46,7 +46,7 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ midiFile, player }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [bars, setBars] = useState<any[][]>([[]]);
   const [activeBarNote, setActiveBarNote] = useState([0, 0]);
-  console.log(midiFile);
+
   useEffect(() => {
     if (player) {
       player.handleNotesMoving = setTick;
@@ -76,25 +76,29 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ midiFile, player }) => {
   }, [midiFile, tonality, activeBarNote]);
 
   useEffect(() => {
-    if (!midiFile) return;
-    const currentBar = Math.floor(
-      (tick % midiFile.durationTicks) / (midiFile?.header.ppq * 4)
-    );
+    if (!midiFile || !bars[0]?.length) return;
 
-    let noteIndex = 0;
-    const note = bars[currentBar].find((note, index) => {
-      if (note.ticks > tick) {
-        noteIndex = index - 1;
-        return true;
-      } else if (index === bars[currentBar].length - 1) {
-        noteIndex = index;
-        return true;
-      }
-
-      return false;
+    const currentBar = bars.findIndex((bar) => {
+      const lastNote = bar.at(-1);
+      return lastNote?.ticks + lastNote?.durationTicks > tick;
     });
 
-    setActiveBarNote([currentBar, noteIndex]);
+    let noteIndex = 0;
+
+    for (let i = 0; i < bars[currentBar].length; i++) {
+      const note = bars[currentBar][i];
+      if (note.ticks > tick) {
+        noteIndex = i - 1;
+        break;
+      } else if (i === bars[currentBar].length - 1) {
+        noteIndex = i;
+        break;
+      }
+    }
+
+    if (currentBar !== activeBarNote[0] || noteIndex !== activeBarNote[1]) {
+      setActiveBarNote([currentBar, noteIndex]);
+    }
   }, [tick, midiFile, tonality]);
 
   return (

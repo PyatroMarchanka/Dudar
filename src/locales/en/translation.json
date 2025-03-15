@@ -5,6 +5,7 @@
   "transposeMelody": "Bagpipe tonality",
   "preclick": "Preclick",
   "silentMode": "Silent mode (metronome only)",
+  "musicSheetsSettings": "Music sheets view",
   "noIcon": "No icon",
   "semitones": "semitones",
   "tuner": "Tuner",

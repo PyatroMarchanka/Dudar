@@ -7,6 +7,7 @@ export const RedCheckbox = withStyles({
     "&$checked": {
       color: mainColors.red,
     },
+    marginLeft: "auto",
   },
   checked: {},
 })((props: CheckboxProps) => <Checkbox color="default" {...props} />);

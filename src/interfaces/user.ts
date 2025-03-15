@@ -9,6 +9,11 @@ export interface User {
   _id?: string;
 }
 
+export enum Views {
+  Bagpipe = "Bagpipe",
+  MusicSheets = "MusicSheets",
+}
+
 export interface UserSettings {
   bagpipeType: BagpipeTypes;
   tempo: number;
@@ -17,6 +22,7 @@ export interface UserSettings {
   transpose: number;
   isSilentMode?: boolean;
   lastSongUrl?: string;
+  view: Views;
 }
 export const defaultUser: User = {
   settings: {
@@ -26,5 +32,6 @@ export const defaultUser: User = {
     language: getUserLanguage() || Languages.English,
     transpose: 0,
     isSilentMode: false,
+    view: Views.Bagpipe,
   },
 };

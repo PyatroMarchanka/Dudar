@@ -8,25 +8,16 @@ import { Settings } from "../Controls/Settings";
 import { Header, SettingsButtons, SongTitle } from "./common";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { useLoadSong } from "../../hooks/useLoadSong";
-import { useContext, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 import { SongPageModal } from "../global/SongPageModal";
-import IconButton from "@material-ui/core/IconButton";
-import MusicNoteIcon from "@material-ui/icons/MusicNote";
-import { Icon } from "../global/Icon";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
 }
 
 export const PlayPageHeader = ({ midiPlayer }: Props) => {
-  const {
-    state: { isMusicSheets },
-    setIsMusicSheet,
-  } = useContext(store);
   const songTitle = useSongTitle();
   useLoadSong();
-  const { t } = useTranslation("translation");
 
   useEffect(() => {
     document.title = songTitle ?? noSongsLabel;
@@ -39,18 +30,11 @@ export const PlayPageHeader = ({ midiPlayer }: Props) => {
         <SongTitle>{songTitle ?? noSongsLabel}</SongTitle>
       </Header>
       <SongPageModal />
-
       <ChangeLogPopup />
       <LogoContainer>
         <Logo variant="small" width={26} height={40} />
       </LogoContainer>
       <Settings midiPlayer={midiPlayer} />
-      <IconButton
-        onClick={() => setIsMusicSheet(!isMusicSheets)}
-        aria-label="music note"
-      >
-        <Icon type="material" Icon={MusicNoteIcon} fill="black" />
-      </IconButton>
     </SettingsButtons>
   );
 };
