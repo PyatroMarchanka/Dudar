@@ -1,3 +1,5 @@
+import { Midi } from "@tonejs/midi";
+import { Note } from "@tonejs/midi/dist/Note";
 import {
   StaveNote,
   Dot,
@@ -7,14 +9,7 @@ import {
   Formatter,
   TickContext,
 } from "vexflow";
-
-interface MidiNote {
-  duration: number;
-  midi: number;
-  noteOffVelocity: number;
-  ticks: number;
-  velocity: number;
-}
+import { TimeSignatures } from "../../dataset/songs/interfaces";
 
 const midiToPitch = (midi: number): string => {
   const octave = Math.floor(midi / 12) - 1;
@@ -37,17 +32,36 @@ const midiToPitch = (midi: number): string => {
 
 const midiToDuration = (duration: number): { dur: string; dots: number } => {
   const durationRatios: { [key: number]: { dur: string; dots: number } } = {
-    2: { dur: "w", dots: 0 },
-    1.5: { dur: "h", dots: 1 },
-    1.25: { dur: "h", dots: 2 },
-    1: { dur: "h", dots: 0 },
-    0.75: { dur: "q", dots: 1 },
-    0.5: { dur: "q", dots: 0 },
-    0.375: { dur: "8", dots: 1 },
-    0.25: { dur: "8", dots: 0 },
-    0.125: { dur: "16", dots: 0 },
-    0.0625: { dur: "32", dots: 0 },
+    1920: { dur: "w", dots: 0 },
+    1440: { dur: "h", dots: 1 },
+    1200: { dur: "h", dots: 2 },
+    960: { dur: "h", dots: 0 },
+    840: { dur: "q", dots: 2 },
+    720: { dur: "q", dots: 1 },
+    480: { dur: "q", dots: 0 },
+    360: { dur: "8", dots: 1 },
+    240: { dur: "8", dots: 0 },
+    180: { dur: "16", dots: 2 },
+    120: { dur: "16", dots: 0 },
+    90: { dur: "32", dots: 1 },
+    60: { dur: "32", dots: 0 },
   };
+
+  if (!durationRatios[duration]) {
+    const closestDuration = Object.keys(durationRatios).reduce((prev, curr) => {
+      return Math.abs(parseInt(curr) - duration) <
+        Math.abs(parseInt(prev) - duration)
+        ? curr
+        : prev;
+    });
+
+    if (Math.abs(parseInt(closestDuration) - duration) <= 10) {
+      return durationRatios[parseInt(closestDuration)];
+    } else {
+      throw new Error(`Unknown duration: ${duration}`);
+    }
+  }
+
   if (!durationRatios[duration]) {
     throw new Error(`Unknown duration: ${duration}`);
   }
@@ -55,9 +69,14 @@ const midiToDuration = (duration: number): { dur: string; dots: number } => {
   return durationRatios[duration]; // Default to quarter note if not found
 };
 
-export const convertMidiNoteToStaveNote = (midiNote: MidiNote): StaveNote => {
+export const convertMidiNoteToStaveNote = (
+  midiNote: Note,
+  ppq: number
+): StaveNote | null => {
+  const durationTicks = midiNote.durationTicks;
+  const durationFormatted = durationTicks * (480 / ppq);
   const keys = [midiToPitch(midiNote.midi)];
-  const duration = midiToDuration(midiNote.duration);
+  const duration = midiToDuration(durationFormatted);
   const note = new StaveNote({
     keys,
     duration: duration.dur,
@@ -71,11 +90,33 @@ export const convertMidiNoteToStaveNote = (midiNote: MidiNote): StaveNote => {
   return note;
 };
 
-export const splitNotesIntoBars = (notes: any[], barLength: number) => {
+const getBarLength = (timeSignature: TimeSignatures) => {
+  const [numerator] = timeSignature.split("/").map(Number);
+  if (numerator % 4 === 0) {
+    return 4;
+  }
+  if (numerator % 3 === 0) {
+    return 3;
+  }
+  if (numerator % 5 === 0) {
+    return 5;
+  }
+
+  if (numerator % 7 === 0) {
+    return 3.5;
+  }
+
+  return 4;
+};
+
+export const splitNotesIntoBars = (
+  notes: any[],
+  timeSignature: TimeSignatures
+) => {
   const bars: any[][] = [];
   let currentBar: any[] = [];
   let currentLength = 0;
-
+  const barLength = getBarLength(timeSignature) / 2;
   notes.forEach((note) => {
     const noteLength = note.duration;
     if (currentLength + noteLength > barLength) {
@@ -99,39 +140,54 @@ export const renderBar = (
   index: number,
   context: any,
   tonality: string,
-  activeBarNote: number[]
+  activeBarNote: number[],
+  midiFile: Midi | null
 ) => {
-  let notes = bar.map((note) => convertMidiNoteToStaveNote(note));
-  const isActiveBar = activeBarNote[0] === index;
-  notes = notes.map((note, i) => {
-    note.setTickContext(new TickContext()).setContext(context);
-    if (isActiveBar && activeBarNote[1] === i) {
-      note.setStyle({ fillStyle: "red", strokeStyle: "red" });
-    } else {
-      note.setStyle({ fillStyle: "black", strokeStyle: "black" });
-    }
-    return note;
-  });
+  if (!midiFile) return;
+  try {
+    let notes = bar.map(
+      (note) =>
+        convertMidiNoteToStaveNote(note, midiFile.header.ppq) ||
+        new StaveNote({
+          keys: ["c/4"],
+          duration: "q",
+        })
+    );
+    const isActiveBar = activeBarNote[0] === index;
+    notes = notes.map((note, i) => {
+      note.setTickContext(new TickContext()).setContext(context);
+      if (isActiveBar && activeBarNote[1] === i) {
+        note.setStyle({ fillStyle: "red", strokeStyle: "red" });
+      } else {
+        note.setStyle({ fillStyle: "black", strokeStyle: "black" });
+      }
+      return note;
+    });
 
-  const beams = Beam.generateBeams(notes).map(function (beam, i) {
-    if (isActiveBar && activeBarNote[1] === i) {
-      beam.setStyle({ fillStyle: "red", strokeStyle: "red" });
-    } else {
-      beam.setStyle({ fillStyle: "black", strokeStyle: "black" });
-    }
-    return beam;
-  });
+    const beams = Beam.generateBeams(notes).map(function (beam, i) {
+      if (isActiveBar && activeBarNote[1] === i) {
+        beam.setStyle({ fillStyle: "red", strokeStyle: "red" });
+      } else {
+        beam.setStyle({ fillStyle: "black", strokeStyle: "black" });
+      }
+      return beam;
+    });
 
-  const voice = new Voice({ numBeats: 4, beatValue: 4 }).setStrict(false);
-  voice.addTickables(notes);
-  new Formatter().joinVoices([voice]).format([voice], 350);
-  const stave = new Stave(10, 40 + 80 * index, 450);
-  stave.addClef("treble").setContext(context).draw();
-  stave.addKeySignature(tonality).setContext(context).draw();
+    const voice = new Voice({ numBeats: 4, beatValue: 4 }).setStrict(false);
+    voice.addTickables(notes);
+    new Formatter().joinVoices([voice]).format([voice], 350);
+    const stave = new Stave(10, 40 + 80 * index, 450);
+    stave.addClef("treble").setContext(context).draw();
+    stave.addKeySignature(tonality).setContext(context).draw();
 
-  voice.draw(context, stave);
+    voice.draw(context, stave);
 
-  beams.forEach(function (beam) {
-    beam.setContext(context).draw();
-  });
+    beams.forEach(function (beam) {
+      beam.setContext(context).draw();
+    });
+    return true;
+  } catch (error) {
+    console.error("Error rendering bar", error);
+    return false;
+  }
 };
