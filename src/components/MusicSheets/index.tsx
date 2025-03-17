@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { VexFlow } from "vexflow";
+import { StaveNote, VexFlow } from "vexflow";
 import styled from "styled-components";
 import { store } from "../../context";
 import { transposeNote } from "../../utils/midiUtils";
-import { renderBar, splitNotesIntoBars } from "./utils";
+import { convertAllNotes, renderBar, splitNotesIntoBars } from "./utils";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { useNotesMoving } from "../../hooks/useNotesMoving";
 import { PlayerControls } from "../Controls/PlayerControls";
@@ -25,6 +25,7 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
   const tonality = transposeNote("A", transpose);
   const containerRef = useRef<HTMLDivElement>(null);
   const [bars, setBars] = useState<any[][]>([[]]);
+  const [notes, setNotes] = useState<StaveNote[][]>([[]]);
   const [activeBarNote, setActiveBarNote] = useState([0, 0]);
   const [isMusicViewValid, setIsMusicViewValid] = useState(true);
 
@@ -35,7 +36,25 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
   }, [player, setTick]);
 
   useEffect(() => {
-    if (!midiData) return;
+    if (!midiData || !activeSong) return;
+    setIsMusicViewValid(true);
+
+    const bars = splitNotesIntoBars(
+      midiData.tracks[0].notes,
+      activeSong.timeSignature
+    );
+
+    setBars(bars);
+    try {
+      const staveNotes = convertAllNotes(bars, midiData.header.ppq || 480);
+      setNotes(staveNotes);
+    } catch (error) {
+      setIsMusicViewValid(false);
+    }
+  }, [midiData, activeSong, tonality]);
+
+  useEffect(() => {
+    if (!midiData || !isMusicViewValid) return;
 
     if (containerRef.current) {
       containerRef.current.innerHTML = "";
@@ -46,30 +65,14 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
       const context = renderer.getContext();
 
       context.clear();
-      const bars = splitNotesIntoBars(
-        midiData.tracks[0].notes,
-        activeSong?.timeSignature!
-      );
-      setBars(bars);
-      renderer.resize(500, bars.length * 80 + 200);
 
-      for (let index = 0; index < bars.length; index++) {
-        const bar = bars[index];
-        const isOk = renderBar(
-          bar,
-          index,
-          context,
-          tonality,
-          activeBarNote,
-          midiData
-        );
-        if (!isOk) {
-          setIsMusicViewValid(false);
-          break;
-        }
-      }
+      renderer.resize(500, notes.length * 80 + 200);
+
+      notes.forEach((staveBar, index) => {
+        renderBar(staveBar, index, context, tonality, activeBarNote, midiData);
+      });
     }
-  }, [midiData, tonality, activeBarNote]);
+  }, [midiData, tonality, activeBarNote, activeSong, isMusicViewValid, notes]);
 
   useEffect(() => {
     if (!midiData || !bars[0]?.length) return;
@@ -95,7 +98,7 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
     if (currentBar !== activeBarNote[0] || noteIndex !== activeBarNote[1]) {
       setActiveBarNote([currentBar, noteIndex]);
     }
-  }, [tick, midiData, tonality]);
+  }, [tick, midiData, tonality, bars]);
 
   return (
     <CenteredContainer>

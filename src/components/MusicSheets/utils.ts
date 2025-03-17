@@ -34,16 +34,21 @@ const midiToDuration = (duration: number): { dur: string; dots: number } => {
   const durationRatios: { [key: number]: { dur: string; dots: number } } = {
     1920: { dur: "w", dots: 0 },
     1440: { dur: "h", dots: 1 },
+    1280: { dur: "h", dots: 0 }, // Triple half note
     1200: { dur: "h", dots: 2 },
     960: { dur: "h", dots: 0 },
     840: { dur: "q", dots: 2 },
     720: { dur: "q", dots: 1 },
+    640: { dur: "q", dots: 0 }, // Triple quarter note
     480: { dur: "q", dots: 0 },
     360: { dur: "8", dots: 1 },
+    320: { dur: "8", dots: 0 }, // Triple eighth note
     240: { dur: "8", dots: 0 },
     180: { dur: "16", dots: 2 },
+    160: { dur: "16", dots: 0 }, // Triple sixteenth note
     120: { dur: "16", dots: 0 },
     90: { dur: "32", dots: 1 },
+    80: { dur: "32", dots: 0 }, // Triple thirty-second note
     60: { dur: "32", dots: 0 },
   };
 
@@ -88,6 +93,22 @@ export const convertMidiNoteToStaveNote = (
   }
 
   return note;
+};
+
+export const convertAllNotes = (bars: Note[][], ppq: number) => {
+  const staveNotes: any[][] = [];
+  bars.forEach((bar) => {
+    const notes = bar.map(
+      (note) => convertMidiNoteToStaveNote(note, ppq) || null
+    );
+    staveNotes.push(notes);
+  });
+
+  if (staveNotes.flat().every((note) => note !== null)) {
+    return staveNotes as StaveNote[][];
+  }
+
+  throw new Error("Failed to convert notes");
 };
 
 const getBarLength = (timeSignature: TimeSignatures) => {
@@ -136,7 +157,7 @@ export const splitNotesIntoBars = (
 };
 
 export const renderBar = (
-  bar: any[],
+  bar: StaveNote[],
   index: number,
   context: any,
   tonality: string,
@@ -145,14 +166,8 @@ export const renderBar = (
 ) => {
   if (!midiFile) return;
   try {
-    let notes = bar.map(
-      (note) =>
-        convertMidiNoteToStaveNote(note, midiFile.header.ppq) ||
-        new StaveNote({
-          keys: ["c/4"],
-          duration: "q",
-        })
-    );
+    let notes = bar;
+
     const isActiveBar = activeBarNote[0] === index;
     notes = notes.map((note, i) => {
       note.setTickContext(new TickContext()).setContext(context);
