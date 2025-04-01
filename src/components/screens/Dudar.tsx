@@ -59,7 +59,10 @@ export const Dudar = () => {
   useGoogleProfile();
 
   const PlayerComponent = isMusicSheets ? (
-    <MusicSheet player={midiPlayer} />
+    <>
+      <MusicSheet player={midiPlayer} />
+      <MidiPlayerComponent playerRef={playerRef} />
+    </>
   ) : (
     <>
       <BagpipeContainer>
