@@ -6,30 +6,41 @@ import { cleanLines } from "../utils/drawUtils/drawAll";
 
 import { useNotesNames } from "./useNotesNames";
 
-export const useDrawStatic = (activeHole: { note: SharpNotes; octave: number } | null) => {
+export const useDrawStatic = (
+  activeHole: { note: SharpNotes; octave: number } | null
+) => {
   const {
-    state: { activeSong, songNotes, bagpipeType },
+    state: { activeSong, songNotes, bagpipeType, isMusicSheets },
   } = useContext(store);
   const canvasRef = useRef(null);
 
   const { notesMap: notesNameToLine, bagpipeNotes } = useNotesNames();
-
   useEffect(() => {
     const canvas = canvasRef.current;
     const context: CanvasRenderingContext2D | null =
       canvas && (canvas as HTMLCanvasElement)!.getContext("2d");
 
     cleanLines(context!);
-  }, [activeSong, bagpipeType]);
+  }, [activeSong, bagpipeType, isMusicSheets]);
 
   useEffect(() => {
+    if (!notesNameToLine || !bagpipeNotes) {
+      return;
+    }
+
     let animationFrameId: number;
     const canvas = canvasRef.current;
     const context: CanvasRenderingContext2D | null =
       canvas && (canvas as HTMLCanvasElement)!.getContext("2d");
 
     const render = () => {
-      drawStatic(context!, bagpipeType, notesNameToLine, bagpipeNotes, activeHole);
+      drawStatic(
+        context!,
+        bagpipeType,
+        notesNameToLine,
+        bagpipeNotes,
+        activeHole
+      );
 
       animationFrameId = window.requestAnimationFrame(render);
     };
@@ -37,7 +48,7 @@ export const useDrawStatic = (activeHole: { note: SharpNotes; octave: number } |
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [activeHole, songNotes, bagpipeType]);
+  }, [activeHole, songNotes, bagpipeType, bagpipeNotes]);
 
   return canvasRef;
 };

@@ -11,6 +11,8 @@ import {
 } from "vexflow";
 import { TimeSignatures } from "../../dataset/songs/interfaces";
 
+export const STAVE_HEIGHT = 90;
+
 const midiToPitch = (midi: number): string => {
   const octave = Math.floor(midi / 12) - 1;
   const note = [
@@ -132,14 +134,15 @@ const getBarLength = (timeSignature: TimeSignatures) => {
 
 export const splitNotesIntoBars = (
   notes: any[],
-  timeSignature: TimeSignatures
+  timeSignature: TimeSignatures,
+  ppq = 480
 ) => {
   const bars: any[][] = [];
   let currentBar: any[] = [];
   let currentLength = 0;
-  const barLength = getBarLength(timeSignature) / 2;
+  const barLength = getBarLength(timeSignature) * ppq; // Assuming 480 ticks per quarter note
   notes.forEach((note) => {
-    const noteLength = note.duration;
+    const noteLength = note.durationTicks;
     if (currentLength + noteLength > barLength) {
       bars.push(currentBar);
       currentBar = [];
@@ -162,9 +165,11 @@ export const renderBar = (
   context: any,
   tonality: string,
   activeBarNote: number[],
-  midiFile: Midi | null
+  midiFile: Midi | null,
+  timeSignatire: TimeSignatures
 ) => {
   if (!midiFile) return;
+
   try {
     let notes = bar;
 
@@ -189,12 +194,24 @@ export const renderBar = (
     });
 
     const voice = new Voice({ numBeats: 4, beatValue: 4 }).setStrict(false);
-    voice.addTickables(notes);
-    new Formatter().joinVoices([voice]).format([voice], 350);
-    const stave = new Stave(10, 40 + 80 * index, 450);
-    stave.addClef("treble").setContext(context).draw();
-    stave.addKeySignature(tonality).setContext(context).draw();
 
+    voice.addTickables(notes);
+    if (voice.getTickables().length > 0) {
+      new Formatter()
+        .joinVoices([voice])
+        .format([voice], index === 0 ? 300 : 350);
+    }
+
+    const stave = new Stave(10, 40 + STAVE_HEIGHT * index, 450);
+
+    stave.addKeySignature(tonality).setContext(context);
+
+    if (index === 0) {
+      stave.addClef("treble").setContext(context);
+      stave.addTimeSignature(timeSignatire).setContext(context);
+    }
+
+    stave.draw();
     voice.draw(context, stave);
 
     beams.forEach(function (beam) {

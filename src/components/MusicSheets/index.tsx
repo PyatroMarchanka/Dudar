@@ -3,7 +3,7 @@ import { StaveNote, VexFlow } from "vexflow";
 import styled from "styled-components";
 import { store } from "../../context";
 import { transposeNote } from "../../utils/midiUtils";
-import { convertAllNotes, renderBar, splitNotesIntoBars } from "./utils";
+import { convertAllNotes, renderBar, splitNotesIntoBars, STAVE_HEIGHT } from "./utils";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { useNotesMoving } from "../../hooks/useNotesMoving";
 import { PlayerControls } from "../Controls/PlayerControls";
@@ -41,7 +41,8 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
 
     const bars = splitNotesIntoBars(
       midiData.tracks[0].notes,
-      activeSong.timeSignature
+      activeSong.timeSignature,
+      midiData.header.ppq
     );
 
     setBars(bars);
@@ -66,13 +67,21 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
 
       context.clear();
 
-      renderer.resize(500, notes.length * 80 + 200);
+      renderer.resize(500, (notes.length + 2) * STAVE_HEIGHT);
 
       notes.forEach((staveBar, index) => {
-        renderBar(staveBar, index, context, tonality, activeBarNote, midiData);
+          renderBar(
+            staveBar,
+            index,
+            context,
+            tonality,
+            activeBarNote,
+            midiData,
+            activeSong?.timeSignature!
+          );
       });
     }
-  }, [midiData, tonality, activeBarNote, activeSong, isMusicViewValid, notes]);
+  }, [midiData, tonality, activeSong, isMusicViewValid, notes, activeBarNote]);
 
   useEffect(() => {
     if (!midiData || !bars[0]?.length) return;
