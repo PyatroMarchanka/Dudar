@@ -10,8 +10,8 @@ export interface User {
 }
 
 export enum Views {
-  Bagpipe = "Bagpipe",
-  MusicSheets = "MusicSheets",
+  Bagpipe = "bagpipe",
+  MusicSheets = "musicSheets",
 }
 
 export interface UserSettings {

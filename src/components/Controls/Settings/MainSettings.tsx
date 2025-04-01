@@ -89,10 +89,10 @@ export const MainSettings = ({ midiPlayer }: Props) => {
         <RedCheckbox
           checked={isMusicSheets}
           onChange={() => {
-            setIsMusicSheet(!isMusicSheets);
             updateUserSettings({
-              view: isMusicSheets ? Views.MusicSheets : Views.Bagpipe,
+              view: !isMusicSheets ? Views.MusicSheets : Views.Bagpipe,
             });
+            setIsMusicSheet(!isMusicSheets);
           }}
           name="checkedG"
         />
