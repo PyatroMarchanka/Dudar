@@ -61,7 +61,7 @@ export const settingsInitialState: SettingsState = {
   loopBars: 1,
   holesMode: HolesModes.Fingers,
   isUserLoggedIn: false,
-  isMusicSheets: true,
+  isMusicSheets: false,
   ...defaultUser.settings,
 };
 
