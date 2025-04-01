@@ -8,6 +8,7 @@ import {
   Voice,
   Formatter,
   TickContext,
+  StaveText,
 } from "vexflow";
 import { TimeSignatures } from "../../dataset/songs/interfaces";
 
@@ -199,10 +200,10 @@ export const renderBar = (
     if (voice.getTickables().length > 0) {
       new Formatter()
         .joinVoices([voice])
-        .format([voice], index === 0 ? 300 : 350);
+        .format([voice], index === 0 ? 270 : 320);
     }
 
-    const stave = new Stave(10, 40 + STAVE_HEIGHT * index, 450);
+    const stave = new Stave(50, 40 + STAVE_HEIGHT * index, 400);
 
     stave.addKeySignature(tonality).setContext(context);
 
@@ -210,7 +211,8 @@ export const renderBar = (
       stave.addClef("treble").setContext(context);
       stave.addTimeSignature(timeSignatire).setContext(context);
     }
-
+    const barNumber = new StaveText((index + 1).toString(), StaveText.Position.LEFT);
+    barNumber.setContext(context).setStave(stave).draw();
     stave.draw();
     voice.draw(context, stave);
 
