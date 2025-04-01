@@ -7,7 +7,7 @@ import { SharpNotesEnum } from "../interfaces";
 
 export const useNotesNames = () => {
   const {
-    state: { transpose, midiData, bagpipeType },
+    state: { transpose, midiData, bagpipeType, isMusicSheets },
     setSongNotes,
   } = useContext(store);
 
@@ -32,10 +32,9 @@ export const useNotesNames = () => {
       });
       return acc;
     }, [] as NotesMap);
-
     setNotesNamesMap({ notesMap, bagpipeNotes });
     setSongNotes(transposedNotes);
-  }, [midiData, transpose, bagpipeType]);
+  }, [midiData, transpose, bagpipeType, isMusicSheets]);
 
   return notesNamesMap;
 };

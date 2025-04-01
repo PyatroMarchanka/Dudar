@@ -93,14 +93,12 @@ export const SongPage = ({ onClose }: Props) => {
           <Typography align="center" variant="h6">
             {t(`songInfo.bagpipesToPlay`)}:
           </Typography>
-          <Typography>
-            {activeSong?.bagpipesToPlay
-              .filter((bagpipe) => (bagpipe as any) !== "gd")
-              .map((bagpipe) => getTranslationKeyByBagpipeType(bagpipe))
-              .map((bagpipe) => (
-                <Typography>{t(`dudas.${bagpipe}`)}</Typography>
-              ))}
-          </Typography>
+          {activeSong?.bagpipesToPlay
+            .filter((bagpipe) => (bagpipe as any) !== "gd")
+            .map((bagpipe) => getTranslationKeyByBagpipeType(bagpipe))
+            .map((bagpipe) => (
+              <Typography key={bagpipe}>{t(`dudas.${bagpipe}`)}</Typography>
+            ))}
         </SongProperty>
       )}
       {activeSong?.lyrycs && (
@@ -109,7 +107,9 @@ export const SongPage = ({ onClose }: Props) => {
             {t(`songInfo.lyrics`)}:
           </Typography>
           {activeSong?.lyrycs.split("\n").map((line) => (
-            <Typography variant="body2">{line}</Typography>
+            <Typography key={line} variant="body2">
+              {line}
+            </Typography>
           ))}
         </SongProperty>
       )}
@@ -142,24 +142,22 @@ export const SongPage = ({ onClose }: Props) => {
           <Typography align="center" variant="h6">
             {t(`songInfo.links`)}:
           </Typography>
-          <Typography>
-            {activeSong?.links.map((link) => (
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={link.url}
-                key={link.url}
-                className="song-link"
-              >
-                <div>
-                  <Typography variant="body2">
-                    <b>{link.name}</b>
-                  </Typography>
-                  <LinkIcon type={link.type} />
-                </div>
-              </a>
-            ))}
-          </Typography>
+          {activeSong?.links.map((link) => (
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={link.url}
+              key={link.url}
+              className="song-link"
+            >
+              <div>
+                <Typography variant="body2">
+                  <b>{link.name}</b>
+                </Typography>
+                <LinkIcon type={link.type} />
+              </div>
+            </a>
+          ))}
         </SongProperty>
       ) : null}
 
@@ -168,7 +166,7 @@ export const SongPage = ({ onClose }: Props) => {
           {t(`songInfo.tags`)}:
         </Typography>
         <Typography>
-          <b> {activeSong?.labels.map((tag) => t(`tags.${tag}`)).join(", ")}</b>
+          <b>{activeSong?.labels.map((tag) => t(`tags.${tag}`)).join(", ")}</b>
         </Typography>
       </SongProperty>
     </Container>

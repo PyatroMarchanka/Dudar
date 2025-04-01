@@ -57,6 +57,7 @@ interface Context {
   setUserLastSongUrl: (url: string) => void;
   setIsSongUnavailable: (bool: boolean) => void;
   setIsUserLoggedIn: (bool: boolean) => void;
+  setIsMusicSheet: (bool: boolean) => void;
 }
 
 const store = createContext<Context>({
@@ -88,6 +89,7 @@ const store = createContext<Context>({
   setUserLastSongUrl: (url: string) => {},
   setIsSongUnavailable: (bool: boolean) => {},
   setIsUserLoggedIn: (bool: boolean) => {},
+  setIsMusicSheet: (bool: boolean) => {},
 });
 const { Provider } = store;
 

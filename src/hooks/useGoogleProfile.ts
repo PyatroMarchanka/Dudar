@@ -25,7 +25,8 @@ export const useGoogleProfile = () => {
     setTranspose,
     setIsSilentMode,
     setUserLastSongUrl,
-    setIsUserLoggedIn
+    setIsUserLoggedIn,
+    setIsMusicSheet
   } = useContext(store);
 
   const [loading, setLoading] = useState(true);
@@ -44,7 +45,8 @@ export const useGoogleProfile = () => {
       language,
       isSilentMode,
       lastSongUrl,
-    } = userData.settings!;
+      view,
+    } = userData.settings;
     if (bagpipeType) {
       setBagpipeType(bagpipeType);
     }
@@ -57,13 +59,16 @@ export const useGoogleProfile = () => {
     if (transpose) {
       setTranspose(transpose);
     }
+    if(view) {
+      setIsMusicSheet(view === "musicSheets");
+    }
     if (language) {
       setLanguage(language);
       changeLanguage(language);
     } else {
       const localLanguage: Languages | null = getUserLanguage() as Languages;
-      setLanguage(localLanguage ? localLanguage : fallbackLanguage);
-      changeLanguage(localLanguage ? localLanguage : fallbackLanguage);
+      setLanguage(localLanguage || fallbackLanguage);
+      changeLanguage(localLanguage || fallbackLanguage);
     }
     if (isSilentMode) {
       setIsSilentMode(isSilentMode);
@@ -83,12 +88,12 @@ export const useGoogleProfile = () => {
         setIsUserLoggedIn(true);
       } else {
         const settings = {
-          ...defaultUser.settings!,
+          ...defaultUser.settings,
           bagpipeType: BagpipeTypes.BelarusianTraditionalDuda,
         } as UserSettings;
 
         setAllUserData({ ...defaultUser, settings });
-        updateUserSettings(defaultUser.settings!);
+        updateUserSettings(defaultUser.settings);
       }
     } catch (err) {
       console.log(err);

@@ -1,9 +1,7 @@
 import styled from "styled-components";
 import { SongList } from "../SongList";
-import { makeStyles } from "@material-ui/core";
-import { mainColors } from "../../utils/theme";
 import ChangeLogPopup from "../ChangeLogPopup";
-import { noSongsLabel } from "../../context";
+import { noSongsLabel, store } from "../../context";
 import { useSongTitle } from "../../hooks/useSongTitle";
 import { Logo } from "../global/Logo";
 import { Settings } from "../Controls/Settings";
@@ -11,7 +9,6 @@ import { Header, SettingsButtons, SongTitle } from "./common";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { useLoadSong } from "../../hooks/useLoadSong";
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { SongPageModal } from "../global/SongPageModal";
 
 interface Props {
@@ -21,7 +18,6 @@ interface Props {
 export const PlayPageHeader = ({ midiPlayer }: Props) => {
   const songTitle = useSongTitle();
   useLoadSong();
-  const { t } = useTranslation("translation");
 
   useEffect(() => {
     document.title = songTitle ?? noSongsLabel;
@@ -34,7 +30,6 @@ export const PlayPageHeader = ({ midiPlayer }: Props) => {
         <SongTitle>{songTitle ?? noSongsLabel}</SongTitle>
       </Header>
       <SongPageModal />
-
       <ChangeLogPopup />
       <LogoContainer>
         <Logo variant="small" width={26} height={40} />
