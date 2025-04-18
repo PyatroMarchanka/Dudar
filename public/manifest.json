@@ -1,18 +1,57 @@
 {
   "short_name": "Duda Hero",
-  "name": "Duda Hero",
+  "name": "Duda Hero - Learn to Play Bagpipes",
+  "description": "Interactive platform for learning to play various types of bagpipes including Belarusian traditional, Great Highland, and German Dudelsack",
+  "lang": "en",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "categories": ["education", "music", "entertainment"],
+  "screenshots": [
     {
       "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ],
-  "start_url": ".",
-  "display": "standalone"
+  "shortcuts": [
+    {
+      "name": "Play Bagpipes",
+      "short_name": "Play",
+      "description": "Start playing bagpipes",
+      "url": "/app",
+      "icons": [{ "src": "/android-chrome-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Browse Playlists",
+      "short_name": "Playlists",
+      "description": "Browse available bagpipe playlists",
+      "url": "/playlists",
+      "icons": [{ "src": "/android-chrome-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "EDuda Learning",
+      "short_name": "EDuda",
+      "description": "Learn to play bagpipes with EDuda",
+      "url": "/eduda",
+      "icons": [{ "src": "/android-chrome-192x192.png", "sizes": "192x192" }]
+    }
+  ]
 }

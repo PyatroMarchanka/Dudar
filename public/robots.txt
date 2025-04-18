@@ -1,3 +1,9 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /api/
+Disallow: /private/
+Disallow: /admin/
+
+# Sitemap
+Sitemap: https://dudahero.org/sitemap.xml
