@@ -67,10 +67,6 @@ export const About = () => {
             {t('aboutPage.melodiesCount', { count: 200 })}
           </Typography>
 
-          <Typography variant="body1" className="description">
-            {t('aboutPage.description1')}
-          </Typography>
-
           <Typography variant="h4" className="sectionSubtitle">
             {t('aboutPage.availableBagpipes')}
           </Typography>
@@ -241,24 +237,6 @@ const VideoSection = styled.div`
   margin: 40px 0;
 `;
 
-const UserImage = styled.img`
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid ${mainColors.orange};
-  width: 30px;
-  height: 30px;
-  &:hover {
-    cursor: pointer;
-    border: 2px solid ${mainColors.darkOrange};
-  }
-`;
-
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 const Left = styled.div`
   flex-basis: 100%;
   max-width: 800px;
@@ -274,7 +252,7 @@ const Left = styled.div`
   .sectionSubtitle {
     font-size: 1.5rem;
     margin: 30px 0 15px;
-    color: ${mainColors.darkOrange};
+    color: ${mainColors.orange};
   }
 
   .description {

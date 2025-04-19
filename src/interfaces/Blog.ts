@@ -14,6 +14,7 @@ export interface BlogPost {
     name: string;
     picture: string;
   };
+  createdAt: string;
   publishedAt: string;
   updatedAt: string;
   tags: string[];
@@ -29,8 +30,13 @@ export interface BlogPostPreview {
   slug: string;
   title: string;
   excerpt: string;
-  author: string;
+  author: {
+    _id: string;
+    name: string;
+    picture?: string;
+  };
   publishedAt: string;
+  createdAt: string;
   tags: string[];
   featuredImage?: string;
   availableLanguages: string[];

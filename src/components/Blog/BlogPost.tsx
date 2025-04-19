@@ -252,7 +252,7 @@ const BlogPost: React.FC = () => {
           variant="outlined"
           color="primary"
         >
-          Back to Blogs
+          Blogs
         </Button>
         <LanguageSelector />
         {userData?.email && (
@@ -302,20 +302,12 @@ const BlogPost: React.FC = () => {
             <Box className={classes.metaItem}>
               <CalendarToday fontSize="small" />
               <Typography variant="body1">
-                {new Date(post.publishedAt).toLocaleDateString()}
+                {new Date(
+                  post.publishedAt || post.createdAt
+                ).toLocaleDateString()}
               </Typography>
             </Box>
           </Tooltip>
-          {post.updatedAt !== post.publishedAt && (
-            <Tooltip title="Last Updated">
-              <Box className={classes.metaItem}>
-                <Update fontSize="small" />
-                <Typography variant="body1">
-                  {new Date(post.updatedAt).toLocaleDateString()}
-                </Typography>
-              </Box>
-            </Tooltip>
-          )}
         </Box>
         <Box className={classes.tags}>
           {post.tags.map((tag) => (
