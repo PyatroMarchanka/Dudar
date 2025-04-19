@@ -152,7 +152,7 @@
   "aboutPage": {
     "heroTitle": "Where Tradition Meets Innovation",
     "heroSubtitle": "The app to learn how to play bagpipes. No music theory is needed anymore.",
-    "sectionTitle": "Your Bagpipe Learning Journey Starts Here",
+    "sectionTitle": "Like Guitar Hero, but for bagpipes",
     "melodiesCount": "{{count}} melodies and counting!",
     "description1": "Duda Hero revolutionizes bagpipe learning by making it accessible to everyone. No more searching for specialized teachers - we bring the expertise to you!",
     "availableBagpipes": "Available Bagpipes to Master:",
@@ -162,5 +162,11 @@
     "moreComing": "More bagpipe types coming soon! We're constantly expanding our collection.",
     "discoverMelodies": "Discover over {{count}} folk melodies from around the world, carefully curated and organized by their cultural origins.",
     "latestFromBlog": "Latest from Our Blog:"
+  },
+  "navbar": {
+    "learn": "Learn with Dudahero",
+    "playlists": "Playlist Editor",
+    "blog": "Blog",
+    "contacts": "Contacts"
   }
 }

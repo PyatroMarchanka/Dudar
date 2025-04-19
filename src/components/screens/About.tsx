@@ -96,7 +96,7 @@ export const About = () => {
             </Typography>
             <BlogLinks>
               {posts.map((post) => (
-                <a key={post.id} href={`${routes.blog}/${post.slug}`}>
+                <a key={post.id} href={`${routes.blog}/${i18n.language}/${post.slug}`}>
                   <Typography>{post.title}</Typography>
                 </a>
               ))}

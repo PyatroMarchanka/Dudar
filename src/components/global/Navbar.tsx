@@ -79,7 +79,7 @@ export const Navbar = () => {
             location.pathname === routes.app ? mainColors.orange : "inherit",
         }}
       >
-        Learn with Dudahero
+        {t("navbar.learn")}
       </MenuItem>
       <MenuItem
         component={Link}
@@ -94,7 +94,7 @@ export const Navbar = () => {
               : "inherit",
         }}
       >
-        Playlist Editor
+        {t("navbar.playlists")}
       </MenuItem>
       <MenuItem
         component={Link}
@@ -107,7 +107,7 @@ export const Navbar = () => {
             location.pathname === routes.blog ? mainColors.orange : "inherit",
         }}
       >
-        Blog
+        {t("navbar.blog")}
       </MenuItem>
       <MenuItem
         component={Link}
@@ -122,7 +122,7 @@ export const Navbar = () => {
               : "inherit",
         }}
       >
-        Contacts
+        {t("navbar.contacts")}
       </MenuItem>
     </Menu>
   );
@@ -139,7 +139,7 @@ export const Navbar = () => {
               to={`${routes.app}/${routes.play}/${songId}`}
               className={location.pathname === routes.app ? "active" : ""}
             >
-              Learn with Dudahero
+              {t("navbar.learn")}
             </StyledLink>
           </NavItem>
           <NavItem>
@@ -147,7 +147,7 @@ export const Navbar = () => {
               to={routes.playlists}
               className={location.pathname === routes.playlists ? "active" : ""}
             >
-              Playlist Editor
+              {t("navbar.playlists")}
             </StyledLink>
           </NavItem>
           <NavItem>
@@ -155,7 +155,7 @@ export const Navbar = () => {
               to={routes.blog}
               className={location.pathname === routes.blog ? "active" : ""}
             >
-              Blog
+              {t("navbar.blog")}
             </StyledLink>
           </NavItem>
           <NavItem>
@@ -163,7 +163,7 @@ export const Navbar = () => {
               to={routes.contacts}
               className={location.pathname === routes.contacts ? "active" : ""}
             >
-              Contacts
+              {t("navbar.contacts")}
             </StyledLink>
           </NavItem>
         </DesktopNavList>

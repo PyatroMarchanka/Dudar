@@ -154,8 +154,8 @@
   "aboutPage": {
     "heroTitle": "Gdzie tradycja spotyka się z innowacją",
     "heroSubtitle": "Aplikacja do nauki gry na dudach. Nie jest już potrzebna teoria muzyki.",
-    "sectionTitle": "Twoja podróż w nauce gry na dudach zaczyna się tutaj",
-    "melodiesCount": "{{count}} melodii i więcej!",
+    "sectionTitle": "Jak Guitar Hero, ale dla dud",
+    "melodiesCount": "Więcej niż {{count}} melodii!",
     "description1": "Duda Hero rewolucjonizuje naukę gry na dudach, czyniąc ją dostępną dla wszystkich. Nie musisz już szukać specjalistycznych nauczycieli - dostarczamy ekspertyzę do Ciebie!",
     "availableBagpipes": "Dostępne do nauki typy dud:",
     "belTradDuda": "Białoruska Tradycyjna Duda",
@@ -164,5 +164,11 @@
     "moreComing": "Więcej typów dud już w przygotowaniu! Stale rozszerzamy naszą kolekcję.",
     "discoverMelodies": "Odkryj ponad {{count}} melodii ludowych z całego świata, starannie wyselekcjonowanych i zorganizowanych według ich pochodzenia kulturowego.",
     "latestFromBlog": "Najnowsze z naszego bloga:"
+  },
+  "navbar": {
+    "learn": "Ucz się z Dudahero",
+    "playlists": "Edytor playlist",
+    "blog": "Blog",
+    "contacts": "Kontakty"
   }
 }

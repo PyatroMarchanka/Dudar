@@ -12,6 +12,7 @@ import {
   Box,
   CircularProgress,
   Button,
+  Avatar,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useTranslation } from "react-i18next";
@@ -115,8 +116,7 @@ const BlogList: React.FC = () => {
   const classes = useStyles();
   const { t, i18n } = useTranslation();
   const language = i18n.language;
-
-  const { posts, loading, error } = useBlogPosts(language);
+  const { posts, loading } = useBlogPosts(language);
 
   if (loading) {
     return (
@@ -169,13 +169,13 @@ const BlogList: React.FC = () => {
         <LanguageSelector />
       </Box>
       <Typography variant="h3" component="h1" className={classes.title}>
-        {t("blog.title")}
+        {t("blog.latestPosts")}
       </Typography>
       <Grid container spacing={4}>
         {posts.map((post) => (
           <Grid item key={post.id} xs={12} sm={6} md={4}>
             <Card className={classes.card}>
-              <CardActionArea component={Link} to={`/blog/${post.slug}`}>
+              <CardActionArea component={Link} to={`/blog/${language}/${post.slug}`}>
                 {post.featuredImage && (
                   <CardMedia
                     className={classes.media}
@@ -205,14 +205,21 @@ const BlogList: React.FC = () => {
                     ))}
                   </Box>
                   <Box mt={2} className={classes.meta}>
+                    <Box display="flex" alignItems="center">
+                      {post.author?.picture ? (
+                        <Avatar
+                          src={post.author.picture}
+                          alt={post.author.name}
+                          style={{ width: 24, height: 24, marginRight: 8 }}
+                        />
+                      ) : null}
+                      <Typography variant="caption">
+                        {t("blog.author")}: {post.author?.name}
+                      </Typography>
+                    </Box>
                     <Typography variant="caption">
                       {t("blog.published")}: {new Date(post.publishedAt || post.createdAt).toLocaleDateString()}
                     </Typography>
-                    {post.author && (
-                      <Typography variant="caption">
-                        {t("blog.author")}: {post.author.name}
-                      </Typography>
-                    )}
                   </Box>
                 </CardContent>
               </CardActionArea>

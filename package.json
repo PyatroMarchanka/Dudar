@@ -55,7 +55,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "update-sitemap": "ts-node -T src/scripts/updateSitemap.ts"
   },
   "eslintConfig": {
     "extends": [

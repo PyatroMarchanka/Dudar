@@ -195,11 +195,11 @@ const BlogPost: React.FC = () => {
   } = useContext(store);
 
   const classes = useStyles();
-  const { slug } = useParams<{ slug: string }>();
+  const { slug, lang } = useParams<{ slug: string; lang: string }>();
   const [post, setPost] = useState<BlogPostType | null>(null);
   const [loading, setLoading] = useState(true);
   const { i18n } = useTranslation();
-  const language = i18n.language;
+  const language = lang || i18n.language;
 
   useGoogleProfile();
 

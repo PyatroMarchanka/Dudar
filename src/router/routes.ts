@@ -7,7 +7,7 @@ export const routes = {
   main: "/",
   about: "/about",
   blog: "/blog",
-  blogPost: "/blog/:slug",
+  blogPost: "/blog/:lang/:slug",
   blogAdmin: "/admin-blog",
   blogUpdate: "/admin-blog/:id",
   blogAdminList: "/admin-blog-list",
