@@ -36,12 +36,6 @@ export const LoginPage = (props: Props) => {
         <LoginComponent />
       </div>
       <div className="buttons">
-        <Button
-          onClick={() => history.push(`${routes.app}/${routes.play}/${songId}`)}
-          type="big"
-        >
-           {t('login.skip')}
-        </Button>
         <Button onClick={() => history.push(routes.main)} type="big">
         {t('login.mainPage')}
         </Button>
