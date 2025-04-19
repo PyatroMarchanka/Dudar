@@ -24,8 +24,19 @@ const blogApi = {
   },
 
   // Get all blog posts (preview)
-  getAllPosts: async (): Promise<BlogPostPreview[]> => {
-    const response = await axios.get(links.blog);
+  getAllPosts: async (language: string): Promise<BlogPostPreview[]> => {
+    const response = await axios.get(`${links.blog}?language=${language}`);
+    return response.data;
+  },
+
+  getAllPostsByUserAuthor: async (authorId: string): Promise<BlogPost[]> => {
+    const response = await axios.get(`${links.blog}/author/${authorId}`, {
+      headers: {
+        Authorization: `Bearer ${cookie.load("jwtToken")}`,
+        userId: cookie.load("userId"),
+      },
+      withCredentials: true,
+    });
     return response.data;
   },
 
@@ -40,13 +51,25 @@ const blogApi = {
     id: string,
     post: Partial<BlogPost>
   ): Promise<BlogPost> => {
-    const response = await axios.put(`${API_BASE_URL}/blog/${id}`, post);
+    const response = await axios.put(`${links.blog}/${id}`, post, {
+      headers: {
+        Authorization: `Bearer ${cookie.load("jwtToken")}`,
+        userId: cookie.load("userId"),
+      },
+      withCredentials: true,
+    });
     return response.data;
   },
 
   // Delete a blog post
   deletePost: async (id: string): Promise<void> => {
-    await axios.delete(`${API_BASE_URL}/blog/${id}`);
+    await axios.delete(`${API_BASE_URL}/blog/${id}`, {
+      headers: {
+        Authorization: `Bearer ${cookie.load("jwtToken")}`,
+        userId: cookie.load("userId"),
+      },
+      withCredentials: true,
+    });
   },
 };
 

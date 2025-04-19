@@ -13,9 +13,13 @@ import {
   Box,
   CircularProgress,
   Snackbar,
+  Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import blogApi from "../../api/blog";
+import { useTranslation } from "react-i18next";
+import LanguageSelector from "../Controls/LanguageSelector";
+import { ArrowBack } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,11 +77,13 @@ const BlogList: React.FC = () => {
   const [posts, setPosts] = useState<BlogPostPreview[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { i18n } = useTranslation();
+  const language = i18n.language;
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const data = await blogApi.getAllPosts();
+        const data = await blogApi.getAllPosts(language);
         setPosts(data);
         setLoading(false);
       } catch (err) {
@@ -87,7 +93,7 @@ const BlogList: React.FC = () => {
     };
 
     fetchPosts();
-  }, []);
+  }, [language]);
 
   if (loading) {
     return (
@@ -99,6 +105,18 @@ const BlogList: React.FC = () => {
 
   return (
     <Container className={classes.root}>
+      <Box display="flex" justifyContent="space-between" mb={2}>
+        <Button
+          component={Link}
+          to="/"
+          startIcon={<ArrowBack />}
+          variant="outlined"
+          color="primary"
+        >
+          Back to Home
+        </Button>
+        <LanguageSelector />
+      </Box>
       <Typography variant="h3" component="h1" className={classes.title}>
         Blog
       </Typography>

@@ -8,6 +8,8 @@ import EDuda from "../components/screens/Eduda";
 import { Playlists } from "../components/Playlist";
 import BlogList from "../components/Blog/BlogList";
 import BlogAdmin from "../components/Blog/Admin/BlogAdmin";
+import BlogUpdate from "../components/Blog/Admin/BlogUpdate";
+import BlogAdminList from "../components/Blog/Admin/BlogAdminList";
 import BlogPost from "../components/Blog/BlogPost";
 
 export const AppRouter = () => {
@@ -16,6 +18,12 @@ export const AppRouter = () => {
       <Switch>
         <Route path={routes.admin}>
           <Admin />
+        </Route>
+        <Route path={routes.blogAdminList}>
+          <BlogAdminList />
+        </Route>
+        <Route path={routes.blogUpdate}>
+          <BlogUpdate />
         </Route>
         <Route path={routes.blogAdmin}>
           <BlogAdmin />

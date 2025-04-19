@@ -9,6 +9,8 @@ export const routes = {
   blog: "/blog",
   blogPost: "/blog/:slug",
   blogAdmin: "/admin-blog",
+  blogUpdate: "/admin-blog/:id",
+  blogAdminList: "/admin-blog-list",
   login: "/login",
   logout: "/logout",
   admin: "/admin",

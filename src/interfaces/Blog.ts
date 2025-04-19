@@ -7,9 +7,13 @@ export interface BlogPostTranslation {
 }
 
 export interface BlogPost {
-  id: string;
+  _id: string;
   slug: string;
-  author: string;
+  author: {
+    _id: string;
+    name: string;
+    picture: string;
+  };
   publishedAt: string;
   updatedAt: string;
   tags: string[];
