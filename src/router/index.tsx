@@ -6,6 +6,9 @@ import { LoginPage } from "../components/screens/LoginPage";
 import Admin from "../components/Admin";
 import EDuda from "../components/screens/Eduda";
 import { Playlists } from "../components/Playlist";
+import BlogList from "../components/Blog/BlogList";
+import BlogAdmin from "../components/Blog/Admin/BlogAdmin";
+import BlogPost from "../components/Blog/BlogPost";
 
 export const AppRouter = () => {
   return (
@@ -13,6 +16,15 @@ export const AppRouter = () => {
       <Switch>
         <Route path={routes.admin}>
           <Admin />
+        </Route>
+        <Route path={routes.blogAdmin}>
+          <BlogAdmin />
+        </Route>
+        <Route path={routes.blogPost}>
+          <BlogPost />
+        </Route>
+        <Route path={routes.blog}>
+          <BlogList />
         </Route>
         <Route exact path={routes.main}>
           <About />

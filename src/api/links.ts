@@ -20,9 +20,15 @@ const adminLinks = {
   adminSong: `${process.env.REACT_APP_BACKEND_URL}/v1/admin/song`
 }
 
+const blogLinks = {
+  blog: `${process.env.REACT_APP_BACKEND_URL}/v1/blog`,
+  blogPost: `${process.env.REACT_APP_BACKEND_URL}/v1/blog/:slug`,
+}
+
 export const links = {
   ...authLinks,
   ...songsLinks,
   ...adminLinks,
-  ...playlistsLinks
+  ...playlistsLinks,
+  ...blogLinks,
 }
