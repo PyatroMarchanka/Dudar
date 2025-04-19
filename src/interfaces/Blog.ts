@@ -4,6 +4,7 @@ export interface BlogPostTranslation {
   excerpt: string;
   metaDescription: string;
   metaKeywords: string[];
+  tags: string[];
 }
 
 export interface BlogPost {

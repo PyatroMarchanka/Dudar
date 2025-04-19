@@ -153,6 +153,7 @@ const initialTranslations: Partial<BlogPost> = {
           excerpt: "",
           metaDescription: "",
           metaKeywords: [],
+          tags: [],
         },
       ])
     ),
@@ -340,20 +341,23 @@ const BlogPostForm: React.FC<BlogPostFormProps> = ({
               variant="outlined"
             />
           </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Tags (comma-separated)"
+              value={post?.translations?.[currentLanguage]?.tags?.join(", ") || ""}
+              onChange={(e) =>
+                handleTranslationChange(
+                  "tags",
+                  e.target.value.split(",").map((k) => k.trim())
+                )
+              }
+              className={classes.textField}
+              variant="outlined"
+            />
+          </Grid>
         </Grid>
       </Box>
-
-      <Box className={classes.formGroup}>
-        <TextField
-          fullWidth
-          label="Tags (comma-separated)"
-          value={post.tags?.join(", ") || ""}
-          onChange={(e) => handleTagsChange(e.target.value)}
-          className={classes.textField}
-          variant="outlined"
-        />
-      </Box>
-
       <Box className={classes.actions}>
         <Button variant="contained" color="primary" onClick={handleSubmit}>
           {submitButtonText}
