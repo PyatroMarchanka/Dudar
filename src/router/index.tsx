@@ -6,6 +6,12 @@ import { LoginPage } from "../components/screens/LoginPage";
 import Admin from "../components/Admin";
 import EDuda from "../components/screens/Eduda";
 import { Playlists } from "../components/Playlist";
+import BlogList from "../components/Blog/BlogList";
+import BlogAdmin from "../components/Blog/Admin/BlogAdmin";
+import BlogUpdate from "../components/Blog/Admin/BlogUpdate";
+import BlogAdminList from "../components/Blog/Admin/BlogAdminList";
+import BlogPost from "../components/Blog/BlogPost";
+import { ContactsPage } from "../components/screens/Contacts";
 
 export const AppRouter = () => {
   return (
@@ -13,6 +19,24 @@ export const AppRouter = () => {
       <Switch>
         <Route path={routes.admin}>
           <Admin />
+        </Route>
+        <Route path={routes.contacts}>
+          <ContactsPage />
+        </Route>
+        <Route path={routes.blogAdminList}>
+          <BlogAdminList />
+        </Route>
+        <Route path={routes.blogUpdate}>
+          <BlogUpdate />
+        </Route>
+        <Route path={routes.blogAdmin}>
+          <BlogAdmin />
+        </Route>
+        <Route path={routes.blogPost}>
+          <BlogPost />
+        </Route>
+        <Route path={routes.blog}>
+          <BlogList />
         </Route>
         <Route exact path={routes.main}>
           <About />
