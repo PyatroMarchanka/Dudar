@@ -16,4 +16,5 @@ export const routes = {
   admin: "/admin",
   adminSong: "/admin/song",
   playlists: "/playlists",
+  contacts: "/contacts",
 };

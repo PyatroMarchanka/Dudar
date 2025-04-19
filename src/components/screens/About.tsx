@@ -4,55 +4,54 @@ import { mediaQueries } from "../../constants/style";
 import { Button } from "../global/Button";
 import { Logo } from "../global/Logo";
 import { routes } from "../../router/routes";
-import { useTranslation } from "react-i18next";
 import { useContext } from "react";
 import { store } from "../../context";
 import { Contacts } from "../Contacts";
 import { DonationButtonBig } from "../global/DonationButtonBig";
 import { useSongListShort } from "../../hooks/useSongLIst";
-import { useHistory } from "react-router-dom";
 import { getFirstSongFromList } from "../../dataset/songs/utils";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { mainColors } from "../../utils/theme";
 import { Navbar } from "../global/Navbar";
+import { useBlogPosts } from "../../hooks/useBlogPosts";
+import { useTranslation } from "react-i18next";
 
 export const About = () => {
-  const { t } = useTranslation("translation");
   const {
-    state: {
-      screenSize,
-      activeSong,
-      listsByBagpipe,
-      userLastSongUrl,
-    },
+    state: { screenSize, activeSong, listsByBagpipe, userLastSongUrl },
   } = useContext(store);
-  const history = useHistory();
   useSongListShort();
   const songId =
     userLastSongUrl ||
     activeSong?.id ||
     (listsByBagpipe && getFirstSongFromList(listsByBagpipe).id);
 
+  const { i18n } = useTranslation("translation");
+
   useGoogleProfile();
+
+  const { posts, loading, error } = useBlogPosts(i18n.language);
+
+  const { t } = useTranslation();
 
   return (
     <Container>
       <Navbar />
       <HeroSection>
         <LogoContainer>
-          <Logo variant="big" width={150} height={75} />
+          <Logo white variant="big" width={250} height={175} />
         </LogoContainer>
         <Typography align="center" className="heroTitle" variant="h1">
-          Where Tradition Meets Innovation
+          {t('aboutPage.heroTitle')}
         </Typography>
         <Typography align="center" className="heroSubtitle" variant="h2">
-          The app to learn how to play bagpipes. No music theory is needed anymore.
+          {t('aboutPage.heroSubtitle')}
         </Typography>
         <DonationButtonBig />
         <GetStarted>
           <a href={`${routes.app}/${routes.play}/${songId}`}>
             <Button className="getStarted" type="big">
-              Get Started
+              {t('mainPage.getStarted')}
             </Button>
           </a>
         </GetStarted>
@@ -61,63 +60,50 @@ export const About = () => {
       <ContentContainer>
         <Left>
           <Typography variant="h3" className="sectionTitle">
-            Your Bagpipe Learning Journey Starts Here
+            {t('aboutPage.sectionTitle')}
           </Typography>
-          
+
           <Typography variant="h4" className="melodiesCount">
-            {`${196} melodies and counting!`}
+            {t('aboutPage.melodiesCount', { count: 200 })}
           </Typography>
-          
+
           <Typography variant="body1" className="description">
-            Duda Hero revolutionizes bagpipe learning by making it accessible to everyone. 
-            No more searching for specialized teachers - we bring the expertise to you!
+            {t('aboutPage.description1')}
           </Typography>
 
           <Typography variant="h4" className="sectionSubtitle">
-            Available Bagpipes to Master:
+            {t('aboutPage.availableBagpipes')}
           </Typography>
           <BagpipesList>
             <li>
-              <Typography>Belarusian Traditional Duda</Typography>
+              <Typography>{t('aboutPage.belTradDuda')}</Typography>
             </li>
             <li>
-              <Typography>Great Highlander Bagpipe (Scotland)</Typography>
+              <Typography>{t('aboutPage.highlander')}</Typography>
             </li>
             <li>
-              <Typography>Dudelsack</Typography>
+              <Typography>{t('aboutPage.dudelsack')}</Typography>
             </li>
           </BagpipesList>
 
           <Typography variant="body1" className="description">
-            More bagpipe types coming soon! We're constantly expanding our collection.
+            {t('aboutPage.moreComing')}
           </Typography>
 
           <Typography variant="body1" className="description">
-            Discover over 120 folk melodies from around the world, carefully curated and organized by their cultural origins.
+            {t('aboutPage.discoverMelodies', { count: 200 })}
           </Typography>
-
-          <Row>
-            <a href={routes.playlists}>
-              <Button className="playlistsButton" type="primary">
-                Playlists Editor
-              </Button>
-            </a>
-          </Row>
 
           <BlogSection>
             <Typography variant="h4" className="sectionSubtitle">
-              Latest from Our Blog:
+              {t('aboutPage.latestFromBlog')}
             </Typography>
             <BlogLinks>
-              <a href="/blog/bagpipe-basics">
-                <Typography>Getting Started with Bagpipes: A Beginner's Guide</Typography>
-              </a>
-              <a href="/blog/folk-melodies">
-                <Typography>Exploring the World of Folk Melodies</Typography>
-              </a>
-              <a href="/blog/practice-tips">
-                <Typography>5 Essential Practice Tips for Bagpipe Players</Typography>
-              </a>
+              {posts.map((post) => (
+                <a key={post.id} href={`${routes.blog}/${post.slug}`}>
+                  <Typography>{post.title}</Typography>
+                </a>
+              ))}
             </BlogLinks>
           </BlogSection>
         </Left>
@@ -167,7 +153,7 @@ const GetStarted = styled.div`
 const HeroSection = styled.div`
   text-align: center;
   padding: 40px 20px;
-  background: url('/images/background.jpg') no-repeat center center;
+  background: url("/images/background.jpg") no-repeat center center;
   background-size: cover;
   color: white;
   width: 100%;
@@ -175,7 +161,7 @@ const HeroSection = styled.div`
   position: relative;
 
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;

@@ -134,5 +134,33 @@
   "continueModal": {
     "title": "Welcome back!",
     "body": "You have returned to the application."
+  },
+  "blog": {
+    "title": "Blog",
+    "readMore": "Read More",
+    "loading": "Loading posts...",
+    "error": "Failed to load posts",
+    "noPosts": "No posts available",
+    "latestPosts": "Latest Posts",
+    "backToBlog": "Back to Blog",
+    "published": "Published",
+    "updated": "Updated",
+    "author": "Author",
+    "categories": "Categories",
+    "tags": "Tags"
+  },
+  "aboutPage": {
+    "heroTitle": "Where Tradition Meets Innovation",
+    "heroSubtitle": "The app to learn how to play bagpipes. No music theory is needed anymore.",
+    "sectionTitle": "Your Bagpipe Learning Journey Starts Here",
+    "melodiesCount": "{{count}} melodies and counting!",
+    "description1": "Duda Hero revolutionizes bagpipe learning by making it accessible to everyone. No more searching for specialized teachers - we bring the expertise to you!",
+    "availableBagpipes": "Available Bagpipes to Master:",
+    "belTradDuda": "Belarusian Traditional Duda",
+    "dudelsack": "Dudelsack",
+    "highlander": "Great Highlander Bagpipe (Scotland)",
+    "moreComing": "More bagpipe types coming soon! We're constantly expanding our collection.",
+    "discoverMelodies": "Discover over {{count}} folk melodies from around the world, carefully curated and organized by their cultural origins.",
+    "latestFromBlog": "Latest from Our Blog:"
   }
 }

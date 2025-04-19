@@ -5,19 +5,35 @@ import { routes } from "../../router/routes";
 type LogoProps = {
   width?: number;
   height?: number;
+  white?: boolean;
 };
 
 type Props = LogoProps & {
   variant: "small" | "big";
 };
 
-export const Logo = ({ width = 200, height = 100, variant }: Props) => {
+export const Logo = ({
+  width = 200,
+  height = 100,
+  variant,
+  white = false,
+}: Props) => {
   return (
     <a href={routes.main}>
       {variant === "big" ? (
-        <LogoImg width={width} height={height} src="/images/logo.svg" />
+        <LogoImg
+          width={width}
+          height={height}
+          src={white ? "/images/logo_white.svg" : "/images/logo.svg"}
+        />
       ) : (
-        <LogoImg width={width} height={height} src="/images/logo_small.svg" />
+        <LogoImg
+          width={width}
+          height={height}
+          src={
+            white ? "/images/logo_small_white.svg" : "/images/logo_small.svg"
+          }
+        />
       )}
     </a>
   );

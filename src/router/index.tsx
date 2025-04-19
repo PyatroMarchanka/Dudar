@@ -11,6 +11,7 @@ import BlogAdmin from "../components/Blog/Admin/BlogAdmin";
 import BlogUpdate from "../components/Blog/Admin/BlogUpdate";
 import BlogAdminList from "../components/Blog/Admin/BlogAdminList";
 import BlogPost from "../components/Blog/BlogPost";
+import { ContactsPage } from "../components/screens/Contacts";
 
 export const AppRouter = () => {
   return (
@@ -18,6 +19,9 @@ export const AppRouter = () => {
       <Switch>
         <Route path={routes.admin}>
           <Admin />
+        </Route>
+        <Route path={routes.contacts}>
+          <ContactsPage />
         </Route>
         <Route path={routes.blogAdminList}>
           <BlogAdminList />

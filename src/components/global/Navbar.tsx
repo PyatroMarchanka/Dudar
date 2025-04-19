@@ -7,12 +7,13 @@ import { Logo } from "./Logo";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { getFirstSongFromList } from "../../dataset/songs/utils";
 import { useSongListShort } from "../../hooks/useSongLIst";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { store } from "../../context";
-import { IconButton, Typography } from "@material-ui/core";
+import { IconButton, Typography, Menu, MenuItem } from "@material-ui/core";
 import { Icon } from "../global/Icon";
 import LanguageIcon from "@material-ui/icons/Language";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import MenuIcon from "@material-ui/icons/Menu";
 import { ModalButton } from "../global/ModalButton";
 import LanguageSelector from "../Controls/LanguageSelector";
 import { useTranslation } from "react-i18next";
@@ -23,13 +24,11 @@ export const Navbar = () => {
   const location = useLocation();
   const history = useHistory();
   const { t } = useTranslation("translation");
+  const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(
+    null
+  );
   const {
-    state: {
-      activeSong,
-      listsByBagpipe,
-      userLastSongUrl,
-      userData,
-    },
+    state: { activeSong, listsByBagpipe, userLastSongUrl, userData },
   } = useContext(store);
 
   useSongListShort();
@@ -40,46 +39,134 @@ export const Navbar = () => {
 
   useGoogleProfile();
 
+  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setMobileMenuAnchor(event.currentTarget);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMenuAnchor(null);
+  };
+
+  const renderMobileMenu = () => (
+    <Menu
+      anchorEl={mobileMenuAnchor}
+      keepMounted
+      open={Boolean(mobileMenuAnchor)}
+      onClose={handleMobileMenuClose}
+      PaperProps={{
+        style: {
+          maxHeight: 48 * 4.5,
+          width: "100%",
+          marginTop: "8px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        },
+      }}
+      MenuListProps={{
+        style: {
+          padding: "8px 0",
+        },
+      }}
+    >
+      <MenuItem
+        component={Link}
+        to={`${routes.app}/${routes.play}/${songId}`}
+        onClick={handleMobileMenuClose}
+        selected={location.pathname === routes.app}
+        style={{
+          padding: "12px 24px",
+          color:
+            location.pathname === routes.app ? mainColors.orange : "inherit",
+        }}
+      >
+        Learn with Dudahero
+      </MenuItem>
+      <MenuItem
+        component={Link}
+        to={routes.playlists}
+        onClick={handleMobileMenuClose}
+        selected={location.pathname === routes.playlists}
+        style={{
+          padding: "12px 24px",
+          color:
+            location.pathname === routes.playlists
+              ? mainColors.orange
+              : "inherit",
+        }}
+      >
+        Playlist Editor
+      </MenuItem>
+      <MenuItem
+        component={Link}
+        to={routes.blog}
+        onClick={handleMobileMenuClose}
+        selected={location.pathname === routes.blog}
+        style={{
+          padding: "12px 24px",
+          color:
+            location.pathname === routes.blog ? mainColors.orange : "inherit",
+        }}
+      >
+        Blog
+      </MenuItem>
+      <MenuItem
+        component={Link}
+        to={routes.contacts}
+        onClick={handleMobileMenuClose}
+        selected={location.pathname === routes.contacts}
+        style={{
+          padding: "12px 24px",
+          color:
+            location.pathname === routes.contacts
+              ? mainColors.orange
+              : "inherit",
+        }}
+      >
+        Contacts
+      </MenuItem>
+    </Menu>
+  );
+
   return (
     <NavContainer>
       <NavContent>
-        <LogoLink to={routes.app}>
+        <LogoLink to={routes.main}>
           <Logo variant="big" width={150} height={55} />
         </LogoLink>
-        <NavList>
+        <DesktopNavList>
           <NavItem>
-            <StyledLink 
+            <StyledLink
               to={`${routes.app}/${routes.play}/${songId}`}
-              className={location.pathname === routes.app ? 'active' : ''}
+              className={location.pathname === routes.app ? "active" : ""}
             >
               Learn with Dudahero
             </StyledLink>
           </NavItem>
           <NavItem>
-            <StyledLink 
+            <StyledLink
               to={routes.playlists}
-              className={location.pathname === routes.playlists ? 'active' : ''}
+              className={location.pathname === routes.playlists ? "active" : ""}
             >
               Playlist Editor
             </StyledLink>
           </NavItem>
           <NavItem>
-            <StyledLink 
-              to="/blog"
-              className={location.pathname === '/blog' ? 'active' : ''}
+            <StyledLink
+              to={routes.blog}
+              className={location.pathname === routes.blog ? "active" : ""}
             >
               Blog
             </StyledLink>
           </NavItem>
           <NavItem>
-            <StyledLink 
-              to="#contacts"
-              className={location.hash === '#contacts' ? 'active' : ''}
+            <StyledLink
+              to={routes.contacts}
+              className={location.pathname === routes.contacts ? "active" : ""}
             >
               Contacts
             </StyledLink>
           </NavItem>
-        </NavList>
+        </DesktopNavList>
         <NavControls>
           <ModalButton
             icon={<Icon type="material" fill={"black"} Icon={LanguageIcon} />}
@@ -115,8 +202,18 @@ export const Navbar = () => {
               <Icon type="material" fill={"black"} Icon={AccountCircleIcon} />
             </IconButton>
           )}
+          <IconButton
+            className="mobileMenuButton"
+            aria-label="show menu"
+            aria-controls="mobile-menu"
+            aria-haspopup="true"
+            onClick={handleMobileMenuOpen}
+          >
+            <MenuIcon />
+          </IconButton>
         </NavControls>
       </NavContent>
+      {renderMobileMenu()}
     </NavContainer>
   );
 };
@@ -132,6 +229,13 @@ const NavContainer = styled.nav`
   left: 0;
   right: 0;
   z-index: 1000;
+
+  .mobileMenuButton {
+    display: none;
+    @media (max-width: ${mediaQueries.tabletMiddle}) {
+      display: block;
+    }
+  }
 `;
 
 const NavContent = styled.div`
@@ -144,9 +248,9 @@ const NavContent = styled.div`
   height: 70px;
 
   @media (max-width: ${mediaQueries.mobile}) {
-    flex-direction: column;
     height: auto;
     padding: 1rem;
+    flex-wrap: wrap;
   }
 `;
 
@@ -160,7 +264,7 @@ const NavControls = styled.div`
   }
 
   @media (max-width: ${mediaQueries.mobile}) {
-    margin-top: 1rem;
+    margin-left: auto;
   }
 `;
 
@@ -186,6 +290,10 @@ const LogoLink = styled(Link)`
   text-decoration: none;
   display: flex;
   align-items: center;
+
+  @media (max-width: ${mediaQueries.mobile}) {
+    margin-right: auto;
+  }
 `;
 
 const NavList = styled.ul`
@@ -208,16 +316,20 @@ const NavList = styled.ul`
 const NavItem = styled.li`
   margin: 0;
   position: relative;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -2px;
     left: 0;
     width: 0;
     height: 2px;
-    background: linear-gradient(135deg, ${mainColors.orange} 0%, ${mainColors.darkOrange} 100%);
+    background: linear-gradient(
+      135deg,
+      ${mainColors.orange} 0%,
+      ${mainColors.darkOrange} 100%
+    );
     transition: width 0.3s ease;
   }
 
@@ -244,15 +356,19 @@ const StyledLink = styled(Link)`
   &.active {
     color: ${mainColors.orange};
     font-weight: 600;
-    
+
     &:after {
-      content: '';
+      content: "";
       position: absolute;
       bottom: -2px;
       left: 0;
       width: 100%;
       height: 2px;
-      background: linear-gradient(135deg, ${mainColors.orange} 0%, ${mainColors.darkOrange} 100%);
+      background: linear-gradient(
+        135deg,
+        ${mainColors.orange} 0%,
+        ${mainColors.darkOrange} 100%
+      );
     }
   }
 
@@ -262,4 +378,10 @@ const StyledLink = styled(Link)`
     width: 100%;
     padding: 0.75rem;
   }
-`; 
+`;
+
+const DesktopNavList = styled(NavList)`
+  @media (max-width: ${mediaQueries.tabletMiddle}) {
+    display: none;
+  }
+`;
