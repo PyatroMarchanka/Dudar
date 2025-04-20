@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useHistory } from "react-router-dom";
 import type { BlogPost as BlogPostType } from "../../interfaces/Blog";
 import {
   Container,
@@ -191,9 +191,9 @@ const useStyles = makeStyles((theme) => ({
 
 const BlogPost: React.FC = () => {
   const {
-    state: { userData },
+    state: { userData, language: currentLanguage },
   } = useContext(store);
-
+  const history = useHistory();
   const classes = useStyles();
   const { slug, lang } = useParams<{ slug: string; lang: string }>();
   const [post, setPost] = useState<BlogPostType | null>(null);
@@ -202,6 +202,12 @@ const BlogPost: React.FC = () => {
   const language = lang || i18n.language;
 
   useGoogleProfile();
+
+  useEffect(() => {
+    if (currentLanguage !== lang) {
+      history.push(`/blog/${currentLanguage}/${slug}`);
+    }
+  }, [currentLanguage, lang, slug, history]);
 
   useEffect(() => {
     const fetchPost = async () => {

@@ -220,7 +220,6 @@ const BlogAdminList: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-        
             {filteredPosts.map((post) => (
               <TableRow key={post.slug}>
                 <TableCell>{post.title}</TableCell>
