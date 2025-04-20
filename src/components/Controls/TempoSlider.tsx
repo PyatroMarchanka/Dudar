@@ -66,6 +66,11 @@ export const TempoSlider = ({ player }: Props) => {
     }
   };
 
+  const handleTempoMultiply = (multiplier: number) => {
+    const newTempo = Math.min(360, Math.max(60, tempo * multiplier));
+    handleTempoChange(newTempo);
+  };
+
   const toggleMetronome = () => {
     setMetronome(!metronome);
     player?.setMetronome(!metronome);
@@ -84,13 +89,17 @@ export const TempoSlider = ({ player }: Props) => {
   const TempoSettings = () => (
     <Container>
       <HeaderContainer>
-        <Typography variant="h6">
-          Tempo Settings
-        </Typography>
+        <Typography variant="h6">Tempo Settings</Typography>
         <MetronomeButton />
       </HeaderContainer>
       <StyledCard>
         <CardContent>
+          <TempoControls>
+            <Typography className="tempo-text" variant="h6">
+              {tempo / 2} bpm
+            </Typography>
+          </TempoControls>
+
           <TempoControls>
             <Button
               className="tempo-button"
@@ -99,7 +108,20 @@ export const TempoSlider = ({ player }: Props) => {
             >
               -5
             </Button>
-            <Typography className="tempo-text" variant="h6">{tempo / 2} bpm</Typography>
+            <Button
+              className="tempo-button"
+              variant="outlined"
+              onClick={() => handleTempoMultiply(0.5)}
+            >
+              ½
+            </Button>
+            <Button
+              className="tempo-button"
+              variant="outlined"
+              onClick={() => handleTempoMultiply(2)}
+            >
+              ×2
+            </Button>
             <Button
               className="tempo-button"
               variant="outlined"
@@ -109,7 +131,12 @@ export const TempoSlider = ({ player }: Props) => {
             </Button>
           </TempoControls>
 
-          <TapTempoButton className="tap-tempo-button" variant="outlined" fullWidth onClick={handleTapTempo}>
+          <TapTempoButton
+            className="tap-tempo-button"
+            variant="outlined"
+            fullWidth
+            onClick={handleTapTempo}
+          >
             Tap Tempo
           </TapTempoButton>
         </CardContent>
@@ -122,7 +149,7 @@ export const TempoSlider = ({ player }: Props) => {
       <CompactView>
         <MetronomeButton />
         <div onClick={() => setIsModalOpen(true)}>
-          <Typography variant="h6">{tempo / 2}bpm</Typography>
+          <Typography variant="h6">{tempo / 2} bpm</Typography>
         </div>
       </CompactView>
 
