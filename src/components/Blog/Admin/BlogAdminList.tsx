@@ -103,6 +103,7 @@ const BlogAdminList: React.FC = () => {
       if (!userData?._id) return;
       try {
         const data = await blogApi.getAllPostsByUserAuthor(userData._id);
+        console.log(data);
         if (data) {
           setFullPosts(data);
           setLoading(false);
@@ -140,7 +141,7 @@ const BlogAdminList: React.FC = () => {
         (post) =>
           post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          post.tags.some((tag) =>
+          post.tags?.some((tag) =>
             tag.toLowerCase().includes(searchTerm.toLowerCase())
           )
       )
@@ -219,12 +220,13 @@ const BlogAdminList: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
+        
             {filteredPosts.map((post) => (
               <TableRow key={post.slug}>
                 <TableCell>{post.title}</TableCell>
                 <TableCell>{post.excerpt}</TableCell>
                 <TableCell>
-                  {post.tags.map((tag) => (
+                  {post.tags?.map((tag) => (
                     <Box
                       key={tag}
                       component="span"
