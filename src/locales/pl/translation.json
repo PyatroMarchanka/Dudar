@@ -172,10 +172,15 @@
     "learn": "Ucz się z Dudahero",
     "playlists": "Edytor playlist",
     "blog": "Blog",
-    "contacts": "Kontakty"
+    "contacts": "Kontakty",
+    "admin": "Admin"
   },
   "topSongs": {
     "title": "Najczęściej odtwarzane utwory"
+  },
+  "cookieBar": {
+    "message": "Używamy plików cookie, aby poprawić Twoje doświadczenie. Kontynuując korzystanie z tej strony, zgadzasz się na używanie plików cookie.",
+    "accept": "Akceptuję",
+    "decline": "Odrzucam"
   }
-  
 }

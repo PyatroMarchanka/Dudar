@@ -17,6 +17,7 @@ import { useBlogPosts } from "../../hooks/useBlogPosts";
 import { useTranslation } from "react-i18next";
 import TopSongs from "../TopSongs";
 import NewestSongs from "../NewestSongs";
+import { CookieBar } from "../CookieBar";
 
 export const About = () => {
   const {
@@ -109,6 +110,7 @@ export const About = () => {
       </VideoSection>
 
       <Contacts />
+      <CookieBar />
     </Container>
   );
 };

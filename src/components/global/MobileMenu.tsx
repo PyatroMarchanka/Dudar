@@ -108,7 +108,7 @@ export const MobileMenu = ({
             location.pathname === routes.admin ? mainColors.orange : "inherit",
         }}
         >
-          Admin
+          {t("navbar.admin")}
         </MenuItem>
       )}
     </Menu>
