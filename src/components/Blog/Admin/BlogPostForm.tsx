@@ -20,6 +20,8 @@ import {
   Language as LanguageIcon,
 } from "@material-ui/icons";
 import { Languages } from "../../../interfaces";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const availableLanguages = Object.values(Languages);
 
@@ -131,6 +133,24 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  editor: {
+    height: "400px",
+    marginBottom: theme.spacing(4),
+    "& .ql-container": {
+      height: "calc(100% - 42px)",
+      fontSize: "16px",
+      fontFamily:
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      borderBottomLeftRadius: theme.shape.borderRadius * 2,
+      borderBottomRightRadius: theme.shape.borderRadius * 2,
+      backgroundColor: theme.palette.background.paper,
+    },
+    "& .ql-toolbar": {
+      borderTopLeftRadius: theme.shape.borderRadius * 2,
+      borderTopRightRadius: theme.shape.borderRadius * 2,
+      backgroundColor: theme.palette.background.paper,
+    },
+  },
 }));
 
 interface BlogPostFormProps {
@@ -171,8 +191,9 @@ const BlogPostForm: React.FC<BlogPostFormProps> = ({
   onDelete,
 }) => {
   const classes = useStyles();
+
   const [currentLanguage, setCurrentLanguage] = useState<string>(
-    initialPost.defaultLanguage || "en"
+    initialPost.defaultLanguage!
   );
   const [post, setPost] = useState<Partial<BlogPost>>(initialPost);
 
@@ -284,9 +305,9 @@ const BlogPostForm: React.FC<BlogPostFormProps> = ({
             <TextField
               fullWidth
               multiline
-              rows={4}
+              minRows={4}
               label="Excerpt"
-              value={post.translations?.[currentLanguage]?.excerpt || ""}
+              value={post.translations?.[currentLanguage]?.excerpt ?? ""}
               onChange={(e) =>
                 handleTranslationChange("excerpt", e.target.value)
               }
@@ -295,17 +316,22 @@ const BlogPostForm: React.FC<BlogPostFormProps> = ({
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField
-              fullWidth
-              multiline
-              rows={10}
-              label="Content"
-              value={post.translations?.[currentLanguage]?.content || ""}
-              onChange={(e) =>
-                handleTranslationChange("content", e.target.value)
+            <ReactQuill
+              theme="snow"
+              value={post.translations?.[currentLanguage]?.content ?? ""}
+              onChange={(content) =>
+                handleTranslationChange("content", content)
               }
-              className={classes.textField}
-              variant="outlined"
+              className={classes.editor}
+              modules={{
+                toolbar: [
+                  [{ header: [1, 2, 3, 4, 5, false] }],
+                  ["bold", "italic", "underline", "strike"],
+                  [{ list: "ordered" }, { list: "bullet" }],
+                  ["link", "image"],
+                  ["clean"],
+                ],
+              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -345,7 +371,9 @@ const BlogPostForm: React.FC<BlogPostFormProps> = ({
             <TextField
               fullWidth
               label="Tags (comma-separated)"
-              value={post?.translations?.[currentLanguage]?.tags?.join(", ") || ""}
+              value={
+                post?.translations?.[currentLanguage]?.tags?.join(", ") || ""
+              }
               onChange={(e) =>
                 handleTranslationChange(
                   "tags",
