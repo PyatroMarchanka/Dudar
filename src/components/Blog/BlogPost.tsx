@@ -316,7 +316,7 @@ const BlogPost: React.FC = () => {
           </Tooltip>
         </Box>
         <Box className={classes.tags}>
-          {post.tags.map((tag) => (
+          {post?.tags?.map((tag) => (
             <Chip key={tag} label={tag} className={classes.tag} clickable />
           ))}
         </Box>
