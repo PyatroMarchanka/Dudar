@@ -163,12 +163,16 @@
     "highlander": "Dudy szkockie",
     "moreComing": "Więcej typów dud już w przygotowaniu! Stale rozszerzamy naszą kolekcję.",
     "discoverMelodies": "Odkryj ponad {{count}} melodii ludowych z całego świata, starannie wyselekcjonowanych i zorganizowanych według ich pochodzenia kulturowego.",
-    "latestFromBlog": "Najnowsze z naszego bloga:"
+    "latestFromBlog": "Najnowsze z naszego bloga:",
+    "popularSongs": "Popularne utwory"
   },
   "navbar": {
     "learn": "Ucz się z Dudahero",
     "playlists": "Edytor playlist",
     "blog": "Blog",
     "contacts": "Kontakty"
+  },
+  "topSongs": {
+    "title": "Najczęściej odtwarzane utwory"
   }
 }

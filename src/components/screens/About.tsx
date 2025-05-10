@@ -15,6 +15,7 @@ import { mainColors } from "../../utils/theme";
 import { Navbar } from "../global/Navbar";
 import { useBlogPosts } from "../../hooks/useBlogPosts";
 import { useTranslation } from "react-i18next";
+import TopSongs from "../TopSongs";
 
 export const About = () => {
   const {
@@ -62,14 +63,6 @@ export const About = () => {
           <Typography variant="h3" className="sectionTitle">
             {t('aboutPage.sectionTitle')}
           </Typography>
-
-          <Typography variant="h4" className="melodiesCount">
-            {t('aboutPage.melodiesCount', { count: 200 })}
-          </Typography>
-
-          <Typography variant="h4" className="sectionSubtitle">
-            {t('aboutPage.availableBagpipes')}
-          </Typography>
           <BagpipesList>
             <li>
               <Typography>{t('aboutPage.belTradDuda')}</Typography>
@@ -81,15 +74,6 @@ export const About = () => {
               <Typography>{t('aboutPage.dudelsack')}</Typography>
             </li>
           </BagpipesList>
-
-          <Typography variant="body1" className="description">
-            {t('aboutPage.moreComing')}
-          </Typography>
-
-          <Typography variant="body1" className="description">
-            {t('aboutPage.discoverMelodies', { count: 200 })}
-          </Typography>
-
           <BlogSection>
             <Typography variant="h4" className="sectionSubtitle">
               {t('aboutPage.latestFromBlog')}
@@ -102,6 +86,13 @@ export const About = () => {
               ))}
             </BlogLinks>
           </BlogSection>
+
+          <TopSongsSection>
+            <Typography variant="h4" className="sectionSubtitle">
+              {t('aboutPage.popularSongs', 'Popular Songs')}
+            </Typography>
+            <TopSongs />
+          </TopSongsSection>
         </Left>
       </ContentContainer>
 
@@ -284,4 +275,11 @@ const ContentContainer = styled.div`
   @media (max-width: ${mediaQueries.mobile}) {
     flex-direction: column;
   }
+`;
+
+const TopSongsSection = styled.div`
+  margin-top: 40px;
+  padding: 20px;
+  background: #f8f8f8;
+  border-radius: 10px;
 `;

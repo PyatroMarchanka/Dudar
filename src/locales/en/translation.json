@@ -162,12 +162,16 @@
     "highlander": "Great Highlander Bagpipe (Scotland)",
     "moreComing": "More bagpipe types coming soon! We're constantly expanding our collection.",
     "discoverMelodies": "Discover over {{count}} folk melodies from around the world, carefully curated and organized by their cultural origins.",
-    "latestFromBlog": "Latest from Our Blog:"
+    "latestFromBlog": "Latest from Our Blog:",
+    "popularSongs": "Popular Songs"
   },
   "navbar": {
     "learn": "Learn with Dudahero",
     "playlists": "Playlist Editor",
     "blog": "Blog",
     "contacts": "Contacts"
+  },
+  "topSongs": {
+    "title": "Most Played Songs"
   }
 }
