@@ -55,4 +55,8 @@ export const songApi = {
     const res = await songServerClient.get(`${links.topSongs}?limit=${limit}`);
     return res.data;
   },
+  getNewSongs: async (limit: number = 10) => {
+    const res = await songServerClient.get(`${links.newSongs}?limit=${limit}`);
+    return res.data;
+  },
 };

@@ -26,7 +26,8 @@
     "settingsDescription": "change instrument\nchange the tone of the melody to match your instrument\npreclick - additional countdown to the start of the performance to blow the bagpipe, prepare\nchange language",
     "updates": "You can loop 1, 2, 4, 6, 8 bars of your choice - press and hold the button with round arrows\nSupport the project - a button with a cup of coffee",
     "updates_short": "New melodies: Troll' Gnyot El' - CHto Sovoj Ob Pen', Troll' Gnyot El' - Tancy Trollej, Pol'ka Glybockaya, Korpiklaani - Tuli Kokko, Metsatöl - Ema hääl kutsub, Metsatöl - Saaremaa Vägimees, Perciwal - A story you wont believe, W moim ogródecku, Znich - Belarus",
-    "updatesTitle": "Updates:"
+    "updatesTitle": "Updates:",
+    "donate": "Buy me a beer"
   },
   "dudas": {
     "belNonTradDuda": "Belarusian Nontraditional Closed Duda",
@@ -163,7 +164,8 @@
     "moreComing": "More bagpipe types coming soon! We're constantly expanding our collection.",
     "discoverMelodies": "Discover over {{count}} folk melodies from around the world, carefully curated and organized by their cultural origins.",
     "latestFromBlog": "Latest from Our Blog:",
-    "popularSongs": "Popular Songs"
+    "popularSongs": "Popular Songs",
+    "newestSongs": "Newest Songs"
   },
   "navbar": {
     "learn": "Learn with Dudahero",

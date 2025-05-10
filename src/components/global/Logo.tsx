@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { routes } from "../../router/routes";
+import { mediaQueries } from "../../constants/style";
 
 type LogoProps = {
   width?: number;
@@ -39,7 +40,12 @@ export const Logo = ({
   );
 };
 
-const LogoImg = styled.img<LogoProps>`
+const LogoImg = styled.img<{ width: number; height: number }>`
   width: ${({ width }) => `${width}px`};
   height: ${({ height }) => `${height}px`};
+
+  @media (max-width: ${mediaQueries.mobile}) {
+    width: ${({ width }) => `${width * 0.75}px`};
+    height: ${({ height }) => `${height * 0.75}px`};
+  }
 `;

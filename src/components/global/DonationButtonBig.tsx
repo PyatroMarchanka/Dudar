@@ -6,16 +6,11 @@ interface Props {}
 export const DonationButtonBig = (props: Props) => {
   return (
     <GetStarted>
-      <a
-        href="https://www.buymeacoffee.com/crazyguitarist"
-        target="_blank"
-        rel="noreferrer"
-      >
+      <a href="https://www.buymeacoffee.com/crazyguitarist">
         <img
-          src="/images/bmc-brown.png"
-          alt="Buy Me A Coffee"
-          height="60px"
-          width="247px"
+          src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+          alt="Buy Me A Beer"
+          style={{ height: '50px', width: "217px !important" }}
         />
       </a>
     </GetStarted>

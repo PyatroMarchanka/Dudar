@@ -7,7 +7,6 @@ import { Icon } from "../global/Icon";
 import { useHistory } from "react-router-dom";
 import { routes } from "../../router/routes";
 import { useTranslation } from "react-i18next";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import { transliterate, useIsCyrylicLang } from "../../locales";
 import { Typography } from "@material-ui/core";
 
@@ -57,46 +56,48 @@ const SongType = styled.span`
   font-family: "Roboto", sans-serif;
 `;
 
-const PlayCount = styled.div`
+const AddedDate = styled.div`
   display: flex;
   align-items: center;
-  color: ${mainColors.red};
-  font-weight: 600;
-  margin-left: 0.5rem;
+  color: ${mainColors.midGrey};
   font-size: 12px;
+  margin-left: 0.5rem;
 `;
 
-const TopSongs: React.FC = () => {
-  const [topSongs, setTopSongs] = useState<Song[]>([]);
+const NewestSongs: React.FC = () => {
+  const [newestSongs, setNewestSongs] = useState<Song[]>([]);
   const history = useHistory();
   const { t } = useTranslation();
   const isCyrilicLang = useIsCyrylicLang();
 
   useEffect(() => {
-    const fetchTopSongs = async () => {
+    const fetchNewestSongs = async () => {
       try {
-        const songs = await songApi.getTopSongs(10);
-        setTopSongs(songs);
+        const songs = await songApi.getNewSongs(10);
+        setNewestSongs(songs);
       } catch (error) {
-        console.error("Error fetching top songs:", error);
+        console.error("Error fetching newest songs:", error);
       }
     };
 
-    fetchTopSongs();
+    fetchNewestSongs();
   }, []);
 
   const handleSongClick = (song: Song) => {
     history.push(`${routes.app}/${routes.play}/${song.id}`);
   };
 
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleDateString();
+  };
+
   return (
     <Container>
-      <SongList>
-        <Typography variant="h4" className="sectionSubtitle">
-          {t("aboutPage.popularSongs", "Popular Songs")}
+  <Typography variant="h4" className="sectionSubtitle">
+          {t("aboutPage.newestSongs")}
         </Typography>
-
-        {topSongs.map((song) => (
+      <SongList>
+        {newestSongs.map((song) => (
           <SongItem key={song.id} onClick={() => handleSongClick(song)}>
             <Icon type="song-play" fill={mainColors.red} />
             <SongInfo>
@@ -105,14 +106,9 @@ const TopSongs: React.FC = () => {
               </SongName>
               <SongType>{t(`genres.${song.type}`)}</SongType>
             </SongInfo>
-            <PlayCount>
-              <Icon
-                type="material"
-                Icon={PlayArrowIcon}
-                fill={mainColors.red}
-              />
-              {song.stats?.views || 0}
-            </PlayCount>
+            {song.createdAt && (
+              <AddedDate>{formatDate(song.createdAt.toString())}</AddedDate>
+            )}
           </SongItem>
         ))}
       </SongList>
@@ -120,4 +116,4 @@ const TopSongs: React.FC = () => {
   );
 };
 
-export default TopSongs;
+export default NewestSongs;

@@ -10,7 +10,8 @@ const songsLinks = {
   songs: `${process.env.REACT_APP_BACKEND_URL}/v1/songs`,
   song: `${process.env.REACT_APP_BACKEND_URL}/v1/song`,
   songViews: `${process.env.REACT_APP_BACKEND_URL}/v1/songs/plays`,
-  topSongs: `${process.env.REACT_APP_BACKEND_URL}/v1/songs/top/plays`
+  topSongs: `${process.env.REACT_APP_BACKEND_URL}/v1/songs/top/plays`,
+  newSongs: `${process.env.REACT_APP_BACKEND_URL}/v1/songs/top/recent`
 }
 
 const playlistsLinks = {

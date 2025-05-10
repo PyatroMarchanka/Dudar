@@ -7,6 +7,7 @@ export interface User {
   picture?: string;
   settings: UserSettings;
   _id?: string;
+  isAdmin?: boolean;
 }
 
 export enum Views {

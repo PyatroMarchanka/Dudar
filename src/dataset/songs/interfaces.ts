@@ -37,7 +37,9 @@ export interface Song {
   links: SongLink[];
   transcribedBy?: string;
   lyrycs?: string;
-  stats: IStats
+  stats: IStats,
+  createdAt?: Date,
+  updatedAt?: Date,
 }
 
 
