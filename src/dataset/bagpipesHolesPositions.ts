@@ -41,13 +41,13 @@ const belarusianTraditionalHolesClosable = [
 ].reverse();
 
 const polishHolesClosable = [
-  { yPos: 554, leftMargin: 73, diameter: 17 },
-  { yPos: 473, leftMargin: 68, diameter: 35 },
-  { yPos: 386, leftMargin: 68, diameter: 35 },
-  { yPos: 314, leftMargin: 73, diameter: 17 },
-  { yPos: 245, leftMargin: 68, diameter: 35 },
+  { yPos: 560, leftMargin: 73, diameter: 17 },
+  { yPos: 480, leftMargin: 68, diameter: 35 },
+  { yPos: 395, leftMargin: 68, diameter: 35 },
+  { yPos: 319, leftMargin: 73, diameter: 17 },
+  { yPos: 250, leftMargin: 68, diameter: 35 },
   { yPos: 185, leftMargin: 68, diameter: 35 },
-  { yPos: 135, leftMargin: 30, diameter: 17 },
+  { yPos: 140, leftMargin: 30, diameter: 17 },
 ].reverse();
 
 const belarusianNONTraditionalHolesClosable = [

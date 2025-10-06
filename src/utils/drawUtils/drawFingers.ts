@@ -10,10 +10,11 @@ const getXpos = (
   switch (bagpipeType) {
     case BagpipeTypes.Polish:
       return {
-        backXposNormal: 25,
-        backXposActive: 5,
-        xPosNormal: 53,
-        xPosNormalActive: 65,
+        backXposNormal: -5,
+        backXposActive: -35,
+        xPosNormal: 23,
+        xPosNormalActive: 35,
+        fingerSize: 35,
       };
     default:
       return {
@@ -21,6 +22,7 @@ const getXpos = (
         backXposActive: -25,
         xPosNormal: 53,
         xPosNormalActive: 65,
+        fingerSize: 40,
       };
   }
 };
@@ -34,7 +36,7 @@ const drawFinger = (
   bagpipeType: BagpipeTypes
 ) => {
   const isBack = idx === 0;
-  const { backXposNormal, backXposActive, xPosNormal, xPosNormalActive } =
+  const { backXposNormal, backXposActive, xPosNormal, xPosNormalActive, fingerSize } =
     getXpos(bagpipeType);
 
   const backXpos = isActive ? backXposActive : backXposNormal;
@@ -43,7 +45,7 @@ const drawFinger = (
   const image = (imagesTree as any)[idx > 3 ? "right" : "left"][
     isActive ? "active" : "inactive"
   ][holeType];
-  ctx.drawImage(image, xPos, yPos - 20, 40, 40);
+  ctx.drawImage(image, xPos, yPos - 20, fingerSize, fingerSize);
 };
 
 const getHoleType = (
