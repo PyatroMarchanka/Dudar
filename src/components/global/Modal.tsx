@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { CSSProperties } from "@material-ui/core/styles/withStyles";
 
 interface Props {
-  title: string;
+  title?: string;
   triggerComponent: JSX.Element;
   children: any;
   className?: string;
@@ -47,7 +47,7 @@ export default function Modal({
         open={open}
         onClose={handleClose}
       >
-        <DialogTitle>{title}</DialogTitle>
+        {title && <DialogTitle>{title}</DialogTitle>}
         <DialogContent>{children}</DialogContent>
       </Dialog>
     </Container>
