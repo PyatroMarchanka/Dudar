@@ -37,6 +37,9 @@ export const getTranslationKeyByBagpipeType = (type: BagpipeTypes) => {
     case BagpipeTypes.BelarusianTraditionalDuda:
       return "belTradDuda";
 
+    case BagpipeTypes.Polish:
+      return "polish";
+
     case BagpipeTypes.Dudelsack:
       return "dudelsack";
 

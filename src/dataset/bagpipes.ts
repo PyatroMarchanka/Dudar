@@ -11,6 +11,7 @@ const bagpipeNames = {
   [BagpipeTypes.BelarusianTraditionalDuda]: getTranslationKeyByBagpipeType(
     BagpipeTypes.BelarusianTraditionalDuda
   ),
+  [BagpipeTypes.Polish]: getTranslationKeyByBagpipeType(BagpipeTypes.Polish),
   [BagpipeTypes.BelarusianNONTraditionalDuda]: getTranslationKeyByBagpipeType(
     BagpipeTypes.BelarusianNONTraditionalDuda
   ),
@@ -39,6 +40,7 @@ export const bagpipes: { [key: string]: BagpipeConfig } = {
   [BagpipeTypes.BelarusianNONTraditionalDuda]: getBagpipeData(
     BagpipeTypes.BelarusianNONTraditionalDuda
   ),
+  [BagpipeTypes.Polish]: getBagpipeData(BagpipeTypes.Polish),
   [BagpipeTypes.BelarusianOpenDuda]: getBagpipeData(BagpipeTypes.BelarusianOpenDuda),
   [BagpipeTypes.Dudelsack]: getBagpipeData(BagpipeTypes.Dudelsack),
   [BagpipeTypes.Highlander]: getBagpipeData(BagpipeTypes.Highlander),
