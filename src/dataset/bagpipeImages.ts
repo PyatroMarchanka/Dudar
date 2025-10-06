@@ -41,6 +41,15 @@ const srcs = {
     blowImage: "/images/blow.svg",
     bgImage: "/images/bel_duda_back.png",
   },
+  [BagpipeTypes.Polish]: {
+    mainPipe: "/images/duda_polska_2.png",
+    activeHoleImage: "/images/piston_open.svg",
+    backActiveHoleImage: "/images/piston_back_open.svg",
+    closedHoleImage: "/images/piston_closed.svg",
+    backClosedHoleImage: "/images/piston_back_closed.svg",
+    blowImage: "/images/blow.svg",
+    bgImage: "/images/duda_polska_bg.png",
+  },
   [BagpipeTypes.BelarusianNONTraditionalDuda]: {
     mainPipe: "/images/bel_duda_side_color_eight_holes.png",
     activeHoleImage: "/images/piston_open.svg",
@@ -76,7 +85,7 @@ const srcs = {
     backClosedHoleImage: "/images/piston_back_closed.svg",
     blowImage: "/images/blow.svg",
     bgImage: "/images/scottish_back.png"
-  },
+  }
 };
 
 const getBagpipeImages = (bagpipeType: BagpipeTypes) => {
@@ -90,6 +99,7 @@ export const bagpipeImages = {
   [BagpipeTypes.BelarusianNONTraditionalDuda]: getBagpipeImages(
     BagpipeTypes.BelarusianNONTraditionalDuda
   ),
+  [BagpipeTypes.Polish]: getBagpipeImages(BagpipeTypes.Polish),
   [BagpipeTypes.BelarusianOpenDuda]: getBagpipeImages(BagpipeTypes.BelarusianOpenDuda),
   [BagpipeTypes.Dudelsack]: getBagpipeImages(BagpipeTypes.Dudelsack),
   [BagpipeTypes.Highlander]: getBagpipeImages(BagpipeTypes.Highlander),

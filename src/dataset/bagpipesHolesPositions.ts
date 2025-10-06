@@ -40,6 +40,16 @@ const belarusianTraditionalHolesClosable = [
   { yPos: 125, leftMargin: 5, diameter: 17 },
 ].reverse();
 
+const polishHolesClosable = [
+  { yPos: 554, leftMargin: 73, diameter: 17 },
+  { yPos: 473, leftMargin: 68, diameter: 35 },
+  { yPos: 386, leftMargin: 68, diameter: 35 },
+  { yPos: 314, leftMargin: 73, diameter: 17 },
+  { yPos: 245, leftMargin: 68, diameter: 35 },
+  { yPos: 185, leftMargin: 68, diameter: 35 },
+  { yPos: 135, leftMargin: 30, diameter: 17 },
+].reverse();
+
 const belarusianNONTraditionalHolesClosable = [
   { yPos: 475, leftMargin: 68, diameter: 35 },
   { yPos: 420, leftMargin: 68, diameter: 35 },
@@ -93,6 +103,11 @@ const belarusianTraditionalHoles: BagpipeHolesPositions = {
   linesYPositions: [...holesToLinesYPositions([...belarusianTraditionalHolesClosable]), coeff(570)],
 };
 
+const polishHoles: BagpipeHolesPositions = {
+  closable: polishHolesClosable.map(applyCoefficientToHole),
+  linesYPositions: [...holesToLinesYPositions([...polishHolesClosable]), coeff(600)],
+};
+
 const belarusianNONTraditionalHoles: BagpipeHolesPositions = {
   closable: belarusianNONTraditionalHolesClosable.map(applyCoefficientToHole),
   linesYPositions: [
@@ -143,6 +158,7 @@ export const holesPositions = {
   [BagpipeTypes.BelarusianTraditionalDuda]: belarusianTraditionalHoles,
   [BagpipeTypes.BelarusianNONTraditionalDuda]: belarusianNONTraditionalHoles,
   [BagpipeTypes.BelarusianOpenDuda]: belarusianOpenHoles,
+  [BagpipeTypes.Polish]: polishHoles,
   [BagpipeTypes.Dudelsack]: dudelsackHoles,
   [BagpipeTypes.Highlander]: highlanderHoles,
 };
