@@ -2,11 +2,12 @@ import React, { useContext } from "react";
 import { Container, Typography, Box, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { ArrowBack } from "@material-ui/icons";
-import blogApi from "../../../api/blog";
+import articlesApi from "../../../api/articles";
 import { Link, useHistory } from "react-router-dom";
 import BlogPostForm from "./BlogPostForm";
 import { store } from "../../../context";
 import { useGoogleProfile } from "../../../hooks/useGoogleProfile";
+import { routes } from "../../../router/routes";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,10 +28,11 @@ const BlogAdmin: React.FC = () => {
   const handleSave = async (post: any) => {
     try {
       if (!userData?._id) return;
-      const fullPost = {...post, author: userData._id}
-      await blogApi.createPost(fullPost);
+      console.log('post', post)
+      const fullPost = { ...post, author: userData._id }
+      await articlesApi.createPost(fullPost);
       alert("Post saved successfully");
-      history.push("/blog");
+      history.push(routes.learningBook);
     } catch (error) {
       console.error("Error creating post:", error);
       alert("Failed to create post");
@@ -38,13 +40,14 @@ const BlogAdmin: React.FC = () => {
   };
 
   const handleCancel = () => {
-    history.push("/blog");
+    history.push(routes.learningBook);
   };
+
 
   return (
     <Container className={classes.root}>
       <Box display="flex" justifyContent="flex-start" mb={4}>
-        <Link to="/blog" style={{ textDecoration: "none" }}>
+        <Link to={routes.learningBook} style={{ textDecoration: "none" }}>
           <Button startIcon={<ArrowBack />} variant="outlined" color="primary">
             Back to Blogs
           </Button>

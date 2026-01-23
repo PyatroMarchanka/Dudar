@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const BASE_URL = 'https://dudahero.org';
-const BLOG_API_URL = process.env.REACT_APP_BACKEND_URL + '/v1/blog';
+const BLOG_API_URL = process.env.REACT_APP_BACKEND_URL + '/v1/learning-book';
 
 interface BlogPost {
   slug: string;

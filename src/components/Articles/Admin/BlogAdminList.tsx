@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { BlogPost } from "../../../interfaces/Blog";
+import { Article } from "../../../interfaces/article";
 import {
   Container,
   Typography,
@@ -27,10 +27,11 @@ import {
   Search as SearchIcon,
   ArrowBack,
 } from "@material-ui/icons";
-import blogApi from "../../../api/blog";
+import articlesApi from "../../../api/articles";
 import { useTranslation } from "react-i18next";
 import { store } from "../../../context";
 import { useGoogleProfile } from "../../../hooks/useGoogleProfile";
+import { routes } from "../../../router/routes";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,7 +93,7 @@ const BlogAdminList: React.FC = () => {
   const { i18n } = useTranslation();
   const language = i18n.language;
 
-  const [fullPosts, setFullPosts] = useState<BlogPost[]>([]);
+  const [fullPosts, setFullPosts] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -102,7 +103,7 @@ const BlogAdminList: React.FC = () => {
     const fetchPosts = async () => {
       if (!userData?._id) return;
       try {
-        const data = await blogApi.getAllPostsByUserAuthor(userData._id);
+        const data = await articlesApi.getAllPostsByUserAuthor(userData._id);
         console.log(data);
         if (data) {
           setFullPosts(data);
@@ -138,19 +139,19 @@ const BlogAdminList: React.FC = () => {
 
   const filteredPosts = searchTerm
     ? posts?.filter(
-        (post) =>
-          post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          post.tags?.some((tag) =>
-            tag.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-      )
+      (post) =>
+        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.tags?.some((tag) =>
+          tag.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+    )
     : posts;
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this post?")) {
       try {
-        await blogApi.deletePost(id);
+        await articlesApi.deletePost(id);
         setFullPosts(fullPosts.filter((post) => post._id !== id));
       } catch (error) {
         console.error("Error deleting post:", error);
@@ -174,7 +175,7 @@ const BlogAdminList: React.FC = () => {
         </Typography>
         <Button
           component={Link}
-          to="/admin-blog"
+          to={routes.articleAdmin}
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
@@ -245,7 +246,7 @@ const BlogAdminList: React.FC = () => {
                     <Tooltip title="Edit">
                       <IconButton
                         component={Link}
-                        to={`/admin-blog/${post.slug}`}
+                        to={`${routes.articleAdmin}/${post.slug}`}
                         color="primary"
                       >
                         <EditIcon />

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams, Link, useHistory } from "react-router-dom";
-import type { BlogPost as BlogPostType } from "../../interfaces/Blog";
+import type { Article as BlogPostType } from "../../interfaces/article";
 import {
   Container,
   Typography,
@@ -19,11 +19,12 @@ import {
   ArrowBack,
   Add,
 } from "@material-ui/icons";
-import blogApi from "../../api/blog";
+import articlesApi from "../../api/articles";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { store } from "../../context";
 import LanguageSelector from "../Controls/LanguageSelector";
 import { useTranslation } from "react-i18next";
+import { routes } from "../../router/routes";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -189,7 +190,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BlogPost: React.FC = () => {
+const ArticlePage: React.FC = () => {
   const {
     state: { userData, language: currentLanguage },
   } = useContext(store);
@@ -205,14 +206,14 @@ const BlogPost: React.FC = () => {
 
   useEffect(() => {
     if (currentLanguage !== lang) {
-      history.push(`/blog/${currentLanguage}/${slug}`);
+      history.push(`${routes.article}/${currentLanguage}/${slug}`);
     }
   }, [currentLanguage, lang, slug, history]);
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const post = await blogApi.getPostBySlug(slug);
+        const post = await articlesApi.getPostBySlug(slug);
         setPost(post);
       } catch (error) {
         console.error("Error fetching blog post:", error);
@@ -245,6 +246,7 @@ const BlogPost: React.FC = () => {
     );
   }
 
+
   const currentTranslation =
     post.translations[language] || post.translations[post.defaultLanguage];
 
@@ -253,7 +255,7 @@ const BlogPost: React.FC = () => {
       <Box display="flex" justifyContent="space-between" mb={4}>
         <Button
           component={Link}
-          to="/blog"
+          to={routes.learningBook}
           startIcon={<ArrowBack />}
           variant="outlined"
           color="primary"
@@ -265,7 +267,7 @@ const BlogPost: React.FC = () => {
           <Box>
             <Button
               component={Link}
-              to="/admin-blog-list"
+              to={routes.articleAdminList}
               startIcon={<Add />}
               variant="outlined"
               color="primary"
@@ -275,7 +277,7 @@ const BlogPost: React.FC = () => {
             </Button>
             <Button
               component={Link}
-              to={`/admin-blog/${post._id}`}
+              to={`${routes.articleAdmin}/${post._id}`}
               startIcon={<Update />}
               variant="outlined"
               color="primary"
@@ -329,7 +331,6 @@ const BlogPost: React.FC = () => {
           className={classes.featuredImage}
         />
       )}
-
       <Box
         className={classes.content}
         dangerouslySetInnerHTML={{ __html: currentTranslation.content }}
@@ -338,4 +339,4 @@ const BlogPost: React.FC = () => {
   );
 };
 
-export default BlogPost;
+export default ArticlePage;

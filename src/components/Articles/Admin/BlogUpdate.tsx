@@ -3,9 +3,10 @@ import { useParams, useHistory } from "react-router-dom";
 import { Container, Typography, Box, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { ArrowBack } from "@material-ui/icons";
-import blogApi from "../../../api/blog";
+import articlesApi from "../../../api/articles";
 import { Link } from "react-router-dom";
 import BlogPostForm from "./BlogPostForm";
+import { routes } from "../../../router/routes";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,11 +26,11 @@ const BlogUpdate: React.FC = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await blogApi.getPostBySlug(id);
+        const response = await articlesApi.getPostBySlug(id);
         setPost(response);
       } catch (error) {
         console.error("Error fetching post:", error);
-        history.push("/blog");
+        history.push(routes.learningBook);
       }
     };
 
@@ -39,9 +40,9 @@ const BlogUpdate: React.FC = () => {
   const handleSave = async (updatedPost: any) => {
     try {
       if (!post._id) return;
-      await blogApi.updatePost(post._id, updatedPost);
+      await articlesApi.updatePost(post._id, updatedPost);
       alert("Post updated successfully");
-      history.push("/blog");
+      history.push(routes.learningBook);
     } catch (error) {
       console.error("Error updating post:", error);
       alert("Failed to update post");
@@ -49,16 +50,16 @@ const BlogUpdate: React.FC = () => {
   };
 
   const handleCancel = () => {
-    history.push("/blog");
+    history.push(routes.learningBook);
   };
 
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this post?")) {
       try {
         if (!post?.id) return;
-        await blogApi.deletePost(post.id);
+        await articlesApi.deletePost(post.id);
         alert("Post deleted successfully");
-        history.push("/blog");
+        history.push(routes.learningBook);
       } catch (error) {
         console.error("Error deleting post:", error);
         alert("Failed to delete post");
@@ -73,7 +74,7 @@ const BlogUpdate: React.FC = () => {
   return (
     <Container className={classes.root}>
       <Box display="flex" justifyContent="flex-start" mb={4}>
-        <Link to="/blog" style={{ textDecoration: "none" }}>
+        <Link to={routes.learningBook} style={{ textDecoration: "none" }}>
           <Button startIcon={<ArrowBack />} variant="outlined" color="primary">
             Back to Blogs
           </Button>
@@ -90,7 +91,7 @@ const BlogUpdate: React.FC = () => {
         submitButtonText="Update Post"
         showDeleteButton={true}
       />
-    </Container>
+    </Container >
   );
 };
 

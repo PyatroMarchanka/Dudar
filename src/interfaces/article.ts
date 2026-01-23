@@ -1,4 +1,6 @@
-export interface BlogPostTranslation {
+import { MenuCategoryId } from "./category";
+
+export interface ArticleTranslation {
   title: string;
   content: string;
   excerpt: string;
@@ -7,7 +9,7 @@ export interface BlogPostTranslation {
   tags: string[];
 }
 
-export interface BlogPost {
+export interface Article {
   _id: string;
   slug: string;
   author: {
@@ -21,13 +23,13 @@ export interface BlogPost {
   tags: string[];
   featuredImage?: string;
   translations: {
-    [languageCode: string]: BlogPostTranslation;
+    [languageCode: string]: ArticleTranslation;
   };
   defaultLanguage: string;
 }
 
-export interface BlogPostPreview {
-  id: string;
+export interface ArticlePreview {
+  _id: string;
   slug: string;
   title: string;
   excerpt: string;
@@ -41,4 +43,5 @@ export interface BlogPostPreview {
   tags: string[];
   featuredImage?: string;
   availableLanguages: string[];
+  category: MenuCategoryId
 } 

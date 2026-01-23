@@ -22,9 +22,9 @@ const adminLinks = {
   adminSong: `${process.env.REACT_APP_BACKEND_URL}/v1/admin/song`
 }
 
-const blogLinks = {
-  blog: `${process.env.REACT_APP_BACKEND_URL}/v1/blog`,
-  blogPost: `${process.env.REACT_APP_BACKEND_URL}/v1/blog/:slug`,
+const articleLinks = {
+  article: `${process.env.REACT_APP_BACKEND_URL}/v1/articles`,
+  categories: `${process.env.REACT_APP_BACKEND_URL}/v1/categories`,
 }
 
 export const links = {
@@ -32,5 +32,5 @@ export const links = {
   ...songsLinks,
   ...adminLinks,
   ...playlistsLinks,
-  ...blogLinks,
+  ...articleLinks,
 }
