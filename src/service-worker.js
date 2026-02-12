@@ -90,8 +90,27 @@ registerRoute(
     cacheName: 'fonts',
     plugins: [
       new ExpirationPlugin({
-        maxEntries: 20,
+        maxEntries: 30,
         maxAgeSeconds: 60 * 24 * 60 * 60, // 60 Days
+      }),
+    ],
+  })
+);
+
+// Cache audio and media files with a Cache First strategy for offline playback
+registerRoute(
+  ({ url }) => {
+    const audioExtensions = ['.mp3', '.wav', '.ogg', '.m4a', '.aac', '.flac'];
+    const audioPath = url.pathname.startsWith('/samples/') || url.pathname.startsWith('/midi/');
+    const hasAudioExtension = audioExtensions.some(ext => url.pathname.toLowerCase().endsWith(ext));
+    return url.origin === self.location.origin && (audioPath || hasAudioExtension);
+  },
+  new CacheFirst({
+    cacheName: 'audio-files',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 100,
+        maxAgeSeconds: 90 * 24 * 60 * 60, // 90 Days
       }),
     ],
   })
@@ -105,7 +124,7 @@ registerRoute(
     plugins: [
       new ExpirationPlugin({
         maxEntries: 50,
-        maxAgeSeconds: 5 * 60, // 5 minutes
+        maxAgeSeconds: 15 * 60, // 15 minutes
       }),
     ],
   })
@@ -115,8 +134,7 @@ registerRoute(
 registerRoute(
   ({ request }) => 
     request.destination === 'document' || 
-    request.destination === 'pdf' ||
-    request.destination === 'media',
+    request.destination === 'pdf',
   new CacheFirst({
     cacheName: 'static-assets',
     plugins: [
