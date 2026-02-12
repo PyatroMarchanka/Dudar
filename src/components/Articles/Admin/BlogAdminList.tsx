@@ -169,7 +169,7 @@ const BlogAdminList: React.FC = () => {
         <Button component={Link} to={routes.articleAdmin} variant="contained" color="primary" startIcon={<AddIcon />}>
           {t('blog.admin.createNew')}
         </Button>
-        <Button component={Link} to="/" variant="outlined" color="primary" startIcon={<ArrowBack />}>
+        <Button component={Link} to={routes.learningBook} variant="outlined" color="primary" startIcon={<ArrowBack />}>
           {t('blog.backToHome')}
         </Button>
       </Box>

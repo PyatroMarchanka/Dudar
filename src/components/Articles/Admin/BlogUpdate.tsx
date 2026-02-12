@@ -77,9 +77,9 @@ const BlogUpdate: React.FC = () => {
   return (
     <Container className={classes.root}>
       <Box display="flex" justifyContent="flex-start" mb={4}>
-        <Link to={routes.learningBook} style={{ textDecoration: "none" }}>
+        <Link to={routes.articleAdminList} style={{ textDecoration: "none" }}>
           <Button startIcon={<ArrowBack />} variant="outlined" color="primary">
-            {t("blog.backToBlogs")}
+            {t("blog.backToAdminList")}
           </Button>
         </Link>
       </Box>
