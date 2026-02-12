@@ -24,6 +24,8 @@ import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { store } from "../../context";
 import LanguageSelector from "../Controls/LanguageSelector";
 import { routes } from "../../router/routes";
+import { MetaTags } from "../SEO/MetaTags";
+import { StructuredData } from "../SEO/StructuredData";
 import { useContext, useEffect, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -250,8 +252,38 @@ const ArticlePage: React.FC = () => {
   const currentTranslation =
     post.translations[language] || post.translations[post.defaultLanguage];
 
+  const metaDescription = currentTranslation.metaDescription || currentTranslation.excerpt || 'Learn about bagpipes with Duda Hero - interactive bagpipe tutorial';
+  const metaKeywords = currentTranslation.metaKeywords?.join(', ') || 'bagpipes, learn bagpipes, bagpipe tutorial';
+  const canonicalPath = `/article/${language}/${slug}`;
+
   return (
-    <Container className={classes.root}>
+    <>
+      <MetaTags 
+        title={`${currentTranslation.title} | Duda Hero`}
+        description={metaDescription}
+        keywords={metaKeywords}
+        image={post.featuredImage || '/android-chrome-192x192.png'}
+        language={language}
+        canonicalPath={canonicalPath}
+        type="article"
+      />
+      <StructuredData 
+        articleData={{
+          title: currentTranslation.title,
+          description: metaDescription,
+          image: post.featuredImage,
+          author: post.author,
+          publishedDate: post.publishedAt || post.createdAt,
+          modifiedDate: post.updatedAt,
+          tags: post.tags
+        }}
+        breadcrumbs={[
+          { name: 'Home', url: '/' },
+          { name: 'Learning Book', url: routes.learningBook },
+          { name: currentTranslation.title, url: canonicalPath }
+        ]}
+      />
+      <Container className={classes.root}>
       <Box display="flex" justifyContent="space-between" mb={4}>
         <Button
           component={Link}
@@ -325,7 +357,8 @@ const ArticlePage: React.FC = () => {
         className={classes.content}
         dangerouslySetInnerHTML={{ __html: currentTranslation.content }}
       />
-    </Container>
+      </Container>
+    </>
   );
 };
 
