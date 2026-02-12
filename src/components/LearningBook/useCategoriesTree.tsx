@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import categoriesApi from "../../api/categories";
 import { CategoriesTree, MenuCategoryId, TranslatedCategoryTree } from "../../interfaces/category";
 
-const getTitleByCategoryId = (categoryId: MenuCategoryId) => {
+export const getTitleByCategoryId = (categoryId: MenuCategoryId) => {
     switch (categoryId) {
         case MenuCategoryId.Beginners:
             return "Для Пачаткоўцаў"

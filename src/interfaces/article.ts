@@ -26,6 +26,7 @@ export interface Article {
     [languageCode: string]: ArticleTranslation;
   };
   defaultLanguage: string;
+  category: MenuCategoryId
 }
 
 export interface ArticlePreview {

@@ -28,7 +28,6 @@ const BlogAdmin: React.FC = () => {
   const handleSave = async (post: any) => {
     try {
       if (!userData?._id) return;
-      console.log('post', post)
       const fullPost = { ...post, author: userData._id }
       await articlesApi.createPost(fullPost);
       alert("Post saved successfully");

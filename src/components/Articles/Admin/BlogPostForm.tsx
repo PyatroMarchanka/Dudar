@@ -8,6 +8,8 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -17,6 +19,10 @@ import {
 import SingleLanguageForm from "./SingleLanguageForm";
 import { Languages } from "../../../interfaces";
 import { useTranslation } from "react-i18next";
+import { MenuCategoryId } from "../../../interfaces/category";
+import { useSelectStyles } from "../../global/selectStyles";
+import { getTitleByCategoryId } from "../../LearningBook/useCategoriesTree";
+import styled from "styled-components";
 
 const availableLanguages = Object.values(Languages);
 
@@ -112,6 +118,7 @@ const getInitialTranslations = (): Partial<Article> => ({
   },
   defaultLanguage: "en",
   tags: [],
+  category: MenuCategoryId.Beginners
 });
 
 const BlogPostForm: React.FC<BlogPostFormProps> = ({
@@ -137,6 +144,15 @@ const BlogPostForm: React.FC<BlogPostFormProps> = ({
       }
       : defaultPost
   );
+
+  const handleCategoryChange = (category: MenuCategoryId) => {
+    setPost((prevPost) => {
+      return {
+        ...prevPost,
+        category
+      }
+    })
+  }
 
   const handleTranslationChange = (
     language: string,
@@ -180,8 +196,37 @@ const BlogPostForm: React.FC<BlogPostFormProps> = ({
     value: lang,
   }));
 
+  const CategoriesSelector = () => {
+    const options = Object.values(MenuCategoryId).map((category) => ({
+      label: getTitleByCategoryId(category),
+      value: category,
+    }));
+    const selectClasses = useSelectStyles();
+
+    return (
+      <CategoryContainer>
+        <Typography variant="h6">Category</Typography>
+        <Select
+          id="lang-select"
+          className={selectClasses.select}
+          value={post.category}
+          onChange={(e) => {
+            handleCategoryChange(e.target.value as MenuCategoryId);
+          }}
+        >
+          {options.map((option) => (
+            <MenuItem key={option.label} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </CategoryContainer>
+    );
+  }
+
   return (
     <Paper className={classes.form}>
+      <CategoriesSelector />
       {availableLanguages.map((language) => {
         const translation =
           post.translations?.[language.value] || {
@@ -197,7 +242,6 @@ const BlogPostForm: React.FC<BlogPostFormProps> = ({
           <Accordion
             key={language.value}
             className={classes.accordion}
-            defaultExpanded={language.value === Languages.Belarusian}
           >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
@@ -240,3 +284,9 @@ const BlogPostForm: React.FC<BlogPostFormProps> = ({
 };
 
 export default BlogPostForm;
+
+const CategoryContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+`

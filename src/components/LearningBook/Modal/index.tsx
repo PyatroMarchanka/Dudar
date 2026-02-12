@@ -5,12 +5,10 @@ import { mediaQueries } from "../../../constants/style";
 interface ModalProps {
     isOpen: boolean;
     position: { left: number; top: number };
-    onMouseEnter: () => void;
-    onMouseLeave: () => void;
     children: React.ReactNode;
 }
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, position, onMouseEnter, onMouseLeave, children }) => {
+export const Modal: React.FC<ModalProps> = ({ isOpen, position, children }) => {
     if (!isOpen) return null;
 
     return (
@@ -19,8 +17,6 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, position, onMouseEnter, on
                 left: `${position.left}px`,
                 top: `${position.top}px`,
             }}
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
         >
             {children}
         </ModalContent>
@@ -37,7 +33,8 @@ const ModalContent = styled.div`
     overflow-y: auto;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     z-index: 1000;
-    margin-top: 4px;
+    margin-top: 0;
+    pointer-events: auto;
 
     @media (max-width: ${mediaQueries.tabletMiddle}) {
         max-width: 90vw;

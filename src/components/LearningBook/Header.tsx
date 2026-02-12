@@ -29,26 +29,29 @@ interface HeaderProps {
 
 export const LearningBookHeader: React.FC<HeaderProps> = ({ categoriesTree }: HeaderProps) => {
     const { state: { userData } } = useContext(store);
-    const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+    const [hoveredCategoryId, setHoveredCategoryId] = useState<string | null>(null);
     const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [mobileExpanded, setMobileExpanded] = useState<{ [key: string]: boolean }>({});
-    const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
+    const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
-
-    const handleCategoryHover = (categoryId: string) => {
-        // Clear any pending close timeout
-        if (closeTimeout) {
-            clearTimeout(closeTimeout);
-            setCloseTimeout(null);
+    const clearCloseTimeout = () => {
+        if (closeTimeoutRef.current) {
+            clearTimeout(closeTimeoutRef.current);
+            closeTimeoutRef.current = null;
         }
+    };
 
-        // Get button position
+    const handleMenuItemEnter = (categoryId: string) => {
+        // Clear any pending close timeout
+        clearCloseTimeout();
+
+        // Get button position and show modal
         const button = buttonRefs.current[categoryId];
         if (button) {
             const rect = button.getBoundingClientRect();
-            setSelectedCategoryId(categoryId);
+            setHoveredCategoryId(categoryId);
             setMenuPosition({
                 left: rect.left,
                 top: rect.bottom,
@@ -56,27 +59,13 @@ export const LearningBookHeader: React.FC<HeaderProps> = ({ categoriesTree }: He
         }
     };
 
-    const handleCategoryLeave = () => {
-        // Set a timeout to close the menu
-        const timeout = setTimeout(() => {
-            setSelectedCategoryId(null);
+    const handleMenuItemLeave = () => {
+        // Start a 200ms timeout before closing
+        closeTimeoutRef.current = setTimeout(() => {
+            setHoveredCategoryId(null);
             setMenuPosition(null);
-            setCloseTimeout(null);
-        }, 500);
-
-        setCloseTimeout(timeout);
-    };
-
-    const handleModalEnter = () => {
-        // Cancel any pending close when mouse enters modal
-        if (closeTimeout) {
-            clearTimeout(closeTimeout);
-            setCloseTimeout(null);
-        }
-    };
-
-    const handleModalLeave = () => {
-        handleCategoryLeave();
+            closeTimeoutRef.current = null;
+        }, 200);
     };
 
     const handleMobileMenuToggle = () => {
@@ -93,15 +82,9 @@ export const LearningBookHeader: React.FC<HeaderProps> = ({ categoriesTree }: He
     // Cleanup timeout on unmount
     useEffect(() => {
         return () => {
-            if (closeTimeout) {
-                clearTimeout(closeTimeout);
-            }
+            clearCloseTimeout();
         };
-    }, [closeTimeout]);
-
-    const selectedCategory = selectedCategoryId
-        ? categoriesTree.find((cat) => cat.category === selectedCategoryId)
-        : null;
+    }, []);
 
     return (
         <>
@@ -112,21 +95,35 @@ export const LearningBookHeader: React.FC<HeaderProps> = ({ categoriesTree }: He
                         <Logo variant="big" width={150} height={55} />
                     </LogoLink>
                     {categoriesTree.map((category) => (
-                        <MenuCategoryItem key={category.category}>
+                        <MenuCategoryItemWrapper
+                            key={category.category}
+                            onMouseEnter={() => handleMenuItemEnter(category.category)}
+                            onMouseLeave={handleMenuItemLeave}
+                        >
                             <CategoryButton
                                 ref={(el) => (buttonRefs.current[category.category] = el)}
-                                onMouseEnter={() => handleCategoryHover(category.category)}
-                                onMouseLeave={handleCategoryLeave}
                             >
                                 {category.category}
                                 <ExpandMoreIcon style={{ marginLeft: "4px", fontSize: "18px" }} />
                             </CategoryButton>
 
-                        </MenuCategoryItem>
+                            {/* Modal for Article Previews */}
+                            {hoveredCategoryId === category.category && menuPosition && (
+                                <Modal
+                                    isOpen={true}
+                                    position={menuPosition}
+                                >
+                                    <ArticlePreviewList
+                                        articles={category.articles}
+                                        categoryTitle={category.category}
+                                    />
+                                </Modal>
+                            )}
+                        </MenuCategoryItemWrapper>
                     ))}
-                    <MenuCategoryItem >
+                    <AdminLinkWrapper>
                         {!userData?.isAdmin && <StyledLink to={routes.articleAdminList}><CategoryButton>Для Адмінаў</CategoryButton></StyledLink>}
-                    </MenuCategoryItem>
+                    </AdminLinkWrapper>
                 </DesktopMenu>
 
                 {/* Mobile Hamburger Menu */}
@@ -212,21 +209,6 @@ export const LearningBookHeader: React.FC<HeaderProps> = ({ categoriesTree }: He
                     </DrawerContent>
                 </MobileDrawer>
             </MenuContainer>
-
-            {/* Modal for Article Previews */}
-            {selectedCategory && menuPosition && (
-                <Modal
-                    isOpen={true}
-                    position={menuPosition}
-                    onMouseEnter={handleModalEnter}
-                    onMouseLeave={handleModalLeave}
-                >
-                    <ArticlePreviewList
-                        articles={selectedCategory.articles}
-                        categoryTitle={selectedCategory.category}
-                    />
-                </Modal>
-            )}
         </>
     );
 };
@@ -270,8 +252,19 @@ const MobileMenuButton = styled.div`
   }
 `;
 
-const MenuCategoryItem = styled.div`
+const MenuCategoryItemWrapper = styled.div`
     position: relative;
+    display: inline-block;
+    
+    /* Ensure modal is properly positioned relative to this container */
+    &:hover {
+        /* No special hover style needed, handled by wrapper onMouseLeave/Enter */
+    }
+`;
+
+const AdminLinkWrapper = styled.div`
+    position: relative;
+    display: inline-block;
 `;
 
 const CategoryButton = styled.button`
