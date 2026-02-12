@@ -13,10 +13,14 @@ import BlogAdminList from "../components/Articles/Admin/BlogAdminList";
 import ArticlePage from "../components/Articles/ArticlePage";
 import { ContactsPage } from "../components/screens/Contacts";
 import { LearningBook } from "../components/LearningBook";
+import { MetaTags } from "../components/SEO/MetaTags";
+import { StructuredData } from "../components/SEO/StructuredData";
 
 export const AppRouter = () => {
   return (
     <Router>
+      <MetaTags />
+      <StructuredData />
       <Switch>
         <Route path={routes.admin}>
           <Admin />

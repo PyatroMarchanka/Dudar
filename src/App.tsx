@@ -5,8 +5,6 @@ import { detectOS } from "./utils/detectOS";
 import { useWakeLock } from "./hooks/useWakeLock";
 import { AppRouter } from "./router";
 import { loadGapiInsideDOM } from "gapi-script";
-import { MetaTags } from "./components/SEO/MetaTags";
-import { StructuredData } from "./components/SEO/StructuredData";
 
 function App() {
   const [OS, setOS] = useState<string>("");
@@ -20,8 +18,6 @@ function App() {
 
   return (
     <ContextProvider>
-      <MetaTags />
-      <StructuredData />
       <AppRouter />
     </ContextProvider>
   );

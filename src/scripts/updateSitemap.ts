@@ -97,3 +97,5 @@ const updateSitemap = async () => {
 };
 
 updateSitemap();
+
+export {};
