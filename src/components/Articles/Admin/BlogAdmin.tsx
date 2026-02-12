@@ -8,6 +8,7 @@ import BlogPostForm from "./BlogPostForm";
 import { store } from "../../../context";
 import { useGoogleProfile } from "../../../hooks/useGoogleProfile";
 import { routes } from "../../../router/routes";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +23,7 @@ const BlogAdmin: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
   const { state: { userData } } = useContext(store)
+  const { t } = useTranslation();
 
   useGoogleProfile();
 
@@ -48,17 +50,17 @@ const BlogAdmin: React.FC = () => {
       <Box display="flex" justifyContent="flex-start" mb={4}>
         <Link to={routes.learningBook} style={{ textDecoration: "none" }}>
           <Button startIcon={<ArrowBack />} variant="outlined" color="primary">
-            Back to Blogs
+            {t("blog.backToBlogs")}
           </Button>
         </Link>
       </Box>
       <Typography variant="h4" className={classes.title}>
-        Blog Post Editor
+        {t("blog.blogPostEditor")}
       </Typography>
       <BlogPostForm
         onSubmit={handleSave}
         onCancel={handleCancel}
-        submitButtonText="Create Post"
+        submitButtonText={t("common.save") as string}
       />
     </Container>
   );

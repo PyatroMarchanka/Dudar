@@ -9,6 +9,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
   translationForm: {
@@ -68,6 +69,7 @@ const SingleLanguageForm: React.FC<SingleLanguageFormProps> = ({
   onChange,
 }) => {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   return (
     <Box className={classes.translationForm}>
@@ -75,7 +77,7 @@ const SingleLanguageForm: React.FC<SingleLanguageFormProps> = ({
         <Grid item xs={12}>
           <TextField
             fullWidth
-            label="Title"
+            label={t("blog.form.title")}
             value={translation.title || ""}
             onChange={(e) => onChange("title", e.target.value)}
             className={classes.textField}
@@ -87,7 +89,7 @@ const SingleLanguageForm: React.FC<SingleLanguageFormProps> = ({
             fullWidth
             multiline
             minRows={4}
-            label="Excerpt"
+            label={t("blog.form.excerpt")}
             value={translation.excerpt ?? ""}
             onChange={(e) => onChange("excerpt", e.target.value)}
             className={classes.textField}
@@ -114,7 +116,7 @@ const SingleLanguageForm: React.FC<SingleLanguageFormProps> = ({
         <Grid item xs={12}>
           <TextField
             fullWidth
-            label="Meta Description"
+            label={t("blog.form.metaDescription")}
             value={translation.metaDescription || ""}
             onChange={(e) => onChange("metaDescription", e.target.value)}
             className={classes.textField}
@@ -124,7 +126,7 @@ const SingleLanguageForm: React.FC<SingleLanguageFormProps> = ({
         <Grid item xs={12}>
           <TextField
             fullWidth
-            label="Meta Keywords (comma-separated)"
+            label={t("blog.form.metaKeywords")}
             value={translation.metaKeywords?.join(", ") || ""}
             onChange={(e) =>
               onChange(
@@ -139,7 +141,7 @@ const SingleLanguageForm: React.FC<SingleLanguageFormProps> = ({
         <Grid item xs={12}>
           <TextField
             fullWidth
-            label="Tags (comma-separated)"
+            label={t("blog.form.tags")}
             value={translation.tags?.join(", ") || ""}
             onChange={(e) =>
               onChange(

@@ -3,10 +3,12 @@ import { useParams, useHistory } from "react-router-dom";
 import { Container, Typography, Box, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { ArrowBack } from "@material-ui/icons";
+import { useTranslation } from "react-i18next";
 import articlesApi from "../../../api/articles";
 import { Link } from "react-router-dom";
 import BlogPostForm from "./BlogPostForm";
 import { routes } from "../../../router/routes";
+import { a } from "react-spring";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const BlogUpdate: React.FC = () => {
+  const { t } = useTranslation();
   const classes = useStyles();
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
@@ -41,11 +44,11 @@ const BlogUpdate: React.FC = () => {
     try {
       if (!post._id) return;
       await articlesApi.updatePost(post._id, updatedPost);
-      alert("Post updated successfully");
+      alert(t("blog.messages.postUpdated"));
       history.push(routes.learningBook);
     } catch (error) {
       console.error("Error updating post:", error);
-      alert("Failed to update post");
+      alert(t("blog.messages.updateFailed"));
     }
   };
 
@@ -54,15 +57,15 @@ const BlogUpdate: React.FC = () => {
   };
 
   const handleDelete = async () => {
-    if (window.confirm("Are you sure you want to delete this post?")) {
+    if (window.confirm(t("blog.form.deleteConfirm") as string)) {
       try {
         if (!post?.id) return;
         await articlesApi.deletePost(post.id);
-        alert("Post deleted successfully");
+        alert(t("blog.messages.postDeleted"));
         history.push(routes.learningBook);
       } catch (error) {
         console.error("Error deleting post:", error);
-        alert("Failed to delete post");
+        alert(t("blog.messages.deleteFailed"));
       }
     }
   };
@@ -76,19 +79,19 @@ const BlogUpdate: React.FC = () => {
       <Box display="flex" justifyContent="flex-start" mb={4}>
         <Link to={routes.learningBook} style={{ textDecoration: "none" }}>
           <Button startIcon={<ArrowBack />} variant="outlined" color="primary">
-            Back to Blogs
+            {t("blog.backToBlogs")}
           </Button>
         </Link>
       </Box>
       <Typography variant="h4" className={classes.title}>
-        Edit Blog Post
+        {t("blog.admin.editTitle")}
       </Typography>
       <BlogPostForm
         initialPost={post}
         onSubmit={handleSave}
         onCancel={handleCancel}
         onDelete={handleDelete}
-        submitButtonText="Update Post"
+        submitButtonText={t("blog.form.updatePost") as string}
         showDeleteButton={true}
       />
     </Container >

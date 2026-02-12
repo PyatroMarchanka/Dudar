@@ -1,4 +1,3 @@
-import React, { useContext, useEffect, useState } from "react";
 import { useParams, Link, useHistory } from "react-router-dom";
 import type { Article as BlogPostType } from "../../interfaces/article";
 import {
@@ -12,6 +11,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { useTranslation } from "react-i18next";
 import {
   CalendarToday,
   Person,
@@ -23,8 +23,8 @@ import articlesApi from "../../api/articles";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { store } from "../../context";
 import LanguageSelector from "../Controls/LanguageSelector";
-import { useTranslation } from "react-i18next";
 import { routes } from "../../router/routes";
+import { useContext, useEffect, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -199,7 +199,7 @@ const ArticlePage: React.FC = () => {
   const { slug, lang } = useParams<{ slug: string; lang: string }>();
   const [post, setPost] = useState<BlogPostType | null>(null);
   const [loading, setLoading] = useState(true);
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const language = lang || i18n.language;
 
   useGoogleProfile();
@@ -237,10 +237,10 @@ const ArticlePage: React.FC = () => {
     return (
       <Paper className={classes.notFound}>
         <Typography variant="h4" gutterBottom>
-          Post Not Found
+          {t("blog.page.notFound")}
         </Typography>
         <Typography variant="body1" color="textSecondary">
-          The blog post you're looking for doesn't exist or has been removed.
+          {t("blog.page.notFoundText")}
         </Typography>
       </Paper>
     );
@@ -260,7 +260,7 @@ const ArticlePage: React.FC = () => {
           variant="outlined"
           color="primary"
         >
-          Blogs
+          {t("blog.page.blogs")}
         </Button>
         <LanguageSelector />
         {userData?.email && (
@@ -273,7 +273,7 @@ const ArticlePage: React.FC = () => {
               color="primary"
               style={{ marginRight: 8 }}
             >
-              Manage Posts
+              {t("blog.page.managePosts")}
             </Button>
             <Button
               component={Link}
@@ -282,7 +282,7 @@ const ArticlePage: React.FC = () => {
               variant="outlined"
               color="primary"
             >
-              Edit Post
+              {t("common.edit")}
             </Button>
           </Box>
         )}
@@ -292,7 +292,7 @@ const ArticlePage: React.FC = () => {
           {currentTranslation.title}
         </Typography>
         <Box className={classes.meta}>
-          <Tooltip title="Author">
+          <Tooltip title={t("blog.author") as string}>
             <Box className={classes.metaItem}>
               {post.author?.picture ? (
                 <img
@@ -306,7 +306,7 @@ const ArticlePage: React.FC = () => {
               <Typography variant="body1">{post.author?.name}</Typography>
             </Box>
           </Tooltip>
-          <Tooltip title="Published Date">
+          <Tooltip title={t("blog.publishedDate") as string}>
             <Box className={classes.metaItem}>
               <CalendarToday fontSize="small" />
               <Typography variant="body1">

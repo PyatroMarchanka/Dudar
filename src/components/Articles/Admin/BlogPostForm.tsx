@@ -205,7 +205,7 @@ const BlogPostForm: React.FC<BlogPostFormProps> = ({
 
     return (
       <CategoryContainer>
-        <Typography variant="h6">Category</Typography>
+        <Typography variant="h6">{t("blog.form.category")}</Typography>
         <Select
           id="lang-select"
           className={selectClasses.select}
@@ -271,11 +271,11 @@ const BlogPostForm: React.FC<BlogPostFormProps> = ({
           {submitButtonText}
         </Button>
         <Button variant="outlined" color="secondary" onClick={onCancel}>
-          Cancel
+          {t("blog.form.cancel")}
         </Button>
         {showDeleteButton && onDelete && (
           <Button variant="outlined" color="secondary" onClick={onDelete}>
-            Delete Post
+            {t("blog.form.deletePost")}
           </Button>
         )}
       </Box>

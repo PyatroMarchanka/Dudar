@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { Article } from "../../../interfaces/article";
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { Article } from '../../../interfaces/article';
 import {
   Container,
   Typography,
@@ -18,29 +18,29 @@ import {
   CircularProgress,
   TextField,
   InputAdornment,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   Search as SearchIcon,
   ArrowBack,
-} from "@material-ui/icons";
-import articlesApi from "../../../api/articles";
-import { useTranslation } from "react-i18next";
-import { store } from "../../../context";
-import { useGoogleProfile } from "../../../hooks/useGoogleProfile";
-import { routes } from "../../../router/routes";
+} from '@material-ui/icons';
+import articlesApi from '../../../api/articles';
+import { useTranslation } from 'react-i18next';
+import { store } from '../../../context';
+import { useGoogleProfile } from '../../../hooks/useGoogleProfile';
+import { routes } from '../../../router/routes';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(4),
   },
   header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: theme.spacing(4),
   },
   title: {
@@ -55,25 +55,25 @@ const useStyles = makeStyles((theme) => ({
   },
   tableHeader: {
     backgroundColor: theme.palette.primary.main,
-    "& th": {
+    '& th': {
       color: theme.palette.primary.contrastText,
-      fontWeight: "bold",
+      fontWeight: 'bold',
     },
   },
   loadingContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "200px",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '200px',
   },
   actions: {
-    display: "flex",
+    display: 'flex',
     gap: theme.spacing(1),
   },
   status: {
     padding: theme.spacing(0.5, 1),
     borderRadius: theme.shape.borderRadius,
-    display: "inline-block",
+    display: 'inline-block',
   },
   published: {
     backgroundColor: theme.palette.success.light,
@@ -95,7 +95,8 @@ const BlogAdminList: React.FC = () => {
 
   const [fullPosts, setFullPosts] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
+  const { t } = useTranslation();
 
   useGoogleProfile();
 
@@ -110,7 +111,7 @@ const BlogAdminList: React.FC = () => {
           setLoading(false);
         }
       } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error('Error fetching posts:', error);
         setLoading(false);
       }
     };
@@ -123,38 +124,30 @@ const BlogAdminList: React.FC = () => {
   };
 
   const posts = fullPosts.map((post) => ({
-    title:
-      post.translations[language]?.title ||
-      post.translations[post.defaultLanguage]?.title,
-    excerpt:
-      post.translations[language]?.excerpt ||
-      post.translations[post.defaultLanguage]?.excerpt,
+    title: post.translations[language]?.title || post.translations[post.defaultLanguage]?.title,
+    excerpt: post.translations[language]?.excerpt || post.translations[post.defaultLanguage]?.excerpt,
     tags: post.tags,
-    publishedAt: post.publishedAt
-      ? new Date(post.publishedAt).toLocaleDateString()
-      : null,
+    publishedAt: post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : null,
     slug: post.slug,
     _id: post._id,
   }));
 
   const filteredPosts = searchTerm
     ? posts?.filter(
-      (post) =>
-        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.tags?.some((tag) =>
-          tag.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-    )
+        (post) =>
+          post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          post.tags?.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+      )
     : posts;
 
   const handleDelete = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this post?")) {
+    if (window.confirm(t('blog.admin.deleteConfirm') as string)) {
       try {
         await articlesApi.deletePost(id);
         setFullPosts(fullPosts.filter((post) => post._id !== id));
       } catch (error) {
-        console.error("Error deleting post:", error);
+        console.error('Error deleting post:', error);
       }
     }
   };
@@ -171,25 +164,13 @@ const BlogAdminList: React.FC = () => {
     <Container className={classes.root}>
       <Box className={classes.header}>
         <Typography variant="h4" className={classes.title}>
-          Blog Posts Management
+          {t('blog.admin.title')}
         </Typography>
-        <Button
-          component={Link}
-          to={routes.articleAdmin}
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-        >
-          Create New Post
+        <Button component={Link} to={routes.articleAdmin} variant="contained" color="primary" startIcon={<AddIcon />}>
+          {t('blog.admin.createNew')}
         </Button>
-        <Button
-          component={Link}
-          to="/"
-          variant="outlined"
-          color="primary"
-          startIcon={<ArrowBack />}
-        >
-          Back to Home
+        <Button component={Link} to="/" variant="outlined" color="primary" startIcon={<ArrowBack />}>
+          {t('blog.backToHome')}
         </Button>
       </Box>
 
@@ -197,7 +178,7 @@ const BlogAdminList: React.FC = () => {
         className={classes.searchField}
         fullWidth
         variant="outlined"
-        placeholder="Search posts by title, excerpt, or tags..."
+        placeholder={t('blog.admin.searchPlaceholder') as string}
         value={searchTerm}
         onChange={handleSearch}
         InputProps={{
@@ -213,11 +194,11 @@ const BlogAdminList: React.FC = () => {
         <Table className={classes.table}>
           <TableHead className={classes.tableHeader}>
             <TableRow>
-              <TableCell>Title</TableCell>
-              <TableCell>Excerpt</TableCell>
-              <TableCell>Tags</TableCell>
-              <TableCell>Published</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>{t('songInfo.title')}</TableCell>
+              <TableCell>{t('blog.form.excerpt')}</TableCell>
+              <TableCell>{t('blog.tags')}</TableCell>
+              <TableCell>{t('blog.published')}</TableCell>
+              <TableCell>{t('blog.admin.table.actions')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -237,26 +218,16 @@ const BlogAdminList: React.FC = () => {
                     </Box>
                   ))}
                 </TableCell>
-                <TableCell>
-                  {post.publishedAt &&
-                    new Date(post.publishedAt).toLocaleDateString()}
-                </TableCell>
+                <TableCell>{post.publishedAt && new Date(post.publishedAt).toLocaleDateString()}</TableCell>
                 <TableCell>
                   <Box className={classes.actions}>
                     <Tooltip title="Edit">
-                      <IconButton
-                        component={Link}
-                        to={`${routes.articleUpdate}/${post.slug}`}
-                        color="primary"
-                      >
+                      <IconButton component={Link} to={`${routes.articleUpdate}/${post.slug}`} color="primary">
                         <EditIcon />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Delete">
-                      <IconButton
-                        onClick={() => handleDelete(post._id)}
-                        color="secondary"
-                      >
+                      <IconButton onClick={() => handleDelete(post._id)} color="secondary">
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
