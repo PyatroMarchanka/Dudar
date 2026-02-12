@@ -192,7 +192,7 @@
     "page": {
       "notFound": "Post Not Found",
       "notFoundText": "The blog post you're looking for doesn't exist or has been removed.",
-      "blogs": "Blogs",
+      "blogs": "Articles",
       "managePosts": "Manage Posts"
     },
     "messages": {

@@ -23,7 +23,6 @@ import { mainColors } from "../../utils/theme";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(4),
     background:
       "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
     minHeight: "100vh",
@@ -40,10 +39,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     transition: "all 0.3s ease-in-out",
-    background: "rgba(255, 255, 255, 0.1)",
-    backdropFilter: "blur(10px)",
     border: "1px solid rgba(255, 255, 255, 0.2)",
-    borderRadius: "16px",
     boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.15)",
     "&:hover": {
       transform: "translateY(-8px)",
@@ -58,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
   },
   cardContent: {
     flexGrow: 1,
-    padding: theme.spacing(3),
     background: "rgba(255, 255, 255, 0.05)",
   },
   excerpt: {
@@ -162,7 +157,7 @@ export const ArticlesList: React.FC = () => {
       <Grid container spacing={4}>
         {posts.map((post) => (
           <Grid item key={post._id} xs={12} sm={6} md={4}>
-            <Card className={classes.card}>
+            <div className={classes.card}>
               <CardActionArea
                 component={Link}
                 to={`/article/${language}/${post.slug}`}
@@ -222,7 +217,7 @@ export const ArticlesList: React.FC = () => {
                   </Box>
                 </CardContent>
               </CardActionArea>
-            </Card>
+            </div>
           </Grid>
         ))}
       </Grid>

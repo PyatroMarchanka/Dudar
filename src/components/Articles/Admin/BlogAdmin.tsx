@@ -55,7 +55,7 @@ const BlogAdmin: React.FC = () => {
         </Link>
       </Box>
       <Typography variant="h4" className={classes.title}>
-        {t("blog.blogPostEditor")}
+        {t("blog.admin.blogPostEditor")}
       </Typography>
       <BlogPostForm
         onSubmit={handleSave}

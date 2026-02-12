@@ -36,7 +36,7 @@ export const LearningBookHeader: React.FC<HeaderProps> = ({ categoriesTree }: He
     const [mobileExpanded, setMobileExpanded] = useState<{ [key: string]: boolean }>({});
     const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
-    
+
     useGoogleProfile();
 
     const clearCloseTimeout = () => {
@@ -77,8 +77,7 @@ export const LearningBookHeader: React.FC<HeaderProps> = ({ categoriesTree }: He
 
     const handleMobileCategoryToggle = (categoryId: string) => {
         setMobileExpanded((prev) => ({
-            ...prev,
-            [categoryId]: !prev[categoryId],
+           [categoryId]: !prev[categoryId],
         }));
     };
 
@@ -183,6 +182,7 @@ export const LearningBookHeader: React.FC<HeaderProps> = ({ categoriesTree }: He
                                                     paddingTop: "0.75rem",
                                                     paddingBottom: "0.75rem",
                                                     cursor: "pointer",
+                                                    backgroundColor: mainColors.lightestGrey,
                                                 }}
                                                 onMouseEnter={(e) => {
                                                     e.currentTarget.style.background = "rgba(223, 120, 97, 0.1)";
@@ -312,11 +312,10 @@ const MobileDrawer = styled(Drawer)`
 
 const DrawerHeader = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  padding: 1rem;
+  padding: 0.25rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  background: ${mainColors.lightestGrey};
 `;
 
 const DrawerTitle = styled.h3`
@@ -329,6 +328,7 @@ const DrawerTitle = styled.h3`
 
 const DrawerContent = styled.div`
   padding: 0.5rem 0;
+  
 `;
 
 const MobileCategoryItem = styled.div`
@@ -343,9 +343,10 @@ const MobileCategoryHeader = styled(ListItem)`
     justify-content: space-between;
     align-items: center;
     transition: background 0.2s ease;
+    
 
     &:hover {
-      background: rgba(223, 120, 97, 0.1);
+      background: ${mainColors.lightestGrey};
     }
 
     .MuiListItemText-primary {

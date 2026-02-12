@@ -263,21 +263,11 @@ const ArticlePage: React.FC = () => {
           {t("blog.page.blogs")}
         </Button>
         <LanguageSelector />
-        {userData?.email && (
+        {userData?.isAdmin && (
           <Box>
             <Button
               component={Link}
-              to={routes.articleAdminList}
-              startIcon={<Add />}
-              variant="outlined"
-              color="primary"
-              style={{ marginRight: 8 }}
-            >
-              {t("blog.page.managePosts")}
-            </Button>
-            <Button
-              component={Link}
-              to={`${routes.articleAdmin}/${post._id}`}
+              to={`${routes.articleUpdate}/${post.slug}`}
               startIcon={<Update />}
               variant="outlined"
               color="primary"
