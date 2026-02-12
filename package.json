@@ -19,7 +19,7 @@
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.2",
     "@types/styled-components": "^5.1.10",
-    "axios": "^1.6.2",
+    "axios": "^1.6.8",
     "buffer": "^6.0.3",
     "gapi-script": "^1.2.0",
     "googleapis": "^105.0.0",
