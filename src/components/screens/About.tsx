@@ -244,13 +244,13 @@ const Left = styled.div`
   .sectionTitle {
     font-size: 2rem;
     margin: 40px 0 20px;
-    color: ${mainColors.orange};
+    color: ${mainColors.darkerGray};
   }
 
   .sectionSubtitle {
     font-size: 1.5rem;
     margin: 30px 0 15px;
-    color: ${mainColors.orange};
+    color: ${mainColors.darkerGray};
   }
 
   .description {

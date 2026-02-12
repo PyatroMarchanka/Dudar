@@ -9,7 +9,7 @@ export const routes = {
   about: "/about",
   article: "/article",
   articleAdmin: "/admin-article",
-  articleUpdate: "/admin-blog/:id",
+  articleUpdate: "/admin-blog",
   articleAdminList: "/admin-article-list",
   login: "/login",
   logout: "/logout",

@@ -30,7 +30,7 @@ export const AppRouter = () => {
         <Route path={routes.learningBook}>
           <LearningBook />
         </Route>
-        <Route path={routes.articleUpdate}>
+        <Route path={`${routes.articleUpdate}/:id`}>
           <BlogUpdate />
         </Route>
         <Route path={routes.articleAdmin}>

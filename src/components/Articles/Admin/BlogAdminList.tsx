@@ -246,7 +246,7 @@ const BlogAdminList: React.FC = () => {
                     <Tooltip title="Edit">
                       <IconButton
                         component={Link}
-                        to={`${routes.articleAdmin}/${post.slug}`}
+                        to={`${routes.articleUpdate}/${post.slug}`}
                         color="primary"
                       >
                         <EditIcon />

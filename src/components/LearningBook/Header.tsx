@@ -17,6 +17,7 @@ import { Logo } from "../global/Logo";
 import { routes } from "../../router/routes";
 import { TranslatedCategoryTree } from "../../interfaces/category";
 import { store } from "../../context";
+import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 
 interface MenuPosition {
     left: number;
@@ -35,6 +36,8 @@ export const LearningBookHeader: React.FC<HeaderProps> = ({ categoriesTree }: He
     const [mobileExpanded, setMobileExpanded] = useState<{ [key: string]: boolean }>({});
     const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
+    
+    useGoogleProfile();
 
     const clearCloseTimeout = () => {
         if (closeTimeoutRef.current) {
@@ -122,7 +125,7 @@ export const LearningBookHeader: React.FC<HeaderProps> = ({ categoriesTree }: He
                         </MenuCategoryItemWrapper>
                     ))}
                     <AdminLinkWrapper>
-                        {!userData?.isAdmin && <StyledLink to={routes.articleAdminList}><CategoryButton>Для Адмінаў</CategoryButton></StyledLink>}
+                        {userData?.isAdmin && <StyledLink to={routes.articleAdminList}><CategoryButton>Для Адмінаў</CategoryButton></StyledLink>}
                     </AdminLinkWrapper>
                 </DesktopMenu>
 
