@@ -275,7 +275,7 @@ const NavItem = styled.li`
 `;
 
 const StyledLink = styled(Link)`
-  color: ${mainColors.darkerGray};
+  color: ${mainColors.darkOrange};
   text-decoration: none;
   font-weight: 500;
   font-size: 1rem;

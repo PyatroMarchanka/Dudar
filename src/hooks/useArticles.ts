@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import articlesApi from '../api/articles';
 import type { ArticlePreview } from '../interfaces/article';
 
-export const useArticles = (language: string) => {
-  const [articles, setArticles] = useState<ArticlePreview[]>([]);
+export const useArticlesPreviews = (language: string) => {
+  const [articlesPreviews, setArticles] = useState<ArticlePreview[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -24,5 +24,5 @@ export const useArticles = (language: string) => {
     fetchPosts();
   }, [language]);
 
-  return { articles, loading, error };
+  return { articlesPreviews, loading, error };
 }; 

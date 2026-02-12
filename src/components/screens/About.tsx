@@ -13,7 +13,7 @@ import { getFirstSongFromList } from "../../dataset/songs/utils";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { mainColors } from "../../utils/theme";
 import { Navbar } from "../global/Navbar";
-import { useArticles } from "../../hooks/useArticles";
+import { useArticlesPreviews } from "../../hooks/useArticles";
 import { useTranslation } from "react-i18next";
 import TopSongs from "../TopSongs";
 import NewestSongs from "../NewestSongs";
@@ -34,7 +34,7 @@ export const About = () => {
 
   useGoogleProfile();
 
-  const { articles, loading, error } = useArticles(i18n.language);
+  const { articlesPreviews, loading, error } = useArticlesPreviews(i18n.language);
 
   const { t } = useTranslation();
 
@@ -82,12 +82,12 @@ export const About = () => {
               {t("aboutPage.latestFromBlog")}
             </Typography>
             <BlogLinks>
-              {articles.map((post) => (
+              {articlesPreviews.map((article) => (
                 <a
-                  key={post._id}
-                  href={`${routes.learningBook}/${Languages.Belarusian}/${post.slug}`}
+                  key={article._id}
+                  href={`${routes.learningBook}/${Languages.Belarusian}/${article.slug}`}
                 >
-                  <Typography>{post.title}</Typography>
+                  <Typography>{article.title}</Typography>
                 </a>
               ))}
             </BlogLinks>
