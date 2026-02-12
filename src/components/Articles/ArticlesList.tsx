@@ -152,7 +152,7 @@ export const ArticlesList: React.FC = () => {
         <IconLanguageSelector />
       </Box>
       <Grid container spacing={4}>
-        {articlesPreviews.filter((post) => post.title).map((post) => (
+        {articlesPreviews.sort((a, b) => new Date(b.publishedAt || b.createdAt).getTime() - new Date(a.publishedAt || a.createdAt).getTime()).filter((post) => post.title).map((post) => (
           <Grid item key={post._id} xs={12} sm={6} md={4}>
             <div className={classes.card}>
               <CardActionArea component={Link} to={`/article/${language}/${post.slug}`}>
