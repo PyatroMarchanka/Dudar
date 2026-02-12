@@ -4,7 +4,7 @@ import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
-import { IconButton, List, ListItem } from "@material-ui/core";
+import { Button, IconButton, List, ListItem } from "@material-ui/core";
 import { Close, Videocam } from "@material-ui/icons";
 import { Icon } from "../global/Icon";
 import styled from "styled-components";
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       width: "90%",
       marginTop: "20px",
-      marginLeft: "20px",
+      marginLeft: "5px",
     },
     accordionRoot: {
       backgroundColor: mainColors.darkestRed,
@@ -60,7 +60,6 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: "4px",
       display: "flex",
       alignItems: "center",
-      justifyContent: "space-between",
       width: "100%",
     },
     list: {
@@ -68,13 +67,32 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: "0px",
     },
     buttonRoot: {
-      padding: "5px 20px 5px 5px",
+      padding: "5px 0px 5px 5px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      textTransform: "none",
+      backgroundColor: "transparent",
+      border: "none",
+      fontSize: "16px",
+      color: "white",
+      "&.songButton": {
+        display: "flex",
+        textTransform: "none",
+        alignItems: "center",
+        justifyContent: "flex-start",
+      },
+    },
+    ".MuiButton-label": {
+      textTransform: "none",
+      alignItems: "center",
+      justifyContent: "flex-start",
     },
     listItem: {
       display: "flex",
       alignItems: "center",
-      justifyContent: "space-between",
-      width: "100%",
+      justifyContent: "flex-start",
+      // width: "100%",
     },
     playsCount: {
       paddingRight: "10px",
@@ -157,9 +175,8 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                         {song.stats.views}
                       </Typography>
                     )}
-                    <IconButton
-                      classes={{ root: classes.buttonRoot }}
-                      className="songButton"
+                    <button
+                      className={classes.buttonRoot}
                       onClick={(e) => onSongClick(e, song)}
                     >
                       <Icon type="song-play" />
@@ -183,7 +200,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
                           fill={mainColors.lightestGrey}
                         />
                       )}
-                    </IconButton>
+                    </button>
                   </div>
                 ))}
               </List>
@@ -208,7 +225,7 @@ const Content = styled.div`
     width: 100%;
   }
 
-  width: 300px;
+  width: 350px;
   z-index: 10;
 
   .songButton {

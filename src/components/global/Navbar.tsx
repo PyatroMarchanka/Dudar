@@ -9,7 +9,7 @@ import { getFirstSongFromList } from "../../dataset/songs/utils";
 import { useSongListShort } from "../../hooks/useSongLIst";
 import { useContext, useState } from "react";
 import { store } from "../../context";
-import { IconButton, Typography, Menu, MenuItem } from "@material-ui/core";
+import { IconButton, Typography } from "@material-ui/core";
 import { Icon } from "../global/Icon";
 import LanguageIcon from "@material-ui/icons/Language";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -19,6 +19,7 @@ import LanguageSelector from "../Controls/LanguageSelector";
 import { useTranslation } from "react-i18next";
 import { links } from "../../api/links";
 import { Button } from "../global/Button";
+import { MobileMenu } from "./MobileMenu";
 
 export const Navbar = () => {
   const location = useLocation();
@@ -30,12 +31,12 @@ export const Navbar = () => {
   const {
     state: { activeSong, listsByBagpipe, userLastSongUrl, userData },
   } = useContext(store);
-
   useSongListShort();
   const songId =
     userLastSongUrl ||
     activeSong?.id ||
-    (listsByBagpipe && getFirstSongFromList(listsByBagpipe).id);
+    (listsByBagpipe && getFirstSongFromList(listsByBagpipe).id) ||
+    "";
 
   useGoogleProfile();
 
@@ -46,86 +47,6 @@ export const Navbar = () => {
   const handleMobileMenuClose = () => {
     setMobileMenuAnchor(null);
   };
-
-  const renderMobileMenu = () => (
-    <Menu
-      anchorEl={mobileMenuAnchor}
-      keepMounted
-      open={Boolean(mobileMenuAnchor)}
-      onClose={handleMobileMenuClose}
-      PaperProps={{
-        style: {
-          maxHeight: 48 * 4.5,
-          width: "100%",
-          marginTop: "8px",
-          borderRadius: "8px",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        },
-      }}
-      MenuListProps={{
-        style: {
-          padding: "8px 0",
-        },
-      }}
-    >
-      <MenuItem
-        component={Link}
-        to={`${routes.app}/${routes.play}/${songId}`}
-        onClick={handleMobileMenuClose}
-        selected={location.pathname === routes.app}
-        style={{
-          padding: "12px 24px",
-          color:
-            location.pathname === routes.app ? mainColors.orange : "inherit",
-        }}
-      >
-        {t("navbar.learn")}
-      </MenuItem>
-      <MenuItem
-        component={Link}
-        to={routes.playlists}
-        onClick={handleMobileMenuClose}
-        selected={location.pathname === routes.playlists}
-        style={{
-          padding: "12px 24px",
-          color:
-            location.pathname === routes.playlists
-              ? mainColors.orange
-              : "inherit",
-        }}
-      >
-        {t("navbar.playlists")}
-      </MenuItem>
-      <MenuItem
-        component={Link}
-        to={routes.blog}
-        onClick={handleMobileMenuClose}
-        selected={location.pathname === routes.blog}
-        style={{
-          padding: "12px 24px",
-          color:
-            location.pathname === routes.blog ? mainColors.orange : "inherit",
-        }}
-      >
-        {t("navbar.blog")}
-      </MenuItem>
-      <MenuItem
-        component={Link}
-        to={routes.contacts}
-        onClick={handleMobileMenuClose}
-        selected={location.pathname === routes.contacts}
-        style={{
-          padding: "12px 24px",
-          color:
-            location.pathname === routes.contacts
-              ? mainColors.orange
-              : "inherit",
-        }}
-      >
-        {t("navbar.contacts")}
-      </MenuItem>
-    </Menu>
-  );
 
   return (
     <NavContainer>
@@ -166,6 +87,16 @@ export const Navbar = () => {
               {t("navbar.contacts")}
             </StyledLink>
           </NavItem>
+          {userData?.isAdmin && (
+            <NavItem>
+              <StyledLink
+                to={routes.admin}
+                className={location.pathname === routes.admin ? "active" : ""}
+              >
+                {t("navbar.admin")}
+              </StyledLink>
+            </NavItem>
+          )}
         </DesktopNavList>
         <NavControls>
           <ModalButton
@@ -213,7 +144,12 @@ export const Navbar = () => {
           </IconButton>
         </NavControls>
       </NavContent>
-      {renderMobileMenu()}
+      <MobileMenu
+        mobileMenuAnchor={mobileMenuAnchor}
+        onClose={handleMobileMenuClose}
+        songId={songId}
+        isAdmin={userData?.isAdmin}
+      />
     </NavContainer>
   );
 };
@@ -249,7 +185,7 @@ const NavContent = styled.div`
 
   @media (max-width: ${mediaQueries.mobile}) {
     height: auto;
-    padding: 1rem;
+    padding: 0.5rem 1rem;
     flex-wrap: wrap;
   }
 `;

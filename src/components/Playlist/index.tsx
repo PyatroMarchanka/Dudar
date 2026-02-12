@@ -6,9 +6,8 @@ import { PlaylistCreator } from "./PlaylistCreator";
 import styled, { createGlobalStyle } from "styled-components";
 import { usePlaylists } from "../../hooks/usePlaylists";
 import { TabPanel } from "./TabPanel";
-import { Home } from "@material-ui/icons";
-import { Link } from "react-router-dom";
 import { DonationButton } from "../global/DonationButton";
+import { Navbar } from "../global/Navbar";
 
 interface Props {}
 
@@ -39,6 +38,7 @@ export const Playlists = (props: Props) => {
   return (
     <Container>
       <GlobalStyle />
+      <Navbar />
       <DonationButton/>
       <AppBar position="static">
         <Tabs
@@ -76,9 +76,6 @@ export const Playlists = (props: Props) => {
       <TabPanel value={activeTab} index={2}>
         <TagEditor tags={tags} onAddTag={onAddTag} onRemoveTag={onRemoveTag} />
       </TabPanel>
-      <Link className="back" to="/">
-        <Home fontSize="large" />
-      </Link>
     </Container>
   );
 };
@@ -86,6 +83,7 @@ export const Playlists = (props: Props) => {
 const Container = styled.div`
   height: 100vh;
   position: relative;
+  padding-top: 70px;
 
   .back {
     position: fixed;

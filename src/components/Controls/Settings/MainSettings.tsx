@@ -122,15 +122,6 @@ export const MainSettings = ({ midiPlayer }: Props) => {
       </Row>
       <Line />
       <Contacts />
-
-      <Typography variant="h5" component="div">
-        <Link
-          to="/admin"
-          style={{ textDecoration: "none", color: mainColors.darkerGray }}
-        >
-          Admin Panel
-        </Link>
-      </Typography>
     </Container>
   );
 };

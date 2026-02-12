@@ -26,12 +26,14 @@
     "settingsDescription": "zmień instrument\nzmień ton melodii na swój instrument\nzawołanie - dodatkowe odliczanie do rozpoczęcia występu, aby zadąć w dudy, przygotować\nzmienić język",
     "updates": "Możesz zapętlić 1, 2, 4, 6, 8 taktów - naciśnij i przytrzymaj przycisk z okrągłymi strzałkami\nWesprzyj projekt - przycisk z filiżanką kawy",
     "updates_short": "Nowe melodie: Bagarodzica, Marazula, Was wollen wir trinken, Anioł, Pahonia, Lipka, Trzy Żółwie, Villeman i Magnhild",
-    "updatesTitle": "Aktualizacje:"
+    "updatesTitle": "Aktualizacje:",
+    "donate": "Kup mi piwo"
   },
   "dudas": {
     "belNonTradDuda": "Białoruskie nietradycyjne zamknięte dudy",
     "belOpenDuda": "Białoruskie otwarte dudy",
     "belTradDuda": "Tradycyjne białoruskie dudy",
+    "polish": "Dudy wielkopolskie",
     "Dudelsack": "Dudelzak",
     "highlander": "Dudy szkockie",
     "unknownBagpipe": "Nieokreślone dudy"
@@ -163,12 +165,23 @@
     "highlander": "Dudy szkockie",
     "moreComing": "Więcej typów dud już w przygotowaniu! Stale rozszerzamy naszą kolekcję.",
     "discoverMelodies": "Odkryj ponad {{count}} melodii ludowych z całego świata, starannie wyselekcjonowanych i zorganizowanych według ich pochodzenia kulturowego.",
-    "latestFromBlog": "Najnowsze z naszego bloga:"
+    "latestFromBlog": "Najnowsze z naszego bloga:",
+    "popularSongs": "Popularne utwory",
+    "newestSongs": "Najnowsze utwory"
   },
   "navbar": {
     "learn": "Ucz się z Dudahero",
     "playlists": "Edytor playlist",
     "blog": "Blog",
-    "contacts": "Kontakty"
+    "contacts": "Kontakty",
+    "admin": "Admin"
+  },
+  "topSongs": {
+    "title": "Najczęściej odtwarzane utwory"
+  },
+  "cookieBar": {
+    "message": "Używamy plików cookie, aby poprawić Twoje doświadczenie. Kontynuując korzystanie z tej strony, zgadzasz się na używanie plików cookie.",
+    "accept": "Akceptuję",
+    "decline": "Odrzucam"
   }
 }

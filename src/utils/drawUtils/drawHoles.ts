@@ -71,7 +71,6 @@ export const drawClosedHoles = (
   const { holesPositions } = bagpipes[bagpipeType];
 
   const holes = holesPositions.closable;
-
   holes.forEach((hole, i) => {
     drawHole(ctx, bagpipeType, hole, false, i === 0);
   });

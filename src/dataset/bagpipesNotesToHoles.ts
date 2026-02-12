@@ -17,6 +17,16 @@ export const bagpipesNotesToLines: { [key: string]: BagpipesNotesToLines } = {
     [SharpNotesEnum.F5]: 0,
     [SharpNotesEnum["F#5"]]: 0,
   },
+  [BagpipeTypes.Polish]: {
+    [SharpNotesEnum["E4"]]: 7,
+    [SharpNotesEnum["G#4"]]: 6,
+    [SharpNotesEnum.A4]: 5,
+    [SharpNotesEnum.B4]: 4,
+    [SharpNotesEnum["C#5"]]: 3,
+    [SharpNotesEnum.D5]: 2,
+    [SharpNotesEnum.E5]: 1,
+    [SharpNotesEnum["F#5"]]: 0,
+  },
   [BagpipeTypes.BelarusianNONTraditionalDuda]: {
     [SharpNotesEnum.G4]: 8,
     [SharpNotesEnum["G#4"]]: 8,

@@ -15,6 +15,9 @@ import { mainColors } from "../../utils/theme";
 import { Navbar } from "../global/Navbar";
 import { useBlogPosts } from "../../hooks/useBlogPosts";
 import { useTranslation } from "react-i18next";
+import TopSongs from "../TopSongs";
+import NewestSongs from "../NewestSongs";
+import { CookieBar } from "../CookieBar";
 
 export const About = () => {
   const {
@@ -42,16 +45,16 @@ export const About = () => {
           <Logo white variant="big" width={250} height={175} />
         </LogoContainer>
         <Typography align="center" className="heroTitle" variant="h1">
-          {t('aboutPage.heroTitle')}
+          {t("aboutPage.heroTitle")}
         </Typography>
         <Typography align="center" className="heroSubtitle" variant="h2">
-          {t('aboutPage.heroSubtitle')}
+          {t("aboutPage.heroSubtitle")}
         </Typography>
         <DonationButtonBig />
         <GetStarted>
           <a href={`${routes.app}/${routes.play}/${songId}`}>
             <Button className="getStarted" type="big">
-              {t('mainPage.getStarted')}
+              {t("mainPage.getStarted")}
             </Button>
           </a>
         </GetStarted>
@@ -60,48 +63,41 @@ export const About = () => {
       <ContentContainer>
         <Left>
           <Typography variant="h3" className="sectionTitle">
-            {t('aboutPage.sectionTitle')}
-          </Typography>
-
-          <Typography variant="h4" className="melodiesCount">
-            {t('aboutPage.melodiesCount', { count: 200 })}
-          </Typography>
-
-          <Typography variant="h4" className="sectionSubtitle">
-            {t('aboutPage.availableBagpipes')}
+            {t("aboutPage.sectionTitle")}
           </Typography>
           <BagpipesList>
             <li>
-              <Typography>{t('aboutPage.belTradDuda')}</Typography>
+              <Typography>{t("aboutPage.belTradDuda")}</Typography>
             </li>
             <li>
-              <Typography>{t('aboutPage.highlander')}</Typography>
+              <Typography>{t("aboutPage.highlander")}</Typography>
             </li>
             <li>
-              <Typography>{t('aboutPage.dudelsack')}</Typography>
+              <Typography>{t("aboutPage.dudelsack")}</Typography>
             </li>
           </BagpipesList>
-
-          <Typography variant="body1" className="description">
-            {t('aboutPage.moreComing')}
-          </Typography>
-
-          <Typography variant="body1" className="description">
-            {t('aboutPage.discoverMelodies', { count: 200 })}
-          </Typography>
-
           <BlogSection>
             <Typography variant="h4" className="sectionSubtitle">
-              {t('aboutPage.latestFromBlog')}
+              {t("aboutPage.latestFromBlog")}
             </Typography>
             <BlogLinks>
               {posts.map((post) => (
-                <a key={post.id} href={`${routes.blog}/${i18n.language}/${post.slug}`}>
+                <a
+                  key={post.id}
+                  href={`${routes.blog}/${i18n.language}/${post.slug}`}
+                >
                   <Typography>{post.title}</Typography>
                 </a>
               ))}
             </BlogLinks>
           </BlogSection>
+
+          <TopSongsSection>
+            <SongsContainer>
+              <TopSongs />
+              <NewestSongs />
+            </SongsContainer>
+          </TopSongsSection>
         </Left>
       </ContentContainer>
 
@@ -114,6 +110,7 @@ export const About = () => {
       </VideoSection>
 
       <Contacts />
+      <CookieBar />
     </Container>
   );
 };
@@ -194,7 +191,7 @@ const BlogSection = styled.div`
   border-radius: 10px;
 `;
 
-const BlogLinks = styled.div`
+const BlogLinks = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -283,5 +280,24 @@ const ContentContainer = styled.div`
 
   @media (max-width: ${mediaQueries.mobile}) {
     flex-direction: column;
+  }
+`;
+
+const TopSongsSection = styled.div`
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #f8f8f8;
+  border-radius: 10px;
+`;
+
+const SongsContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+
+  @media (max-width: ${mediaQueries.mobile}) {
+    grid-template-columns: 1fr;
   }
 `;

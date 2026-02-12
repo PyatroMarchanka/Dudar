@@ -4,12 +4,13 @@ import styled from "styled-components";
 import { SongEditor } from "./SongEditor";
 import { songApi } from "../../api/songClient";
 import { Song, SongTypes } from "../../dataset/songs/interfaces";
+import { Navbar } from "../global/Navbar";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  margin-top: 70px;
   font-family: Arial, sans-serif;
 `;
 
@@ -56,11 +57,10 @@ const Admin = () => {
   );
 
   return (
-    <Router>
       <Container>
+        <Navbar />
         <Switch>
           <Route exact path="/admin">
-            <Link to="/">To Main Page</Link>
             <h1>Song List</h1>
             <TypeFilter />
             <SearchInput
@@ -69,47 +69,48 @@ const Admin = () => {
               value={searchTerm}
               onChange={handleSearchChange}
             />
-            <Table>
-              <thead>
-                <tr>
-                  <th>№</th>
-                  <th onClick={() => setSortConfig({ key: "name" })}>Name</th>
-                  <th onClick={() => setSortConfig({ key: "type" })}>Type</th>
-                  <th>Path Name</th>
-                  <th>About</th>
-                  <th>Original Tempo</th>
-                  <th>Labels</th>
-                  <th>Time Signature</th>
-                  <th>Transcribed By</th>
-                  <th>Links</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredSongs.map((song, id) => (
-                  <tr key={song._id}>
-                    <td>{id}</td>
-                    <td>
-                      <Link to={`/admin/song/${song._id}`}>{song.name}</Link>
-                    </td>
-                    <td>{song.type}</td>
-                    <td>{song.pathName ? "X" : ""}</td>
-                    <td>{song.about ? "X" : ""}</td>
-                    <td>{song.originalTempo ? "X" : ""}</td>
-                    <td>{song.labels ? "X" : ""}</td>
-                    <td>{song.timeSignature ? "X" : ""}</td>
-                    <td>{song.transcribedBy ? "X" : ""}</td>
-                    <td>{song.links?.length ? "X" : ""}</td>
+            <TableWrapper>
+              <Table>
+                <thead>
+                  <tr>
+                    <th>№</th>
+                    <th onClick={() => setSortConfig({ key: "name" })}>Name</th>
+                    <th onClick={() => setSortConfig({ key: "type" })}>Type</th>
+                    <th>Path Name</th>
+                    <th>About</th>
+                    <th>Original Tempo</th>
+                    <th>Labels</th>
+                    <th>Time Signature</th>
+                    <th>Transcribed By</th>
+                    <th>Links</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody>
+                  {filteredSongs.map((song, id) => (
+                    <tr key={song._id}>
+                      <td>{id}</td>
+                      <td>
+                        <Link to={`/admin/song/${song._id}`}>{song.name}</Link>
+                      </td>
+                      <td>{song.type}</td>
+                      <td>{song.pathName ? "X" : ""}</td>
+                      <td>{song.about ? "X" : ""}</td>
+                      <td>{song.originalTempo ? "X" : ""}</td>
+                      <td>{song.labels ? "X" : ""}</td>
+                      <td>{song.timeSignature ? "X" : ""}</td>
+                      <td>{song.transcribedBy ? "X" : ""}</td>
+                      <td>{song.links?.length ? "X" : ""}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </TableWrapper>
           </Route>
           <Route exact path="/admin/song/:id">
             <SongEditor />
           </Route>
         </Switch>
       </Container>
-    </Router>
   );
 };
 
@@ -129,6 +130,12 @@ const SearchInput = styled.input`
   &:focus {
     border-color: #005f56;
   }
+`;
+
+const TableWrapper = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 `;
 
 const Table = styled.table`

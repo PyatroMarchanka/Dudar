@@ -3,7 +3,6 @@ import {
   CardContent,
   Typography,
   Button,
-  ButtonGroup,
   Dialog,
   Slide,
   IconButton,
@@ -38,9 +37,7 @@ export const TempoSlider = ({ player }: Props) => {
   } = useContext(store);
   const { updateUserSettings } = useUpdateUserSettings();
   const [tapTimes, setTapTimes] = useState<number[]>([]);
-  const [speedMultiplier, setSpeedMultiplier] = useState<
-    "half" | "original" | "double"
-  >("original");
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleTempoChange = (newTempo: number) => {
@@ -67,7 +64,7 @@ export const TempoSlider = ({ player }: Props) => {
   };
 
   const handleTempoMultiply = (multiplier: number) => {
-    const newTempo = Math.min(360, Math.max(60, tempo * multiplier));
+    const newTempo = Math.min(600, Math.max(60, tempo * multiplier));
     handleTempoChange(newTempo);
   };
 

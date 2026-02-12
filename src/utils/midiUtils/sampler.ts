@@ -46,6 +46,22 @@ const dudelsackSamplerSampler = new Tone.Sampler({
   baseUrl: "/",
 }).toDestination();
 
+
+const polishSampler = new Tone.Sampler({
+  urls: {
+    "A#4": "samples/polish-duda/A#3.mp3",
+    B4: "samples/polish-duda/B3.mp3",
+    E5: "samples/polish-duda/E4.mp3",
+    "C#5": "samples/polish-duda/C#4.mp3",
+    "D#5": "samples/polish-duda/D#4.mp3",
+    "F#4": "samples/polish-duda/F#3.mp3",
+    "F#5": "samples/polish-duda/F#4.mp3",
+    B3: "samples/polish-duda/B1.mp3",
+    'G#5': "samples/polish-duda/G#4.mp3",
+  },
+  baseUrl: "/",
+}).toDestination();
+
 const resume = async (sampler: Tone.Sampler) => {
   if (sampler.context.state !== "running") {
     sampler.context.resume();
@@ -77,6 +93,10 @@ export const playNote = (
       resume(dudelsackSamplerSampler);
       dudelsackSamplerSampler.triggerAttack([note], undefined, volume);
       break;
+    case BagpipeTypes.Polish:
+      resume(polishSampler);
+      polishSampler.triggerAttack([note], undefined, volume + 1);
+      break;
     default:
       sampler.triggerAttack([note], undefined, volume);
   }
@@ -100,6 +120,9 @@ export const stopNote = (bagpipeType: BagpipeTypes, note?: string) => {
     case BagpipeTypes.Highlander:
       dudelsackSamplerSampler.triggerRelease([note]);
       break;
+    case BagpipeTypes.Polish:
+      polishSampler.triggerRelease([note]);
+      break;
     default:
       sampler.triggerRelease([note]);
   }
@@ -108,6 +131,7 @@ export const stopNote = (bagpipeType: BagpipeTypes, note?: string) => {
 export const bndDroneFileLengthMs = 60400;
 export const bdDroneFileLengthMs = 33000;
 export const ddlDroneFileLengthMs = 54000;
+export const polishDroneFileLengthMs = 25000;
 
 export const getDroneLength = (bagpipeType: BagpipeTypes) => {
   switch (bagpipeType) {
@@ -120,6 +144,8 @@ export const getDroneLength = (bagpipeType: BagpipeTypes) => {
       return ddlDroneFileLengthMs;
     case BagpipeTypes.Highlander:
       return ddlDroneFileLengthMs;
+    case BagpipeTypes.Polish:
+      return polishDroneFileLengthMs;
     default:
       return bndDroneFileLengthMs;
   }
