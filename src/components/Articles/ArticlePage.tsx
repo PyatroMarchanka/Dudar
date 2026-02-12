@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
 import { useParams, Link, useHistory } from "react-router-dom";
-import type { BlogPost as BlogPostType } from "../../interfaces/Blog";
+import type { Article as BlogPostType } from "../../interfaces/article";
 import {
   Container,
   Typography,
@@ -12,6 +11,7 @@ import {
   Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { useTranslation } from "react-i18next";
 import {
   CalendarToday,
   Person,
@@ -19,11 +19,14 @@ import {
   ArrowBack,
   Add,
 } from "@material-ui/icons";
-import blogApi from "../../api/blog";
+import articlesApi from "../../api/articles";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { store } from "../../context";
 import LanguageSelector from "../Controls/LanguageSelector";
-import { useTranslation } from "react-i18next";
+import { routes } from "../../router/routes";
+import { MetaTags } from "../SEO/MetaTags";
+import { StructuredData } from "../SEO/StructuredData";
+import { useContext, useEffect, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -189,7 +192,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BlogPost: React.FC = () => {
+const ArticlePage: React.FC = () => {
   const {
     state: { userData, language: currentLanguage },
   } = useContext(store);
@@ -198,21 +201,21 @@ const BlogPost: React.FC = () => {
   const { slug, lang } = useParams<{ slug: string; lang: string }>();
   const [post, setPost] = useState<BlogPostType | null>(null);
   const [loading, setLoading] = useState(true);
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const language = lang || i18n.language;
 
   useGoogleProfile();
 
   useEffect(() => {
     if (currentLanguage !== lang) {
-      history.push(`/blog/${currentLanguage}/${slug}`);
+      history.push(`${routes.article}/${currentLanguage}/${slug}`);
     }
   }, [currentLanguage, lang, slug, history]);
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const post = await blogApi.getPostBySlug(slug);
+        const post = await articlesApi.getPostBySlug(slug);
         setPost(post);
       } catch (error) {
         console.error("Error fetching blog post:", error);
@@ -236,51 +239,72 @@ const BlogPost: React.FC = () => {
     return (
       <Paper className={classes.notFound}>
         <Typography variant="h4" gutterBottom>
-          Post Not Found
+          {t("blog.page.notFound")}
         </Typography>
         <Typography variant="body1" color="textSecondary">
-          The blog post you're looking for doesn't exist or has been removed.
+          {t("blog.page.notFoundText")}
         </Typography>
       </Paper>
     );
   }
 
+
   const currentTranslation =
     post.translations[language] || post.translations[post.defaultLanguage];
 
+  const metaDescription = currentTranslation.metaDescription || currentTranslation.excerpt || 'Learn about bagpipes with Duda Hero - interactive bagpipe tutorial';
+  const metaKeywords = currentTranslation.metaKeywords?.join(', ') || 'bagpipes, learn bagpipes, bagpipe tutorial';
+  const canonicalPath = `/article/${language}/${slug}`;
+
   return (
-    <Container className={classes.root}>
+    <>
+      <MetaTags 
+        title={`${currentTranslation.title} | Duda Hero`}
+        description={metaDescription}
+        keywords={metaKeywords}
+        image={post.featuredImage || '/android-chrome-192x192.png'}
+        language={language}
+        canonicalPath={canonicalPath}
+        type="article"
+      />
+      <StructuredData 
+        articleData={{
+          title: currentTranslation.title,
+          description: metaDescription,
+          image: post.featuredImage,
+          author: post.author,
+          publishedDate: post.publishedAt || post.createdAt,
+          modifiedDate: post.updatedAt,
+          tags: post.tags
+        }}
+        breadcrumbs={[
+          { name: 'Home', url: '/' },
+          { name: 'Learning Book', url: routes.learningBook },
+          { name: currentTranslation.title, url: canonicalPath }
+        ]}
+      />
+      <Container className={classes.root}>
       <Box display="flex" justifyContent="space-between" mb={4}>
         <Button
           component={Link}
-          to="/blog"
+          to={routes.learningBook}
           startIcon={<ArrowBack />}
           variant="outlined"
           color="primary"
         >
-          Blogs
+          {t("blog.page.blogs")}
         </Button>
         <LanguageSelector />
-        {userData?.email && (
+        {userData?.isAdmin && (
           <Box>
             <Button
               component={Link}
-              to="/admin-blog-list"
-              startIcon={<Add />}
-              variant="outlined"
-              color="primary"
-              style={{ marginRight: 8 }}
-            >
-              Manage Posts
-            </Button>
-            <Button
-              component={Link}
-              to={`/admin-blog/${post._id}`}
+              to={`${routes.articleUpdate}/${post.slug}`}
               startIcon={<Update />}
               variant="outlined"
               color="primary"
             >
-              Edit Post
+              {t("common.edit")}
             </Button>
           </Box>
         )}
@@ -290,7 +314,7 @@ const BlogPost: React.FC = () => {
           {currentTranslation.title}
         </Typography>
         <Box className={classes.meta}>
-          <Tooltip title="Author">
+          <Tooltip title={t("blog.author") as string}>
             <Box className={classes.metaItem}>
               {post.author?.picture ? (
                 <img
@@ -304,7 +328,7 @@ const BlogPost: React.FC = () => {
               <Typography variant="body1">{post.author?.name}</Typography>
             </Box>
           </Tooltip>
-          <Tooltip title="Published Date">
+          <Tooltip title={t("blog.publishedDate") as string}>
             <Box className={classes.metaItem}>
               <CalendarToday fontSize="small" />
               <Typography variant="body1">
@@ -329,13 +353,13 @@ const BlogPost: React.FC = () => {
           className={classes.featuredImage}
         />
       )}
-
       <Box
         className={classes.content}
         dangerouslySetInnerHTML={{ __html: currentTranslation.content }}
       />
-    </Container>
+      </Container>
+    </>
   );
 };
 
-export default BlogPost;
+export default ArticlePage;

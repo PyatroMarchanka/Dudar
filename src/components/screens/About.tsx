@@ -13,11 +13,12 @@ import { getFirstSongFromList } from "../../dataset/songs/utils";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
 import { mainColors } from "../../utils/theme";
 import { Navbar } from "../global/Navbar";
-import { useBlogPosts } from "../../hooks/useBlogPosts";
+import { useArticles } from "../../hooks/useArticles";
 import { useTranslation } from "react-i18next";
 import TopSongs from "../TopSongs";
 import NewestSongs from "../NewestSongs";
 import { CookieBar } from "../CookieBar";
+import { Languages } from "../../interfaces";
 
 export const About = () => {
   const {
@@ -33,7 +34,7 @@ export const About = () => {
 
   useGoogleProfile();
 
-  const { posts, loading, error } = useBlogPosts(i18n.language);
+  const { articles, loading, error } = useArticles(i18n.language);
 
   const { t } = useTranslation();
 
@@ -81,10 +82,10 @@ export const About = () => {
               {t("aboutPage.latestFromBlog")}
             </Typography>
             <BlogLinks>
-              {posts.map((post) => (
+              {articles.map((post) => (
                 <a
-                  key={post.id}
-                  href={`${routes.blog}/${i18n.language}/${post.slug}`}
+                  key={post._id}
+                  href={`${routes.learningBook}/${Languages.Belarusian}/${post.slug}`}
                 >
                   <Typography>{post.title}</Typography>
                 </a>
@@ -243,13 +244,13 @@ const Left = styled.div`
   .sectionTitle {
     font-size: 2rem;
     margin: 40px 0 20px;
-    color: ${mainColors.orange};
+    color: ${mainColors.darkerGray};
   }
 
   .sectionSubtitle {
     font-size: 1.5rem;
     margin: 30px 0 15px;
-    color: ${mainColors.orange};
+    color: ${mainColors.darkerGray};
   }
 
   .description {

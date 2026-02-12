@@ -1,5 +1,13 @@
 {
-  "tempo": "Tempo",
+  "common": {
+    "edit": "Edytuj",
+    "delete": "Usuń",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "loading": "Ładowanie...",
+    "error": "Błąd",
+    "success": "Sukces"
+  },
   "settings": "Ustawienia",
   "instrumentType": "Typ instrumentu",
   "transposeMelody": "Tonacja dudy",
@@ -147,11 +155,54 @@
     "noPosts": "Brak dostępnych postów",
     "latestPosts": "Najnowsze posty",
     "backToBlog": "Powrót do bloga",
+    "backToAdminList": "Powrót do zarządzania blogiem", 
+    "backToBlogs": "Powrót do bloga",
+    "backToHome": "Powrót do domu",
     "published": "Opublikowano",
     "updated": "Zaktualizowano",
     "author": "Autor",
+    "publishedDate": "Data publikacji",
     "categories": "Kategorie",
-    "tags": "Tagi"
+    "tags": "Tagi",
+    "admin": {
+      "title": "Zarządzanie postami na blogu",
+      "createNew": "Utwórz nowy post",
+      "searchPlaceholder": "Szukaj postów po tytule, streszczeniu lub tagach...",
+      "editTitle": "Edytuj post na blogu",
+      "blogPostEditor": "Edytor postów na blogu",
+      "table": {
+        "excerpt": "Streszczenie",
+        "tags": "Tagi",
+        "published": "Opublikowano",
+        "actions": "Akcje"
+      }
+    },
+    "form": {
+      "category": "Kategoria",
+      "savePost": "Zapisz post",
+      "updatePost": "Zaktualizuj post",
+      "deletePost": "Usuń post",
+      "cancel": "Anuluj",
+      "deleteConfirm": "Czy na pewno chcesz usunąć ten post?",
+      "title": "Tytuł",
+      "excerpt": "Streszczenie",
+      "metaDescription": "Meta opis",
+      "metaKeywords": "Meta słowa kluczowe (oddzielone przecinkami)",
+      "tags": "Tagi (oddzielone przecinkami)"
+    },
+    "page": {
+      "notFound": "Post nie znaleziony",
+      "notFoundText": "Post, którego szukasz, nie istnieje lub został usunięty.",
+      "blogs": "Artykuły",
+      "managePosts": "Zarządzaj postami"
+    },
+    "messages": {
+      "postSaved": "Post zapisany pomyślnie",
+      "postUpdated": "Post zaktualizowany pomyślnie",
+      "postDeleted": "Post usunięty pomyślnie",
+      "updateFailed": "Nie udało się zaktualizować posta",
+      "deleteFailed": "Nie udało się usunąć posta"
+    }
   },
   "aboutPage": {
     "heroTitle": "Gdzie tradycja spotyka się z innowacją",
@@ -172,7 +223,7 @@
   "navbar": {
     "learn": "Ucz się z Dudahero",
     "playlists": "Edytor playlist",
-    "blog": "Blog",
+    "blog": "Artykuły",
     "contacts": "Kontakty",
     "admin": "Admin"
   },

@@ -18,13 +18,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useTranslation } from "react-i18next";
 import LanguageSelector from "../Controls/LanguageSelector";
 import { ArrowBack } from "@material-ui/icons";
-import { useBlogPosts } from "../../hooks/useBlogPosts";
-import { Navbar } from "../global/Navbar";
+import { useArticles } from "../../hooks/useArticles";
+import { mainColors } from "../../utils/theme";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(4),
-    paddingTop:  theme.spacing(10),
     background:
       "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
     minHeight: "100vh",
@@ -33,9 +31,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(4),
     fontFamily: "'Poppins', sans-serif",
     fontWeight: 600,
-    background: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
+    color: mainColors.darkerGray,
     textShadow: "0 2px 10px rgba(0,0,0,0.1)",
   },
   card: {
@@ -43,10 +39,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     transition: "all 0.3s ease-in-out",
-    background: "rgba(255, 255, 255, 0.1)",
-    backdropFilter: "blur(10px)",
     border: "1px solid rgba(255, 255, 255, 0.2)",
-    borderRadius: "16px",
     boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.15)",
     "&:hover": {
       transform: "translateY(-8px)",
@@ -61,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
   },
   cardContent: {
     flexGrow: 1,
-    padding: theme.spacing(3),
     background: "rgba(255, 255, 255, 0.05)",
   },
   excerpt: {
@@ -115,11 +107,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const BlogList: React.FC = () => {
+export const ArticlesList: React.FC = () => {
   const classes = useStyles();
   const { t, i18n } = useTranslation();
   const language = i18n.language;
-  const { posts, loading } = useBlogPosts(language);
+  const { articles: posts, loading } = useArticles(language);
 
   if (loading) {
     return (
@@ -135,7 +127,6 @@ const BlogList: React.FC = () => {
   if (posts.length === 0) {
     return (
       <Container className={classes.root}>
-        <Navbar />
         <Box display="flex" justifyContent="space-between" mb={4}>
           <Button
             component={Link}
@@ -148,7 +139,7 @@ const BlogList: React.FC = () => {
           </Button>
           <LanguageSelector />
         </Box>
-        <Typography variant="h3" component="h1" className={classes.title}>
+        <Typography variant="h3" component="h3" className={classes.title}>
           {t("blog.title")}
         </Typography>
         <Typography variant="body1" align="center">
@@ -160,17 +151,16 @@ const BlogList: React.FC = () => {
 
   return (
     <Container className={classes.root}>
-      <Navbar />
-      <Typography variant="h3" component="h1" className={classes.title}>
+      <Typography variant="h4" component="h4" className={classes.title}>
         {t("blog.latestPosts")}
       </Typography>
       <Grid container spacing={4}>
         {posts.map((post) => (
-          <Grid item key={post.id} xs={12} sm={6} md={4}>
-            <Card className={classes.card}>
+          <Grid item key={post._id} xs={12} sm={6} md={4}>
+            <div className={classes.card}>
               <CardActionArea
                 component={Link}
-                to={`/blog/${language}/${post.slug}`}
+                to={`/article/${language}/${post.slug}`}
               >
                 {post.featuredImage && (
                   <CardMedia
@@ -227,12 +217,10 @@ const BlogList: React.FC = () => {
                   </Box>
                 </CardContent>
               </CardActionArea>
-            </Card>
+            </div>
           </Grid>
         ))}
       </Grid>
     </Container>
   );
 };
-
-export default BlogList;

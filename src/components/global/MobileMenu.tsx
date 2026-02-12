@@ -70,13 +70,13 @@ export const MobileMenu = ({
       </MenuItem>
       <MenuItem
         component={Link}
-        to={routes.blog}
+        to={routes.learningBook}
         onClick={onClose}
-        selected={location.pathname === routes.blog}
+        selected={location.pathname === routes.learningBook}
         style={{
           padding: "12px 24px",
           color:
-            location.pathname === routes.blog ? mainColors.orange : "inherit",
+            location.pathname === routes.learningBook ? mainColors.orange : "inherit",
         }}
       >
         {t("navbar.blog")}
@@ -103,10 +103,10 @@ export const MobileMenu = ({
           onClick={onClose}
           selected={location.pathname === routes.admin}
           style={{
-          padding: "12px 24px",
-          color:
-            location.pathname === routes.admin ? mainColors.orange : "inherit",
-        }}
+            padding: "12px 24px",
+            color:
+              location.pathname === routes.admin ? mainColors.orange : "inherit",
+          }}
         >
           {t("navbar.admin")}
         </MenuItem>

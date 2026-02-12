@@ -6,16 +6,21 @@ import { LoginPage } from "../components/screens/LoginPage";
 import Admin from "../components/Admin";
 import EDuda from "../components/screens/Eduda";
 import { Playlists } from "../components/Playlist";
-import BlogList from "../components/Blog/BlogList";
-import BlogAdmin from "../components/Blog/Admin/BlogAdmin";
-import BlogUpdate from "../components/Blog/Admin/BlogUpdate";
-import BlogAdminList from "../components/Blog/Admin/BlogAdminList";
-import BlogPost from "../components/Blog/BlogPost";
+import { ArticlesList } from "../components/Articles/ArticlesList";
+import BlogAdmin from "../components/Articles/Admin/BlogAdmin";
+import BlogUpdate from "../components/Articles/Admin/BlogUpdate";
+import BlogAdminList from "../components/Articles/Admin/BlogAdminList";
+import ArticlePage from "../components/Articles/ArticlePage";
 import { ContactsPage } from "../components/screens/Contacts";
+import { LearningBook } from "../components/LearningBook";
+import { MetaTags } from "../components/SEO/MetaTags";
+import { StructuredData } from "../components/SEO/StructuredData";
 
 export const AppRouter = () => {
   return (
     <Router>
+      <MetaTags />
+      <StructuredData />
       <Switch>
         <Route path={routes.admin}>
           <Admin />
@@ -23,20 +28,20 @@ export const AppRouter = () => {
         <Route path={routes.contacts}>
           <ContactsPage />
         </Route>
-        <Route path={routes.blogAdminList}>
+        <Route path={routes.articleAdminList}>
           <BlogAdminList />
         </Route>
-        <Route path={routes.blogUpdate}>
+        <Route path={routes.learningBook}>
+          <LearningBook />
+        </Route>
+        <Route path={`${routes.articleUpdate}/:id`}>
           <BlogUpdate />
         </Route>
-        <Route path={routes.blogAdmin}>
+        <Route path={routes.articleAdmin}>
           <BlogAdmin />
         </Route>
-        <Route path={routes.blogPost}>
-          <BlogPost />
-        </Route>
-        <Route path={routes.blog}>
-          <BlogList />
+        <Route path={`${routes.article}/:lang/:slug`}>
+          <ArticlePage />
         </Route>
         <Route exact path={routes.main}>
           <About />

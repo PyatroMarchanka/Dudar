@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const BASE_URL = 'https://dudahero.org';
-const BLOG_API_URL = process.env.REACT_APP_BACKEND_URL + '/v1/blog';
+const BLOG_API_URL = process.env.REACT_APP_BACKEND_URL + '/v1/articles';
 
 interface BlogPost {
   slug: string;
@@ -14,7 +14,8 @@ interface BlogPost {
 const generateSitemap = async () => {
   const languages = ['en', 'be', 'pl'];
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <!-- Main Routes -->
   <url>
     <loc>${BASE_URL}/</loc>
@@ -52,18 +53,27 @@ const generateSitemap = async () => {
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>${BASE_URL}/learning-book</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
   
   <!-- Blog Posts -->
   ${await Promise.all(languages.map(async (lang) => {
     try {
-      const response = await fetch(`${BLOG_API_URL}?language=${lang}`);
+      const response = await fetch(`${BLOG_API_URL}`);
       const posts = await response.json();
+      console.log(`Found ${posts} posts for language ${lang}`);
       return posts.map((post: BlogPost) => `
   <url>
-    <loc>${BASE_URL}/blog/${lang}/${post.slug}</loc>
+    <loc>${BASE_URL}/article/${lang}/${post.slug}</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    ${languages.map(altLang => `
+    <xhtml:link rel="alternate" hreflang="${altLang}" href="${BASE_URL}/article/${altLang}/${post.slug}" />`).join('')}
   </url>`).join('');
     } catch (error) {
       console.error(`Error fetching blog posts for language ${lang}:`, error);
@@ -88,4 +98,4 @@ const updateSitemap = async () => {
 
 updateSitemap();
 
-export { updateSitemap };
+export {};

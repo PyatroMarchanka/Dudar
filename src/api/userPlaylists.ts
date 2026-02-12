@@ -1,10 +1,10 @@
 import { links } from "./links";
-import cookie from "react-cookies";
 import { userClient } from "./user";
 import {
   IPlaylist,
   PlaylistSong,
 } from "../dataset/songs/interfaces";
+import { withAuth } from "./utils";
 interface GetResult {
   playlists: IPlaylist[];
   songs: PlaylistSong[];
@@ -13,13 +13,7 @@ interface GetResult {
 export const userPlaylistApi = {
   getAllPlaylists: async (): Promise<GetResult> => {
     try {
-      const res = await userClient.get(links.playlists, {
-        headers: {
-          Authorization: `Bearer ${cookie.load("jwtToken")}`,
-          userId: cookie.load("userId"),
-        },
-        withCredentials: true,
-      });
+      const res = await userClient.get(links.playlists, withAuth());
 
       return res.data;
     } catch (error) {
@@ -34,13 +28,7 @@ export const userPlaylistApi = {
 
   createPlaylist: async (data: IPlaylist): Promise<any> => {
     try {
-      const res = await userClient.post(links.playlists, data, {
-        headers: {
-          Authorization: `Bearer ${cookie.load("jwtToken")}`,
-          userId: cookie.load("userId"),
-        },
-        withCredentials: true,
-      });
+      const res = await userClient.post(links.playlists, data, withAuth());
 
       return res.data;
     } catch (error) {
@@ -50,13 +38,7 @@ export const userPlaylistApi = {
 
   deletePlaylist: async (id: string): Promise<void> => {
     try {
-      await userClient.delete(`${links.playlists}/${id}`, {
-        headers: {
-          Authorization: `Bearer ${cookie.load("jwtToken")}`,
-          userId: cookie.load("userId"),
-        },
-        withCredentials: true,
-      });
+      await userClient.delete(`${links.playlists}/${id}`, withAuth());
     } catch (error) {
       console.log("error", error);
     }
@@ -64,13 +46,7 @@ export const userPlaylistApi = {
 
   updatePlaylist: async (id: string, data: IPlaylist): Promise<any> => {
     try {
-      const res = await userClient.put(`${links.playlists}/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${cookie.load("jwtToken")}`,
-          userId: cookie.load("userId"),
-        },
-        withCredentials: true,
-      });
+      const res = await userClient.put(`${links.playlists}/${id}`, data, withAuth());
 
       return res.data;
     } catch (error) {
@@ -83,13 +59,7 @@ export const userPlaylistApi = {
       const res = await userClient.post(
         `${links.playlists}/songs`,
         song,
-        {
-          headers: {
-            Authorization: `Bearer ${cookie.load("jwtToken")}`,
-            userId: cookie.load("userId"),
-          },
-          withCredentials: true,
-        }
+        withAuth()
       );
 
       return res.data;
@@ -100,13 +70,7 @@ export const userPlaylistApi = {
 
   deleteSongFromPlaylist: async (songId: string): Promise<void> => {
     try {
-      await userClient.delete(`${links.playlists}/songs/${songId}`, {
-        headers: {
-          Authorization: `Bearer ${cookie.load("jwtToken")}`,
-          userId: cookie.load("userId"),
-        },
-        withCredentials: true,
-      });
+      await userClient.delete(`${links.playlists}/songs/${songId}`, withAuth());
     } catch (error) {
       console.log("error", error);
     }
@@ -117,13 +81,7 @@ export const userPlaylistApi = {
       const res = await userClient.post(
         `${links.playlists}/songs/${songId}`,
         data,
-        {
-          headers: {
-            Authorization: `Bearer ${cookie.load("jwtToken")}`,
-            userId: cookie.load("userId"),
-          },
-          withCredentials: true,
-        }
+        withAuth()
       );
 
       return res.data;
@@ -134,13 +92,7 @@ export const userPlaylistApi = {
 
   addTagToPlaylistSong: async (tags: string[]): Promise<any> => {
     try {
-      const res = await userClient.post(`${links.playlists}/tags`, tags, {
-        headers: {
-          Authorization: `Bearer ${cookie.load("jwtToken")}`,
-          userId: cookie.load("userId"),
-        },
-        withCredentials: true,
-      });
+      const res = await userClient.post(`${links.playlists}/tags`, tags, withAuth());
 
       return res.data;
     } catch (error) {

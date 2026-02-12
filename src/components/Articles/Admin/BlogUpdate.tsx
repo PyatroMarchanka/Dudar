@@ -3,9 +3,12 @@ import { useParams, useHistory } from "react-router-dom";
 import { Container, Typography, Box, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { ArrowBack } from "@material-ui/icons";
-import blogApi from "../../../api/blog";
+import { useTranslation } from "react-i18next";
+import articlesApi from "../../../api/articles";
 import { Link } from "react-router-dom";
 import BlogPostForm from "./BlogPostForm";
+import { routes } from "../../../router/routes";
+import { a } from "react-spring";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const BlogUpdate: React.FC = () => {
+  const { t } = useTranslation();
   const classes = useStyles();
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
@@ -25,11 +29,11 @@ const BlogUpdate: React.FC = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await blogApi.getPostBySlug(id);
+        const response = await articlesApi.getPostBySlug(id);
         setPost(response);
       } catch (error) {
         console.error("Error fetching post:", error);
-        history.push("/blog");
+        history.push(routes.learningBook);
       }
     };
 
@@ -39,29 +43,29 @@ const BlogUpdate: React.FC = () => {
   const handleSave = async (updatedPost: any) => {
     try {
       if (!post._id) return;
-      await blogApi.updatePost(post._id, updatedPost);
-      alert("Post updated successfully");
-      history.push("/blog");
+      await articlesApi.updatePost(post._id, updatedPost);
+      alert(t("blog.messages.postUpdated"));
+      history.push(routes.learningBook);
     } catch (error) {
       console.error("Error updating post:", error);
-      alert("Failed to update post");
+      alert(t("blog.messages.updateFailed"));
     }
   };
 
   const handleCancel = () => {
-    history.push("/blog");
+    history.push(routes.learningBook);
   };
 
   const handleDelete = async () => {
-    if (window.confirm("Are you sure you want to delete this post?")) {
+    if (window.confirm(t("blog.form.deleteConfirm") as string)) {
       try {
         if (!post?.id) return;
-        await blogApi.deletePost(post.id);
-        alert("Post deleted successfully");
-        history.push("/blog");
+        await articlesApi.deletePost(post.id);
+        alert(t("blog.messages.postDeleted"));
+        history.push(routes.learningBook);
       } catch (error) {
         console.error("Error deleting post:", error);
-        alert("Failed to delete post");
+        alert(t("blog.messages.deleteFailed"));
       }
     }
   };
@@ -73,24 +77,24 @@ const BlogUpdate: React.FC = () => {
   return (
     <Container className={classes.root}>
       <Box display="flex" justifyContent="flex-start" mb={4}>
-        <Link to="/blog" style={{ textDecoration: "none" }}>
+        <Link to={routes.articleAdminList} style={{ textDecoration: "none" }}>
           <Button startIcon={<ArrowBack />} variant="outlined" color="primary">
-            Back to Blogs
+            {t("blog.backToAdminList")}
           </Button>
         </Link>
       </Box>
       <Typography variant="h4" className={classes.title}>
-        Edit Blog Post
+        {t("blog.admin.editTitle")}
       </Typography>
       <BlogPostForm
         initialPost={post}
         onSubmit={handleSave}
         onCancel={handleCancel}
         onDelete={handleDelete}
-        submitButtonText="Update Post"
+        submitButtonText={t("blog.form.updatePost") as string}
         showDeleteButton={true}
       />
-    </Container>
+    </Container >
   );
 };
 

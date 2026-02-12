@@ -73,8 +73,8 @@ export const Navbar = () => {
           </NavItem>
           <NavItem>
             <StyledLink
-              to={routes.blog}
-              className={location.pathname === routes.blog ? "active" : ""}
+              to={routes.learningBook}
+              className={location.pathname === routes.learningBook ? "active" : ""}
             >
               {t("navbar.blog")}
             </StyledLink>
@@ -222,7 +222,7 @@ const ModalTitle = styled.div`
   padding: 1rem;
 `;
 
-const LogoLink = styled(Link)`
+export const LogoLink = styled(Link)`
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -275,7 +275,7 @@ const NavItem = styled.li`
 `;
 
 const StyledLink = styled(Link)`
-  color: ${mainColors.darkOrange};
+  color: ${mainColors.darkerGray};
   text-decoration: none;
   font-weight: 500;
   font-size: 1rem;
