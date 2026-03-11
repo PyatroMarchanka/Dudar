@@ -1,23 +1,30 @@
-import { Dialog, makeStyles } from "@material-ui/core";
 import { mainColors } from "../../utils/theme";
 import { RotateSpinner } from "react-spinners-kit";
+import styled from "styled-components";
 
 interface Props {
   isOpen: boolean;
 }
 
-const useStyles = makeStyles(() => ({
-  paper: {
-    backgroundColor: "unset",
-    boxShadow: "unset",
-  },
-}));
-
 export const BackdropSpinner = ({ isOpen }: Props) => {
-  const classes = useStyles();
+  if (!isOpen) return null;
+  
   return (
-    <Dialog open={isOpen} classes={classes} disableEscapeKeyDown>
+    <StyledBackdrop>
       <RotateSpinner color={mainColors.darkestRed} size={150} />
-    </Dialog>
+    </StyledBackdrop>
   );
 };
+
+const StyledBackdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+`;

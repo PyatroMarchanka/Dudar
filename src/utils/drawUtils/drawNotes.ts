@@ -24,96 +24,66 @@ import { sizes } from "../../constants/style";
   return this;
 };
 
-const getYposByNote = (
-  note: SharpNotes,
-  octave: number,
-  bagpipeType: BagpipeTypes
-) => {
-  const { notesToLines, holesPositions } = bagpipes[bagpipeType];
-  let yPos = holesPositions.linesYPositions[notesToLines[note + octave]];
-
-  return { yPosInPx: yPos };
-};
-
-const drawNote = (
-  ctx: CanvasRenderingContext2D,
-  bagpipeType: BagpipeTypes,
-  note: SharpNotes,
-  dur: number,
-  start: number,
-  tick: number,
-  octave: number
-) => {
-  const imageProperties = bagpipes[bagpipeType].imagesProperties;
-
-  const y = getYposByNote(note, octave, bagpipeType);
-  if (!y?.yPosInPx) {
-    return;
-  }
-
-  const startPos =
-    start * sizes.notesScale -
-    tick * sizes.notesScale +
-    imageProperties.notes.brickLeftMargin;
-  ctx.beginPath();
-  // @ts-ignore
-  ctx.roundRect(
-    startPos,
-    y.yPosInPx - imageProperties.notes.brickHeightHalf,
-    dur * sizes.notesScale,
-    imageProperties.notes.brickhHeight,
-    10
-  );
-  if (startPos < imageProperties.notes.brickLeftMargin) {
-    ctx.fillStyle = mainColors.darkRed;
-  } else {
-    ctx.fillStyle = mainColors.darkerGray;
-  }
-  ctx.fill();
-};
-
 export const drawNotes = (
   ctx: CanvasRenderingContext2D,
   bagpipeType: BagpipeTypes,
   tick: number,
   previousNotes?: Note[],
   nextNotes?: Note[],
-  nextToNextNotes?: Note[]
+  nextToNextNotes?: Note[],
+  previousPreviousNotes?: Note[],
+  nextToNextToNextNotes?: Note[]
 ) => {
- 
-  previousNotes?.forEach((note) => {
-    drawNote(
-      ctx,
-      bagpipeType,
-      note.pitch as SharpNotes,
-      note.durationTicks,
-      note.ticks,
-      tick,
-      note.octave
+  // Pre-calculate shared values once
+  const imageProperties = bagpipes[bagpipeType].imagesProperties;
+  const tickScaled = tick * sizes.notesScale;
+  const canvasWidth = ctx.canvas.width;
+  const brickLeftMargin = imageProperties.notes.brickLeftMargin;
+  const brickHeightHalf = imageProperties.notes.brickHeightHalf;
+  const brickHeight = imageProperties.notes.brickhHeight;
+  const { notesToLines, holesPositions } = bagpipes[bagpipeType];
+  
+  // Pre-cache colors
+  const colorPast = mainColors.darkRed;
+  const colorNormal = mainColors.darkerGray;
+  
+  // Combine all notes into single array to iterate once
+  const allNotes = [
+    ...(previousPreviousNotes || []),
+    ...(previousNotes || []),
+    ...(nextNotes || []),
+    ...(nextToNextNotes || []),
+    ...(nextToNextToNextNotes || [])
+  ];
+  
+  // Draw all notes in one pass
+  for (let i = 0; i < allNotes.length; i++) {
+    const note = allNotes[i];
+    const pitch = note.pitch as SharpNotes;
+    
+    // Get Y position
+    const yPos = holesPositions.linesYPositions[notesToLines[pitch + note.octave]];
+    if (!yPos) continue;
+    
+    // Calculate positions
+    const startPos = note.ticks * sizes.notesScale - tickScaled + brickLeftMargin;
+    const noteWidth = note.durationTicks * sizes.notesScale;
+    const endPos = startPos + noteWidth;
+    
+    // Skip off-screen notes
+    if (endPos < 0 || startPos > canvasWidth) continue;
+    
+    // Draw note
+    ctx.beginPath();
+    // @ts-ignore
+    ctx.roundRect(
+      startPos,
+      yPos - brickHeightHalf,
+      noteWidth,
+      brickHeight,
+      10
     );
-  });
-
-  nextNotes?.forEach((note) => {
-    drawNote(
-      ctx,
-      bagpipeType,
-      note.pitch as SharpNotes,
-      note.durationTicks,
-      note.ticks,
-      tick,
-      note.octave
-    );
-  });
-
-  nextToNextNotes?.forEach((note) => {
-    drawNote(
-      ctx,
-      bagpipeType,
-      note.pitch as SharpNotes,
-      note.durationTicks,
-      note.ticks,
-      tick,
-      note.octave
-    );
-  });
+    ctx.fillStyle = startPos < brickLeftMargin ? colorPast : colorNormal;
+    ctx.fill();
+  }
 };

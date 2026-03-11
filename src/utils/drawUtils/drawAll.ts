@@ -16,11 +16,13 @@ export const drawDynamic = (
   previousNotes: Note[] | undefined,
   nextNotes?: Note[] | undefined,
   nextToNextNotes?: Note[] | undefined,
-  song?: Song
+  song?: Song,
+  previousPreviousNotes?: Note[] | undefined,
+  nextToNextToNextNotes?: Note[] | undefined
 ) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   drawBarsLines(ctx, tick, midiData, bagpipeType, song?.timeSignature);
-  drawNotes(ctx, bagpipeType, tick, previousNotes, nextNotes, nextToNextNotes);
+  drawNotes(ctx, bagpipeType, tick, previousNotes, nextNotes, nextToNextNotes, previousPreviousNotes, nextToNextToNextNotes);
 };
 
 export const cleanLines = (ctx: CanvasRenderingContext2D) => {

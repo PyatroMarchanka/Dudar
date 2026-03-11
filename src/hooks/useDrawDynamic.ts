@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useMemo } from "react";
 import { store } from "../context";
 import { cleanLines, drawDynamic } from "../utils/drawUtils/drawAll";
 import { MidiPlayer } from "../utils/MidiPlayer";
@@ -10,7 +10,7 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
     state: { showPianoRoll, activeSong, songNotes, bagpipeType, midiData },
   } = useContext(store);
   const canvasRef = useRef(null);
-  const { previousNotes, nextNotes, nextToNextNotes, setTick, tick } = useNotesMoving();
+  const { previousPreviousNotes, previousNotes, nextNotes, nextToNextNotes, nextToNextToNextNotes, setTick, tick } = useNotesMoving();
 
   useEffect(() => {
     if (player && showPianoRoll) {
@@ -32,9 +32,11 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
     const context: CanvasRenderingContext2D | null =
       canvas && (canvas as HTMLCanvasElement)!.getContext("2d");
 
+    if (!context) return;
+
     //RENDER
     const render = () => {
-      drawDynamic(context!, bagpipeType, tick, midiData, previousNotes, nextNotes, nextToNextNotes, activeSong!);
+      drawDynamic(context, bagpipeType, tick, midiData, previousNotes, nextNotes, nextToNextNotes, activeSong!, previousPreviousNotes, nextToNextToNextNotes);
       animationFrameId = window.requestAnimationFrame(render);
     };
     render();
@@ -42,7 +44,7 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [drawDynamic, tick, bagpipeType]);
+  }, [tick, bagpipeType, midiData, previousNotes, nextNotes, nextToNextNotes, activeSong, previousPreviousNotes, nextToNextToNextNotes]);
 
   return canvasRef;
 };
