@@ -71,10 +71,13 @@ export const About = () => {
               <Typography>{t("aboutPage.belTradDuda")}</Typography>
             </li>
             <li>
-              <Typography>{t("aboutPage.highlander")}</Typography>
+              <Typography>{t("aboutPage.polish")}</Typography>
             </li>
             <li>
               <Typography>{t("aboutPage.dudelsack")}</Typography>
+            </li>
+            <li>
+              <Typography>{t("aboutPage.highlander")}</Typography>
             </li>
           </BagpipesList>
           <BlogSection>
