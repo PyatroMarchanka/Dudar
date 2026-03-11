@@ -41,7 +41,9 @@ export const TempoSlider = ({ player }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleTempoChange = (newTempo: number) => {
-    const boundedTempo = Math.min(360, Math.max(60, newTempo));
+    console.log(newTempo);
+    const boundedTempo = Math.min(500, Math.max(60, Math.round(newTempo)));
+    console.log(boundedTempo);
     setTempo(boundedTempo);
     player?.checkTempo(boundedTempo);
     updateUserSettings({ tempo: boundedTempo });
@@ -64,7 +66,7 @@ export const TempoSlider = ({ player }: Props) => {
   };
 
   const handleTempoMultiply = (multiplier: number) => {
-    const newTempo = Math.min(600, Math.max(60, tempo * multiplier));
+    const newTempo = Math.min(600, Math.max(60, Math.round(tempo * multiplier)));
     handleTempoChange(newTempo);
   };
 
@@ -93,7 +95,7 @@ export const TempoSlider = ({ player }: Props) => {
         <CardContent>
           <TempoControls>
             <Typography className="tempo-text" variant="h6">
-              {tempo / 2} bpm
+              {Math.round(tempo / 2)} bpm
             </Typography>
           </TempoControls>
 

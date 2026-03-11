@@ -1,3 +1,4 @@
+import { mainColors } from "../theme";
 import { bagpipes } from "./../../dataset/bagpipes";
 import { BagpipeTypes } from "./../../interfaces/index";
 import { drawShadow } from "./drawBagpipe";
@@ -8,7 +9,7 @@ export const drawLines = (
 ) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   const { holesPositions, imagesProperties } = bagpipes[bagpipeType];
-  ctx.fillStyle = "#D6D6D6";
+  ctx.fillStyle = mainColors.linesColor
   holesPositions.linesYPositions.forEach((yPos) => {
     ctx.fillRect(
       30,

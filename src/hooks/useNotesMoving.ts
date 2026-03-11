@@ -7,14 +7,35 @@ const getNotesChunks = (notes: Note[], canvasWidth: number) => {
   const result: Note[][] = [[]];
   let min = 0;
   let max = canvasWidth / 2;
+  const chunkSize = canvasWidth / 2;
+  const buffer = chunkSize * 0.5; // 50% buffer for smooth transitions
 
   notes.forEach((note) => {
-    if (note.ticks >= min && note.ticks <= max) {
+    const noteStart = note.ticks;
+    const noteEnd = note.ticks + note.durationTicks;
+    
+    // Include note if:
+    // 1. It starts within chunk range (with buffer)
+    // 2. It extends into the chunk (even if it started earlier)
+    // 3. It starts shortly after to prevent pop-in
+    if (
+      (noteStart >= min - buffer && noteStart <= max + buffer) || 
+      (noteStart < min && noteEnd > min)
+    ) {
       result[result.length - 1].push(note);
-    } else if (note.ticks > max) {
+    } else if (noteStart > max + buffer) {
+      // Move to next chunk
       min = max;
-      max += canvasWidth;
-      result.push([note]);
+      max += chunkSize;
+      result.push([]);
+      
+      // Check if this note belongs to the new chunk (with buffer)
+      if (
+        (noteStart >= min - buffer && noteStart <= max + buffer) || 
+        (noteStart < min && noteEnd > min)
+      ) {
+        result[result.length - 1].push(note);
+      }
     }
   });
 

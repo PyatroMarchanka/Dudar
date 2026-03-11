@@ -12,18 +12,30 @@ const getLinePosition = (
   timeSignature?: TimeSignatures
 ) => {
   const [beatsPerBar, fullBeats] = timeSignature?.split("/").map(Number) || [4, 4];
-  const ticksPerBar = midiData.header.ppq * (beatsPerBar / (fullBeats / 4));
-  const currentBar = Math.ceil(tick / ticksPerBar);
-  const lineXPosStart = currentBar * ticksPerBar - tick;
-
-  const lines = [lineXPosStart, lineXPosStart + ticksPerBar];
-
+  const ticksPerBeat = midiData.header.ppq * (1 / (fullBeats / 4));
+  const currentBeat = Math.floor(tick / ticksPerBeat);
+  
+  // Pre-calculate constants used in the loop
   const { imagesProperties } = bagpipes[bagpipeType];
+  const notesScale = sizes.notesScale;
+  const brickLeftMargin = imagesProperties.notes.brickLeftMargin;
+  
+  // Generate beat lines - draw several beats before and after current position
+  const linesData = [];
+  for (let i = -2; i <= 10; i++) {
+    const absoluteBeat = currentBeat + i;
+    const beatPosition = (absoluteBeat * ticksPerBeat) - tick;
+    const isFirstBeatOfBar = absoluteBeat % beatsPerBar === 0;
+    const barNumber = Math.floor(absoluteBeat / beatsPerBar) + 1;
+    
+    linesData.push({
+      position: beatPosition * notesScale + brickLeftMargin,
+      isFirstBeatOfBar,
+      barNumber
+    });
+  }
 
-  return {
-    lines: lines.map((line) => line * sizes.notesScale + imagesProperties.notes.brickLeftMargin),
-    currentBar,
-  };
+  return { linesData };
 };
 
 export const drawBarsLines = (
@@ -34,24 +46,32 @@ export const drawBarsLines = (
   timeSignature?: TimeSignatures
 ) => {
   if (!midiData) return;
-  const { lines, currentBar } = getLinePosition(midiData, tick, bagpipeType, timeSignature);
+  const { linesData } = getLinePosition(midiData, tick, bagpipeType, timeSignature);
 
   const { holesPositions, imagesProperties } = bagpipes[bagpipeType];
-  const [top, bottom] = [
-    holesPositions.linesYPositions[0] - 30,
-    holesPositions.linesYPositions[holesPositions.linesYPositions.length - 1],
-  ];
+  const top = holesPositions.linesYPositions[0] - 20;
+  const bottom = holesPositions.linesYPositions[holesPositions.linesYPositions.length - 1];
+  const topForRegularBeats = top + 20;
+  const barNumberYPosition = top + 15;
 
-  ctx.strokeStyle = mainColors.lightGrey;
   ctx.lineWidth = imagesProperties.notes.lineHeight;
   ctx.font = "bold 16px Arial";
 
-  lines.forEach((line, i) => {
+  linesData.forEach((lineData) => {
+    // Set stroke color: black for first beat of bar, light grey for other beats
+    ctx.strokeStyle = lineData.isFirstBeatOfBar ? "black" : mainColors.linesColor;
+    
+    // Make non-first-beat lines shorter by 20px
+    const lineTop = lineData.isFirstBeatOfBar ? top : topForRegularBeats;
+    
     ctx.beginPath();
-    ctx.moveTo(line, top);
-    ctx.lineTo(line, bottom);
+    ctx.moveTo(lineData.position, lineTop);
+    ctx.lineTo(lineData.position, bottom);
     ctx.stroke();
 
-    ctx.fillText((currentBar + 1 + i).toString(), line + 10, top + 20);
+    // Only show bar number on the first beat of each bar
+    if (lineData.isFirstBeatOfBar) {
+      ctx.fillText(lineData.barNumber.toString(), lineData.position + 10, barNumberYPosition);
+    }
   });
 };

@@ -351,5 +351,7 @@ export const mainColors = {
   darkestRed: "#500702",
   lightestGrey: "#FCF7F2",
   midGrey: "#AC968F",
-  lightGrey: "#DDD5CE"
+  lightGrey: "#DDD5CE",
+  linesColor: '#dbd4cb7f'
+
 };
