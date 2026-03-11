@@ -37,6 +37,7 @@ export const useGoogleProfile = () => {
     if (!userData) {
       return;
     }
+    console.log(userData.settings);
     const {
       bagpipeType,
       isPreclick,

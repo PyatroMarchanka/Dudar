@@ -8,7 +8,7 @@ import {
   IconButton,
 } from "@material-ui/core";
 import { TransitionProps } from "@material-ui/core/transitions";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { store } from "../../context";
@@ -84,6 +84,10 @@ export const TempoSlider = ({ player }: Props) => {
       />
     </IconButton>
   );
+
+  useEffect(() => {
+   handleTempoChange(tempo);
+  }, [tempo]);
 
   const TempoSettings = () => (
     <Container>
