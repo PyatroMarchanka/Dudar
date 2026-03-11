@@ -13,13 +13,15 @@ import Videocam from "@material-ui/icons/Videocam";
 import Audiotrack from "@material-ui/icons/Audiotrack";
 import Info from "@material-ui/icons/Info";
 import { Icon } from "../global/Icon";
+import { MetaTags } from "../SEO/MetaTags";
+import { StructuredData } from "../SEO/StructuredData";
 
 interface Props {
   onClose: () => void;
 }
 
 export const SongPage = ({ onClose }: Props) => {
-  const { t } = useTranslation("translation");
+  const { t, i18n } = useTranslation("translation");
   const params: any = useParams();
 
   const {
@@ -54,8 +56,68 @@ export const SongPage = ({ onClose }: Props) => {
     );
   };
 
+  // SEO metadata
+  const songTitle = activeSong?.name || 'Bagpipe Song';
+  const songType = activeSong?.type ? t(`genres.${activeSong.type}`) : '';
+  const bagpipes = activeSong?.bagpipesToPlay
+    ?.filter((bagpipe) => (bagpipe as any) !== "gd")
+    .map((bagpipe) => t(`dudas.${getTranslationKeyByBagpipeType(bagpipe)}`))
+    .join(', ');
+  
+  const metaTitle = `${songTitle}${songType ? ` - ${songType}` : ''} | Duda Hero`;
+  const metaDescription = activeSong?.about 
+    ? `${activeSong.about} - Play on Duda Hero`
+    : `Learn and play ${songTitle} on bagpipes with Duda Hero. ${bagpipes ? `Available for: ${bagpipes}` : ''}`;
+  const metaKeywords = [
+    'bagpipe song',
+    songTitle,
+    songType,
+    ...(activeSong?.labels?.map(label => t(`tags.${label}`)) || []),
+    bagpipes,
+    'learn bagpipes',
+    'bagpipe tutorial',
+    'traditional music',
+    `${songTitle} bagpipe`,
+    `${songTitle} tutorial`,
+    `how to play ${songTitle}`,
+    `${songTitle} bagpipe tutorial`,
+    `learn ${songTitle}`,
+    `${songTitle} lesson`,
+    'bagpipe lesson',
+    'interactive bagpipe learning'
+  ].filter(Boolean).join(', ');
+
   return (
-    <Container>
+    <>
+      <MetaTags
+        title={metaTitle}
+        description={metaDescription}
+        keywords={metaKeywords}
+        language={i18n.language}
+        canonicalPath={`/play/${params.id}`}
+        type="music.song"
+      />
+      <StructuredData
+        songData={{
+          name: songTitle,
+          genre: songType || 'Traditional',
+          description: activeSong?.about,
+          bagpipeTypes: activeSong?.bagpipesToPlay
+            ?.filter((bagpipe) => (bagpipe as any) !== "gd")
+            .map((bagpipe) => t(`dudas.${getTranslationKeyByBagpipeType(bagpipe)}`)) || [],
+          timeSignature: activeSong?.timeSignature || '4/4',
+          tempo: activeSong?.originalTempo,
+          tags: activeSong?.labels?.map(label => t(`tags.${label}`)) || [],
+          transcribedBy: activeSong?.transcribedBy,
+          url: `/play/${params.id}`,
+        }}
+        breadcrumbs={[
+          { name: 'Home', url: '/' },
+          { name: 'Play', url: '/play' },
+          { name: songTitle, url: `/play/${params.id}` },
+        ]}
+      />
+      <Container>
       <IconButton onClick={onClose} className="back">
         <Icon type="back" fill={"black"} />
       </IconButton>
@@ -170,6 +232,7 @@ export const SongPage = ({ onClose }: Props) => {
         </Typography>
       </SongProperty>
     </Container>
+    </>
   );
 };
 

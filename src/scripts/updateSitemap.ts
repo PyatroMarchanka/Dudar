@@ -6,9 +6,16 @@ dotenv.config();
 
 const BASE_URL = 'https://dudahero.org';
 const BLOG_API_URL = process.env.REACT_APP_BACKEND_URL + '/v1/articles';
+const SONGS_API_URL = process.env.REACT_APP_BACKEND_URL + '/v1/songs';
 
 interface BlogPost {
   slug: string;
+}
+
+interface Song {
+  id: string;
+  name: string;
+  updatedAt?: string;
 }
 
 const generateSitemap = async () => {
@@ -59,6 +66,25 @@ const generateSitemap = async () => {
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
+  
+  <!-- Songs -->
+  ${await (async () => {
+    try {
+      const response = await fetch(SONGS_API_URL);
+      const songs = await response.json() as Song[];
+      console.log(`Found ${songs.length} songs`);
+      return songs.map((song: Song) => `
+  <url>
+    <loc>${BASE_URL}/play/${song.id}</loc>
+    <lastmod>${song.updatedAt ? new Date(song.updatedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>`).join('');
+    } catch (error) {
+      console.error('Error fetching songs:', error);
+      return '';
+    }
+  })()}
   
   <!-- Blog Posts -->
   ${await Promise.all(languages.map(async (lang) => {

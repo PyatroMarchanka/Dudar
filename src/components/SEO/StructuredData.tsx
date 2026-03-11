@@ -16,6 +16,17 @@ interface StructuredDataProps {
     modifiedDate?: string;
     tags: string[];
   };
+  songData?: {
+    name: string;
+    genre: string;
+    description?: string;
+    bagpipeTypes: string[];
+    timeSignature: string;
+    tempo?: number;
+    tags: string[];
+    transcribedBy?: string;
+    url: string;
+  };
   breadcrumbs?: Array<{
     name: string;
     url: string;
@@ -162,18 +173,127 @@ const getBreadcrumbSchema = (breadcrumbs: StructuredDataProps['breadcrumbs']) =>
   }))
 });
 
+const getSongSchema = (songData: StructuredDataProps['songData']): Record<string, any>[] => {
+  const musicRecordingSchema = {
+    "@context": "https://schema.org",
+    "@type": "MusicRecording",
+    "name": songData!.name,
+    "genre": songData!.genre,
+    "description": songData!.description || `Learn to play ${songData!.name} on bagpipes`,
+    "url": `https://dudahero.org${songData!.url}`,
+    "keywords": [
+      songData!.name,
+      `${songData!.name} bagpipe`,
+      `${songData!.name} tutorial`,
+      `how to play ${songData!.name}`,
+      `${songData!.name} bagpipe tutorial`,
+      `learn ${songData!.name}`,
+      ...songData!.bagpipeTypes.map(type => `${songData!.name} ${type}`),
+      ...songData!.tags,
+      "bagpipe tutorial",
+      "bagpipe lesson",
+      "learn bagpipes"
+    ].join(", "),
+    "inLanguage": "en",
+    "byArtist": songData!.transcribedBy ? {
+      "@type": "Person",
+      "name": songData!.transcribedBy
+    } : undefined
+  };
+
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": `How to Play ${songData!.name} on Bagpipes`,
+    "description": `Interactive tutorial for learning to play ${songData!.name} on bagpipes. Step-by-step guide with MIDI support and multiple bagpipe types.`,
+    "url": `https://dudahero.org${songData!.url}`,
+    "image": "https://dudahero.org/android-chrome-192x192.png",
+    "totalTime": "PT10M",
+    "estimatedCost": {
+      "@type": "MonetaryAmount",
+      "currency": "USD",
+      "value": "0"
+    },
+    "tool": songData!.bagpipeTypes.map(type => ({
+      "@type": "HowToTool",
+      "name": type
+    })),
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Select your bagpipe type",
+        "text": `Choose from ${songData!.bagpipeTypes.join(", ")} to play ${songData!.name}`,
+        "position": 1
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Learn the melody",
+        "text": `Follow the interactive player to learn the notes and fingering for ${songData!.name}`,
+        "position": 2
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Practice with MIDI",
+        "text": "Use the MIDI player to practice along with the music",
+        "position": 3
+      }
+    ],
+    "about": {
+      "@type": "Thing",
+      "name": "Bagpipe Playing"
+    },
+    "teach": true
+  };
+
+  const learningResourceSchema = {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "name": `${songData!.name} - Bagpipe Tutorial`,
+    "description": `Interactive tutorial for learning ${songData!.name} on bagpipes with step-by-step guidance`,
+    "url": `https://dudahero.org${songData!.url}`,
+    "learningResourceType": ["Interactive Tutorial", "Music Lesson"],
+    "educationalLevel": "Beginner to Advanced",
+    "interactivityType": "active",
+    "isAccessibleForFree": true,
+    "inLanguage": "en",
+    "teaches": `How to play ${songData!.name} on bagpipes`,
+    "about": [
+      {
+        "@type": "Thing",
+        "name": "Bagpipe Music"
+      },
+      {
+        "@type": "Thing",
+        "name": songData!.genre
+      }
+    ]
+  };
+
+  return [musicRecordingSchema, howToSchema, learningResourceSchema];
+};
+
 export const StructuredData: React.FC<StructuredDataProps> = ({ 
   articleData,
+  songData,
   breadcrumbs
 }) => {
   const location = useLocation();
   const currentRoute = location.pathname;
   const routeSchema = routeSchemas[currentRoute] || defaultSchema;
 
-  const schemas: Record<string, any>[] = [routeSchema, getOrganizationSchema()];
+  const schemas: Record<string, any>[] = [getOrganizationSchema()];
+  
+  // Only add route schema if it's not a song page (song schema is more specific)
+  if (!songData) {
+    schemas.push(routeSchema);
+  }
   
   if (articleData) {
     schemas.push(getArticleSchema(articleData));
+  }
+
+  if (songData) {
+    schemas.push(...getSongSchema(songData));
   }
 
   if (breadcrumbs && breadcrumbs.length > 0) {
