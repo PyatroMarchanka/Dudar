@@ -17,6 +17,11 @@ import { theme, mainColors } from "../../utils/theme";
 import { Icon } from "../global/Icon";
 import { useUpdateUserSettings } from "../../hooks/useGoogleProfile";
 
+const maxTempo = 600;
+const minTempo = 60;
+const roundToNearest = 5;
+const roundTempo = (tempo: number) => Math.round(tempo / 2 / roundToNearest) * roundToNearest;
+
 interface Props {
   player: MidiPlayer | null;
 }
@@ -42,7 +47,7 @@ export const TempoSlider = ({ player }: Props) => {
 
   const handleTempoChange = (newTempo: number) => {
     console.log(newTempo);
-    const boundedTempo = Math.min(500, Math.max(60, Math.round(newTempo)));
+    const boundedTempo = Math.round(Math.min(maxTempo, Math.max(minTempo, newTempo)) / 5) * 5;
     console.log(boundedTempo);
     setTempo(boundedTempo);
     player?.checkTempo(boundedTempo);
@@ -66,7 +71,7 @@ export const TempoSlider = ({ player }: Props) => {
   };
 
   const handleTempoMultiply = (multiplier: number) => {
-    const newTempo = Math.min(600, Math.max(60, Math.round(tempo * multiplier)));
+    const newTempo = Math.min(maxTempo, Math.max(minTempo, Math.round(tempo * multiplier)));
     handleTempoChange(newTempo);
   };
 
@@ -99,7 +104,7 @@ export const TempoSlider = ({ player }: Props) => {
         <CardContent>
           <TempoControls>
             <Typography className="tempo-text" variant="h6">
-              {Math.round(tempo / 2)} bpm
+              {roundTempo(tempo)} bpm
             </Typography>
           </TempoControls>
 
@@ -152,7 +157,7 @@ export const TempoSlider = ({ player }: Props) => {
       <CompactView>
         <MetronomeButton />
         <div onClick={() => setIsModalOpen(true)}>
-          <Typography variant="h6">{tempo / 2} bpm</Typography>
+          <Typography variant="h6">{roundTempo(tempo)} bpm</Typography>
         </div>
       </CompactView>
 
