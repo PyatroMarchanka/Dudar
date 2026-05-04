@@ -47,8 +47,6 @@ export const useLoadSong = () => {
     async (song: Song) => {
       try {
         if (!song.pathName) {
-          console.log(`No song with this path in list \n ${song.pathName}`);
-
           listsByBagpipe && setActiveSong(getFirstSongFromList(listsByBagpipe));
         }
         setIsSongLoading(true);

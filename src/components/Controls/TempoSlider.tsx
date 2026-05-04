@@ -46,9 +46,7 @@ export const TempoSlider = ({ player }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleTempoChange = (newTempo: number) => {
-    console.log(newTempo);
     const boundedTempo = Math.round(Math.min(maxTempo, Math.max(minTempo, newTempo)) / 5) * 5;
-    console.log(boundedTempo);
     setTempo(boundedTempo);
     player?.checkTempo(boundedTempo);
     updateUserSettings({ tempo: boundedTempo });

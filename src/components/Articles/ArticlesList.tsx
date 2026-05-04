@@ -112,7 +112,7 @@ export const ArticlesList: React.FC = () => {
   const { t, i18n } = useTranslation();
   const language = i18n.language;
   const { articlesPreviews, loading } = useArticlesPreviews(language);
-  console.log('posts', articlesPreviews);
+
   if (loading) {
     return (
       <Box className={classes.loadingContainer}>
@@ -152,47 +152,53 @@ export const ArticlesList: React.FC = () => {
         <IconLanguageSelector />
       </Box>
       <Grid container spacing={4}>
-        {articlesPreviews.sort((a, b) => new Date(b.publishedAt || b.createdAt).getTime() - new Date(a.publishedAt || a.createdAt).getTime()).filter((post) => post.title).map((post) => (
-          <Grid item key={post._id} xs={12} sm={6} md={4}>
-            <div className={classes.card}>
-              <CardActionArea component={Link} to={`/article/${language}/${post.slug}`}>
-                {post.featuredImage && (
-                  <CardMedia className={classes.media} image={post.featuredImage} title={post.title} />
-                )}
-                <CardContent className={classes.cardContent}>
-                  <Typography gutterBottom variant="h5" component="h2" className={classes.postTitle}>
-                    {post.title}
-                  </Typography>
-                  <Typography variant="body2" className={classes.excerpt} component="p">
-                    {post.excerpt}
-                  </Typography>
-                  <Box mt={2}>
-                    {post.tags.map((tag: string) => (
-                      <Chip key={tag} label={tag} size="small" className={classes.tag} />
-                    ))}
-                  </Box>
-                  <Box mt={2} className={classes.meta}>
-                    <Box display="flex" alignItems="center">
-                      {post.author?.picture ? (
-                        <Avatar
-                          src={post.author.picture}
-                          alt={post.author.name}
-                          style={{ width: 24, height: 24, marginRight: 8 }}
-                        />
-                      ) : null}
+        {articlesPreviews
+          .sort(
+            (a, b) =>
+              new Date(b.publishedAt || b.createdAt).getTime() - new Date(a.publishedAt || a.createdAt).getTime()
+          )
+          .filter((post) => post.title)
+          .map((post) => (
+            <Grid item key={post._id} xs={12} sm={6} md={4}>
+              <div className={classes.card}>
+                <CardActionArea component={Link} to={`/article/${language}/${post.slug}`}>
+                  {post.featuredImage && (
+                    <CardMedia className={classes.media} image={post.featuredImage} title={post.title} />
+                  )}
+                  <CardContent className={classes.cardContent}>
+                    <Typography gutterBottom variant="h5" component="h2" className={classes.postTitle}>
+                      {post.title}
+                    </Typography>
+                    <Typography variant="body2" className={classes.excerpt} component="p">
+                      {post.excerpt}
+                    </Typography>
+                    <Box mt={2}>
+                      {post.tags.map((tag: string) => (
+                        <Chip key={tag} label={tag} size="small" className={classes.tag} />
+                      ))}
+                    </Box>
+                    <Box mt={2} className={classes.meta}>
+                      <Box display="flex" alignItems="center">
+                        {post.author?.picture ? (
+                          <Avatar
+                            src={post.author.picture}
+                            alt={post.author.name}
+                            style={{ width: 24, height: 24, marginRight: 8 }}
+                          />
+                        ) : null}
+                        <Typography variant="caption">
+                          {t('blog.author')}: {post.author?.name}
+                        </Typography>
+                      </Box>
                       <Typography variant="caption">
-                        {t('blog.author')}: {post.author?.name}
+                        {t('blog.published')}: {new Date(post.publishedAt || post.createdAt).toLocaleDateString()}
                       </Typography>
                     </Box>
-                    <Typography variant="caption">
-                      {t('blog.published')}: {new Date(post.publishedAt || post.createdAt).toLocaleDateString()}
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </CardActionArea>
-            </div>
-          </Grid>
-        ))}
+                  </CardContent>
+                </CardActionArea>
+              </div>
+            </Grid>
+          ))}
       </Grid>
     </Container>
   );

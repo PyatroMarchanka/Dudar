@@ -63,7 +63,6 @@ export const MetaTags: React.FC<MetaTagsProps> = ({
   canonicalPath
 }) => {
   const location = useLocation();
-  console.log('Current location:', location);
   const currentRoute = location?.pathname;
   const routeSpecificMeta = routeMeta[currentRoute] || {};
 
