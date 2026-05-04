@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { songApi } from "../../api/songClient";
-import { Song, SongLink, SongTypes } from "../../dataset/songs/interfaces";
+import React, { useState, useEffect } from 'react';
+import { songApi } from '../../api/songClient';
+import { Song, SongLink, SongTypes } from '../../dataset/songs/interfaces';
 
-import styled from "styled-components";
-import { useParams } from "react-router-dom";
-import { LinksEditor } from "./LinksEditor";
-import { Button } from "../global/Button";
-import { IconButton, Input, Typography } from "@material-ui/core";
-import { Icon } from "../global/Icon";
-import { useTranslation } from "react-i18next";
-import { getTranslationKeyByBagpipeType } from "../../interfaces/enumUtils";
+import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import { LinksEditor } from './LinksEditor';
+import { Button } from '../global/Button';
+import { IconButton, Input, Typography } from '@material-ui/core';
+import { Icon } from '../global/Icon';
+import { useTranslation } from 'react-i18next';
+import { getTranslationKeyByBagpipeType } from '../../interfaces/enumUtils';
 
 export const SongEditor: React.FC = () => {
   const [song, setSong] = useState<Song | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [initialSong, setInitialSong] = useState<Song>();
   const params: any = useParams();
-  const { t } = useTranslation("translation");
+  const { t } = useTranslation('translation');
 
   const isSaveDisabled = () => {
     if (!song || !initialSong) return true;
@@ -32,7 +32,7 @@ export const SongEditor: React.FC = () => {
         setSong(song);
         setInitialSong(song);
       } catch (error) {
-        console.error("Error fetching song:", error);
+        console.error('Error fetching song:', error);
       } finally {
         setIsLoading(false);
       }
@@ -49,9 +49,9 @@ export const SongEditor: React.FC = () => {
     if (song) {
       try {
         await songApi.updateSong(song);
-        alert("Song updated successfully!");
+        alert('Song updated successfully!');
       } catch (error) {
-        console.error("Error updating song:", error);
+        console.error('Error updating song:', error);
       }
     }
   };
@@ -64,18 +64,9 @@ export const SongEditor: React.FC = () => {
     return <div>No song found</div>;
   }
 
-  const fieldsInOrder = [
-    "name",
-    "pathName",
-    "about",
-    "lyrycs",
-    "originalTempo",
-    "labels",
-    "timeSignature",
-    "transcribedBy",
-  ];
+  const fieldsInOrder = ['name', 'pathName', 'about', 'lyrycs', 'labels', 'timeSignature', 'transcribedBy'];
 
-  const multiLineFields = ["about", "lyrycs"];
+  const multiLineFields = ['about', 'lyrycs'];
 
   const typeSwitchInput = () => {
     return (
@@ -112,9 +103,7 @@ export const SongEditor: React.FC = () => {
       {typeSwitchInput()}
       <LinksEditor
         links={song.links}
-        updateLinks={(links: SongLink[]) =>
-          handleChange({ name: "links", value: links })
-        }
+        updateLinks={(links: SongLink[]) => handleChange({ name: 'links', value: links })}
       />
       {fieldsInOrder.map((key) => (
         <FormGroup key={key}>
@@ -125,12 +114,20 @@ export const SongEditor: React.FC = () => {
             className="input"
             name={key}
             value={(song as any)[key as keyof Song]}
-            onChange={(e) =>
-              handleChange({ name: e.target.name, value: e.target.value })
-            }
+            onChange={(e) => handleChange({ name: e.target.name, value: e.target.value })}
           />
         </FormGroup>
       ))}
+      <FormGroup key="originalTempo">
+        <Label key="originalTempo">Original Tempo:</Label>
+        <Input
+          type="number"
+          className="input"
+          name="originalTempo"
+          value={song.originalTempo ? Number(song.originalTempo) / 2 : ''}
+          onChange={(e) => handleChange({ name: e.target.name, value: Number(e.target.value) * 2 })}
+        />
+      </FormGroup>
       <FormGroup>
         <Label>Bagpipes to Play:</Label>
         {song.bagpipesToPlay.map((type) => (

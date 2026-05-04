@@ -1,16 +1,13 @@
-import { Midi } from "@tonejs/midi";
-import { useCallback, useContext, useEffect, useState } from "react";
-import { store } from "../context";
-import { Song } from "../dataset/songs/interfaces";
-import { addMetronome, fixMidiDataOctaves } from "../utils/midiUtils";
-import { songApi } from "../api/songClient";
-import { useParams } from "react-router-dom";
-import {
-  findSongInListById,
-  getFirstSongFromList,
-} from "../dataset/songs/utils";
-import { useSongList } from "./useSongLIst";
-import { useSong } from "./useSong";
+import { Midi } from '@tonejs/midi';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { store } from '../context';
+import { Song } from '../dataset/songs/interfaces';
+import { addMetronome, fixMidiDataOctaves } from '../utils/midiUtils';
+import { songApi } from '../api/songClient';
+import { useParams } from 'react-router-dom';
+import { findSongInListById, getFirstSongFromList } from '../dataset/songs/utils';
+import { useSongList } from './useSongLIst';
+import { useSong } from './useSong';
 
 export const useLoadSong = () => {
   const params: any = useParams();
@@ -23,6 +20,7 @@ export const useLoadSong = () => {
     setIsSongLoading,
     setIsPlaying,
     setProgress,
+    setTempo,
   } = useContext(store);
 
   const onStop = () => {
@@ -53,13 +51,10 @@ export const useLoadSong = () => {
         const file = await songApi.getSong(song);
         const buffer = await file.arrayBuffer();
 
-        const songWithMetronome = await addMetronome(
-          buffer,
-          song.timeSignature
-        );
+        const songWithMetronome = await addMetronome(buffer, song.timeSignature);
 
         const midi = new Midi(songWithMetronome);
-        midi.header.setTempo(tempo / 2);
+        midi.header.setTempo((song.originalTempo || tempo) / 2);
 
         setSongLength(midi.header.ticksToSeconds(midi.durationTicks));
 
@@ -68,20 +63,16 @@ export const useLoadSong = () => {
         setMidiData(midi);
         setMidi(songWithMetronome);
         setIsSongLoading(false);
+
+        if (song.originalTempo) {
+          setTempo(song.originalTempo);
+        }
       } catch (error) {
         listsByBagpipe && setActiveSong(getFirstSongFromList(listsByBagpipe));
         console.log(error);
       }
     },
-    [
-      listsByBagpipe,
-      setActiveSong,
-      setIsSongLoading,
-      setMidi,
-      setMidiData,
-      setSongLength,
-      tempo,
-    ]
+    [listsByBagpipe, setActiveSong, setIsSongLoading, setMidi, setMidiData, setSongLength, tempo]
   );
 
   useEffect(() => {
