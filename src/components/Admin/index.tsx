@@ -75,6 +75,7 @@ const Admin = () => {
                   <tr>
                     <th>№</th>
                     <th onClick={() => setSortConfig({ key: "name" })}>Name</th>
+                    <th>Dudahero link</th>
                     <th onClick={() => setSortConfig({ key: "type" })}>Type</th>
                     <th>Path Name</th>
                     <th>About</th>
@@ -92,6 +93,7 @@ const Admin = () => {
                       <td>
                         <Link to={`/admin/song/${song._id}`}>{song.name}</Link>
                       </td>
+                      <td><a href={`/app/play/${song.id}`} target="_blank" rel="noopener noreferrer">open</a></td>
                       <td>{song.type}</td>
                       <td>{song.pathName ? "X" : ""}</td>
                       <td>{song.about ? "X" : ""}</td>
