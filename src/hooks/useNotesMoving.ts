@@ -1,13 +1,13 @@
-import { Note } from "@tonejs/midi/dist/Note";
-import { useContext, useEffect, useState, useMemo, useRef } from "react";
-import { sizes } from "../constants/style";
-import { store } from "../context";
+import { Note } from '@tonejs/midi/dist/Note';
+import { useContext, useEffect, useState, useMemo, useRef } from 'react';
+import { sizes } from '../constants/style';
+import { store } from '../context';
 
 const getNotesChunks = (notes: Note[], canvasWidth: number) => {
   const result: Note[][] = [[]];
   const chunkSize = canvasWidth / 2;
   const buffer = chunkSize * 0.5; // 50% buffer for smooth transitions
-  
+
   let min = 0;
   let max = chunkSize;
   let minWithBuffer = -buffer;
@@ -18,7 +18,7 @@ const getNotesChunks = (notes: Note[], canvasWidth: number) => {
     const note = notes[i];
     const noteStart = note.ticks;
     const noteEnd = noteStart + note.durationTicks;
-    
+
     // Move to next chunk if note is beyond current chunk
     while (noteStart > maxWithBuffer) {
       min = max;
@@ -28,12 +28,9 @@ const getNotesChunks = (notes: Note[], canvasWidth: number) => {
       currentChunk++;
       result.push([]);
     }
-    
+
     // Include note if it's within range or extends into chunk
-    if (
-      (noteStart >= minWithBuffer && noteStart <= maxWithBuffer) || 
-      (noteStart < min && noteEnd > min)
-    ) {
+    if ((noteStart >= minWithBuffer && noteStart <= maxWithBuffer) || (noteStart < min && noteEnd > min)) {
       result[currentChunk].push(note);
     }
   }
@@ -54,7 +51,7 @@ export const useNotesMoving = () => {
   const [nextNotes, setNextNotes] = useState<Note[] | undefined>([]);
   const [nextToNextNotes, setNextToNextNotes] = useState<Note[] | undefined>([]);
   const [nextToNextToNextNotes, setNextToNextToNextNotes] = useState<Note[] | undefined>([]);
-  
+
   // Keep ref in sync with state
   useEffect(() => {
     currentChunkIndexRef.current = currentChunkIndex;
@@ -62,13 +59,17 @@ export const useNotesMoving = () => {
 
   useEffect(() => {
     const chunkedNotes = chunkedNotesRef.current;
-    if (!progress || !chunkedNotes.length) {
+    if (progress === undefined || !chunkedNotes.length) {
       return;
     }
 
     const newIndex = Math.floor((chunkedNotes.length * (progress.percent - 1)) / 100);
     const currentIndex = currentChunkIndexRef.current;
-    
+
+    if (!isPlaying) {
+      setTick(Math.floor((midiData?.durationTicks || 0) * (progress.percent / 100)));
+    }
+
     // Only update if index actually changed
     if (newIndex !== currentIndex) {
       setCurrentChunkIndex(newIndex);
@@ -78,17 +79,17 @@ export const useNotesMoving = () => {
       setNextToNextNotes(chunkedNotes[newIndex + 1] || []);
       setNextToNextToNextNotes(chunkedNotes[newIndex + 2] || []);
     }
-  }, [progress]);
+  }, [progress, isPlaying]);
 
   useEffect(() => {
     if (!isPlaying) return;
-    
+
     const chunkedNotes = chunkedNotesRef.current;
     const currentIndex = currentChunkIndexRef.current;
     const currentNextNotes = chunkedNotes[currentIndex];
-    
+
     if (!currentNextNotes || currentNextNotes.length === 0) return;
-    
+
     const lastNote = currentNextNotes[currentNextNotes.length - 1];
     if (lastNote?.ticks && lastNote.ticks < tick - lastNote.durationTicks) {
       const newIndex = currentIndex + 1;
@@ -103,19 +104,17 @@ export const useNotesMoving = () => {
 
   // Memoize canvas width calculation
   const canvasWidthInTicks = useMemo(() => {
-    return (screenSize.width < sizes.maxCanvasWidth
-      ? screenSize.width
-      : sizes.maxCanvasWidth) / sizes.notesScale;
+    return (screenSize.width < sizes.maxCanvasWidth ? screenSize.width : sizes.maxCanvasWidth) / sizes.notesScale;
   }, [screenSize.width]);
 
   useEffect(() => {
     if (midiData) {
       const tracks = midiData?.tracks.filter((track) => track.notes.length);
       if (!tracks || tracks.length === 0) return;
-      
+
       const notes = tracks[0].notes;
       const chunks = getNotesChunks(notes, canvasWidthInTicks);
-      
+
       chunkedNotesRef.current = chunks;
       setPreviousPreviousNotes([]);
       setPreviousNotes([]);
