@@ -109,7 +109,7 @@ export const useNotesMoving = () => {
   }, [screenSize.width]);
 
   useEffect(() => {
-    if (midiData && isPlaying) {
+    if (midiData) {
       const tracks = midiData?.tracks.filter((track) => track.notes.length);
       if (!tracks || tracks.length === 0) return;
       
@@ -124,7 +124,24 @@ export const useNotesMoving = () => {
       setNextToNextToNextNotes(chunks[2] || []);
       setCurrentChunkIndex(0);
     }
-  }, [midiData, isPlaying, canvasWidthInTicks]);
+  }, [midiData, canvasWidthInTicks]);
+
+  // Reset notes to initial state when stop button is clicked
+  useEffect(() => {
+    if (!isPlaying && progress && progress.percent === 0 && progress.time === 0) {
+      const chunkedNotes = chunkedNotesRef.current;
+      if (chunkedNotes && chunkedNotes.length > 0) {
+        // Force state updates
+        setTick(0);
+        setCurrentChunkIndex(0);
+        setPreviousPreviousNotes([]);
+        setPreviousNotes([]);
+        setNextNotes(chunkedNotes[0] || []);
+        setNextToNextNotes(chunkedNotes[1] || []);
+        setNextToNextToNextNotes(chunkedNotes[2] || []);
+      }
+    }
+  }, [isPlaying, progress]);
 
   return {
     tick,
