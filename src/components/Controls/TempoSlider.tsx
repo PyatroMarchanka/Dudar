@@ -1,21 +1,14 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  Dialog,
-  Slide,
-  IconButton,
-} from "@material-ui/core";
-import { TransitionProps } from "@material-ui/core/transitions";
-import React, { useContext, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import styled from "styled-components";
-import { store } from "../../context";
-import { MidiPlayer } from "../../utils/MidiPlayer";
-import { theme, mainColors } from "../../utils/theme";
-import { Icon } from "../global/Icon";
-import { useUpdateUserSettings } from "../../hooks/useGoogleProfile";
+import { Card, CardContent, Typography, Button, Dialog, Slide, IconButton } from '@material-ui/core';
+import { TransitionProps } from '@material-ui/core/transitions';
+import React, { useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+import { store } from '../../context';
+import { MidiPlayer } from '../../utils/MidiPlayer';
+import { theme, mainColors } from '../../utils/theme';
+import { Icon } from '../global/Icon';
+import { useUpdateUserSettings } from '../../hooks/useGoogleProfile';
+import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 
 const maxTempo = 600;
 const minTempo = 60;
@@ -34,12 +27,13 @@ const Transition = React.forwardRef(function Transition(
 });
 
 export const TempoSlider = ({ player }: Props) => {
-  const { t } = useTranslation("translation");
+  const { t } = useTranslation('translation');
   const {
-    state: { tempo, metronome },
+    state: { tempo, metronome, activeSong },
     setTempo,
     setMetronome,
   } = useContext(store);
+
   const { updateUserSettings } = useUpdateUserSettings();
   const [tapTimes, setTapTimes] = useState<number[]>([]);
 
@@ -58,11 +52,8 @@ export const TempoSlider = ({ player }: Props) => {
     setTapTimes(newTapTimes);
 
     if (newTapTimes.length > 1) {
-      const intervals = newTapTimes
-        .slice(1)
-        .map((time, i) => time - newTapTimes[i]);
-      const averageInterval =
-        intervals.reduce((a, b) => a + b) / intervals.length;
+      const intervals = newTapTimes.slice(1).map((time, i) => time - newTapTimes[i]);
+      const averageInterval = intervals.reduce((a, b) => a + b) / intervals.length;
       const newTempo = Math.round(60000 / averageInterval) * 2;
       handleTempoChange(newTempo);
     }
@@ -78,18 +69,21 @@ export const TempoSlider = ({ player }: Props) => {
     player?.setMetronome(!metronome);
   };
 
+  const restoreOriginalTempo = () => {
+    const originalTempo = activeSong?.originalTempo || 240;
+    handleTempoChange(originalTempo);
+  };
+
   const MetronomeButton = () => (
     <IconButton onClick={toggleMetronome}>
-      <Icon
-        type={metronome ? "metr-on" : "metr-off"}
-        fill={theme.colors.black}
-        className="play-icon"
-      />
+      <Icon type={metronome ? 'metr-on' : 'metr-off'} fill={theme.colors.black} className="play-icon" />
     </IconButton>
   );
 
+  const isTempoOriginal = !!(activeSong?.originalTempo && roundTempo(tempo) === roundTempo(activeSong.originalTempo));
+
   useEffect(() => {
-   handleTempoChange(tempo);
+    handleTempoChange(tempo);
   }, [tempo]);
 
   const TempoSettings = () => (
@@ -102,47 +96,29 @@ export const TempoSlider = ({ player }: Props) => {
         <CardContent>
           <TempoControls>
             <Typography className="tempo-text" variant="h6">
-              {roundTempo(tempo)} bpm
+              {roundTempo(tempo)} bpm {isTempoOriginal ? `(original)` : ''}
             </Typography>
           </TempoControls>
 
           <TempoControls>
-            <Button
-              className="tempo-button"
-              variant="outlined"
-              onClick={() => handleTempoChange(tempo - 10)}
-            >
+            <Button className="tempo-button" variant="outlined" onClick={() => handleTempoChange(tempo - 10)}>
               -5
             </Button>
-            <Button
-              className="tempo-button"
-              variant="outlined"
-              onClick={() => handleTempoMultiply(0.5)}
-            >
+            <Button className="tempo-button" variant="outlined" onClick={() => handleTempoMultiply(0.5)}>
               ½
             </Button>
-            <Button
-              className="tempo-button"
-              variant="outlined"
-              onClick={() => handleTempoMultiply(2)}
-            >
+            <IconButton className='tap-tempo-button' disabled={isTempoOriginal} onClick={() => restoreOriginalTempo()} size="medium">
+              <Icon materialSize="medium" type="material" Icon={SettingsBackupRestoreIcon} />
+            </IconButton>
+            <Button className="tempo-button" variant="outlined" onClick={() => handleTempoMultiply(2)}>
               ×2
             </Button>
-            <Button
-              className="tempo-button"
-              variant="outlined"
-              onClick={() => handleTempoChange(tempo + 10)}
-            >
+            <Button className="tempo-button" variant="outlined" onClick={() => handleTempoChange(tempo + 10)}>
               +5
             </Button>
           </TempoControls>
 
-          <TapTempoButton
-            className="tap-tempo-button"
-            variant="outlined"
-            fullWidth
-            onClick={handleTapTempo}
-          >
+          <TapTempoButton className="tap-tempo-button" variant="outlined" fullWidth onClick={handleTapTempo}>
             Tap Tempo
           </TapTempoButton>
         </CardContent>
@@ -166,12 +142,12 @@ export const TempoSlider = ({ player }: Props) => {
         TransitionComponent={Transition}
         PaperProps={{
           style: {
-            position: "fixed",
+            position: 'fixed',
             bottom: 0,
             margin: 0,
             borderTopLeftRadius: 16,
             borderTopRightRadius: 16,
-            maxWidth: "100%",
+            maxWidth: '100%',
             backgroundColor: mainColors.lightestGrey,
           },
         }}
@@ -187,6 +163,7 @@ const Container = styled.div`
   background-color: ${mainColors.lightestGrey};
 
   .tap-tempo-button {
+    border: 1px solid ${mainColors.lightGrey};
     background-color: ${mainColors.lightestGrey};
     color: ${mainColors.darkerGray};
     border-color: ${mainColors.lightGrey};

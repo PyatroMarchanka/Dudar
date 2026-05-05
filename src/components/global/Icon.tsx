@@ -32,16 +32,17 @@ interface Props {
   fill?: string;
   disabled?: boolean;
   Icon?: any;
+  materialSize?: 'small' | 'medium' | 'large';
 }
 
 export const Icon = styled(
-  ({ type, className, fill = theme.colors.black, disabled, Icon }: Props) => {
+  ({ type, className, fill = theme.colors.black, disabled, Icon, materialSize = 'large' }: Props) => {
     const getClassName = () => `${className} ${disabled ? "disabled" : ""}`;
 
     if (Icon && type === "material") {
       return (
         <Icon
-          fontSize="large"
+          fontSize={materialSize}
           className={className}
           style={{ color: disabled ? "rgba(179, 179, 179, 0.3)" : fill }}
         />
