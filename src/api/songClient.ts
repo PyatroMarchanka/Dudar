@@ -1,11 +1,12 @@
-import axios from "axios";
-import { Song } from "../dataset/songs/interfaces";
-import { links } from "./links";
+import axios from 'axios';
+import { Song } from '../dataset/songs/interfaces';
+import { links } from './links';
 
-export const songClient = axios.create({
-  baseURL:
-    "https://raw.githubusercontent.com/PyatroMarchanka/dudahero-midi/main/midi/",
-});
+const resolveSongUrl = (pathName: string) => {
+  const cleanedPath = pathName.replace(/^\/?midi\//, '');
+  const baseUrl = `${process.env.PUBLIC_URL ?? ''}/midi`.replace(/\/+/g, '/').replace(/\/$/, '');
+  return `${baseUrl}/${cleanedPath}`;
+};
 
 export const songServerClient = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
@@ -13,12 +14,16 @@ export const songServerClient = axios.create({
 
 export const songApi = {
   getSong: async (song: Song) => {
-    const res = await songClient.get(song.pathName, {
-      responseType: "blob",
-    });
+    const url = resolveSongUrl(song.pathName);
+    const res = await fetch(url);
 
-    return res.data;
+    if (!res.ok) {
+      throw new Error(`Failed to load song from public folder: ${res.status} ${res.statusText}`);
+    }
+
+    return await res.blob();
   },
+
   getSongList: async (): Promise<Song[]> => {
     const res = await songServerClient.get(links.songs);
     return res.data;
@@ -26,16 +31,12 @@ export const songApi = {
   updateSong: async (song: Song) => {
     if (!song._id) return;
 
-    const res = await songServerClient.put(
-      `${links.adminSong}/${song._id}`,
-      song,
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await songServerClient.put(`${links.adminSong}/${song._id}`, song, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     return res.data;
   },
   getSongData: async (_id: string) => {
@@ -45,10 +46,7 @@ export const songApi = {
   updateSongViewsCount: async (song: Song) => {
     if (!song._id) return;
 
-    const res = await songServerClient.put(
-      `${links.songViews}/${song._id}`,
-      song
-    );
+    const res = await songServerClient.put(`${links.songViews}/${song._id}`, song);
     return res.data;
   },
   getTopSongs: async (limit: number = 10) => {
