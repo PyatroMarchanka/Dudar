@@ -44,7 +44,7 @@ export const SongPage = ({ onClose }: Props) => {
       type === LinkTypes.Video
         ? Videocam
         : type === LinkTypes.Audio
-        ? Audiotrack
+        ? Audiotrack  
         : Info;
     return (
       <Icon
@@ -106,7 +106,7 @@ export const SongPage = ({ onClose }: Props) => {
             ?.filter((bagpipe) => (bagpipe as any) !== "gd")
             .map((bagpipe) => t(`dudas.${getTranslationKeyByBagpipeType(bagpipe)}`)) || [],
           timeSignature: activeSong?.timeSignature || '4/4',
-          tempo: activeSong?.originalTempo,
+          tempo: activeSong?.originalTempo ? activeSong?.originalTempo / 2 : undefined,
           tags: activeSong?.labels?.map(label => t(`tags.${label}`)) || [],
           transcribedBy: activeSong?.transcribedBy,
           url: `/play/${params.id}`,
@@ -184,7 +184,7 @@ export const SongPage = ({ onClose }: Props) => {
       {activeSong?.originalTempo && (
         <SongProperty>
           <Typography align="center" variant="h6">
-            {t(`songInfo.originalTempo`)}: <b>{activeSong?.originalTempo}</b>
+            {t(`songInfo.originalTempo`)}: <b>{activeSong?.originalTempo ? activeSong?.originalTempo / 2 : undefined}</b>
           </Typography>
         </SongProperty>
       )}
