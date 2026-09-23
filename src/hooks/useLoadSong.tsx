@@ -1,8 +1,7 @@
-import { Midi } from '@tonejs/midi';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { store } from '../context';
 import { Song } from '../dataset/songs/interfaces';
-import { addMetronome, fixMidiDataOctaves } from '../utils/midiUtils';
+import { prepareSongMidi } from '../utils/midiUtils';
 import { songApi } from '../api/songClient';
 import { useParams } from 'react-router-dom';
 import { findSongInListById, getFirstSongFromList } from '../dataset/songs/utils';
@@ -51,14 +50,10 @@ export const useLoadSong = () => {
         const file = await songApi.getSong(song);
         const buffer = await file.arrayBuffer();
 
-        const songWithMetronome = await addMetronome(buffer, song.timeSignature);
+        const { midi, songWithMetronome, songLength, lowestOctave: lowestOctaveFromFile } =
+          await prepareSongMidi(buffer, song.timeSignature, song.originalTempo, tempo);
 
-        const midi = new Midi(songWithMetronome);
-        midi.header.setTempo((song.originalTempo || tempo) / 2);
-
-        setSongLength(midi.header.ticksToSeconds(midi.durationTicks));
-
-        const { lowestOctave: lowestOctaveFromFile } = fixMidiDataOctaves(midi);
+        setSongLength(songLength);
         setLowestOctave(lowestOctaveFromFile);
         setMidiData(midi);
         setMidi(songWithMetronome);
