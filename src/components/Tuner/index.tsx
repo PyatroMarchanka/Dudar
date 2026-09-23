@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import createTuner from "@pedroloch/tuner";
+import createTuner from "../../vendor/tuner";
 import styled from "styled-components";
 import { Typography } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
