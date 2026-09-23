@@ -1,12 +1,11 @@
-import styled from "styled-components";
 import { noSongsLabel } from "../../context";
 import { useSongTitle } from "../../hooks/useSongTitle";
 import { useAbcSong } from "../../hooks/useAbcSong";
-import { Logo } from "../global/Logo";
 import { Settings } from "../Controls/Settings";
 import { Header, SettingsButtons, SongTitle } from "./common";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { useEffect } from "react";
+import { TunerButton } from "../global/TunerButton";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
@@ -29,14 +28,8 @@ export const AbcPlayPageHeader = ({ midiPlayer }: Props) => {
       <Header>
         <SongTitle>{songTitle ?? noSongsLabel}</SongTitle>
       </Header>
-      <LogoContainer>
-        <Logo variant="small" width={26} height={40} />
-      </LogoContainer>
-      <Settings midiPlayer={midiPlayer} />
+      <TunerButton />
+      <Settings midiPlayer={midiPlayer} showSongInfo={false} />
     </SettingsButtons>
   );
 };
-
-const LogoContainer = styled.div`
-  margin-left: 10px;
-`;

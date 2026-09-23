@@ -20,6 +20,8 @@
   "tuner": "Цюнэр",
   "disableTuner": "Адключыць цюнэр",
   "enableTuner":"Уключыць цюнэр",
+  "frequency": "Частата",
+  "tunerTarget": "Мэта",
   "semitones": "паўтон(аў)",
   "gotIt": "Зразумела",
   "looper": {

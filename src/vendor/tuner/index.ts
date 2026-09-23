@@ -18,11 +18,13 @@ const createTuner = () => {
         autoGainControl: false,
       },
     });
-    startPitch(mic, audioContext);
+    await startPitch(mic, audioContext);
   }
 
-  function startPitch(mic: MediaStream, audioContext: AudioContext) {
-    audioContext = new AudioContext();
+  async function startPitch(mic: MediaStream, audioContext: AudioContext) {
+    if (audioContext.state === 'suspended') {
+      await audioContext.resume();
+    }
     pitchDetector = ml5.pitchDetection(modelUrl, audioContext, mic, () => {
       getPitch();
     });

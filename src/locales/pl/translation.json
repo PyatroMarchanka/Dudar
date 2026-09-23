@@ -21,6 +21,8 @@
   "tuner": "Tuner",
   "disableTuner": "Wyłącz tuner",
   "enableTuner": "Włącz tuner",
+  "frequency": "Częstotliwość",
+  "tunerTarget": "Cel",
   "gotIt": "Rozumiem",
   "looper": {
     "selectBarsCount": "Wybierz liczbę taktów muzycznych do zapętlenia",
