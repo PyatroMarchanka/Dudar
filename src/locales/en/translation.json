@@ -23,6 +23,7 @@
   "enableTuner": "Enable Tuner",
   "frequency": "Frequency",
   "tunerTarget": "Target",
+  "tunerWaitingForSound": "Play a note to start tuning",
   "gotIt": "Got it",
   "looper": {
     "selectBarsCount": "Select the bars count to loop",

@@ -5,7 +5,12 @@ import { theme } from "../../utils/theme";
 import { Tuner, startTuner } from "../Tuner";
 
 const useStyles = makeStyles(() => ({
-  container: {},
+  container: {
+    padding: 0,
+    "&:first-child": {
+      paddingTop: 0,
+    },
+  },
 }));
 
 export const TunerButton = () => {
@@ -26,8 +31,8 @@ export const TunerButton = () => {
       <IconButton onClick={handleClick} className="icon">
         <Icon type="tuning-fork" fill={theme.colors.black} />
       </IconButton>
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogContent className={classes.container}>
+      <Dialog open={open} onClose={() => setOpen(false)} PaperProps={{ style: { borderRadius: 16 } }}>
+        <DialogContent classes={{ root: classes.container }}>
           <Tuner />
         </DialogContent>
       </Dialog>

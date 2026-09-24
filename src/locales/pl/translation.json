@@ -23,6 +23,7 @@
   "enableTuner": "Włącz tuner",
   "frequency": "Częstotliwość",
   "tunerTarget": "Cel",
+  "tunerWaitingForSound": "Zagraj dźwięk, aby rozpocząć strojenie",
   "gotIt": "Rozumiem",
   "looper": {
     "selectBarsCount": "Wybierz liczbę taktów muzycznych do zapętlenia",

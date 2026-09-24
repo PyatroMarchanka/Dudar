@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import createTuner from "../../vendor/tuner";
 import styled from "styled-components";
-import { CircularProgress, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
+import MicNoneOutlinedIcon from "@material-ui/icons/MicNoneOutlined";
 import { useTranslation } from "react-i18next";
 import { mainColors } from "../../utils/theme";
 
@@ -25,9 +26,11 @@ const statusColors: Record<Status, string> = {
 const tuner = createTuner();
 const tunerWidth = 300;
 
-const bufferLength = 500;
-
-let lastDatas: Data[] = [];
+// How much each new reading pulls the displayed value toward it (0-1).
+// Higher = reacts faster but jitters more, lower = smoother but laggier.
+// Readings now arrive ~30/sec (see vendor/tuner), so this can be fairly
+// low and still keep the needle moving in real time.
+const smoothing = 0.25;
 
 let stream: MediaStream | undefined;
 
@@ -48,12 +51,17 @@ export const stopTuner = () => {
 export const Tuner = ({}: Props) => {
   const [data, setData] = useState<Data | null>(null);
   const [dataToShow, setDataToShow] = useState<Data | null>(null);
+  const smoothedDiffRef = useRef<number | null>(null);
   const { t } = useTranslation("translation");
 
   useEffect(() => {
-    if (data) {
-      lastDatas.push(data);
-    }
+    if (!data) return;
+
+    const prevDiff = smoothedDiffRef.current;
+    const smoothedDiff = prevDiff === null ? data.diff : prevDiff + smoothing * (data.diff - prevDiff);
+    smoothedDiffRef.current = smoothedDiff;
+
+    setDataToShow({ ...data, diff: Math.round(smoothedDiff) });
   }, [data]);
 
   useEffect(() => {
@@ -71,25 +79,8 @@ export const Tuner = ({}: Props) => {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (lastDatas.length > 0) {
-        const sum = lastDatas.reduce((acc, curr) => acc + curr.diff, 0);
-        const avg = sum / lastDatas.length;
-        const note = lastDatas.at(-1)!.note;
-
-        setDataToShow({
-          frequency: lastDatas.at(-1)!.frequency,
-          note,
-          diff: Math.round(avg),
-          pitch: lastDatas.at(-1)!.pitch,
-        });
-
-        lastDatas = [];
-      }
-    }, bufferLength);
-
     return () => {
-      clearInterval(interval);
+      smoothedDiffRef.current = null;
       setDataToShow(null);
       setData(null);
       stopTuner();
@@ -112,9 +103,9 @@ export const Tuner = ({}: Props) => {
   };
 
   const status: Status = dataToShow ? getStatus(dataToShow.diff) : "off";
-  const needleX = dataToShow
-    ? Math.max(-1, Math.min(1, dataToShow.diff / 100)) * (tunerWidth / 2)
-    : 0;
+  // Percentage offset from center, so the needle tracks correctly whatever
+  // width the meter actually renders at (it's responsive, not fixed pixels).
+  const needleOffsetPercent = dataToShow ? Math.max(-1, Math.min(1, dataToShow.diff / 100)) * 50 : 0;
 
   return (
     <Container>
@@ -135,7 +126,7 @@ export const Tuner = ({}: Props) => {
                   <Tick key={i} isCenter={i === tickCount / 2} />
                 ))}
               </TicksRow>
-              <Needle status={status} translateX={needleX} />
+              <Needle status={status} offsetPercent={needleOffsetPercent} />
             </MeterOuter>
 
             <FrequencyRow>
@@ -152,9 +143,12 @@ export const Tuner = ({}: Props) => {
             </FrequencyRow>
           </Panel>
         ) : (
-          <LoaderContainer>
-            <CircularProgress size="2.5rem" style={{ color: mainColors.darkerGray }} />
-          </LoaderContainer>
+          <WaitingContainer>
+            <MicNoneOutlinedIcon style={{ fontSize: "2.5rem", color: mainColors.midGrey }} />
+            <Typography variant="body2" style={{ color: mainColors.midGrey }}>
+              {t("tunerWaitingForSound")}
+            </Typography>
+          </WaitingContainer>
         )}
       </Wrapper>
     </Container>
@@ -173,17 +167,21 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-const LoaderContainer = styled.div`
+const WaitingContainer = styled.div`
+  box-sizing: border-box;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   width: ${tunerWidth}px;
+  max-width: 100%;
   height: 110px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  text-align: center;
 `;
 
 const Panel = styled.div<{ status: Status }>`
+  box-sizing: border-box;
   position: relative;
   width: ${tunerWidth}px;
   max-width: 100%;
@@ -191,7 +189,6 @@ const Panel = styled.div<{ status: Status }>`
   flex-direction: column;
   align-items: center;
   padding: 20px 20px 16px;
-  margin: 16px 0;
   border-radius: 16px;
   background: ${mainColors.lightestGrey};
   border: 2px solid ${({ status }) => statusColors[status]};
@@ -226,6 +223,7 @@ const CentsBadge = styled.div<{ status: Status }>`
 const MeterOuter = styled.div`
   position: relative;
   width: ${tunerWidth}px;
+  max-width: 100%;
   height: 40px;
   margin-top: 16px;
 `;
@@ -264,17 +262,17 @@ const Tick = styled.div<{ isCenter: boolean }>`
   background: ${({ isCenter }) => (isCenter ? mainColors.darkerGray : mainColors.midGrey)};
 `;
 
-const Needle = styled.div<{ translateX: number; status: Status }>`
+const Needle = styled.div<{ offsetPercent: number; status: Status }>`
   position: absolute;
   top: 0;
-  left: 50%;
+  left: calc(50% + ${({ offsetPercent }) => offsetPercent}%);
   width: 3px;
   height: 32px;
   border-radius: 2px;
   background: ${({ status }) => statusColors[status]};
   box-shadow: 0 0 8px ${({ status }) => statusColors[status]}99;
-  transform: translateX(${({ translateX }) => translateX - 1.5}px);
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s ease;
+  transform: translateX(-50%);
+  transition: left 0.12s linear, background-color 0.3s ease;
 `;
 
 const FrequencyRow = styled.div`

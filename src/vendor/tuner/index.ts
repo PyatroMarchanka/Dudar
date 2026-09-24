@@ -1,14 +1,19 @@
-import ml5 from 'ml5';
 import { on, trigger } from './events';
-import { getNote } from './helpers';
+import { autoCorrelate, getNote } from './helpers';
 
-const modelUrl = 'https://cdn.jsdelivr.net/gh/ml5js/ml5-data-and-models/models/pitch-detection/crepe/';
+const bufferSize = 2048;
+// No model inference to wait on, so we can sample this often (~30/sec)
+// and still be cheap on the CPU.
+const detectionIntervalMs = 33;
 
 const createTuner = () => {
   const audioContext = new ((window as any).AudioContext || (window as any).webkitAudioContext)();
   let isOn = false;
-  let pitchDetector: any;
   let mic: MediaStream;
+  let source: MediaStreamAudioSourceNode | undefined;
+  let analyser: AnalyserNode | undefined;
+  let buffer: Float32Array;
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
   async function setup() {
     mic = await navigator.mediaDevices.getUserMedia({
@@ -18,47 +23,49 @@ const createTuner = () => {
         autoGainControl: false,
       },
     });
-    await startPitch(mic, audioContext);
-  }
 
-  async function startPitch(mic: MediaStream, audioContext: AudioContext) {
     if (audioContext.state === 'suspended') {
       await audioContext.resume();
     }
-    pitchDetector = ml5.pitchDetection(modelUrl, audioContext, mic, () => {
-      getPitch();
-    });
+
+    const newAnalyser = audioContext.createAnalyser();
+    newAnalyser.fftSize = bufferSize;
+    buffer = new Float32Array(newAnalyser.fftSize);
+
+    const newSource = audioContext.createMediaStreamSource(mic);
+    newSource.connect(newAnalyser);
+
+    analyser = newAnalyser;
+    source = newSource;
   }
 
-  function getPitch() {
-    pitchDetector.getPitch(function (err: Error, frequency: number) {
-      if (err) throw new Error(err.message);
-      if (isOn) {
-        if (frequency) {
-          const { pitch, note, diff } = getNote(frequency);
-          trigger({
-            frequency,
-            pitch,
-            note,
-            diff,
-          });
-        }
-        setTimeout(() => {
-          getPitch();
-        }, 100);
-      }
-    });
+  function detectPitch() {
+    if (!isOn || !analyser) return;
+
+    analyser.getFloatTimeDomainData(buffer);
+    const frequency = autoCorrelate(buffer, audioContext.sampleRate);
+
+    if (frequency > 0) {
+      const { pitch, note, diff } = getNote(frequency);
+      trigger({ frequency, pitch, note, diff });
+    }
+
+    timeoutId = setTimeout(detectPitch, detectionIntervalMs);
   }
 
   async function start() {
     await setup();
-    if (pitchDetector) getPitch();
     isOn = true;
+    detectPitch();
   }
 
   function stop() {
     isOn = false;
-    mic.getTracks().forEach((t) => t.stop());
+    if (timeoutId) clearTimeout(timeoutId);
+    source?.disconnect();
+    source = undefined;
+    analyser = undefined;
+    mic?.getTracks().forEach((t) => t.stop());
   }
 
   return { start, stop, getData: on, isOn };

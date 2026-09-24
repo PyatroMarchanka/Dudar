@@ -22,6 +22,7 @@
   "enableTuner":"Уключыць цюнэр",
   "frequency": "Частата",
   "tunerTarget": "Мэта",
+  "tunerWaitingForSound": "Згуляйце ноту, каб пачаць настройку",
   "semitones": "паўтон(аў)",
   "gotIt": "Зразумела",
   "looper": {
