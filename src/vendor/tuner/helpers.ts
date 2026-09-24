@@ -90,10 +90,15 @@ export function getNote(frequency: number) {
   const indexNote = allNotes.indexOf(pitch);
   let limit;
   const isSharp = frequency > pitch;
+  // At the top/bottom edge of the table the neighbour we'd normally use is
+  // missing, so fall back to the interval on the other side instead of
+  // producing NaN (which would permanently poison the smoothing in Tuner).
   if (isSharp) {
-    limit = allNotes[indexNote + 1] - allNotes[indexNote];
+    const next = allNotes[indexNote + 1];
+    limit = next !== undefined ? next - pitch : pitch - allNotes[indexNote - 1];
   } else {
-    limit = allNotes[indexNote] - allNotes[indexNote - 1];
+    const prev = allNotes[indexNote - 1];
+    limit = prev !== undefined ? pitch - prev : allNotes[indexNote + 1] - pitch;
   }
   const diff = Math.floor(((frequency - pitch) / limit) * 200);
 

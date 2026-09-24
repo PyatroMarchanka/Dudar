@@ -55,28 +55,17 @@ export const Tuner = ({}: Props) => {
   const { t } = useTranslation("translation");
 
   useEffect(() => {
-    if (!data) return;
+    if (!data || !Number.isFinite(data.diff)) return;
 
     const prevDiff = smoothedDiffRef.current;
-    const smoothedDiff = prevDiff === null ? data.diff : prevDiff + smoothing * (data.diff - prevDiff);
+    // Guard against a stale non-finite value (e.g. from a bad reading) so it
+    // can't permanently poison every future reading via NaN propagation.
+    const smoothedDiff =
+      prevDiff === null || !Number.isFinite(prevDiff) ? data.diff : prevDiff + smoothing * (data.diff - prevDiff);
     smoothedDiffRef.current = smoothedDiff;
 
     setDataToShow({ ...data, diff: Math.round(smoothedDiff) });
   }, [data]);
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        stopTuner();
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, []);
 
   useEffect(() => {
     return () => {
