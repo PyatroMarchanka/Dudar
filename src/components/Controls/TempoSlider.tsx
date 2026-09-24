@@ -26,6 +26,86 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+interface MetronomeButtonProps {
+  metronome: boolean;
+  toggleMetronome: () => void;
+}
+
+// Defined at module scope (not inside TempoSlider) so its component identity stays stable across
+// re-renders: playback dispatches context updates roughly every 5ms, and a component re-created on
+// every render would get remounted each time, dropping hover state and interrupting in-flight clicks.
+const MetronomeButton = ({ metronome, toggleMetronome }: MetronomeButtonProps) => (
+  <IconButton onClick={toggleMetronome}>
+    <Icon type={metronome ? 'metr-on' : 'metr-off'} fill={theme.colors.black} className="play-icon" />
+  </IconButton>
+);
+
+interface TempoSettingsProps {
+  tempo: number;
+  metronome: boolean;
+  toggleMetronome: () => void;
+  isTempoOriginal: boolean;
+  onDecrease: () => void;
+  onHalve: () => void;
+  onRestoreOriginal: () => void;
+  onDouble: () => void;
+  onIncrease: () => void;
+  onTapTempo: () => void;
+}
+
+// Same reason as MetronomeButton: must stay a stable module-level component, not be redefined
+// inside TempoSlider's render, or it remounts on every playback tick.
+const TempoSettings = ({
+  tempo,
+  metronome,
+  toggleMetronome,
+  isTempoOriginal,
+  onDecrease,
+  onHalve,
+  onRestoreOriginal,
+  onDouble,
+  onIncrease,
+  onTapTempo,
+}: TempoSettingsProps) => (
+  <Container>
+    <HeaderContainer>
+      <Typography variant="h6">Tempo Settings</Typography>
+      <MetronomeButton metronome={metronome} toggleMetronome={toggleMetronome} />
+    </HeaderContainer>
+    <StyledCard>
+      <CardContent>
+        <TempoControls>
+          <Typography className="tempo-text" variant="h6">
+            {roundTempo(tempo)} bpm {isTempoOriginal ? `(original)` : ''}
+          </Typography>
+        </TempoControls>
+
+        <TempoControls>
+          <Button className="tempo-button" variant="outlined" onClick={onDecrease}>
+            -5
+          </Button>
+          <Button className="tempo-button" variant="outlined" onClick={onHalve}>
+            ½
+          </Button>
+          <IconButton className="tap-tempo-button" disabled={isTempoOriginal} onClick={onRestoreOriginal} size="medium">
+            <Icon materialSize="medium" type="material" Icon={SettingsBackupRestoreIcon} />
+          </IconButton>
+          <Button className="tempo-button" variant="outlined" onClick={onDouble}>
+            ×2
+          </Button>
+          <Button className="tempo-button" variant="outlined" onClick={onIncrease}>
+            +5
+          </Button>
+        </TempoControls>
+
+        <TapTempoButton className="tap-tempo-button" variant="outlined" fullWidth onClick={onTapTempo}>
+          Tap Tempo
+        </TapTempoButton>
+      </CardContent>
+    </StyledCard>
+  </Container>
+);
+
 export const TempoSlider = ({ player }: Props) => {
   const { t } = useTranslation('translation');
   const {
@@ -74,62 +154,16 @@ export const TempoSlider = ({ player }: Props) => {
     handleTempoChange(originalTempo);
   };
 
-  const MetronomeButton = () => (
-    <IconButton onClick={toggleMetronome}>
-      <Icon type={metronome ? 'metr-on' : 'metr-off'} fill={theme.colors.black} className="play-icon" />
-    </IconButton>
-  );
-
   const isTempoOriginal = !!(activeSong?.originalTempo && roundTempo(tempo) === roundTempo(activeSong.originalTempo));
 
   useEffect(() => {
     handleTempoChange(tempo);
   }, [tempo]);
 
-  const TempoSettings = () => (
-    <Container>
-      <HeaderContainer>
-        <Typography variant="h6">Tempo Settings</Typography>
-        <MetronomeButton />
-      </HeaderContainer>
-      <StyledCard>
-        <CardContent>
-          <TempoControls>
-            <Typography className="tempo-text" variant="h6">
-              {roundTempo(tempo)} bpm {isTempoOriginal ? `(original)` : ''}
-            </Typography>
-          </TempoControls>
-
-          <TempoControls>
-            <Button className="tempo-button" variant="outlined" onClick={() => handleTempoChange(tempo - 10)}>
-              -5
-            </Button>
-            <Button className="tempo-button" variant="outlined" onClick={() => handleTempoMultiply(0.5)}>
-              ½
-            </Button>
-            <IconButton className='tap-tempo-button' disabled={isTempoOriginal} onClick={() => restoreOriginalTempo()} size="medium">
-              <Icon materialSize="medium" type="material" Icon={SettingsBackupRestoreIcon} />
-            </IconButton>
-            <Button className="tempo-button" variant="outlined" onClick={() => handleTempoMultiply(2)}>
-              ×2
-            </Button>
-            <Button className="tempo-button" variant="outlined" onClick={() => handleTempoChange(tempo + 10)}>
-              +5
-            </Button>
-          </TempoControls>
-
-          <TapTempoButton className="tap-tempo-button" variant="outlined" fullWidth onClick={handleTapTempo}>
-            Tap Tempo
-          </TapTempoButton>
-        </CardContent>
-      </StyledCard>
-    </Container>
-  );
-
   return (
     <>
       <CompactView>
-        <MetronomeButton />
+        <MetronomeButton metronome={metronome} toggleMetronome={toggleMetronome} />
         <div onClick={() => setIsModalOpen(true)}>
           <Typography variant="h6">{roundTempo(tempo)} bpm</Typography>
         </div>
@@ -152,7 +186,18 @@ export const TempoSlider = ({ player }: Props) => {
           },
         }}
       >
-        <TempoSettings />
+        <TempoSettings
+          tempo={tempo}
+          metronome={metronome}
+          toggleMetronome={toggleMetronome}
+          isTempoOriginal={isTempoOriginal}
+          onDecrease={() => handleTempoChange(tempo - 10)}
+          onHalve={() => handleTempoMultiply(0.5)}
+          onRestoreOriginal={restoreOriginalTempo}
+          onDouble={() => handleTempoMultiply(2)}
+          onIncrease={() => handleTempoChange(tempo + 10)}
+          onTapTempo={handleTapTempo}
+        />
       </Dialog>
     </>
   );
