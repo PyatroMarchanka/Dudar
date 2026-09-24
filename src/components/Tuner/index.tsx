@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
-import createTuner from "@pedroloch/tuner";
+import createTuner from "../../vendor/tuner";
 import styled from "styled-components";
 import { Typography } from "@material-ui/core";
+import MicNoneOutlinedIcon from "@material-ui/icons/MicNoneOutlined";
 import { useTranslation } from "react-i18next";
 import { mainColors } from "../../utils/theme";
-import { Icon } from "../global/Icon";
 
 interface Props {}
 interface Data {
@@ -15,143 +15,131 @@ interface Data {
   diff: number;
 }
 
+type Status = "inTune" | "close" | "off";
+
+const statusColors: Record<Status, string> = {
+  inTune: "#4caf50",
+  close: mainColors.orange,
+  off: mainColors.red,
+};
+
 const tuner = createTuner();
 const tunerWidth = 300;
 
-const bufferLength = 100;
+// How much each new reading pulls the displayed value toward it (0-1).
+// Higher = reacts faster but jitters more, lower = smoother but laggier.
+// Readings now arrive ~30/sec (see vendor/tuner), so this can be fairly
+// low and still keep the needle moving in real time.
+const smoothing = 0.25;
 
-let lastDatas: Data[] = [];
+let stream: MediaStream | undefined;
 
-let stream: MediaStream;
+// Requests mic access and starts the pitch detector. Called from the header's
+// tuning-fork button so the permission prompt fires on that click, before the
+// popup showing the Tuner even opens.
+export const startTuner = async () => {
+  stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  await tuner.start();
+};
+
+export const stopTuner = () => {
+  tuner.stop();
+  stream?.getTracks().forEach((track) => track.stop());
+  stream = undefined;
+};
 
 export const Tuner = ({}: Props) => {
   const [data, setData] = useState<Data | null>(null);
-  const [isTunerOn, setIsTunerOn] = useState(false);
   const [dataToShow, setDataToShow] = useState<Data | null>(null);
+  const smoothedDiffRef = useRef<number | null>(null);
   const { t } = useTranslation("translation");
 
-  const handleClick = async () => {
-    if (isTunerOn) {
-      tuner.stop();
-      stream?.getTracks().forEach((track) => track.stop());
-    } else if (!tuner.isOn) {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      await tuner.start();
-    }
-
-    setIsTunerOn(!isTunerOn);
-  };
-
   useEffect(() => {
-    if (data) {
-      lastDatas.push(data);
-    }
+    if (!data || !Number.isFinite(data.diff)) return;
+
+    const prevDiff = smoothedDiffRef.current;
+    // Guard against a stale non-finite value (e.g. from a bad reading) so it
+    // can't permanently poison every future reading via NaN propagation.
+    const smoothedDiff =
+      prevDiff === null || !Number.isFinite(prevDiff) ? data.diff : prevDiff + smoothing * (data.diff - prevDiff);
+    smoothedDiffRef.current = smoothedDiff;
+
+    setDataToShow({ ...data, diff: Math.round(smoothedDiff) });
   }, [data]);
 
   useEffect(() => {
-    const handleVisibilityChange = async () => {
-      if (document.hidden && isTunerOn) {
-        tuner.stop();
-        setIsTunerOn(false);
-        stream?.getTracks().forEach((track) => track.stop());
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
     return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [isTunerOn]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (lastDatas.length > 0) {
-        const sum = lastDatas.reduce((acc, curr) => acc + curr.diff, 0);
-        const avg = sum / lastDatas.length;
-        const note = lastDatas.at(-1)!.note;
-
-        setDataToShow({
-          frequency: lastDatas.at(-1)!.frequency,
-          note,
-          diff: Math.round(avg),
-          pitch: lastDatas.at(-1)!.pitch,
-        });
-
-        lastDatas = [];
-      }
-    }, bufferLength);
-
-    return () => {
-      clearInterval(interval);
+      smoothedDiffRef.current = null;
       setDataToShow(null);
       setData(null);
-      if (tuner.isOn) {
-        tuner.stop();
-      }
-      setIsTunerOn(false);
-      stream?.getTracks().forEach((track) => track.stop());
+      stopTuner();
     };
   }, []);
 
-  React.useEffect(() => {
-    if (isTunerOn) {
-      tuner.getData((data) => {
-        setData(data);
-      });
-    }
-  }, [isTunerOn]);
+  useEffect(() => {
+    tuner.getData((data) => {
+      setData(data);
+    });
+  }, []);
 
-  const verticalLines = (number: number, margin: number) => {
-    const lines = [];
-    for (let i = 0; i < number; i++) {
-      lines.push(
-        <div
-          key={i}
-          style={{
-            borderLeft: "1px solid #333",
-            height: "10px",
-            position: "absolute",
-            left: `${margin + i * 10}px`,
-          }}
-        ></div>
-      );
-    }
-    return lines;
+  const tickCount = tunerWidth / 10;
+
+  const getStatus = (diff: number): Status => {
+    const abs = Math.abs(diff);
+    if (abs <= 10) return "inTune";
+    if (abs <= 30) return "close";
+    return "off";
   };
 
-  const isGreen = dataToShow
-    ? dataToShow?.diff > -10 && dataToShow?.diff < 10
-    : false;
+  const status: Status = dataToShow ? getStatus(dataToShow.diff) : "off";
+  // Percentage offset from center, so the needle tracks correctly whatever
+  // width the meter actually renders at (it's responsive, not fixed pixels).
+  const needleOffsetPercent = dataToShow ? Math.max(-1, Math.min(1, dataToShow.diff / 100)) * 50 : 0;
 
   return (
     <Container>
-      <Row>
-        <Icon
-          fill={mainColors.darkerGray}
-          type="tuning-fork"
-          className="duda"
-        />
-        <Title onClick={handleClick}>
-          {isTunerOn ? t("disableTuner") : t("enableTuner")}
-        </Title>
-      </Row>
-      {isTunerOn && dataToShow && (
-        <Wrapper>
-          <TunerContainer isGreen={isGreen}>
-            <MovingBarContainer>
-              <MovingBar
-                isGreen={isGreen}
-                translateX={(tunerWidth / 2) * (dataToShow.diff / 100) || 0}
-                width={20}
-              />
-              {verticalLines(tunerWidth / 10, 10)}
-            </MovingBarContainer>
-            <Typography variant="h4">{dataToShow?.note}</Typography>
-            <Typography variant="h5">{dataToShow?.diff}</Typography>
-          </TunerContainer>
-        </Wrapper>
-      )}
+      <Wrapper>
+        {dataToShow ? (
+          <Panel status={status}>
+            <NoteRow>
+              <NoteName status={status}>{dataToShow.note}</NoteName>
+              <CentsBadge status={status}>
+                {dataToShow.diff > 0 ? `+${dataToShow.diff}` : dataToShow.diff}
+              </CentsBadge>
+            </NoteRow>
+
+            <MeterOuter>
+              <MeterGradient />
+              <TicksRow>
+                {Array.from({ length: tickCount + 1 }).map((_, i) => (
+                  <Tick key={i} isCenter={i === tickCount / 2} />
+                ))}
+              </TicksRow>
+              <Needle status={status} offsetPercent={needleOffsetPercent} />
+            </MeterOuter>
+
+            <FrequencyRow>
+              <Typography variant="caption" style={{ color: mainColors.midGrey }}>
+                {t("frequency")}
+              </Typography>
+              <FrequencyValue>
+                {dataToShow.frequency.toFixed(1)}
+                <Unit>Hz</Unit>
+              </FrequencyValue>
+              <TargetFrequency>
+                {t("tunerTarget")} &asymp; {dataToShow.pitch.toFixed(1)} Hz
+              </TargetFrequency>
+            </FrequencyRow>
+          </Panel>
+        ) : (
+          <WaitingContainer>
+            <MicNoneOutlinedIcon style={{ fontSize: "2.5rem", color: mainColors.midGrey }} />
+            <Typography variant="body2" style={{ color: mainColors.midGrey }}>
+              {t("tunerWaitingForSound")}
+            </Typography>
+          </WaitingContainer>
+        )}
+      </Wrapper>
     </Container>
   );
 };
@@ -168,50 +156,136 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-const TunerContainer = styled.div<{ isGreen: boolean }>`
-  position: relative;
-  width: ${tunerWidth}px;
+const WaitingContainer = styled.div`
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: ${({ isGreen }) => (isGreen ? "#4caf50" : "#f44336")};
-  margin-top: 20px;
-  margin-bottom: 20px;
+  gap: 8px;
+  width: ${tunerWidth}px;
+  max-width: 100%;
+  height: 110px;
+  text-align: center;
 `;
 
-const MovingBar = styled.div<{
-  translateX: number;
-  isGreen: boolean;
-  width: number;
-}>`
-  position: absolute;
-  width: ${({ width }) => width}px;
-  height: 10px;
-  background-color: ${({ isGreen }) => (isGreen ? "#4caf50" : "#f44336")};
-  transform: translateX(${(props) => props.translateX - props.width / 2}px);
-  transition: transform 0.5s;
-  border-radius: 5px;
-`;
-
-const MovingBarContainer = styled.div`
-  height: 10px;
-  border: 1px solid #333;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  overflow: hidden;
-`;
-
-const Title = styled.h3`
-  color: ${mainColors.midGrey};
-  font-weight: 600;
-  font-size: 20px;
-  font-family: Arial, Helvetica, sans-serif;
-  margin-left: 20px;
-`;
-
-const Row = styled.div`
+const Panel = styled.div<{ status: Status }>`
+  box-sizing: border-box;
+  position: relative;
+  width: ${tunerWidth}px;
+  max-width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  flex-wrap: nowrap;
+  padding: 20px 20px 16px;
+  border-radius: 16px;
+  background: ${mainColors.lightestGrey};
+  border: 2px solid ${({ status }) => statusColors[status]};
+  box-shadow: 0 4px 14px rgba(109, 83, 83, 0.12);
+  transition: border-color 0.3s ease;
+`;
+
+const NoteRow = styled.div`
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+`;
+
+const NoteName = styled.div<{ status: Status }>`
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+  color: ${({ status }) => statusColors[status]};
+  transition: color 0.3s ease;
+`;
+
+const CentsBadge = styled.div<{ status: Status }>`
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: ${mainColors.lightestGrey};
+  background: ${({ status }) => statusColors[status]};
+  transition: background-color 0.3s ease;
+`;
+
+const MeterOuter = styled.div`
+  position: relative;
+  width: ${tunerWidth}px;
+  max-width: 100%;
+  height: 40px;
+  margin-top: 16px;
+`;
+
+const MeterGradient = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 17px;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(
+    to right,
+    ${mainColors.red} 0%,
+    ${mainColors.orange} 20%,
+    #4caf50 42%,
+    #4caf50 58%,
+    ${mainColors.orange} 80%,
+    ${mainColors.red} 100%
+  );
+  opacity: 0.5;
+`;
+
+const TicksRow = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 8px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Tick = styled.div<{ isCenter: boolean }>`
+  width: 1px;
+  height: ${({ isCenter }) => (isCenter ? "24px" : "10px")};
+  background: ${({ isCenter }) => (isCenter ? mainColors.darkerGray : mainColors.midGrey)};
+`;
+
+const Needle = styled.div<{ offsetPercent: number; status: Status }>`
+  position: absolute;
+  top: 0;
+  left: calc(50% + ${({ offsetPercent }) => offsetPercent}%);
+  width: 3px;
+  height: 32px;
+  border-radius: 2px;
+  background: ${({ status }) => statusColors[status]};
+  box-shadow: 0 0 8px ${({ status }) => statusColors[status]}99;
+  transform: translateX(-50%);
+  transition: left 0.12s linear, background-color 0.3s ease;
+`;
+
+const FrequencyRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 14px;
+`;
+
+const FrequencyValue = styled.div`
+  font-size: 22px;
+  font-weight: 600;
+  color: ${mainColors.darkerGray};
+`;
+
+const Unit = styled.span`
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 4px;
+  color: ${mainColors.midGrey};
+`;
+
+const TargetFrequency = styled.div`
+  font-size: 12px;
+  color: ${mainColors.midGrey};
+  margin-top: 2px;
 `;

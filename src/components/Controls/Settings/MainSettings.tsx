@@ -17,16 +17,18 @@ import { Contacts } from "../../Contacts";
 import { DonationButtonBig } from "../../global/DonationButtonBig";
 import { useUpdateUserSettings } from "../../../hooks/useGoogleProfile";
 import { Link } from "react-router-dom";
-import { Tuner } from "../../Tuner";
 import { Typography } from "@material-ui/core";
-import { MusicNote } from "@material-ui/icons";
+import { MusicNote, Home } from "@material-ui/icons";
 import { Views } from "../../../interfaces/user";
+import { routes } from "../../../router/routes";
+import { SongPageModal } from "../../global/SongPageModal";
 
 type Props = {
   midiPlayer?: MidiPlayer | null;
+  showSongInfo?: boolean;
 };
 
-export const MainSettings = ({ midiPlayer }: Props) => {
+export const MainSettings = ({ midiPlayer, showSongInfo = true }: Props) => {
   const { t } = useTranslation("translation");
 
   const {
@@ -48,9 +50,16 @@ export const MainSettings = ({ midiPlayer }: Props) => {
   return (
     <Container>
       <DonationButtonBig />
-      <Row>
-        <Tuner />
+      <Row as="a" href={routes.main}>
+        <Icon type="material" fill={mainColors.darkerGray} Icon={Home} />
+        <Title>{t("login.mainPage")}</Title>
       </Row>
+      {showSongInfo && (
+        <>
+          <Line />
+          <SongPageModal />
+        </>
+      )}
       <Line />
       <Row>
         <Icon type="duda" className="duda" />
@@ -134,6 +143,8 @@ const Row = styled.div`
   padding-left: 20px;
   padding-right: 20px;
   flex-wrap: nowrap;
+  color: inherit;
+  text-decoration: none;
 `;
 
 const Line = styled.div`

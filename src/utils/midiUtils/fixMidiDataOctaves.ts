@@ -2,7 +2,8 @@ import { Midi } from "@tonejs/midi";
 
 export const fixMidiDataOctaves = (midiData: Midi): { midiData: Midi; lowestOctave: number } => {
   const octavesObject = {} as any;
-  const notes = midiData?.tracks.filter((track) => track.notes.length)[0].notes;
+  const trackIndex = midiData?.tracks.findIndex((track) => track.notes.length);
+  const notes = trackIndex !== undefined && trackIndex !== -1 ? midiData.tracks[trackIndex].notes : undefined;
 
   if (!notes) {
     return { midiData, lowestOctave: 4 };
@@ -18,7 +19,7 @@ export const fixMidiDataOctaves = (midiData: Midi): { midiData: Midi; lowestOcta
     .map((e) => +e)
     .sort((a: any, b: any) => a - b);
 
-  midiData.tracks[0].notes = notes.map((note) => {
+  midiData.tracks[trackIndex as number].notes = notes.map((note) => {
     note.octave += 4 - octaves[0];
 
     return note;

@@ -1,5 +1,7 @@
-import { IconButton, makeStyles, SwipeableDrawer } from "@material-ui/core";
+import { makeStyles, SwipeableDrawer } from "@material-ui/core";
 import React from "react";
+import styled from "styled-components";
+import { useTranslation } from "react-i18next";
 import { SongPage } from "../screens/SongPage";
 import { mainColors, theme } from "../../utils/theme";
 import { Icon } from "./Icon";
@@ -31,6 +33,8 @@ const useStyles = makeStyles(() => ({
 export const SongPageModal = (props: Props) => {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
+  const { t } = useTranslation("translation");
+
   return (
     <div>
       <SwipeableDrawer
@@ -44,9 +48,27 @@ export const SongPageModal = (props: Props) => {
       >
         <SongPage onClose={() => setOpen(false)} />
       </SwipeableDrawer>
-      <IconButton onClick={() => setOpen(true)} className="icon">
-        <Icon type="material" fill={theme.colors.black} Icon={HelpOutline} />
-      </IconButton>
+      <Row onClick={() => setOpen(true)}>
+        <Icon type="material" fill={mainColors.darkerGray} Icon={HelpOutline} />
+        <Title>{t("songInfo.title")}</Title>
+      </Row>
     </div>
   );
 };
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  flex-wrap: nowrap;
+  cursor: pointer;
+`;
+
+const Title = styled.h3`
+  color: ${mainColors.midGrey};
+  font-weight: 600;
+  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-left: 20px;
+`;

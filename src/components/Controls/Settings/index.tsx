@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 
 interface Props {
   midiPlayer?: MidiPlayer | null;
+  showSongInfo?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Settings = ({ midiPlayer }: Props) => {
+export const Settings = ({ midiPlayer, showSongInfo = true }: Props) => {
   const { t } = useTranslation("translation");
 
   const {
@@ -58,7 +59,7 @@ export const Settings = ({ midiPlayer }: Props) => {
             </IconButton>
             <Title>{t("settings")}</Title>
           </Header>
-          <MainSettings midiPlayer={midiPlayer} />
+          <MainSettings midiPlayer={midiPlayer} showSongInfo={showSongInfo} />
         </Content>
       </SwipeableDrawer>
       <IconButton onClick={() => setOpen(true)} className="settings">

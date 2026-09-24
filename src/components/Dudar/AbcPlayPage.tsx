@@ -1,11 +1,9 @@
-import { SongList } from "../SongList";
-import ChangeLogPopup from "../ChangeLogPopup";
-import { noSongsLabel, store } from "../../context";
+import { noSongsLabel } from "../../context";
 import { useSongTitle } from "../../hooks/useSongTitle";
+import { useAbcSong } from "../../hooks/useAbcSong";
 import { Settings } from "../Controls/Settings";
 import { Header, SettingsButtons, SongTitle } from "./common";
 import { MidiPlayer } from "../../utils/MidiPlayer";
-import { useLoadSong } from "../../hooks/useLoadSong";
 import { useEffect } from "react";
 import { TunerButton } from "../global/TunerButton";
 
@@ -13,9 +11,13 @@ interface Props {
   midiPlayer: MidiPlayer | null;
 }
 
-export const PlayPageHeader = ({ midiPlayer }: Props) => {
+// Header for the ABC-notation player (/app/abc?abc=...). Unlike
+// PlayPageHeader it doesn't render SongList or SongPageModal, since there is
+// no catalog song to browse or share - just keeps this route light enough
+// to embed in an iframe.
+export const AbcPlayPageHeader = ({ midiPlayer }: Props) => {
   const songTitle = useSongTitle();
-  useLoadSong();
+  useAbcSong();
 
   useEffect(() => {
     document.title = songTitle ?? noSongsLabel;
@@ -23,13 +25,11 @@ export const PlayPageHeader = ({ midiPlayer }: Props) => {
 
   return (
     <SettingsButtons className="settingsButtons">
-      <SongList player={midiPlayer} />
       <Header>
         <SongTitle>{songTitle ?? noSongsLabel}</SongTitle>
       </Header>
-      <ChangeLogPopup />
       <TunerButton />
-      <Settings midiPlayer={midiPlayer} />
+      <Settings midiPlayer={midiPlayer} showSongInfo={false} />
     </SettingsButtons>
   );
 };

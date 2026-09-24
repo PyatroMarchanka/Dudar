@@ -5,6 +5,7 @@ export const routes = {
   app: "/app",
   info: "info",
   play: "play",
+  abc: "abc",
   main: "/",
   about: "/about",
   article: "/article",
