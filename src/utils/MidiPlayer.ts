@@ -278,10 +278,26 @@ export class MidiPlayer {
   };
 
   checkTempo = (bpm: number) => {
-    if (Player.tempo !== bpm) {
-      Player.tempo = Math.floor(bpm / 2);
-      (Player as any).setTempo(Math.floor(bpm / 2));
-      this.bpm = bpm;
+    const newTempo = Math.floor(bpm / 2);
+    if (Player.tempo === newTempo) {
+      return;
+    }
+
+    // midi-player-js's setTempo() only reassigns Player.tempo. It doesn't
+    // reset startTime/startTick, so getCurrentTick() keeps computing ticks
+    // as if the new tempo had applied for the whole elapsed time since the
+    // last skip, not just from now on. That makes the tick jump backward
+    // whenever the tempo is lowered, landing behind the events already
+    // fired, so melody notes go silent until real time catches back up.
+    // Re-anchoring via setTick() at the current tick fixes the reference
+    // point instead of letting it drift.
+    const currentTick = Player.getCurrentTick();
+    Player.tempo = newTempo;
+    (Player as any).setTempo(newTempo);
+    this.bpm = bpm;
+
+    if (this.isPlaying) {
+      this.setTick(currentTick, true);
     }
   };
 
