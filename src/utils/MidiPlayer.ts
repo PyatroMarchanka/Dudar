@@ -57,6 +57,9 @@ export class MidiPlayer {
   bagpipeType: BagpipeTypes;
   loopData = { startLoopTicks: 0, endLoopTicks: 0, loopBars: 1 };
   loop: boolean = false;
+  // True once a wrapping loop has played through the end of the track and
+  // is now replaying from tick 0, waiting to reach the overflow point.
+  loopWrapped: boolean = false;
   timeSignature: TimeSignatures = "4/4";
   barLength = 1;
   isPlaying = false;
@@ -101,10 +104,12 @@ export class MidiPlayer {
       if (this.handleNotesMoving) {
         this.handleNotesMoving(tick);
       }
+      if (this.loopBar(tick)) {
+        return;
+      }
       if (tick >= this.midiData?.durationTicks!) {
         this.setProgress(0, true);
       }
-      this.loopBar(tick);
     });
 
     Player.on("midiEvent", (event: MidiEvent) => {
@@ -122,6 +127,9 @@ export class MidiPlayer {
 
   setLoop(loop: boolean) {
     this.loop = loop;
+    if (!loop) {
+      this.loopWrapped = false;
+    }
   }
 
   setLoopBarsCount(num: number) {
@@ -160,16 +168,42 @@ export class MidiPlayer {
     this.loopData.startLoopTicks = currentBar * ticksPerBar;
     this.loopData.endLoopTicks =
       this.loopData.startLoopTicks + this.loopData.loopBars * ticksPerBar;
+    this.loopWrapped = false;
   }
 
-  loopBar(tick: number) {
-    if (
-      this.loopData.endLoopTicks &&
-      this.loop &&
-      tick >= this.loopData.endLoopTicks
-    ) {
-      this.setTick(this.loopData.startLoopTicks, true);
+  loopBar(tick: number): boolean {
+    if (!this.loop || !this.loopData.endLoopTicks) {
+      return false;
     }
+    const durationTicks = this.midiData?.durationTicks;
+
+    // The loop region runs past the end of the track (e.g. a 4-bar loop
+    // starting 2 bars before the end): play the tail up to the end of the
+    // track, then wrap to tick 0 and keep playing until the remaining bars
+    // ("overflow") have played, before jumping back to the loop start.
+    if (durationTicks !== undefined && this.loopData.endLoopTicks > durationTicks) {
+      const overflowTicks = this.loopData.endLoopTicks - durationTicks;
+      if (!this.loopWrapped) {
+        if (tick >= durationTicks) {
+          this.loopWrapped = true;
+          this.setTick(0, true);
+          return true;
+        }
+        return false;
+      }
+      if (tick >= overflowTicks) {
+        this.loopWrapped = false;
+        this.setTick(this.loopData.startLoopTicks, true);
+        return true;
+      }
+      return false;
+    }
+
+    if (tick >= this.loopData.endLoopTicks) {
+      this.setTick(this.loopData.startLoopTicks, true);
+      return true;
+    }
+    return false;
   }
 
   handleMetronomeEvent = (event: MidiEvent) => {
@@ -278,10 +312,26 @@ export class MidiPlayer {
   };
 
   checkTempo = (bpm: number) => {
-    if (Player.tempo !== bpm) {
-      Player.tempo = Math.floor(bpm / 2);
-      (Player as any).setTempo(Math.floor(bpm / 2));
-      this.bpm = bpm;
+    const newTempo = Math.floor(bpm / 2);
+    if (Player.tempo === newTempo) {
+      return;
+    }
+
+    // midi-player-js's setTempo() only reassigns Player.tempo. It doesn't
+    // reset startTime/startTick, so getCurrentTick() keeps computing ticks
+    // as if the new tempo had applied for the whole elapsed time since the
+    // last skip, not just from now on. That makes the tick jump backward
+    // whenever the tempo is lowered, landing behind the events already
+    // fired, so melody notes go silent until real time catches back up.
+    // Re-anchoring via setTick() at the current tick fixes the reference
+    // point instead of letting it drift.
+    const currentTick = Player.getCurrentTick();
+    Player.tempo = newTempo;
+    (Player as any).setTempo(newTempo);
+    this.bpm = bpm;
+
+    if (this.isPlaying) {
+      this.setTick(currentTick, true);
     }
   };
 
