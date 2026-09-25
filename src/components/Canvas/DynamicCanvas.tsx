@@ -9,7 +9,14 @@ type Props = {
 };
 
 export const DynamicCanvas = ({ player }: Props) => {
-  const canvasRef = useDrawDynamic(player);
+  const { canvasRef, dragHandlers, isDragging } = useDrawDynamic(player);
 
-  return <GenericCanvas canvasRef={canvasRef} />;
+  return (
+    <GenericCanvas
+      canvasRef={canvasRef}
+      interactive
+      style={{ cursor: isDragging ? "grabbing" : "grab" }}
+      {...dragHandlers}
+    />
+  );
 };
