@@ -19,7 +19,7 @@ export const prepareSongMidi = async (
   originalTempo: number | undefined,
   fallbackTempo: number,
   // Off when the notes are already placed in the instrument's range (ABC tunes
-  // rearranged for a flute), since the fingering reads the unshifted MIDI.
+  // rearranged for the instrument), since the fingering reads the unshifted MIDI.
   normalizeOctaves = true
 ): Promise<PreparedSongMidi> => {
   const songWithMetronome = await addMetronome(buffer, timeSignature);

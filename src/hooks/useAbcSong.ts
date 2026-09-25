@@ -1,8 +1,9 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { store } from "../context";
-import { abcToMidi, prepareSongMidi } from "../utils/midiUtils";
-import { isFluteInstrument } from "../brand";
+import { notesMaps } from "../dataset/bagpipesNotesMaps";
+import { SharpNotesEnum } from "../interfaces";
+import { abcToMidi, convertNoteToMidiPitch, prepareSongMidi } from "../utils/midiUtils";
 
 // Loads a song from ABC notation passed in the `abc` query param
 // (e.g. /app/abc?abc=X:1%0AT:...), converts it to MIDI with abcjs and feeds
@@ -10,9 +11,11 @@ import { isFluteInstrument } from "../brand";
 // useLoadSong, it never touches the song catalog (no useSong/useSongList),
 // so it's safe to use standalone, including inside an iframe.
 //
-// On flutes the tune keeps its written key and is rearranged onto the fingering
-// of the selected whistle (the transpose setting), e.g. an E minor tune on a D
-// whistle. Catalog songs are instead already written for an A instrument.
+// The tune keeps its written key and is rearranged onto the fingering of the
+// selected instrument in the selected key (the transpose setting), e.g. an E
+// minor tune on a D whistle or a duda in G. So in ABC mode transpose changes
+// the instrument, not the melody. Catalog songs are instead already written
+// for an A instrument, and transpose shifts the melody with it.
 export const useAbcSong = () => {
   const location = useLocation();
   const {
@@ -27,9 +30,11 @@ export const useAbcSong = () => {
   } = useContext(store);
 
   const abc = new URLSearchParams(location.search).get("abc");
-  const isFlute = isFluteInstrument(bagpipeType);
-  const instrumentTranspose = isFlute ? transpose : undefined;
-  // Re-converting for another whistle key must not reset a tempo the user changed
+  const playableNotes = useMemo(
+    () => Object.keys(notesMaps[bagpipeType] ?? {}).map((note) => convertNoteToMidiPitch(note as SharpNotesEnum)),
+    [bagpipeType]
+  );
+  // Re-converting for another instrument key must not reset a tempo the user changed
   const tempoAppliedForAbc = useRef<string | null>(null);
 
   useEffect(() => {
@@ -44,7 +49,7 @@ export const useAbcSong = () => {
     (async () => {
       try {
         setIsSongLoading(true);
-        const { buffer, song } = abcToMidi(abc, { instrumentTranspose });
+        const { buffer, song } = abcToMidi(abc, { instrument: { transpose, playableNotes } });
         if (cancelled) return;
 
         setActiveSong(song);
@@ -55,7 +60,7 @@ export const useAbcSong = () => {
           song.timeSignature,
           song.originalTempo,
           tempo,
-          !isFlute
+          false
         );
         if (cancelled) return;
 
@@ -81,5 +86,5 @@ export const useAbcSong = () => {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [abc, instrumentTranspose]);
+  }, [abc, transpose, playableNotes]);
 };

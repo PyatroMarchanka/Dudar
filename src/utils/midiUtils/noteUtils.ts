@@ -48,6 +48,10 @@ export const convertMidiPitchToNote = (midiPitch: number) => {
   return { note: AllNotes[note], octave };
 };
 
+// Inverse of convertMidiPitchToNote: "A4" -> 69
+export const convertNoteToMidiPitch = (note: SharpNotesEnum) =>
+  AllNotes.indexOf(note.slice(0, -1) as SharpNotes) + (+note.slice(-1) + 1) * 12;
+
 export const convertToSharp = (note: Notes): SharpNotes => {
   const map: SharpMap = {
     Bb: "A#",

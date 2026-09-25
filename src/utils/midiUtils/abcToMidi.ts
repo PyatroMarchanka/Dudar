@@ -78,10 +78,6 @@ const MAX_ABC_LENGTH = 20_000;
 // length check above.
 const MAX_NOTE_COUNT = 10_000;
 
-// Flute fingerings are written for an A instrument: A4 is the lowest note,
-// played with all holes covered (see tinWhistleNotes).
-const FLUTE_LOWEST_NOTE = 69;
-
 const renderMidi = (tune: abcjs.TuneObject, midiTranspose = 0) =>
   Buffer.from(
     abcjs.synth.getMidiFile(tune, {
@@ -96,27 +92,56 @@ const getNoteOns = (midiBuffer: Buffer) =>
     track.filter((event) => event.type === "noteOn" && event.velocity > 0)
   ) as { noteNumber: number }[];
 
-// Shift that moves concert-pitch notes into the A-frame fingering of an
-// instrument whose tonic is `instrumentTranspose` semitones from A, so the
-// player (which adds the transpose back) still sounds the tune in its written
-// key. The octave is chosen so the lowest note sits in the instrument's
-// bottom octave.
-const getFingeringShift = (lowestNote: number, instrumentTranspose: number) => {
-  const shift = -instrumentTranspose;
-  const octaves = Math.ceil((FLUTE_LOWEST_NOTE - (lowestNote + shift)) / 12);
-  return shift + octaves * 12;
+// Compares scores element by element, earlier elements taking priority
+const isHigherScore = (a: number[], b: number[]) => {
+  const firstDiff = a.findIndex((value, i) => value !== b[i]);
+  return firstDiff !== -1 && a[firstDiff] > b[firstDiff];
 };
 
-export interface AbcToMidiOptions {
+// Shift that moves concert-pitch notes into the A-frame fingering of an
+// instrument whose tonic is `transpose` semitones from A, so the player (which
+// adds the transpose back) still sounds the tune in its written key. Only the
+// octave is free: pick the one that lands the most notes on the instrument's
+// fingering chart, then the most inside its range, then the smallest jump.
+const getFingeringShift = (notes: number[], { transpose, playableNotes }: AbcInstrument) => {
+  const playable = new Set(playableNotes);
+  const lowest = Math.min(...playableNotes);
+  const highest = Math.max(...playableNotes);
+
+  let best = { shift: -transpose, score: [-1, -1, 0] };
+  for (let octaves = -4; octaves <= 4; octaves++) {
+    const shift = -transpose + octaves * 12;
+    const shifted = notes.map((note) => note + shift);
+    const score = [
+      shifted.filter((note) => playable.has(note)).length,
+      shifted.filter((note) => note >= lowest && note <= highest).length,
+      -Math.abs(octaves),
+    ];
+    if (isHigherScore(score, best.score)) {
+      best = { shift, score };
+    }
+  }
+  return best.shift;
+};
+
+export interface AbcInstrument {
   // Tonic of the instrument, in semitones from A (the `transpose` setting).
-  // When set, the tune is rearranged onto that instrument's fingering instead
-  // of being read as already written for an A instrument.
-  instrumentTranspose?: number;
+  transpose: number;
+  // MIDI pitches of the instrument's fingering chart, written for an A
+  // instrument (the keys of its notes map, e.g. A4 = 69).
+  playableNotes: number[];
+}
+
+export interface AbcToMidiOptions {
+  // When set, the tune keeps its written key and is rearranged onto that
+  // instrument's fingering instead of being read as already written for an A
+  // instrument. The transpose setting then only picks the instrument's key.
+  instrument?: AbcInstrument;
 }
 
 // Converts ABC notation text into a synthetic Song + MIDI buffer that can be
 // fed into the same pipeline (prepareSongMidi) as a regular catalog song.
-export const abcToMidi = (abc: string, { instrumentTranspose }: AbcToMidiOptions = {}): AbcSongResult => {
+export const abcToMidi = (abc: string, { instrument }: AbcToMidiOptions = {}): AbcSongResult => {
   if (abc.length > MAX_ABC_LENGTH) {
     throw new Error(`ABC notation is too large (${abc.length} chars, max ${MAX_ABC_LENGTH})`);
   }
@@ -136,9 +161,11 @@ export const abcToMidi = (abc: string, { instrumentTranspose }: AbcToMidiOptions
     throw new Error(`ABC tune has too many notes (${noteCount}, max ${MAX_NOTE_COUNT})`);
   }
 
-  if (instrumentTranspose !== undefined) {
-    const lowestNote = Math.min(...noteOns.map((event) => event.noteNumber));
-    const shift = getFingeringShift(lowestNote, instrumentTranspose);
+  if (instrument?.playableNotes.length) {
+    const shift = getFingeringShift(
+      noteOns.map((event) => event.noteNumber),
+      instrument
+    );
     if (shift) {
       midiBuffer = renderMidi(tune, shift);
     }
