@@ -44,7 +44,7 @@ export const drawStatic = (
     bagpipeType !== BagpipeTypes.Highlander;
 
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  drawBagpipe(ctx, bagpipeType);
+  drawBagpipe(ctx, bagpipeType, activeNote);
   if (!isFingersAnimation) {
     drawClosedHoles(ctx, bagpipeType);
   }

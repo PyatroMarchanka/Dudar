@@ -22,6 +22,7 @@ import { MusicNote, Home } from "@material-ui/icons";
 import { Views } from "../../../interfaces/user";
 import { routes } from "../../../router/routes";
 import { SongPageModal } from "../../global/SongPageModal";
+import { isFluteInstrument } from "../../../brand";
 
 type Props = {
   midiPlayer?: MidiPlayer | null;
@@ -74,7 +75,7 @@ export const MainSettings = ({ midiPlayer, showSongInfo = true }: Props) => {
             fill={mainColors.darkerGray}
             Icon={ImportExport}
           />
-          <Title>{t("transposeMelody")}</Title>
+          <Title>{t(isFluteInstrument(bagpipeType) ? "whistleTonality" : "transposeMelody")}</Title>
           <Transpose midiPlayer={midiPlayer} />
         </Row>
       )}

@@ -9,6 +9,7 @@ import {
 import { midiNumbersToNotes } from "./midiUtils/notesToMidiNumbers";
 import { BagpipeTypes, SharpNotesEnum } from "../interfaces";
 import { TimeSignatures } from "../dataset/songs/interfaces";
+import { isFluteInstrument } from "../brand";
 
 export type MidiNoteHandler = (note: number) => void;
 export type PlaybackProgressHandler = (
@@ -340,6 +341,9 @@ export class MidiPlayer {
   };
 
   playDrone = (note: number) => {
+    if (isFluteInstrument(this.bagpipeType)) {
+      return;
+    }
     const lowDroneBagpipes = [BagpipeTypes.Dudelsack, BagpipeTypes.Highlander];
     const droneNote = lowDroneBagpipes.includes(this.bagpipeType)
       ? note - 12

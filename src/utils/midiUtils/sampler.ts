@@ -62,6 +62,17 @@ const polishSampler = new Tone.Sampler({
   baseUrl: "/",
 }).toDestination();
 
+// No tin whistle samples yet: a soft, nearly pure tone with light vibrato.
+const tinWhistleVibrato = new Tone.Vibrato(5, 0.04).toDestination();
+const tinWhistleSynth = new Tone.PolySynth(Tone.Synth, {
+  oscillator: { type: "custom", partials: [1, 0.15, 0.05] },
+  envelope: { attack: 0.03, decay: 0.1, sustain: 0.8, release: 0.08 },
+  volume: -10,
+}).connect(tinWhistleVibrato);
+
+// Whistle music is written an octave below the sounding pitch (untransposed: a high A whistle)
+const toWhistlePitch = (note: string) => Tone.Frequency(note).transpose(12).toNote();
+
 const resume = async (sampler: Tone.Sampler) => {
   if (sampler.context.state !== "running") {
     sampler.context.resume();
@@ -97,6 +108,10 @@ export const playNote = (
       resume(polishSampler);
       polishSampler.triggerAttack([note], undefined, volume + 1);
       break;
+    case BagpipeTypes.TinWhistle:
+      Tone.start();
+      tinWhistleSynth.triggerAttack([toWhistlePitch(note)], undefined, volume);
+      break;
     default:
       sampler.triggerAttack([note], undefined, volume);
   }
@@ -122,6 +137,9 @@ export const stopNote = (bagpipeType: BagpipeTypes, note?: string) => {
       break;
     case BagpipeTypes.Polish:
       polishSampler.triggerRelease([note]);
+      break;
+    case BagpipeTypes.TinWhistle:
+      tinWhistleSynth.triggerRelease([toWhistlePitch(note)]);
       break;
     default:
       sampler.triggerRelease([note]);

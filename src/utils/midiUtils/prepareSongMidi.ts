@@ -17,14 +17,19 @@ export const prepareSongMidi = async (
   buffer: ArrayBuffer,
   timeSignature: TimeSignatures,
   originalTempo: number | undefined,
-  fallbackTempo: number
+  fallbackTempo: number,
+  // Off when the notes are already placed in the instrument's range (ABC tunes
+  // rearranged for a flute), since the fingering reads the unshifted MIDI.
+  normalizeOctaves = true
 ): Promise<PreparedSongMidi> => {
   const songWithMetronome = await addMetronome(buffer, timeSignature);
   const midi = new Midi(songWithMetronome);
   midi.header.setTempo((originalTempo || fallbackTempo) / 2);
 
   const songLength = midi.header.ticksToSeconds(midi.durationTicks);
-  const { lowestOctave } = fixMidiDataOctaves(midi);
+  const lowestOctave = normalizeOctaves
+    ? fixMidiDataOctaves(midi).lowestOctave
+    : Math.min(...(midi.tracks.find((track) => track.notes.length)?.notes.map((note) => note.octave) ?? [4]));
 
   return { midi, songWithMetronome, songLength, lowestOctave };
 };

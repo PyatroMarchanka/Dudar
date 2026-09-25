@@ -32,6 +32,37 @@ const emptyStats = (): IStats => ({
   lastViewed: new Date(),
 });
 
+// Letters that introduce an ABC information field (X:, T:, M:, L:, K:, ...).
+// Every one of these must start its own line - see restoreAbcLineBreaks.
+const HEADER_FIELD_LETTERS = "ABCDFGHIKLMNOPQRSTUVWXZmrsw";
+
+// A bare key signature token - tonic plus an optional mode - e.g. "D",
+// "Dmaj", "F#m", "Gmix", or the special "HP"/"Hp"/"none" forms. Used to find
+// where a K: field's value ends, since (unlike other fields) it's normally
+// followed on the same physical line by the tune body itself.
+const KEY_TOKEN =
+  "[A-Ga-g](?:#|b)?(?:maj(?:or)?|min(?:or)?|mix(?:olydian)?|dor(?:ian)?|phr(?:ygian)?|lyd(?:ian)?|loc(?:rian)?|ion(?:ian)?|aeo(?:lian)?|m)?|HP|Hp|none";
+
+// The `abc` query param is normally pasted straight into a browser's address
+// bar. Browsers can't keep a literal newline in a URL and don't %-encode it
+// either - they just turn it into a space - so a multi-line tune collapses
+// onto one line before it ever reaches this app. abcjs then reads everything
+// after the first field (X:) as that field's value and never finds a K:
+// field or a tune body, so it silently produces zero notes. Detect the
+// collapsed form and reinsert the line breaks abcjs requires, using the
+// space before a field letter as the seam - never before a bar-line repeat
+// mark (":|"), which the lookahead excludes. K: needs a second pass: it's
+// always the last header field, and its value has no following field letter
+// to split on since the tune body starts right after it on the same line.
+const restoreAbcLineBreaks = (abc: string): string => {
+  if (abc.includes("\n")) return abc;
+  const fieldPattern = new RegExp(`(^|\\s)([${HEADER_FIELD_LETTERS}]):(?!\\|)`, "g");
+  const withFields = abc.replace(fieldPattern, (_match, before: string, letter: string) => `${before ? "\n" : ""}${letter}:`);
+  const keyPattern = new RegExp(`(^|\\n)(K:\\s*(?:${KEY_TOKEN}))\\s+(?=\\S)`, "i");
+  const withKey = withFields.replace(keyPattern, (_match, prefix: string, keyField: string) => `${prefix}${keyField}\n`);
+  return withKey.trim();
+};
+
 export interface AbcSongResult {
   buffer: ArrayBuffer;
   song: Song;
@@ -47,33 +78,70 @@ const MAX_ABC_LENGTH = 20_000;
 // length check above.
 const MAX_NOTE_COUNT = 10_000;
 
+// Flute fingerings are written for an A instrument: A4 is the lowest note,
+// played with all holes covered (see tinWhistleNotes).
+const FLUTE_LOWEST_NOTE = 69;
+
+const renderMidi = (tune: abcjs.TuneObject, midiTranspose = 0) =>
+  Buffer.from(
+    abcjs.synth.getMidiFile(tune, {
+      midiOutputType: "binary",
+      chordsOff: true,
+      midiTranspose,
+    }) as Uint8Array
+  );
+
+const getNoteOns = (midiBuffer: Buffer) =>
+  parseMidi(midiBuffer).tracks.flatMap((track) =>
+    track.filter((event) => event.type === "noteOn" && event.velocity > 0)
+  ) as { noteNumber: number }[];
+
+// Shift that moves concert-pitch notes into the A-frame fingering of an
+// instrument whose tonic is `instrumentTranspose` semitones from A, so the
+// player (which adds the transpose back) still sounds the tune in its written
+// key. The octave is chosen so the lowest note sits in the instrument's
+// bottom octave.
+const getFingeringShift = (lowestNote: number, instrumentTranspose: number) => {
+  const shift = -instrumentTranspose;
+  const octaves = Math.ceil((FLUTE_LOWEST_NOTE - (lowestNote + shift)) / 12);
+  return shift + octaves * 12;
+};
+
+export interface AbcToMidiOptions {
+  // Tonic of the instrument, in semitones from A (the `transpose` setting).
+  // When set, the tune is rearranged onto that instrument's fingering instead
+  // of being read as already written for an A instrument.
+  instrumentTranspose?: number;
+}
+
 // Converts ABC notation text into a synthetic Song + MIDI buffer that can be
 // fed into the same pipeline (prepareSongMidi) as a regular catalog song.
-export const abcToMidi = (abc: string): AbcSongResult => {
+export const abcToMidi = (abc: string, { instrumentTranspose }: AbcToMidiOptions = {}): AbcSongResult => {
   if (abc.length > MAX_ABC_LENGTH) {
     throw new Error(`ABC notation is too large (${abc.length} chars, max ${MAX_ABC_LENGTH})`);
   }
 
-  const tune = abcjs.parseOnly(abc)[0];
+  const tune = abcjs.parseOnly(restoreAbcLineBreaks(abc))[0];
 
-  const midiBytes = abcjs.synth.getMidiFile(tune, {
-    midiOutputType: "binary",
-    chordsOff: true,
-  }) as Uint8Array;
-
-  const midiBuffer = Buffer.from(midiBytes);
+  let midiBuffer = renderMidi(tune);
 
   // abcjs never throws on empty/garbage ABC text - it just produces a tune
   // with no notes. Detect that here instead.
-  const noteCount = parseMidi(midiBuffer).tracks.reduce(
-    (acc, track) => acc + track.filter((event) => event.type === "noteOn").length,
-    0
-  );
+  const noteOns = getNoteOns(midiBuffer);
+  const noteCount = noteOns.length;
   if (!noteCount) {
     throw new Error("No notes found in the ABC notation");
   }
   if (noteCount > MAX_NOTE_COUNT) {
     throw new Error(`ABC tune has too many notes (${noteCount}, max ${MAX_NOTE_COUNT})`);
+  }
+
+  if (instrumentTranspose !== undefined) {
+    const lowestNote = Math.min(...noteOns.map((event) => event.noteNumber));
+    const shift = getFingeringShift(lowestNote, instrumentTranspose);
+    if (shift) {
+      midiBuffer = renderMidi(tune, shift);
+    }
   }
 
   const timeSignature = meterToTimeSignature(tune.getMeterFraction());

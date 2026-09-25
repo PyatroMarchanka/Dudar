@@ -154,6 +154,33 @@ const highlanderHoles: BagpipeHolesPositions = {
   linesYPositions: [blowImageHighlander.yPos, ...holesToLinesYPositions(highlanderClosable)],
 };
 
+// Tin whistle positions are measured on /images/flute_side.jpg (154x1987px) and
+// scaled to the canvas with the same numbers as in bagpipesImageProperties.
+export const tinWhistleImage = { scale: 0.3, leftMargin: 20, topMargin: -40, width: 154, height: 1987 };
+
+const tinWhistleHoleCentersY = [996, 1116, 1255, 1401, 1513, 1699];
+const tinWhistleHoleCenterX = 116;
+const tinWhistleHoleDiameter = 16;
+
+const toWhistleCanvasY = (y: number) => y * tinWhistleImage.scale + tinWhistleImage.topMargin;
+const toWhistleCanvasX = (x: number) => x * tinWhistleImage.scale + tinWhistleImage.leftMargin;
+
+const tinWhistleClosable: Hole[] = tinWhistleHoleCentersY.map((y) => ({
+  yPos: toWhistleCanvasY(y) - tinWhistleHoleDiameter / 2,
+  leftMargin: toWhistleCanvasX(tinWhistleHoleCenterX) - tinWhistleHoleDiameter / 2,
+  diameter: tinWhistleHoleDiameter,
+}));
+
+// First line is for notes with all holes open, then one line per hole (top to bottom)
+const tinWhistleHoles: BagpipeHolesPositions = {
+  closable: tinWhistleClosable,
+  linesYPositions: [
+    toWhistleCanvasY(tinWhistleHoleCentersY[0]) - 40,
+    ...tinWhistleHoleCentersY.map(toWhistleCanvasY),
+  ],
+  fingersYPositions: tinWhistleHoleCentersY.map(toWhistleCanvasY),
+};
+
 export const holesPositions = {
   [BagpipeTypes.BelarusianTraditionalDuda]: belarusianTraditionalHoles,
   [BagpipeTypes.BelarusianNONTraditionalDuda]: belarusianNONTraditionalHoles,
@@ -161,4 +188,5 @@ export const holesPositions = {
   [BagpipeTypes.Polish]: polishHoles,
   [BagpipeTypes.Dudelsack]: dudelsackHoles,
   [BagpipeTypes.Highlander]: highlanderHoles,
+  [BagpipeTypes.TinWhistle]: tinWhistleHoles,
 };

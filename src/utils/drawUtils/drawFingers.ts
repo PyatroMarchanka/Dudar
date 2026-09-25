@@ -1,4 +1,4 @@
-import { imagesTree } from "../../dataset/bagpipeImages";
+import { imagesTree, whistleFingerImages } from "../../dataset/bagpipeImages";
 import { bagpipes } from "../../dataset/bagpipes";
 import { BagpipeTypes, SharpNotes, SharpNotesEnum } from "../../interfaces";
 
@@ -15,6 +15,21 @@ const getXpos = (
         xPosNormal: 23,
         xPosNormalActive: 35,
         fingerSize: 35,
+        yOffset: 20,
+        backFingerIdx: 0,
+        firstRightHandIdx: 4,
+      };
+    // Six front holes, no thumb hole: left hand on the top three, right hand below
+    case BagpipeTypes.TinWhistle:
+      return {
+        backXposNormal: 0,
+        backXposActive: 0,
+        xPosNormal: 45,
+        xPosNormalActive: 56,
+        fingerSize: 20,
+        yOffset: 10,
+        backFingerIdx: undefined,
+        firstRightHandIdx: 3,
       };
     default:
       return {
@@ -23,6 +38,9 @@ const getXpos = (
         xPosNormal: 53,
         xPosNormalActive: 65,
         fingerSize: 40,
+        yOffset: 20,
+        backFingerIdx: 0,
+        firstRightHandIdx: 4,
       };
   }
 };
@@ -35,17 +53,30 @@ const drawFinger = (
   holeType: HoleType,
   bagpipeType: BagpipeTypes
 ) => {
-  const isBack = idx === 0;
-  const { backXposNormal, backXposActive, xPosNormal, xPosNormalActive, fingerSize } =
-    getXpos(bagpipeType);
+  const {
+    backXposNormal,
+    backXposActive,
+    xPosNormal,
+    xPosNormalActive,
+    fingerSize,
+    yOffset,
+    backFingerIdx,
+    firstRightHandIdx,
+  } = getXpos(bagpipeType);
+  const isBack = idx === backFingerIdx;
 
   const backXpos = isActive ? backXposActive : backXposNormal;
   const normalXpos = isActive ? xPosNormalActive : xPosNormal;
   const xPos = isBack ? backXpos : normalXpos;
-  const image = (imagesTree as any)[idx > 3 ? "right" : "left"][
-    isActive ? "active" : "inactive"
-  ][holeType];
-  ctx.drawImage(image, xPos, yPos - 20, fingerSize, fingerSize);
+  // The whistle's metal body uses its own steel/charcoal markers instead of the
+  // skin-toned finger icons used on the bagpipes, and has no left/right coloring.
+  const image =
+    bagpipeType === BagpipeTypes.TinWhistle
+      ? whistleFingerImages[isActive ? "active" : "inactive"]
+      : (imagesTree as any)[idx >= firstRightHandIdx ? "right" : "left"][
+          isActive ? "active" : "inactive"
+        ][holeType];
+  ctx.drawImage(image, xPos, yPos - yOffset, fingerSize, fingerSize);
 };
 
 const getHoleType = (
@@ -74,6 +105,7 @@ const getHoleType = (
     [BagpipeTypes.Dudelsack]: {},
     [BagpipeTypes.Highlander]: {},
     [BagpipeTypes.Polish]: {},
+    [BagpipeTypes.TinWhistle]: {},
   };
 
   return map[bagpipeType][i] || "normal";
@@ -91,10 +123,9 @@ export const drawFingers = (
   const { holesPositions, fingersMaps } = bagpipes[bagpipeType];
   const note = activeNote.note + activeNote.octave;
 
-  const yPoses = holesPositions.linesYPositions.slice(
-    0,
-    holesPositions.linesYPositions.length - 1
-  );
+  const yPoses =
+    holesPositions.fingersYPositions ||
+    holesPositions.linesYPositions.slice(0, holesPositions.linesYPositions.length - 1);
   const holeTypes = yPoses.map((_, i) => {
     return getHoleType(bagpipeType, i, notesNames);
   });

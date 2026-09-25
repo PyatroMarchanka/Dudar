@@ -2,6 +2,7 @@ import { useReducer } from "react";
 import { BagpipeTypes, HolesModes, Languages } from "../../interfaces";
 import { SongTags } from "../../dataset/songs/interfaces";
 import { defaultUser, User } from "../../interfaces/user";
+import { resolveInstrumentForBrand } from "../../brand";
 
 interface Action {
   type:
@@ -63,6 +64,7 @@ export const settingsInitialState: SettingsState = {
   isUserLoggedIn: false,
   isMusicSheets: false,
   ...defaultUser.settings,
+  bagpipeType: resolveInstrumentForBrand(defaultUser.settings.bagpipeType),
 };
 
 export const useSettingsReducer = () => {
@@ -90,7 +92,7 @@ export const useSettingsReducer = () => {
         case "SET_BAGPIPE_TYPE":
           return {
             ...state,
-            bagpipeType: action.payload,
+            bagpipeType: resolveInstrumentForBrand(action.payload),
           };
 
         case "SET_TRANSPOSE":

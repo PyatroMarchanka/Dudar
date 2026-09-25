@@ -19,6 +19,12 @@ export const sortListsAlphabetically = (lists: SongListBySongType) => {
   }, {} as SongListBySongType);
 };
 
+// Until the backend has songs tagged for an instrument, it borrows the list of a
+// bagpipe with a matching scale. Highlander tunes are in A, like the whistle's default fingering.
+const songListFallbacks: { [key in BagpipeTypes]?: BagpipeTypes } = {
+  [BagpipeTypes.TinWhistle]: BagpipeTypes.Highlander,
+};
+
 export const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {
   const list: SongListByBagpipe = {};
   songs?.forEach((song) => {
@@ -39,6 +45,12 @@ export const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {
         list[bagpipeType] = [song];
       }
     });
+  });
+
+  Object.entries(songListFallbacks).forEach(([type, fallbackType]) => {
+    if (!list[type] && list[fallbackType!]) {
+      list[type] = list[fallbackType!];
+    }
   });
 
   return list;

@@ -1,6 +1,6 @@
 import { fingersMaps } from "./bagpipesFingersMaps";
 import { bagpipesImagesProperties } from "./bagpipesImageProperties";
-import { notesMaps } from "./bagpipesNotesMaps";
+import { notesMaps, overblownNotes } from "./bagpipesNotesMaps";
 import { BagpipeConfig, BagpipeTypes } from "../interfaces";
 import { holesPositions } from "./bagpipesHolesPositions";
 import { bagpipeImages } from "./bagpipeImages";
@@ -20,6 +20,7 @@ const bagpipeNames = {
   ),
   [BagpipeTypes.Dudelsack]: getTranslationKeyByBagpipeType(BagpipeTypes.Dudelsack),
   [BagpipeTypes.Highlander]: getTranslationKeyByBagpipeType(BagpipeTypes.Highlander),
+  [BagpipeTypes.TinWhistle]: getTranslationKeyByBagpipeType(BagpipeTypes.TinWhistle),
 };
 
 const getBagpipeData = (bagpipeType: BagpipeTypes): BagpipeConfig => {
@@ -32,6 +33,7 @@ const getBagpipeData = (bagpipeType: BagpipeTypes): BagpipeConfig => {
     images: bagpipeImages[bagpipeType],
     notesToLines: bagpipesNotesToLines[bagpipeType],
     fingersMaps: fingersMaps[bagpipeType],
+    overblownNotes: overblownNotes[bagpipeType],
   };
 };
 
@@ -44,4 +46,5 @@ export const bagpipes: { [key: string]: BagpipeConfig } = {
   [BagpipeTypes.BelarusianOpenDuda]: getBagpipeData(BagpipeTypes.BelarusianOpenDuda),
   [BagpipeTypes.Dudelsack]: getBagpipeData(BagpipeTypes.Dudelsack),
   [BagpipeTypes.Highlander]: getBagpipeData(BagpipeTypes.Highlander),
+  [BagpipeTypes.TinWhistle]: getBagpipeData(BagpipeTypes.TinWhistle),
 };

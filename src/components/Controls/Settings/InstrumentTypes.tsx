@@ -11,6 +11,7 @@ import Modal from "../../global/Modal";
 import { IconButton } from "@material-ui/core";
 import { Icon } from "../../global/Icon";
 import { Add } from "@material-ui/icons";
+import { currentBrand, isFluteBrand, isFluteInstrument } from "../../../brand";
 
 export const InstrumentTypes = () => {
   const { t } = useTranslation("translation");
@@ -34,8 +35,28 @@ export const InstrumentTypes = () => {
 
   const onChange = (bagpipeType: BagpipeTypes) => {
     setBagpipeType(bagpipeType);
-    updateUserSettings({ bagpipeType: bagpipeType });
+    // The backend keeps one instrument per user, and it belongs to the bagpipe site
+    if (!isFluteInstrument(bagpipeType)) {
+      updateUserSettings({ bagpipeType: bagpipeType });
+    }
   };
+
+  if (isFluteBrand) {
+    return (
+      <InstrumentTypesContainer>
+        {currentBrand.instruments.map((type) => (
+          <TypeItem key={type} onClick={() => onChange(type)}>
+            <RedRadio
+              checked={type === bagpipeType}
+              name="radio-button-demo"
+              inputProps={{ "aria-label": "C" }}
+            />
+            <BigTitle>{t(`dudas.${bagpipes[type].name}`)}</BigTitle>
+          </TypeItem>
+        ))}
+      </InstrumentTypesContainer>
+    );
+  }
 
   return (
     <InstrumentTypesContainer>
