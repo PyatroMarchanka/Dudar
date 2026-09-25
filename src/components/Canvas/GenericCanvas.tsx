@@ -5,9 +5,23 @@ import { store } from "../../context";
 
 type Props = {
   canvasRef: React.MutableRefObject<null>;
+  interactive?: boolean;
+  style?: React.CSSProperties;
+  onPointerDown?: (e: React.PointerEvent<HTMLCanvasElement>) => void;
+  onPointerMove?: (e: React.PointerEvent<HTMLCanvasElement>) => void;
+  onPointerUp?: (e: React.PointerEvent<HTMLCanvasElement>) => void;
+  onPointerCancel?: (e: React.PointerEvent<HTMLCanvasElement>) => void;
 };
 
-export const GenericCanvas = ({ canvasRef }: Props) => {
+export const GenericCanvas = ({
+  canvasRef,
+  interactive = false,
+  style,
+  onPointerDown,
+  onPointerMove,
+  onPointerUp,
+  onPointerCancel,
+}: Props) => {
   const {
     state: { screenSize },
   } = useContext(store);
@@ -23,14 +37,22 @@ export const GenericCanvas = ({ canvasRef }: Props) => {
       }
       className="canvas"
       ref={canvasRef}
+      interactive={interactive}
+      style={style}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerCancel}
     />
   );
 };
 
-const CanvasComponent = styled.canvas<{ marginLeft: number }>`
+const CanvasComponent = styled.canvas<{ marginLeft: number; interactive: boolean }>`
   position: fixed;
   top: 60px;
   left: ${({ marginLeft }) => marginLeft}px;
+  pointer-events: ${({ interactive }) => (interactive ? "auto" : "none")};
+  touch-action: ${({ interactive }) => (interactive ? "none" : "auto")};
 
   @media (max-width: ${mediaQueries.mobile}) {
     top: 0;
