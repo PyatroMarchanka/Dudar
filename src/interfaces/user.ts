@@ -21,6 +21,8 @@ export interface UserSettings {
   isPreclick: boolean;
   language: Languages;
   transpose: number;
+  // Whistle key on the flute site, kept apart from the bagpipe `transpose`
+  fluteTranspose?: number;
   isSilentMode?: boolean;
   lastSongUrl?: string;
   view: Views;
