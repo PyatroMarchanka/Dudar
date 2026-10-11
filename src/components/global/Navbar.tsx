@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { links } from "../../api/links";
 import { Button } from "../global/Button";
 import { MobileMenu } from "./MobileMenu";
+import { isFluteBrand } from "../../brand";
 
 export const Navbar = () => {
   const location = useLocation();
@@ -32,8 +33,9 @@ export const Navbar = () => {
     state: { activeSong, listsByBagpipe, userLastSongUrl, userData },
   } = useContext(store);
   useSongListShort();
+  // The saved last song is shared with the bagpipe site and may not fit the whistle
   const songId =
-    userLastSongUrl ||
+    (!isFluteBrand && userLastSongUrl) ||
     activeSong?.id ||
     (listsByBagpipe && getFirstSongFromList(listsByBagpipe).id) ||
     "";

@@ -11,6 +11,7 @@
   "settings": "Settings",
   "instrumentType": "Instrument Type",
   "transposeMelody": "Bagpipe tonality",
+  "whistleTonality": "Whistle key",
   "preclick": "Preclick",
   "silentMode": "Silent mode (metronome only)",
   "musicSheetsSettings": "Music sheets view",
@@ -47,7 +48,8 @@
     "polish": "Greater Poland Bagpipes",
     "dudelsack": "Dudelsack",
     "highlander": "Great Highlander Bagpipe",
-    "unknownBagpipe": "Unknown bagpipe"
+    "unknownBagpipe": "Unknown bagpipe",
+    "tinWhistle": "Tin whistle"
   },
   "genres": {
     "medieval": "Medieval",
@@ -238,5 +240,17 @@
     "message": "We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.",
     "accept": "Accept",
     "decline": "Decline"
+  },
+  "flutePage": {
+    "heroTitle": "Flute Hero",
+    "heroSubtitle": "Learn to play the tin whistle, sopilka and recorder. No music theory needed.",
+    "sectionTitle": "Like Guitar Hero, but for flutes",
+    "description": "Follow the animated fingering while the melody plays, slow it down, loop the hard bars and practise at your own pace. Your Duda Hero account works here too.",
+    "comingSoon": "Coming soon:",
+    "tinWhistle": "Tin whistle",
+    "sopilka": "Sopilka / dudka",
+    "recorder": "Recorder",
+    "bagpipesLink": "Looking for bagpipes? Visit",
+    "available": "Available now:"
   }
 }

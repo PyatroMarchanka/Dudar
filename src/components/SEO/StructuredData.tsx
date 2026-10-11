@@ -2,6 +2,9 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import { routes } from '../../router/routes';
+import { currentBrand } from '../../brand';
+
+const { name: brandName, siteUrl, description: brandDescription, instrumentNoun } = currentBrand;
 
 interface StructuredDataProps {
   articleData?: {
@@ -36,26 +39,26 @@ interface StructuredDataProps {
 const getOrganizationSchema = () => ({
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "Duda Hero",
-  "url": "https://dudahero.org",
-  "logo": "https://dudahero.org/android-chrome-192x192.png",
-  "description": "Interactive platform for learning to play various types of bagpipes",
+  "name": brandName,
+  "url": siteUrl,
+  "logo": `${siteUrl}/android-chrome-192x192.png`,
+  "description": brandDescription,
   "sameAs": [
     "https://www.facebook.com/dudahero",
     "https://twitter.com/dudahero"
   ],
   "contactPoint": {
     "@type": "ContactPoint",
-    "url": "https://dudahero.org/contacts"
+    "url": `${siteUrl}/contacts`
   }
 });
 
 const defaultSchema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "Duda Hero",
-  "description": "Interactive platform for learning to play various types of bagpipes",
-  "url": "https://dudahero.org",
+  "name": brandName,
+  "description": brandDescription,
+  "url": siteUrl,
   "applicationCategory": "MusicEducation",
   "operatingSystem": "Web",
   "offers": {
@@ -76,12 +79,12 @@ const routeSchemas = {
   [routes.main]: {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Duda Hero",
-    "url": "https://dudahero.org",
-    "description": "Interactive platform for learning to play various types of bagpipes",
+    "name": brandName,
+    "url": siteUrl,
+    "description": brandDescription,
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://dudahero.org/app?search={search_term_string}",
+      "target": `${siteUrl}/app?search={search_term_string}`,
       "query-input": "required name=search_term_string"
     },
     "aggregateRating": {
@@ -143,20 +146,20 @@ const getArticleSchema = (articleData: StructuredDataProps['articleData']): Reco
   "@type": "BlogPosting",
   "headline": articleData!.title,
   "description": articleData!.description,
-  "image": articleData!.image ? `https://dudahero.org${articleData!.image}` : "https://dudahero.org/android-chrome-192x192.png",
+  "image": articleData!.image ? `${siteUrl}${articleData!.image}` : `${siteUrl}/android-chrome-192x192.png`,
   "datePublished": articleData!.publishedDate,
   "dateModified": articleData!.modifiedDate || articleData!.publishedDate,
   "author": {
     "@type": "Person",
     "name": articleData!.author.name,
-    "image": articleData!.author.picture ? `https://dudahero.org${articleData!.author.picture}` : undefined
+    "image": articleData!.author.picture ? `${siteUrl}${articleData!.author.picture}` : undefined
   },
   "publisher": {
     "@type": "Organization",
-    "name": "Duda Hero",
+    "name": brandName,
     "logo": {
       "@type": "ImageObject",
-      "url": "https://dudahero.org/android-chrome-192x192.png"
+      "url": `${siteUrl}/android-chrome-192x192.png`
     }
   },
   "keywords": articleData!.tags?.join(", ") || "bagpipes, learning"
@@ -169,7 +172,7 @@ const getBreadcrumbSchema = (breadcrumbs: StructuredDataProps['breadcrumbs']) =>
     "@type": "ListItem",
     "position": index + 1,
     "name": item.name,
-    "item": `https://dudahero.org${item.url}`
+    "item": `${siteUrl}${item.url}`
   }))
 });
 
@@ -179,8 +182,8 @@ const getSongSchema = (songData: StructuredDataProps['songData']): Record<string
     "@type": "MusicRecording",
     "name": songData!.name,
     "genre": songData!.genre,
-    "description": songData!.description || `Learn to play ${songData!.name} on bagpipes`,
-    "url": `https://dudahero.org${songData!.url}`,
+    "description": songData!.description || `Learn to play ${songData!.name} on ${instrumentNoun}`,
+    "url": `${siteUrl}${songData!.url}`,
     "keywords": [
       songData!.name,
       `${songData!.name} bagpipe`,
@@ -205,9 +208,9 @@ const getSongSchema = (songData: StructuredDataProps['songData']): Record<string
     "@context": "https://schema.org",
     "@type": "HowTo",
     "name": `How to Play ${songData!.name} on Bagpipes`,
-    "description": `Interactive tutorial for learning to play ${songData!.name} on bagpipes. Step-by-step guide with MIDI support and multiple bagpipe types.`,
-    "url": `https://dudahero.org${songData!.url}`,
-    "image": "https://dudahero.org/android-chrome-192x192.png",
+    "description": `Interactive tutorial for learning to play ${songData!.name} on ${instrumentNoun}. Step-by-step guide with MIDI support and multiple bagpipe types.`,
+    "url": `${siteUrl}${songData!.url}`,
+    "image": `${siteUrl}/android-chrome-192x192.png`,
     "totalTime": "PT10M",
     "estimatedCost": {
       "@type": "MonetaryAmount",
@@ -249,14 +252,14 @@ const getSongSchema = (songData: StructuredDataProps['songData']): Record<string
     "@context": "https://schema.org",
     "@type": "LearningResource",
     "name": `${songData!.name} - Bagpipe Tutorial`,
-    "description": `Interactive tutorial for learning ${songData!.name} on bagpipes with step-by-step guidance`,
-    "url": `https://dudahero.org${songData!.url}`,
+    "description": `Interactive tutorial for learning ${songData!.name} on ${instrumentNoun} with step-by-step guidance`,
+    "url": `${siteUrl}${songData!.url}`,
     "learningResourceType": ["Interactive Tutorial", "Music Lesson"],
     "educationalLevel": "Beginner to Advanced",
     "interactivityType": "active",
     "isAccessibleForFree": true,
     "inLanguage": "en",
-    "teaches": `How to play ${songData!.name} on bagpipes`,
+    "teaches": `How to play ${songData!.name} on ${instrumentNoun}`,
     "about": [
       {
         "@type": "Thing",

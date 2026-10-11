@@ -41,11 +41,13 @@ export const drawNotes = (
   const brickLeftMargin = imageProperties.notes.brickLeftMargin;
   const brickHeightHalf = imageProperties.notes.brickHeightHalf;
   const brickHeight = imageProperties.notes.brickhHeight;
-  const { notesToLines, holesPositions } = bagpipes[bagpipeType];
+  const { notesToLines, holesPositions, overblownNotes } = bagpipes[bagpipeType];
   
   // Pre-cache colors
   const colorPast = mainColors.darkRed;
   const colorNormal = mainColors.darkerGray;
+  // Upper-octave flute notes share lines with the lower octave, so they get their own color
+  const colorOverblown = mainColors.orange;
   
   // Combine all notes into single array to iterate once
   const allNotes = [
@@ -62,7 +64,8 @@ export const drawNotes = (
     const pitch = note.pitch as SharpNotes;
     
     // Get Y position
-    const yPos = holesPositions.linesYPositions[notesToLines[pitch + note.octave]];
+    const noteName = pitch + note.octave;
+    const yPos = holesPositions.linesYPositions[notesToLines[noteName]];
     if (!yPos) continue;
     
     // Calculate positions
@@ -83,7 +86,11 @@ export const drawNotes = (
       brickHeight,
       10
     );
-    ctx.fillStyle = startPos < brickLeftMargin ? colorPast : colorNormal;
+    if (startPos < brickLeftMargin) {
+      ctx.fillStyle = colorPast;
+    } else {
+      ctx.fillStyle = overblownNotes?.includes(noteName) ? colorOverblown : colorNormal;
+    }
     ctx.fill();
   }
 };

@@ -11,6 +11,7 @@
   "settings": "Ustawienia",
   "instrumentType": "Typ instrumentu",
   "transposeMelody": "Tonacja dudy",
+  "whistleTonality": "Tonacja whistle'a",
   "preclick": "Wstępne odliczanie",
   "silentMode": "Cichy tryb (tylko metronom)",
   "musicSheetsSettings": "Widok nut",
@@ -47,7 +48,8 @@
     "polish": "Dudy wielkopolskie",
     "Dudelsack": "Dudelzak",
     "highlander": "Dudy szkockie",
-    "unknownBagpipe": "Nieokreślone dudy"
+    "unknownBagpipe": "Nieokreślone dudy",
+    "tinWhistle": "Tin whistle"
   },
   "genres": {
     "medieval": "Średniowieczne",
@@ -126,7 +128,6 @@
     "reminderTitle": "Zaloguj się, aby ułatwić korzystanie z Duda Hero",
     "reminderText": "Zalogowanie pomoże Ci zapisać ustawienia, język, typ instrumentu, strojenie i otworzyć ostatnio grany utwór przy starcie. W przyszłości będziesz mógł pisać komentarze i zobaczyć postępy i doświadczenie innych użytkowników.",
     "cancel": "Anuluj"
-
   },
   "songInfo": {
     "title": "Informacje o utworze",
@@ -159,7 +160,7 @@
     "noPosts": "Brak dostępnych postów",
     "latestPosts": "Najnowsze posty",
     "backToBlog": "Powrót do bloga",
-    "backToAdminList": "Powrót do zarządzania blogiem", 
+    "backToAdminList": "Powrót do zarządzania blogiem",
     "backToBlogs": "Powrót do bloga",
     "backToHome": "Powrót do domu",
     "published": "Opublikowano",
@@ -239,5 +240,17 @@
     "message": "Używamy plików cookie, aby poprawić Twoje doświadczenie. Kontynuując korzystanie z tej strony, zgadzasz się na używanie plików cookie.",
     "accept": "Akceptuję",
     "decline": "Odrzucam"
+  },
+  "flutePage": {
+    "heroTitle": "Flute Hero",
+    "heroSubtitle": "Naucz się grać na tin whistle, fujarce i flecie prostym. Bez znajomości teorii muzyki.",
+    "sectionTitle": "Jak Guitar Hero, ale dla fletów",
+    "description": "Śledź animowane palcowanie podczas odtwarzania melodii, zwalniaj tempo, zapętlaj trudne takty i ćwicz we własnym tempie. Twoje konto Duda Hero działa także tutaj.",
+    "comingSoon": "Wkrótce:",
+    "tinWhistle": "Tin whistle",
+    "sopilka": "Fujarka / sopiłka",
+    "recorder": "Flet prosty",
+    "bagpipesLink": "Szukasz dud? Odwiedź",
+    "available": "Dostępne teraz:"
   }
 }
