@@ -58,3 +58,10 @@ There are two view modes:
 - Routes are in `src/router/` (`routes.ts` holds the paths). Nested `/app` routes are defined in `Dudar.tsx`.
 - Translations: `src/locales/{en,be,pl}/translation.json`, set up in `src/i18n.ts`. Belarusian song names are transliterated for other languages (`src/locales/index.ts`).
 - A PWA service worker is registered in `src/index.tsx`.
+
+## Pull requests and commits
+
+- Never include Claude Code session links (`claude.ai/code/session_...` URLs) in PR titles, PR descriptions, or commit messages.
+- Never add "Generated with Claude Code" footers to PR descriptions or commit messages.
+- Never add `Claude-Session:` or `Co-Authored-By:` session trailers to commit messages.
+- In a PR body, keep only the required project attribution block at the top.
