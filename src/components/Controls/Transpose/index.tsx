@@ -7,6 +7,7 @@ import { transposeNote, transposeNoteDoReMi } from "../../../utils/midiUtils";
 import { useTranslation } from "react-i18next";
 import { transliterate, useIsCyrylicLang } from "../../../locales";
 import { useUpdateUserSettings } from "../../../hooks/useGoogleProfile";
+import { isFluteBrand, whistleKeys } from "../../../brand";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
@@ -41,7 +42,10 @@ const Transpose = ({ midiPlayer }: Props) => {
 
   const options = useMemo(
     () =>
-      optionsNumbers.map((option) => {
+      optionsNumbers
+        // A key saved earlier that is no longer offered stays selectable, so the select isn't blank
+        .filter((option) => !isFluteBrand || whistleKeys.includes(option.value) || option.value === transpose)
+        .map((option) => {
         const doRemiLabel = !isCyrylicLang()
           ? transliterate(transposeNoteDoReMi("Ля", +option.label))
           : transposeNoteDoReMi("Ля", +option.label);
@@ -56,7 +60,7 @@ const Transpose = ({ midiPlayer }: Props) => {
           </MenuItem>
         );
       }),
-    [isCyrylicLang, t]
+    [isCyrylicLang, t, transpose]
   );
 
   return (

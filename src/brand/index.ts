@@ -18,6 +18,10 @@ export interface BrandConfig {
 
 export const fluteInstruments = [BagpipeTypes.TinWhistle];
 
+// Whistle keys offered on the flute site, as transpose values (semitones from A):
+// A, Bb, C, D, Eb, F, G. These cover the common Irish whistle and flute tonalities.
+export const whistleKeys = [0, 1, 3, 5, 6, 8, 10];
+
 export const isFluteInstrument = (type: BagpipeTypes) => fluteInstruments.includes(type);
 
 const bagpipeInstruments = (Object.values(BagpipeTypes) as BagpipeTypes[]).filter(
