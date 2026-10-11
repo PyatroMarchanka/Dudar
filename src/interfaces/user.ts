@@ -25,10 +25,6 @@ export interface UserSettings {
   lastSongUrl?: string;
   view: Views;
 }
-// Settings that belong to the flute site only, stored apart from the bagpipe ones
-export const fluteSettingsKeys = ["transpose", "tempo", "lastSongUrl"] as const;
-export type FluteSettings = Pick<UserSettings, typeof fluteSettingsKeys[number]>;
-
 export const defaultUser: User = {
   settings: {
     bagpipeType: BagpipeTypes.BelarusianTraditionalDuda,

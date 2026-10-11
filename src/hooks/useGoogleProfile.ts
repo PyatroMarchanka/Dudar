@@ -3,7 +3,6 @@ import { store } from "../context";
 import { defaultUser, User, UserSettings } from "../interfaces/user";
 import { useChangeLanguage } from "../locales";
 import { userApi } from "../api/user";
-import { isFluteBrand } from "../brand";
 import { BagpipeTypes, Languages } from "../interfaces";
 import { fallbackLanguage } from "../i18n";
 import { getUserLanguage } from "../constants/localStorage";
@@ -83,20 +82,7 @@ export const useGoogleProfile = () => {
   const fetchUserProfile = async () => {
     try {
       const response = await userApi.getUserData();
-      let data = response;
-      if (data && isFluteBrand) {
-        // The flute site keeps its own key, tempo and last song
-        const { transpose, tempo, lastSongUrl } = (await userApi.getFluteSettings()) || {};
-        data = {
-          ...data,
-          settings: {
-            ...data.settings,
-            transpose: transpose ?? defaultUser.settings.transpose,
-            tempo: tempo ?? defaultUser.settings.tempo,
-            lastSongUrl,
-          },
-        };
-      }
+      const data = response;
       setUserData(data);
       if (data) {
         setAllUserData(data);
