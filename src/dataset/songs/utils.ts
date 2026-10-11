@@ -5,9 +5,12 @@ import {
   SongTags,
   TimeSignatures,
 } from "./interfaces";
+import { currentBrand, isFluteBrand } from "../../brand";
 
 export const getFirstSongFromList = (lists: SongListByBagpipe): Song => {
-  return Object.values(lists)?.[0]?.[0];
+  // On the flute site the first list is usually a bagpipe one, which may not fit the whistle
+  const brandSong = isFluteBrand ? lists[currentBrand.defaultInstrument]?.[0] : undefined;
+  return brandSong || Object.values(lists)?.[0]?.[0];
 };
 
 export const findSongInListById = (
