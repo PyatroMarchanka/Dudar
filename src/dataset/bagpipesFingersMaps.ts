@@ -1,4 +1,5 @@
 import { BagpipeNotesMap, BagpipeTypes, SharpNotesEnum } from "../interfaces";
+import { notesMaps } from "./bagpipesNotesMaps";
 
 const belarusianTraditionalDudaNotes: BagpipeNotesMap = {
   [SharpNotesEnum["E4"]]: [0, 1, 2, 3, 4, 5, 6],
@@ -87,4 +88,6 @@ export const fingersMaps = {
   [BagpipeTypes.BelarusianOpenDuda]: belarusianOpenDudaNotes,
   [BagpipeTypes.Dudelsack]: dudelsackNotes,
   [BagpipeTypes.Highlander]: highlanderNotes,
+  // Every whistle hole has its own finger, so fingers match the covered holes
+  [BagpipeTypes.TinWhistle]: notesMaps[BagpipeTypes.TinWhistle],
 };

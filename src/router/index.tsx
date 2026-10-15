@@ -15,6 +15,8 @@ import { ContactsPage } from "../components/screens/Contacts";
 import { LearningBook } from "../components/LearningBook";
 import { MetaTags } from "../components/SEO/MetaTags";
 import { StructuredData } from "../components/SEO/StructuredData";
+import { FluteLanding } from "../components/screens/FluteLanding";
+import { isFluteBrand } from "../brand";
 
 export const AppRouter = () => {
   return (
@@ -44,7 +46,7 @@ export const AppRouter = () => {
           <ArticlePage />
         </Route>
         <Route exact path={routes.main}>
-          <About />
+          {isFluteBrand ? <FluteLanding /> : <About />}
         </Route>
         <Route path={routes.app}>
           <Dudar />

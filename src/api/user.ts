@@ -1,6 +1,7 @@
 import axios from "axios";
 import { links } from "./links";
 import cookie from "react-cookies";
+import { isFluteBrand } from "../brand";
 import { defaultUser, User, UserSettings } from "../interfaces/user";
 
 export const userClient = axios.create({
@@ -50,6 +51,11 @@ export const userApi = {
   },
 
   updateUserSettings: async (data: Partial<UserSettings>) => {
+    // The flute site saves its key apart from the bagpipe one
+    if (isFluteBrand && data.transpose !== undefined) {
+      const { transpose, ...rest } = data;
+      data = { ...rest, fluteTranspose: transpose };
+    }
     try {
       const res = await userClient.post(links.updateSettings, data, {
         headers: {

@@ -2,6 +2,7 @@ import { useReducer } from "react";
 import { BagpipeTypes, HolesModes, Languages } from "../../interfaces";
 import { SongTags } from "../../dataset/songs/interfaces";
 import { defaultUser, User } from "../../interfaces/user";
+import { resolveInstrumentForBrand } from "../../brand";
 
 interface Action {
   type:
@@ -19,6 +20,7 @@ interface Action {
     | "SET_ACTIVE_SONG_TAGS"
     | "SET_HOLES_MODE"
     | "SET_USER_DATA"
+    | "SET_FAVORITE_SONGS"
     | "SET_IS_SILENT_MODE"
     | "SET_USER_LAST_SONG_URL"
     | "SET_USER_LOGGED_IN"
@@ -63,6 +65,7 @@ export const settingsInitialState: SettingsState = {
   isUserLoggedIn: false,
   isMusicSheets: false,
   ...defaultUser.settings,
+  bagpipeType: resolveInstrumentForBrand(defaultUser.settings.bagpipeType),
 };
 
 export const useSettingsReducer = () => {
@@ -90,7 +93,7 @@ export const useSettingsReducer = () => {
         case "SET_BAGPIPE_TYPE":
           return {
             ...state,
-            bagpipeType: action.payload,
+            bagpipeType: resolveInstrumentForBrand(action.payload),
           };
 
         case "SET_TRANSPOSE":
@@ -154,6 +157,13 @@ export const useSettingsReducer = () => {
           return {
             ...state,
             userData: action.payload,
+          };
+
+        case "SET_FAVORITE_SONGS":
+          if (!state.userData) return state;
+          return {
+            ...state,
+            userData: { ...state.userData, favoriteSongs: action.payload },
           };
 
         case "SET_IS_SILENT_MODE":
@@ -239,6 +249,9 @@ export const useSettingsReducer = () => {
   const setUserData = (data: any) => {
     dispatch({ type: "SET_USER_DATA", payload: data });
   };
+  const setFavoriteSongs = (songIds: string[]) => {
+    dispatch({ type: "SET_FAVORITE_SONGS", payload: songIds });
+  };
   const setIsSilentMode = (bool: boolean) => {
     dispatch({ type: "SET_IS_SILENT_MODE", payload: bool });
   };
@@ -271,6 +284,7 @@ export const useSettingsReducer = () => {
     setSongTags,
     setActiveSongTags,
     setUserData,
+    setFavoriteSongs,
     setIsSilentMode,
     setUserLastSongUrl,
     setIsUserLoggedIn,

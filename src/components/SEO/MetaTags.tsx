@@ -2,6 +2,9 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import { routes } from '../../router/routes';
+import { currentBrand, isFluteBrand } from '../../brand';
+
+const { siteUrl } = currentBrand;
 
 interface MetaTagsProps {
   title?: string;
@@ -13,14 +16,14 @@ interface MetaTagsProps {
   canonicalPath?: string;
 }
 
-const defaultMeta = {
+const bagpipeDefaultMeta = {
   title: 'Duda Hero - Learn to Play Bagpipes | Interactive Music Education',
   description: 'Master bagpipes with Duda Hero - the ultimate interactive learning platform. Features Belarusian traditional bagpipes, Great Highland Bagpipes (Scotland), and German Dudelsack.',
   keywords: 'bagpipes, learn bagpipes, Highland bagpipes, Belarusian bagpipes, German dudelsack, bagpipe tutorial, interactive music',
   image: '/android-chrome-192x192.png'
 };
 
-const routeMeta = {
+const bagpipeRouteMeta: Record<string, { title: string; description: string; keywords: string }> = {
   [routes.main]: {
     title: 'Duda Hero - Learn Bagpipes Online | Interactive Bagpipe Player',
     description: 'Master bagpipes with Duda Hero\'s interactive learning platform. Play Belarusian traditional bagpipes, Great Highland Bagpipes, and German Dudelsack with MIDI support.',
@@ -53,6 +56,24 @@ const routeMeta = {
   }
 };
 
+const fluteDefaultMeta = {
+  title: 'Flute Hero - Learn to Play Tin Whistle, Sopilka and Recorder',
+  description: 'Learn tin whistle, sopilka, dudka and recorder with Flute Hero: an interactive player that shows the fingering for every note as the melody plays.',
+  keywords: 'tin whistle, learn tin whistle, sopilka, dudka, recorder, flute fingering, flute tutorial, interactive music',
+  image: '/android-chrome-192x192.png'
+};
+
+const fluteRouteMeta: typeof bagpipeRouteMeta = {
+  [routes.main]: {
+    title: 'Flute Hero - Learn Tin Whistle and Recorder Online',
+    description: fluteDefaultMeta.description,
+    keywords: fluteDefaultMeta.keywords
+  }
+};
+
+const defaultMeta = isFluteBrand ? fluteDefaultMeta : bagpipeDefaultMeta;
+const routeMeta = isFluteBrand ? fluteRouteMeta : bagpipeRouteMeta;
+
 export const MetaTags: React.FC<MetaTagsProps> = ({ 
   title = defaultMeta.title,
   description = defaultMeta.description,
@@ -64,7 +85,7 @@ export const MetaTags: React.FC<MetaTagsProps> = ({
 }) => {
   const location = useLocation();
   const currentRoute = location?.pathname;
-  const routeSpecificMeta = routeMeta[currentRoute] || {};
+  const routeSpecificMeta: Partial<typeof bagpipeRouteMeta[string]> = routeMeta[currentRoute] || {};
 
   const finalTitle = routeSpecificMeta.title || title;
   const finalDescription = routeSpecificMeta.description || description;
@@ -75,10 +96,10 @@ export const MetaTags: React.FC<MetaTagsProps> = ({
   // Generate hreflang links for multi-language support
   const languages = ['en', 'be', 'pl'];
   const hreflangLinks = languages.map(lang => {
-    let href = `https://dudahero.org${canonicalUrl}`;
+    let href = `${siteUrl}${canonicalUrl}`;
     // For blog/article routes with language parameter
     if (canonicalUrl.includes(':lang')) {
-      href = `https://dudahero.org${canonicalUrl}`.replace(':lang', lang);
+      href = `${siteUrl}${canonicalUrl}`.replace(':lang', lang);
     }
     return { rel: 'alternate', hrefLang: lang, href };
   });
@@ -92,27 +113,27 @@ export const MetaTags: React.FC<MetaTagsProps> = ({
       
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
-      <meta property="og:url" content={`https://dudahero.org${canonicalUrl}`} />
+      <meta property="og:url" content={`${siteUrl}${canonicalUrl}`} />
       <meta property="og:title" content={finalTitle} />
       <meta property="og:description" content={finalDescription} />
-      <meta property="og:image" content={`https://dudahero.org${finalImage}`} />
+      <meta property="og:image" content={`${siteUrl}${finalImage}`} />
       <meta property="og:locale" content={language === 'be' ? 'be_BY' : language === 'pl' ? 'pl_PL' : 'en_US'} />
       
       {/* Twitter */}
       <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:url" content={`https://dudahero.org${canonicalUrl}`} />
+      <meta property="twitter:url" content={`${siteUrl}${canonicalUrl}`} />
       <meta property="twitter:title" content={finalTitle} />
       <meta property="twitter:description" content={finalDescription} />
-      <meta property="twitter:image" content={`https://dudahero.org${finalImage}`} />
+      <meta property="twitter:image" content={`${siteUrl}${finalImage}`} />
       
       {/* Canonical URL */}
-      <link rel="canonical" href={`https://dudahero.org${canonicalUrl}`} />
+      <link rel="canonical" href={`${siteUrl}${canonicalUrl}`} />
       
       {/* hreflang for multi-language support */}
       {hreflangLinks.map((link, index) => (
         <link key={index} rel={link.rel} hrefLang={link.hrefLang} href={link.href} />
       ))}
-      <link rel="alternate" hrefLang="x-default" href="https://dudahero.org/" />
+      <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/`} />
     </Helmet>
   );
 }; 

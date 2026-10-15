@@ -1,5 +1,5 @@
 import { BagpipeTypes } from "../interfaces";
-import { coeff } from "./bagpipesHolesPositions";
+import { coeff, tinWhistleImage } from "./bagpipesHolesPositions";
 
 export interface BagpipesImagesProperties {
   main_pipe: {
@@ -134,6 +134,24 @@ export const bagpipesImagesProperties: {
       notesScale: 0.3,
       brickLeftMargin: 45,
       notesNamesLeftMargin: coeff(5),
+      noteNameColor: "#000",
+    },
+  },
+  [BagpipeTypes.TinWhistle]: {
+    main_pipe: {
+      width: tinWhistleImage.width * tinWhistleImage.scale,
+      heigth: tinWhistleImage.height * tinWhistleImage.scale,
+      imageScale: tinWhistleImage.scale,
+      leftMargin: tinWhistleImage.leftMargin,
+      topMargin: tinWhistleImage.topMargin,
+    },
+    notes: {
+      lineHeight: 2,
+      brickhHeight: coeff(18),
+      brickHeightHalf: coeff(18 / 2),
+      notesScale: 0.3,
+      brickLeftMargin: 70,
+      notesNamesLeftMargin: 4,
       noteNameColor: "#000",
     },
   },

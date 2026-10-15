@@ -8,6 +8,8 @@ export interface User {
   settings: UserSettings;
   _id?: string;
   isAdmin?: boolean;
+  // `id`s of the songs the user marked as favorite
+  favoriteSongs?: string[];
 }
 
 export enum Views {
@@ -21,6 +23,8 @@ export interface UserSettings {
   isPreclick: boolean;
   language: Languages;
   transpose: number;
+  // Whistle key on the flute site, kept apart from the bagpipe `transpose`
+  fluteTranspose?: number;
   isSilentMode?: boolean;
   lastSongUrl?: string;
   view: Views;

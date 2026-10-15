@@ -2,6 +2,7 @@ import { BagpipeTypes } from "../interfaces";
 
 export interface BagpipeImageSet {
   mainPipe?: string;
+  mainPipeOverblown?: string;
   activeHoleImage?: string;
   backActiveHoleImage?: string;
   closedHoleImage?: string;
@@ -12,6 +13,7 @@ export interface BagpipeImageSet {
 
 export interface BagpipeImages {
   mainPipe?: HTMLImageElement;
+  mainPipeOverblown?: HTMLImageElement;
   activeHoleImage?: HTMLImageElement;
   backActiveHoleImage?: HTMLImageElement;
   closedHoleImage?: HTMLImageElement;
@@ -85,7 +87,16 @@ const srcs = {
     backClosedHoleImage: "/images/piston_back_closed.svg",
     blowImage: "/images/blow.svg",
     bgImage: "/images/scottish_back.png"
-  }
+  },
+  // A whistle has no holes on the back, so the "back" images are the front ones
+  [BagpipeTypes.TinWhistle]: {
+    mainPipe: "/images/flute_side.jpg",
+    mainPipeOverblown: "/images/flute_octave.jpg",
+    activeHoleImage: "/images/piston_open.svg",
+    backActiveHoleImage: "/images/piston_open.svg",
+    closedHoleImage: "/images/piston_closed.svg",
+    backClosedHoleImage: "/images/piston_closed.svg",
+  },
 };
 
 const getBagpipeImages = (bagpipeType: BagpipeTypes) => {
@@ -103,12 +114,20 @@ export const bagpipeImages = {
   [BagpipeTypes.BelarusianOpenDuda]: getBagpipeImages(BagpipeTypes.BelarusianOpenDuda),
   [BagpipeTypes.Dudelsack]: getBagpipeImages(BagpipeTypes.Dudelsack),
   [BagpipeTypes.Highlander]: getBagpipeImages(BagpipeTypes.Highlander),
+  [BagpipeTypes.TinWhistle]: getBagpipeImages(BagpipeTypes.TinWhistle),
 };
 
 const srcToImage = (src: string) => {
   const image = new Image();
   image.src = src;
   return image;
+};
+
+// Steel/charcoal finger markers for the tin whistle's metal body, in place of the
+// skin-toned imagesTree icons used on the wooden/leather bagpipe images.
+export const whistleFingerImages = {
+  active: srcToImage("/images/finger_whistle_active.svg"),
+  inactive: srcToImage("/images/finger_whistle_inactive.svg"),
 };
 
 export const imagesTree = {

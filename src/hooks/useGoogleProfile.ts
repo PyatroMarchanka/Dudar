@@ -3,6 +3,7 @@ import { store } from "../context";
 import { defaultUser, User, UserSettings } from "../interfaces/user";
 import { useChangeLanguage } from "../locales";
 import { userApi } from "../api/user";
+import { isFluteBrand } from "../brand";
 import { BagpipeTypes, Languages } from "../interfaces";
 import { fallbackLanguage } from "../i18n";
 import { getUserLanguage } from "../constants/localStorage";
@@ -42,12 +43,14 @@ export const useGoogleProfile = () => {
       bagpipeType,
       isPreclick,
       tempo,
-      transpose,
+      transpose: bagpipeTranspose,
+      fluteTranspose,
       language,
       isSilentMode,
       lastSongUrl,
       view,
     } = userData.settings;
+    const transpose = isFluteBrand ? fluteTranspose : bagpipeTranspose;
     if (bagpipeType) {
       setBagpipeType(bagpipeType);
     }

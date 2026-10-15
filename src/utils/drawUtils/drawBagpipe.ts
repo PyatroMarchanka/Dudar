@@ -1,11 +1,16 @@
 import { bagpipes } from "./../../dataset/bagpipes";
-import { BagpipeTypes, SharpNotesEnum } from "../../interfaces";
+import { BagpipeTypes, SharpNotes } from "../../interfaces";
 
 export type NotesMap = { note: string; yPos: number }[];
 
-export const drawBagpipe = (ctx: CanvasRenderingContext2D, bagpipeType: BagpipeTypes) => {
-  const bagpipeImage = bagpipes[bagpipeType].images.mainPipe;
-  const imagesProperties = bagpipes[bagpipeType].imagesProperties;
+export const drawBagpipe = (
+  ctx: CanvasRenderingContext2D,
+  bagpipeType: BagpipeTypes,
+  activeNote?: { note: SharpNotes; octave: number } | null
+) => {
+  const { images, imagesProperties, overblownNotes } = bagpipes[bagpipeType];
+  const isOverblown = !!activeNote && !!overblownNotes?.includes(activeNote.note + activeNote.octave);
+  const bagpipeImage = (isOverblown && images.mainPipeOverblown) || images.mainPipe;
   ctx.fillStyle = "#FCF7F2";
   ctx.fillRect(0, 0, 50, 800);
   bagpipeImage &&

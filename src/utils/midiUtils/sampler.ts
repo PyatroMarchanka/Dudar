@@ -62,6 +62,18 @@ const polishSampler = new Tone.Sampler({
   baseUrl: "/",
 }).toDestination();
 
+const fluteSampler = new Tone.Sampler({
+  urls: {
+    F4: "samples/flute-samples/F4.mp3",
+    "G#4": "samples/flute-samples/G#4.mp3",
+    C5: "samples/flute-samples/C5.mp3",
+    G5: "samples/flute-samples/G5.mp3",
+    "A#5": "samples/flute-samples/A#5.mp3",
+    "D#6": "samples/flute-samples/D#6.mp3",
+  },
+  baseUrl: "/",
+}).toDestination();
+
 const resume = async (sampler: Tone.Sampler) => {
   if (sampler.context.state !== "running") {
     sampler.context.resume();
@@ -97,6 +109,10 @@ export const playNote = (
       resume(polishSampler);
       polishSampler.triggerAttack([note], undefined, volume + 1);
       break;
+    case BagpipeTypes.TinWhistle:
+      resume(fluteSampler);
+      fluteSampler.triggerAttack([note], undefined, volume);
+      break;
     default:
       sampler.triggerAttack([note], undefined, volume);
   }
@@ -122,6 +138,9 @@ export const stopNote = (bagpipeType: BagpipeTypes, note?: string) => {
       break;
     case BagpipeTypes.Polish:
       polishSampler.triggerRelease([note]);
+      break;
+    case BagpipeTypes.TinWhistle:
+      fluteSampler.triggerRelease([note]);
       break;
     default:
       sampler.triggerRelease([note]);
