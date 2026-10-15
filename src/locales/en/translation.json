@@ -70,7 +70,10 @@
     "lang": "Language"
   },
   "songList": {
-    "instrument": "For the instrument:"
+    "instrument": "For the instrument:",
+    "favorites": "Favorite songs",
+    "addToFavorites": "Add to favorites",
+    "removeFromFavorites": "Remove from favorites"
   },
   "tags": {
     "song": "song",

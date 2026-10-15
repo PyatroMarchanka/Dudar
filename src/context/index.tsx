@@ -53,6 +53,7 @@ interface Context {
   setSongTags: (tags: SongTags[]) => void;
   setActiveSongTags: (tags: SongTags[]) => void;
   setUserData: (data: any) => void;
+  setFavoriteSongs: (songIds: string[]) => void;
   setIsSilentMode: (bool: boolean) => void;
   setUserLastSongUrl: (url: string) => void;
   setIsSongUnavailable: (bool: boolean) => void;
@@ -85,6 +86,7 @@ const store = createContext<Context>({
   setSongTags: (tags: SongTags[]) => {},
   setActiveSongTags: (tags: SongTags[]) => {},
   setUserData: (data: any) => {},
+  setFavoriteSongs: (songIds: string[]) => {},
   setIsSilentMode: (bool: boolean) => {},
   setUserLastSongUrl: (url: string) => {},
   setIsSongUnavailable: (bool: boolean) => {},

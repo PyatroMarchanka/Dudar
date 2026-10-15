@@ -70,7 +70,10 @@
     "lang": "Мова"
   },
   "songList": {
-    "instrument": "Для інструмента:"
+    "instrument": "Для інструмента:",
+    "favorites": "Улюбёныя песні",
+    "addToFavorites": "Дадаць ва ўлюбёныя",
+    "removeFromFavorites": "Прыбраць з улюбёных"
   },
   "tags": {
     "song": "песні",

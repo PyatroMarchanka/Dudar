@@ -18,6 +18,10 @@ import { useHistory } from "react-router-dom";
 import { routes } from "../../router/routes";
 import { LinkTypes, Song } from "../../dataset/songs/interfaces";
 import { useUserLastSong } from "../../hooks/useUserLastSong";
+import {
+  normalizeSongId,
+  useFavoriteSongs,
+} from "../../hooks/useFavoriteSongs";
 
 interface Props {
   setOpen: (bool: boolean) => void;
@@ -109,6 +113,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
   const history = useHistory();
 
   const { updateUserLastSong } = useUserLastSong();
+  const { isLoggedIn, favoriteSongs } = useFavoriteSongs();
 
   const classes = useStyles();
   const genres = Object.keys(listsByBagpipe || {});
@@ -120,6 +125,91 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
     setOpen(false);
     onStop();
   };
+
+  const allSongs = Object.values(listsByBagpipe || {}).flat();
+  // Favorites playable on the current instrument, in the order they were added
+  const favoriteSongsInList = isLoggedIn
+    ? favoriteSongs.reduce<Song[]>((acc, favoriteId) => {
+        const song = allSongs.find(
+          (s) => normalizeSongId(s.id) === normalizeSongId(favoriteId)
+        );
+        if (song && !acc.includes(song)) acc.push(song);
+        return acc;
+      }, [])
+    : [];
+
+  const renderSong = (song: Song) => (
+    <div
+      className={
+        activeSong?.pathName === song.pathName
+          ? classes.activeSong
+          : classes.listItem
+      }
+      key={song.name}
+    >
+      {song.stats?.views > 0 && (
+        <Typography variant="subtitle1" className={classes.playsCount}>
+          {song.stats.views}
+        </Typography>
+      )}
+      <button
+        className={classes.buttonRoot}
+        onClick={(e) => onSongClick(e, song)}
+      >
+        <Icon type="song-play" />
+        <ListItem className="song-button-gtm" id={song.name}>
+          {song.name}
+        </ListItem>
+        {song.links.some((link) => link.type === LinkTypes.Video) && (
+          <Icon
+            className="videoIcon"
+            fill={mainColors.lightestGrey}
+            type="material"
+            Icon={Videocam}
+          />
+        )}
+        {song.lyrycs && (
+          <Icon
+            className="video-icon"
+            type="lyrycs"
+            fill={mainColors.lightestGrey}
+          />
+        )}
+      </button>
+    </div>
+  );
+
+  const renderAccordion = (
+    key: string,
+    title: string,
+    songs: Song[],
+    defaultExpanded = false
+  ) => (
+    <div key={key} className={classes.root}>
+      <Accordion
+        defaultExpanded={defaultExpanded}
+        classes={{
+          root: classes.accordionRoot,
+        }}
+      >
+        <AccordionSummary
+          classes={{
+            root: classes.summary,
+            content: classes.summary,
+          }}
+          aria-controls={`${key}-content`}
+          id={`${key}-header`}
+        >
+          <Typography className={classes.heading}>{title}</Typography>
+        </AccordionSummary>
+        <AccordionDetails classes={{ root: classes.detailsRoot }}>
+          <List classes={{ padding: classes.list }}>
+            {songs.map(renderSong)}
+          </List>
+        </AccordionDetails>
+      </Accordion>
+    </div>
+  );
 
   if (!bagpipeType) return null;
 
@@ -137,77 +227,16 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
         </div>
       </div>
 
-      {genres.map((genre) => (
-        <div key={genre} className={classes.root}>
-          <Accordion
-            classes={{
-              root: classes.accordionRoot,
-            }}
-          >
-            <AccordionSummary
-              classes={{
-                root: classes.summary,
-                content: classes.summary,
-              }}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className={classes.heading}>
-                {t(`genres.${genre}`)}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails classes={{ root: classes.detailsRoot }}>
-              <List classes={{ padding: classes.list }}>
-                {listsByBagpipe![genre].map((song) => (
-                  <div
-                    className={
-                      activeSong?.pathName === song.pathName
-                        ? classes.activeSong
-                        : classes.listItem
-                    }
-                    key={song.name}
-                  >
-                    {song.stats?.views > 0 && (
-                      <Typography
-                        variant="subtitle1"
-                        className={classes.playsCount}
-                      >
-                        {song.stats.views}
-                      </Typography>
-                    )}
-                    <button
-                      className={classes.buttonRoot}
-                      onClick={(e) => onSongClick(e, song)}
-                    >
-                      <Icon type="song-play" />
-                      <ListItem className="song-button-gtm" id={song.name}>
-                        {song.name}
-                      </ListItem>
-                      {song.links.some(
-                        (link) => link.type === LinkTypes.Video
-                      ) && (
-                        <Icon
-                          className="videoIcon"
-                          fill={mainColors.lightestGrey}
-                          type="material"
-                          Icon={Videocam}
-                        />
-                      )}
-                      {song.lyrycs && (
-                        <Icon
-                          className="video-icon"
-                          type="lyrycs"
-                          fill={mainColors.lightestGrey}
-                        />
-                      )}
-                    </button>
-                  </div>
-                ))}
-              </List>
-            </AccordionDetails>
-          </Accordion>
-        </div>
-      ))}
+      {favoriteSongsInList.length > 0 &&
+        renderAccordion(
+          "favorites",
+          t("songList.favorites"),
+          favoriteSongsInList,
+          true
+        )}
+      {genres.map((genre) =>
+        renderAccordion(genre, t(`genres.${genre}`), listsByBagpipe![genre])
+      )}
       <SongTagsWrapper />
     </Content>
   );
