@@ -8,6 +8,8 @@ export interface User {
   settings: UserSettings;
   _id?: string;
   isAdmin?: boolean;
+  // `id`s of the songs the user marked as favorite
+  favoriteSongs?: string[];
 }
 
 export enum Views {

@@ -70,7 +70,10 @@
     "lang": "Język"
   },
   "songList": {
-    "instrument": "Dla instrumentu:"
+    "instrument": "Dla instrumentu:",
+    "favorites": "Ulubione utwory",
+    "addToFavorites": "Dodaj do ulubionych",
+    "removeFromFavorites": "Usuń z ulubionych"
   },
   "tags": {
     "song": "piosenka",

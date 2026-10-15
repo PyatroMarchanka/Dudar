@@ -20,6 +20,7 @@ interface Action {
     | "SET_ACTIVE_SONG_TAGS"
     | "SET_HOLES_MODE"
     | "SET_USER_DATA"
+    | "SET_FAVORITE_SONGS"
     | "SET_IS_SILENT_MODE"
     | "SET_USER_LAST_SONG_URL"
     | "SET_USER_LOGGED_IN"
@@ -158,6 +159,13 @@ export const useSettingsReducer = () => {
             userData: action.payload,
           };
 
+        case "SET_FAVORITE_SONGS":
+          if (!state.userData) return state;
+          return {
+            ...state,
+            userData: { ...state.userData, favoriteSongs: action.payload },
+          };
+
         case "SET_IS_SILENT_MODE":
           return {
             ...state,
@@ -241,6 +249,9 @@ export const useSettingsReducer = () => {
   const setUserData = (data: any) => {
     dispatch({ type: "SET_USER_DATA", payload: data });
   };
+  const setFavoriteSongs = (songIds: string[]) => {
+    dispatch({ type: "SET_FAVORITE_SONGS", payload: songIds });
+  };
   const setIsSilentMode = (bool: boolean) => {
     dispatch({ type: "SET_IS_SILENT_MODE", payload: bool });
   };
@@ -273,6 +284,7 @@ export const useSettingsReducer = () => {
     setSongTags,
     setActiveSongTags,
     setUserData,
+    setFavoriteSongs,
     setIsSilentMode,
     setUserLastSongUrl,
     setIsUserLoggedIn,
