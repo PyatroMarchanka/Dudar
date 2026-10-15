@@ -3,7 +3,8 @@ name: Deploy notification
 # Cloudflare Pages builds main and release and reports the result as a
 # "Cloudflare Pages" check run. When that check finishes, post a comment on the
 # "Deploy notifications" issue so the repo owner gets a GitHub notification
-# (email / mobile) with the URL to check.
+# (email / mobile) with the URL to check: dudahero.org for main,
+# release.dudahero.org for release.
 on:
   check_run:
     types: [completed]
@@ -25,9 +26,7 @@ jobs:
             const branch = run.check_suite.head_branch;
             const sha = run.head_sha.slice(0, 7);
             const ok = run.conclusion === 'success';
-            const summary = (run.output && run.output.summary) || '';
-            const branchUrl = (summary.match(/Branch Preview URL:[\s\S]*?href='([^']+)'/) || [])[1];
-            const siteUrl = branch === 'main' ? 'https://dudahero.org' : branchUrl || `https://${branch}.dudar.pages.dev`;
+            const siteUrl = branch === 'main' ? 'https://dudahero.org' : 'https://release.dudahero.org';
 
             const { data: commit } = await github.rest.repos.getCommit({ ...context.repo, ref: run.head_sha });
             const message = commit.commit.message.split('\n')[0];
