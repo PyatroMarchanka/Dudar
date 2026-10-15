@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
@@ -12,17 +12,20 @@ import LanguageIcon from "@material-ui/icons/Language";
 import AvTimerIcon from "@material-ui/icons/AvTimer";
 import ImportExport from "@material-ui/icons/ImportExport";
 import VolumeOff from "@material-ui/icons/VolumeOff";
+import BluetoothAudio from "@material-ui/icons/BluetoothAudio";
 import { InstrumentTypes } from "./InstrumentTypes";
 import { Contacts } from "../../Contacts";
 import { DonationButtonBig } from "../../global/DonationButtonBig";
 import { useUpdateUserSettings } from "../../../hooks/useGoogleProfile";
 import { Link } from "react-router-dom";
-import { Typography } from "@material-ui/core";
+import { MenuItem, Select, Typography } from "@material-ui/core";
 import { MusicNote, Home } from "@material-ui/icons";
 import { Views } from "../../../interfaces/user";
 import { routes } from "../../../router/routes";
 import { SongPageModal } from "../../global/SongPageModal";
 import { isFluteInstrument } from "../../../brand";
+import { useSelectStyles } from "../../global/selectStyles";
+import { getAutoLatencyMs, getSyncOffsetMs, setSyncOffsetMs, syncOffsetOptionsMs } from "../../../utils/audioSync";
 
 type Props = {
   midiPlayer?: MidiPlayer | null;
@@ -39,6 +42,8 @@ export const MainSettings = ({ midiPlayer, showSongInfo = true }: Props) => {
     setIsMusicSheet,
   } = useContext(store);
   const { updateUserSettings } = useUpdateUserSettings();
+  const selectClasses = useSelectStyles();
+  const [syncOffset, setSyncOffset] = useState(getSyncOffsetMs());
 
   useEffect(() => {
     midiPlayer?.setIsSilentMode(!!isSilentMode);
@@ -119,6 +124,26 @@ export const MainSettings = ({ midiPlayer, showSongInfo = true }: Props) => {
           }}
           name="checkedG"
         />
+      </Row>
+      <Line />
+      <Row>
+        <Icon type="material" fill={mainColors.darkerGray} Icon={BluetoothAudio} />
+        <Title>{t("soundSync")}</Title>
+        <Select
+          className={selectClasses.select}
+          value={syncOffset}
+          onChange={(e) => {
+            const ms = Number(e.target.value);
+            setSyncOffsetMs(ms);
+            setSyncOffset(ms);
+          }}
+        >
+          {syncOffsetOptionsMs.map((ms) => (
+            <MenuItem key={ms} value={ms}>
+              <b>{ms === 0 ? `${t("soundSyncAuto")} (${getAutoLatencyMs()} ms)` : `${ms > 0 ? "+" : ""}${ms} ms`}</b>
+            </MenuItem>
+          ))}
+        </Select>
       </Row>
       <Line />
       <Row>
