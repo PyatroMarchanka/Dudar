@@ -31,7 +31,7 @@ export const FavoriteButton = () => {
       <Icon
         type="material"
         Icon={favorite ? Favorite : FavoriteBorder}
-        fill={favorite ? mainColors.red : theme.colors.black}
+        fill={favorite ? mainColors.orange : theme.colors.black}
       />
     </IconButton>
   );
