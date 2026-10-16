@@ -1,21 +1,18 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { StaveNote, VexFlow } from "vexflow";
-import styled from "styled-components";
-import { store } from "../../context";
-import { transposeNote } from "../../utils/midiUtils";
-import {
-  convertAllNotes,
-  renderBar,
-  splitNotesIntoBars,
-  STAVE_HEIGHT,
-} from "./utils";
-import { MidiPlayer } from "../../utils/MidiPlayer";
-import { useNotesMoving } from "../../hooks/useNotesMoving";
-import { PlayerControls } from "../Controls/PlayerControls";
-import { useTranslation } from "react-i18next";
-import { Typography } from "@material-ui/core";
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import styled from 'styled-components';
+import { store } from '../../context';
+import { transposeNote } from '../../utils/midiUtils';
+import { buildSheet, Sheet, TICKS_PER_QUARTER } from './notation';
+import { findNoteAt, getKeyInfo, renderSheet, RenderedSheet } from './utils';
+import { MidiPlayer } from '../../utils/MidiPlayer';
+import { useNotesMoving } from '../../hooks/useNotesMoving';
+import { PlayerControls } from '../Controls/PlayerControls';
+import { useTranslation } from 'react-i18next';
+import { Typography } from '@material-ui/core';
+import { mainColors } from '../../utils/theme';
 
-const { Renderer } = VexFlow;
+const MAX_SHEET_WIDTH = 1000;
+const ACTIVE_CLASS = 'sheet-note-active';
 
 interface MusicSheetProps {
   player: MidiPlayer | null;
@@ -23,16 +20,17 @@ interface MusicSheetProps {
 
 const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
   const {
-    state: { transpose, midiData, activeSong },
+    state: { transpose, midiData, activeSong, isPlaying, screenSize },
   } = useContext(store);
-  const { t } = useTranslation("translation");
+  const { t } = useTranslation('translation');
   const { setTick, tick } = useNotesMoving();
-  const tonality = transposeNote("A", transpose);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [bars, setBars] = useState<any[][]>([[]]);
-  const [notes, setNotes] = useState<StaveNote[][]>([[]]);
-  const [activeBarNote, setActiveBarNote] = useState([0, 0]);
+  const tonality = transposeNote('A', transpose);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const renderedRef = useRef<RenderedSheet | null>(null);
+  const activeRef = useRef<{ index: number; line: number }>({ index: -1, line: -1 });
   const [isMusicViewValid, setIsMusicViewValid] = useState(true);
+  const [width, setWidth] = useState(0);
 
   useEffect(() => {
     if (player) {
@@ -40,94 +38,87 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
     }
   }, [player, setTick]);
 
-  useEffect(() => {
-    if (!midiData || !activeSong) return;
-    setIsMusicViewValid(true);
-
-    const bars = splitNotesIntoBars(
-      midiData.tracks[0].notes,
-      activeSong.timeSignature,
-      midiData.header.ppq
-    );
-
-    setBars(bars);
+  const sheet = useMemo<Sheet | null>(() => {
+    if (!midiData || !activeSong) return null;
+    // The metronome is appended as the last track; the melody is the first track with notes.
+    const melody = midiData.tracks.find((track) => track.notes.length);
+    if (!melody) return null;
     try {
-      const staveNotes = convertAllNotes(bars, midiData.header.ppq || 480);
-      setNotes(staveNotes);
+      // Show the pitches that are actually played, so they match the transposed key signature.
+      const notes = melody.notes.map((note) => ({
+        midi: note.midi + transpose,
+        ticks: note.ticks,
+        durationTicks: note.durationTicks,
+      }));
+      return buildSheet(notes, midiData.header.ppq, activeSong.timeSignature);
     } catch (error) {
+      console.error('Failed to build music sheet', error);
+      return null;
+    }
+  }, [midiData, activeSong, transpose]);
+
+  useEffect(() => {
+    const element = scrollRef.current;
+    if (element) setWidth(Math.min(element.clientWidth, MAX_SHEET_WIDTH));
+  }, [screenSize]);
+
+  useEffect(() => {
+    if (!sheetRef.current || !width) return;
+    renderedRef.current = null;
+    activeRef.current = { index: -1, line: -1 };
+    if (!sheet) {
+      setIsMusicViewValid(!midiData);
+      return;
+    }
+    try {
+      renderedRef.current = renderSheet(sheetRef.current, sheet, getKeyInfo(tonality), width);
+      setIsMusicViewValid(true);
+    } catch (error) {
+      console.error('Failed to render music sheet', error);
       setIsMusicViewValid(false);
     }
-  }, [midiData, activeSong, tonality]);
+  }, [sheet, tonality, width, midiData]);
 
+  // Highlight the sounding note without re-rendering the score.
   useEffect(() => {
-    if (!midiData || !isMusicViewValid) return;
+    const rendered = renderedRef.current;
+    if (!rendered || !midiData) return;
+    const normalisedTick = (tick * TICKS_PER_QUARTER) / (midiData.header.ppq || TICKS_PER_QUARTER);
+    const index = findNoteAt(rendered.notes, normalisedTick);
+    const previous = activeRef.current;
+    if (index === previous.index) return;
 
-    if (containerRef.current) {
-      containerRef.current.innerHTML = "";
-      const renderer = new Renderer(
-        containerRef.current,
-        Renderer.Backends.SVG
-      );
-      const context = renderer.getContext();
+    rendered.notes[previous.index]?.element?.classList.remove(ACTIVE_CLASS);
+    const note = rendered.notes[index];
+    note?.element?.classList.add(ACTIVE_CLASS);
+    activeRef.current = { index, line: note ? note.line : previous.line };
 
-      context.clear();
-
-      renderer.resize(500, (notes.length + 2) * STAVE_HEIGHT);
-
-      notes.forEach((staveBar, index) => {
-        renderBar(
-          staveBar,
-          index,
-          context,
-          tonality,
-          activeBarNote,
-          midiData,
-          activeSong?.timeSignature!
-        );
-      });
+    // Keep the playing line in view.
+    const scroller = scrollRef.current;
+    const sheetElement = sheetRef.current?.querySelector('svg');
+    if (note && note.line !== previous.line && scroller && sheetElement && isPlaying) {
+      const sheetTop =
+        sheetElement.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop;
+      const top = sheetTop + rendered.lineTops[note.line] - scroller.clientHeight / 4;
+      scroller.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
     }
-  }, [midiData, tonality, activeSong, isMusicViewValid, notes, activeBarNote]);
-
-  useEffect(() => {
-    if (!midiData || !bars[0]?.length) return;
-
-    const currentBar = bars.findIndex((bar) => {
-      const lastNote = bar.at(-1);
-      return lastNote?.ticks + lastNote?.durationTicks > tick;
-    });
-
-    let noteIndex = 0;
-
-    for (let i = 0; i < bars[currentBar]?.length; i++) {
-      const note = bars[currentBar][i];
-      if (note.ticks > tick) {
-        noteIndex = i - 1;
-        break;
-      } else if (i === bars[currentBar].length - 1) {
-        noteIndex = i;
-        break;
-      }
-    }
-
-    if (currentBar !== activeBarNote[0] || noteIndex !== activeBarNote[1]) {
-      setActiveBarNote([currentBar, noteIndex]);
-    }
-  }, [tick, midiData, tonality, bars]);
+  }, [tick, midiData, isPlaying]);
 
   return (
     <CenteredContainer>
-      {isMusicViewValid ? (
-        <>
-          <CanvasContainer ref={containerRef} />
-          <PlayerControlsContainer>
-            <PlayerControls player={player} />
-          </PlayerControlsContainer>
-        </>
-      ) : (
-        <FallbackContainer>
-          <Typography variant="h4">{t("noMusicSheets")}</Typography>
-          <Typography variant="h6">{t("noMusicSheetsSubtitle")}</Typography>
-        </FallbackContainer>
+      <ScrollContainer ref={scrollRef}>
+        {!isMusicViewValid && (
+          <FallbackContainer>
+            <Typography variant="h4">{t('noMusicSheets')}</Typography>
+            <Typography variant="h6">{t('noMusicSheetsSubtitle')}</Typography>
+          </FallbackContainer>
+        )}
+        <SheetContainer ref={sheetRef} hidden={!isMusicViewValid} />
+      </ScrollContainer>
+      {isMusicViewValid && (
+        <PlayerControlsContainer>
+          <PlayerControls player={player} />
+        </PlayerControlsContainer>
       )}
     </CenteredContainer>
   );
@@ -139,14 +130,34 @@ const CenteredContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
 `;
 
-const CanvasContainer = styled.div`
+const ScrollContainer = styled.div`
   width: 100%;
+  height: 100%;
+  overflow-y: auto;
   display: flex;
   justify-content: center;
-  overflow-y: scroll;
+`;
+
+const SheetContainer = styled.div`
+  max-width: ${MAX_SHEET_WIDTH}px;
+  /* room for the song header above and the fixed player controls below */
+  padding-top: 90px;
+  padding-bottom: 140px;
+
+  svg {
+    display: block;
+  }
+
+  .${ACTIVE_CLASS} path,
+  .${ACTIVE_CLASS} text,
+  .${ACTIVE_CLASS} rect {
+    fill: ${mainColors.red};
+    stroke: ${mainColors.red};
+  }
 `;
 
 const PlayerControlsContainer = styled.div`

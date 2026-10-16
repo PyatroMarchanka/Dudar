@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const SettingsButtons = styled.div`
   position: absolute;
@@ -13,14 +13,8 @@ export const SettingsButtons = styled.div`
 export const Header = styled.div`
   width: 100%;
   display: flex;
+  flex: 1;
+  min-width: 0;
   justify-content: center;
-  padding: 5px 0;
-`;
-
-export const SongTitle = styled.h1`
-  font-size: 16px;
-  font-family: Arial, Helvetica, sans-serif;
-  text-align: center;
-  margin: 0;
-  max-width: 150px;
+  padding: 5px 8px;
 `;
