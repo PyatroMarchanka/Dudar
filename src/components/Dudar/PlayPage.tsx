@@ -3,7 +3,8 @@ import ChangeLogPopup from "../ChangeLogPopup";
 import { noSongsLabel, store } from "../../context";
 import { useSongTitle } from "../../hooks/useSongTitle";
 import { Settings } from "../Controls/Settings";
-import { Header, SettingsButtons, SongTitle } from "./common";
+import { Header, SettingsButtons } from "./common";
+import { SongTitle } from "./SongTitle";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { useLoadSong } from "../../hooks/useLoadSong";
 import { useEffect } from "react";
@@ -26,7 +27,7 @@ export const PlayPageHeader = ({ midiPlayer }: Props) => {
     <SettingsButtons className="settingsButtons">
       <SongList player={midiPlayer} />
       <Header>
-        <SongTitle>{songTitle ?? noSongsLabel}</SongTitle>
+        <SongTitle title={songTitle ?? noSongsLabel} />
       </Header>
       <FavoriteButton />
       <ChangeLogPopup />

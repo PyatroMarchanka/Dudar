@@ -1,5 +1,6 @@
 import React from "react";
-import { Header, SettingsButtons, SongTitle } from "./common";
+import { Header, SettingsButtons } from "./common";
+import { SongTitle } from "./SongTitle";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { SongList } from "../SongList";
 import { useSongTitle } from "../../hooks/useSongTitle";
@@ -16,7 +17,7 @@ export const InfoPageHeader = ({midiPlayer}: Props) => {
     <SettingsButtons>
       <SongList player={midiPlayer} />
       <Header>
-        <SongTitle>{songTitle || noSongsLabel}</SongTitle>
+        <SongTitle title={songTitle || noSongsLabel} />
       </Header>
     </SettingsButtons>
   );
