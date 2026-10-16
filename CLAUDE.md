@@ -12,7 +12,7 @@ The project uses npm (`package-lock.json`, `packageManager: npm`), even though t
 
 - `npm start`: dev server on http://localhost:3000
 - `npm run build`: production build into `build/`
-- `npm test`: Jest via react-scripts (watch mode). Run one file with `npm test -- src/path/to/file.test.ts`. There are currently no test files.
+- `npm test`: Jest via react-scripts (watch mode). Run one file with `npm test -- src/path/to/file.test.ts`. The only tests so far are `src/components/MusicSheets/notation.test.ts`.
 - `npx tsc --noEmit`: type-check. There is no separate lint script; ESLint (`react-app` config) runs inside start and build.
 - `npm run update-sitemap`: regenerates `public/sitemap.xml` from the backend's songs and articles
 - `npm run songlist` points at a `load.ts` that no longer exists.
@@ -44,7 +44,7 @@ Components read state with `const { state: {...}, setX } = useContext(store)`. T
 ### Rendering (the `/app` screen, `components/screens/Dudar.tsx`)
 There are two view modes:
 - **Bagpipe view**: three stacked canvases. `BackCanvas` is the bagpipe image. `DynamicCanvas` is the scrolling note "piano roll", driven by `useDrawDynamic`, `useNotesMoving` and the player's `handleNotesMoving` tick callback. `StaticCanvas` shows the active holes and fingers for the current note. The drawing functions are in `src/utils/drawUtils/`.
-- **Sheet music**: `components/MusicSheets` (VexFlow), toggled by `isMusicSheets`.
+- **Sheet music**: `components/MusicSheets` (VexFlow), toggled by `isMusicSheets`. `notation.ts` quantizes the MIDI melody into bars (ties, rests, triplets, grace notes) and `utils.ts` lays the bars out in lines and draws them.
 
 ### Bagpipe data
 `src/dataset/bagpipes.ts` assembles a `BagpipeConfig` for each `BagpipeTypes` value from parallel per-type maps in `src/dataset/` (notes map, hole positions, image properties, images, note-to-line mapping, finger maps). Adding a bagpipe means adding an entry to every one of those maps, plus a sampler in `sampler.ts` and translation keys.
