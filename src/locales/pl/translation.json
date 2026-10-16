@@ -14,6 +14,8 @@
   "whistleTonality": "Tonacja whistle'a",
   "preclick": "Wstępne odliczanie",
   "silentMode": "Cichy tryb (tylko metronom)",
+  "soundSync": "Synchronizacja dźwięku (Bluetooth)",
+  "soundSyncAuto": "Auto",
   "musicSheetsSettings": "Widok nut",
   "noMusicSheets": "Ten utwór nie może być wyświetlony jako nuty.",
   "noMusicSheetsSubtitle": "Możesz zobaczyć go w widoku dudy",

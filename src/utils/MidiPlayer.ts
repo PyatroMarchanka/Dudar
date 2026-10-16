@@ -10,6 +10,7 @@ import { midiNumbersToNotes } from "./midiUtils/notesToMidiNumbers";
 import { BagpipeTypes, SharpNotesEnum } from "../interfaces";
 import { TimeSignatures } from "../dataset/songs/interfaces";
 import { isFluteInstrument } from "../brand";
+import { getVisualDelayMs } from "./audioSync";
 
 export type MidiNoteHandler = (note: number) => void;
 export type PlaybackProgressHandler = (
@@ -65,6 +66,8 @@ export class MidiPlayer {
   barLength = 1;
   isPlaying = false;
   handleNotesMoving?: NotesMovingHandler;
+  // Visual updates waiting for their sound to reach the speakers.
+  visualTimers = new Set<ReturnType<typeof setTimeout>>();
 
   constructor(
     playRef: any,
@@ -97,14 +100,13 @@ export class MidiPlayer {
     console.log("initPlayer");
     Player = new MidiPlayerLib.Player(function (event: any) {});
     Player.on("playing", ({ tick }: any) => {
-      handleProgress(
-        Player.getSongPercentRemaining(),
-        Player.getSongTime(),
-        Player.getSongTimeRemaining()
-      );
-      if (this.handleNotesMoving) {
-        this.handleNotesMoving(tick);
-      }
+      const percentRemaining = Player.getSongPercentRemaining();
+      const songTime = Player.getSongTime();
+      const timeRemaining = Player.getSongTimeRemaining();
+      this.runVisual(() => {
+        handleProgress(percentRemaining, songTime, timeRemaining);
+        this.handleNotesMoving?.(tick);
+      });
       if (this.loopBar(tick)) {
         return;
       }
@@ -125,6 +127,27 @@ export class MidiPlayer {
       console.log("end of file");
     });
   };
+
+  // Sound comes out later than it is triggered (Tone.js lookahead plus the
+  // output device, a lot more with Bluetooth headphones), so the visuals are
+  // held back by the same amount to stay in sync with what the user hears.
+  runVisual(update: () => void) {
+    const delayMs = getVisualDelayMs();
+    if (delayMs <= 0) {
+      update();
+      return;
+    }
+    const timer = setTimeout(() => {
+      this.visualTimers.delete(timer);
+      update();
+    }, delayMs);
+    this.visualTimers.add(timer);
+  }
+
+  clearPendingVisuals() {
+    this.visualTimers.forEach((timer) => clearTimeout(timer));
+    this.visualTimers.clear();
+  }
 
   setLoop(loop: boolean) {
     this.loop = loop;
@@ -187,21 +210,21 @@ export class MidiPlayer {
       if (!this.loopWrapped) {
         if (tick >= durationTicks) {
           this.loopWrapped = true;
-          this.setTick(0, true);
+          this.setTick(0, true, false);
           return true;
         }
         return false;
       }
       if (tick >= overflowTicks) {
         this.loopWrapped = false;
-        this.setTick(this.loopData.startLoopTicks, true);
+        this.setTick(this.loopData.startLoopTicks, true, false);
         return true;
       }
       return false;
     }
 
     if (tick >= this.loopData.endLoopTicks) {
-      this.setTick(this.loopData.startLoopTicks, true);
+      this.setTick(this.loopData.startLoopTicks, true, false);
       return true;
     }
     return false;
@@ -228,7 +251,7 @@ export class MidiPlayer {
       this.keyUp(event.noteNumber);
     } else if (event.name === "Note on" && event.noteNumber !== 33) {
       this.keyDown(event.noteNumber);
-      handleNote(event);
+      this.runVisual(() => handleNote(event));
       this.checkTempo(this.bpm);
     }
   };
@@ -285,6 +308,7 @@ export class MidiPlayer {
   }
 
   setProgress = (percent: number, isPlaying: boolean) => {
+    this.clearPendingVisuals();
     Player.skipToPercent(percent);
     this.setCurrentBarStart();
     if (isPlaying) {
@@ -295,7 +319,13 @@ export class MidiPlayer {
     }
   };
 
-  setTick = (tick: number, isPlaying: boolean) => {
+  // A seek drops visual updates still waiting from before it, so they don't
+  // pull the view back to the old position. Loop jumps keep them
+  // (clearPending = false): the bar before the jump is still being heard.
+  setTick = (tick: number, isPlaying: boolean, clearPending = true) => {
+    if (clearPending) {
+      this.clearPendingVisuals();
+    }
     Player.skipToTick(tick);
     if (isPlaying) {
       Player.play();
@@ -332,7 +362,7 @@ export class MidiPlayer {
     this.bpm = bpm;
 
     if (this.isPlaying) {
-      this.setTick(currentTick, true);
+      this.setTick(currentTick, true, false);
     }
   };
 
@@ -415,6 +445,7 @@ export class MidiPlayer {
 
   stop = () => {
     this.isPlaying = false;
+    this.clearPendingVisuals();
     this.playRef.current?.cancelQueue();
     Player.stop();
     this.stopAllNotes();
@@ -440,6 +471,7 @@ export class MidiPlayer {
 
   pause = () => {
     this.isPlaying = false;
+    this.clearPendingVisuals();
     this.playRef.current?.cancelQueue();
     this.stopAllNotes();
     Player.pause();
