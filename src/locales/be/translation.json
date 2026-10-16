@@ -14,6 +14,8 @@
   "whistleTonality": "Танальнасць свістка",
   "preclick": "Прэклік",
   "silentMode": "Рэжым без гуку (толькі метраном)",
+  "soundSync": "Сінхранізацыя гуку (Bluetooth)",
+  "soundSyncAuto": "Аўта",
   "musicSheetsSettings": "Від прагляду нот",
   "noMusicSheets": "Мы не можам паказаць ноты для гэтай песні",
   "noMusicSheetsSubtitle": "Вы можаце паглядзець яе на дудзе",

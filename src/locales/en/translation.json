@@ -14,6 +14,8 @@
   "whistleTonality": "Whistle key",
   "preclick": "Preclick",
   "silentMode": "Silent mode (metronome only)",
+  "soundSync": "Sound sync (Bluetooth)",
+  "soundSyncAuto": "Auto",
   "musicSheetsSettings": "Music sheets view",
   "noMusicSheets": "This song cannot be shown as a music sheet.",
   "noMusicSheetsSubtitle": "You can see it in the bagpipe view",
