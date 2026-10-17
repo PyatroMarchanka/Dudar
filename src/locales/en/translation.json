@@ -229,7 +229,10 @@
     "discoverMelodies": "Discover over {{count}} folk melodies from around the world, carefully curated and organized by their cultural origins.",
     "latestFromBlog": "Latest from Our Blog:",
     "popularSongs": "Popular Songs",
-    "newestSongs": "Newest Songs"
+    "newestSongs": "Newest Songs",
+    "latestUpdates": "Latest updates",
+    "showAllUpdates": "Show all updates",
+    "showFewerUpdates": "Show fewer updates"
   },
   "navbar": {
     "learn": "Learn with Dudahero",
