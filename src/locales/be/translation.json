@@ -71,6 +71,12 @@
     "pl": "Polski",
     "lang": "Мова"
   },
+  "share": {
+    "share": "Падзяліцца",
+    "copyLink": "Скапіяваць спасылку",
+    "linkCopied": "Спасылка скапіявана",
+    "shareVia": "Падзяліцца праз…"
+  },
   "songList": {
     "instrument": "Для інструмента:",
     "favorites": "Улюбёныя песні",
