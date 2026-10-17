@@ -31,6 +31,10 @@ const articleLinks = {
   categories: `${process.env.REACT_APP_BACKEND_URL}/v1/categories`,
 }
 
+const updatesLinks = {
+  updates: `${process.env.REACT_APP_BACKEND_URL}/v1/updates`,
+}
+
 export const links = {
   ...authLinks,
   ...songsLinks,
@@ -38,4 +42,5 @@ export const links = {
   ...playlistsLinks,
   ...favoritesLinks,
   ...articleLinks,
+  ...updatesLinks,
 }

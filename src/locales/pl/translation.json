@@ -71,6 +71,12 @@
     "pl": "Polski",
     "lang": "Język"
   },
+  "share": {
+    "share": "Udostępnij",
+    "copyLink": "Kopiuj link",
+    "linkCopied": "Link skopiowany",
+    "shareVia": "Udostępnij przez…"
+  },
   "songList": {
     "instrument": "Dla instrumentu:",
     "favorites": "Ulubione utwory",
@@ -229,7 +235,10 @@
     "discoverMelodies": "Odkryj ponad {{count}} melodii ludowych z całego świata, starannie wyselekcjonowanych i zorganizowanych według ich pochodzenia kulturowego.",
     "latestFromBlog": "Najnowsze z naszego bloga:",
     "popularSongs": "Popularne utwory",
-    "newestSongs": "Najnowsze utwory"
+    "newestSongs": "Najnowsze utwory",
+    "latestUpdates": "Najnowsze aktualizacje",
+    "showAllUpdates": "Pokaż wszystkie aktualizacje",
+    "showFewerUpdates": "Pokaż mniej"
   },
   "navbar": {
     "learn": "Ucz się z Dudahero",

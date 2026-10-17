@@ -8,8 +8,8 @@ import { SongTitle } from "./SongTitle";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { useLoadSong } from "../../hooks/useLoadSong";
 import { useEffect } from "react";
-import { TunerButton } from "../global/TunerButton";
 import { FavoriteButton } from "../FavoriteButton";
+import { ShareButton } from "../ShareButton";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
@@ -30,8 +30,8 @@ export const PlayPageHeader = ({ midiPlayer }: Props) => {
         <SongTitle title={songTitle ?? noSongsLabel} />
       </Header>
       <FavoriteButton />
+      <ShareButton />
       <ChangeLogPopup />
-      <TunerButton />
       <Settings midiPlayer={midiPlayer} />
     </SettingsButtons>
   );

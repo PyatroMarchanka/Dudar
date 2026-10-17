@@ -17,6 +17,7 @@ import { useArticlesPreviews } from "../../hooks/useArticles";
 import { useTranslation } from "react-i18next";
 import TopSongs from "../TopSongs";
 import NewestSongs from "../NewestSongs";
+import LatestUpdates from "../LatestUpdates";
 import { CookieBar } from "../CookieBar";
 import { Languages } from "../../interfaces";
 
@@ -80,6 +81,7 @@ export const About = () => {
               <Typography>{t("aboutPage.highlander")}</Typography>
             </li>
           </BagpipesList>
+          <LatestUpdates />
           <BlogSection>
             <Typography variant="h4" className="sectionSubtitle">
               {t("aboutPage.latestFromBlog")}
