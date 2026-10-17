@@ -8,7 +8,6 @@ import { SongTitle } from "./SongTitle";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { useLoadSong } from "../../hooks/useLoadSong";
 import { useEffect } from "react";
-import { TunerButton } from "../global/TunerButton";
 import { FavoriteButton } from "../FavoriteButton";
 import { ShareButton } from "../ShareButton";
 
@@ -33,7 +32,6 @@ export const PlayPageHeader = ({ midiPlayer }: Props) => {
       <FavoriteButton />
       <ShareButton />
       <ChangeLogPopup />
-      <TunerButton />
       <Settings midiPlayer={midiPlayer} />
     </SettingsButtons>
   );
