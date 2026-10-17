@@ -16,6 +16,7 @@ import BluetoothAudio from "@material-ui/icons/BluetoothAudio";
 import { InstrumentTypes } from "./InstrumentTypes";
 import { Contacts } from "../../Contacts";
 import { DonationButtonBig } from "../../global/DonationButtonBig";
+import { TunerButton } from "../../global/TunerButton";
 import { useUpdateUserSettings } from "../../../hooks/useGoogleProfile";
 import { Link } from "react-router-dom";
 import { MenuItem, Select, Typography } from "@material-ui/core";
@@ -56,6 +57,7 @@ export const MainSettings = ({ midiPlayer, showSongInfo = true }: Props) => {
   return (
     <Container>
       <DonationButtonBig />
+      <TunerButton />
       <Row as="a" href={routes.main}>
         <Icon type="material" fill={mainColors.darkerGray} Icon={Home} />
         <Title>{t("login.mainPage")}</Title>

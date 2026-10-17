@@ -6,7 +6,6 @@ import { Header, SettingsButtons } from "./common";
 import { SongTitle } from "./SongTitle";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { useEffect } from "react";
-import { TunerButton } from "../global/TunerButton";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
@@ -29,7 +28,6 @@ export const AbcPlayPageHeader = ({ midiPlayer }: Props) => {
       <Header>
         <SongTitle title={songTitle ?? noSongsLabel} />
       </Header>
-      <TunerButton />
       <Settings midiPlayer={midiPlayer} showSongInfo={false} />
     </SettingsButtons>
   );
