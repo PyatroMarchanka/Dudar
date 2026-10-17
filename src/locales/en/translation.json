@@ -71,6 +71,12 @@
     "pl": "Polski",
     "lang": "Language"
   },
+  "share": {
+    "share": "Share",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied",
+    "shareVia": "Share via…"
+  },
   "songList": {
     "instrument": "For the instrument:",
     "favorites": "Favorite songs",
