@@ -11,6 +11,7 @@ import { BagpipeTypes, SharpNotesEnum } from "../interfaces";
 import { TimeSignatures } from "../dataset/songs/interfaces";
 import { isFluteInstrument } from "../brand";
 import { getVisualDelayMs } from "./audioSync";
+import { registerAudioContextRef } from "./audioContext";
 
 export type MidiNoteHandler = (note: number) => void;
 export type PlaybackProgressHandler = (
@@ -85,6 +86,7 @@ export class MidiPlayer {
     this.loopData.loopBars = loopBars;
     this.timeSignature = timeSignature || "4/4";
     this.bagpipeType = bagpipeType;
+    registerAudioContextRef(playRef);
 
     if (this.playRef.current) {
       this.playRef.current?.setBand256(-5);
