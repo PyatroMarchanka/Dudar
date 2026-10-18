@@ -18,6 +18,7 @@ const clockCheckMs = 300;
 // Less than this much audio time over clockCheckMs means the clock is stuck.
 const minClockAdvanceSec = 0.05;
 const samplesWaitMs = 3000;
+const resumeWaitMs = 500;
 
 let isChecking = false;
 
@@ -83,7 +84,7 @@ export const checkAudioHealth = async () => {
   }
   isChecking = true;
   try {
-    await resumeAudio();
+    await Promise.race([resumeAudio(), waitMs(resumeWaitMs)]);
     const raw = getRawContext();
     const startTime = raw.currentTime;
     await waitMs(clockCheckMs);
@@ -93,7 +94,7 @@ export const checkAudioHealth = async () => {
     const advanced = raw.currentTime - startTime;
     if (raw.state === "running" && advanced < minClockAdvanceSec) {
       resetAudioContext();
-      await resumeAudio();
+      resumeAudio();
     }
   } finally {
     isChecking = false;
@@ -102,12 +103,10 @@ export const checkAudioHealth = async () => {
 
 // Resumes audio before playback starts and waits for the samples, so the
 // first notes aren't lost. Call it straight from the play button handler.
+// Never waits long: on iOS resume() can stay pending while the context is
+// interrupted, and playback must start anyway.
 export const prepareAudioForPlayback = async () => {
-  await resumeAudio();
-  if (getRawContext().state !== "running") {
-    await checkAudioHealth();
-  }
-  // Don't hold playback forever on a slow or failed sample download.
+  await Promise.race([resumeAudio(), waitMs(resumeWaitMs)]);
   await Promise.race([Tone.loaded().catch(() => {}), waitMs(samplesWaitMs)]);
 };
 

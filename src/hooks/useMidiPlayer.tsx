@@ -38,14 +38,23 @@ export const useMidiPlayer = (
   };
 
   useEffect(() => {
-    if (document.visibilityState === "hidden") {
-      midiPlayer?.pause();
-      setIsPlaying(false);
-      return;
-    }
-
     initPlayer();
-  }, [document.visibilityState]);
+  }, []);
+
+  // Pause when the app goes to the background. The player is kept as is, so
+  // pressing play afterwards continues from the same place.
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        midiPlayer?.pause();
+        setIsPlaying(false);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [midiPlayer]);
 
   useEffect(() => {
     if (midiPlayer && bagpipeType) {

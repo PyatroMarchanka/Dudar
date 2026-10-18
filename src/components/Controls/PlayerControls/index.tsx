@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { IconButton, Slider } from "@material-ui/core";
 import styled from "styled-components";
 import { store } from "../../../context";
@@ -44,7 +44,12 @@ export const PlayerControls = ({ player }: Props) => {
     setIsPlaying,
   } = useContext(store);
 
+  // Bumped on every play, stop and pause, so a play that is still waiting
+  // for the audio doesn't start after the user has already stopped it.
+  const playRequest = useRef(0);
+
   const onPlay = async () => {
+    const request = ++playRequest.current;
     setIsPlaying(true);
     const play = isPreclick ? player?.playWithPreclick : player?.playMidi;
 
@@ -53,6 +58,9 @@ export const PlayerControls = ({ player }: Props) => {
       // app was in the background the context can be suspended and only a
       // user gesture is allowed to resume it.
       await prepareAudioForPlayback();
+      if (request !== playRequest.current) {
+        return;
+      }
       play(midi, progress?.percent || 0, activeSong!.timeSignature);
       gtmPush({ song_name: activeSong!.name });
       songApi.updateSongViewsCount(activeSong!);
@@ -60,12 +68,14 @@ export const PlayerControls = ({ player }: Props) => {
   };
 
   const onStop = () => {
+    playRequest.current++;
     setIsPlaying(false);
     player?.stop();
     setProgress(100, 0, 0);
   };
 
   const onPause = () => {
+    playRequest.current++;
     setIsPlaying(false);
     player?.stop();
   };
