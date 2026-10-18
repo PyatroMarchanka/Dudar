@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { store } from '../../context';
 import { transposeNote } from '../../utils/midiUtils';
 import { buildSheet, Sheet, TICKS_PER_QUARTER } from './notation';
@@ -10,7 +10,7 @@ import { useNotesMoving } from '../../hooks/useNotesMoving';
 import { PlayerControls } from '../Controls/PlayerControls';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@material-ui/core';
-import { mainColors } from '../../utils/theme';
+import { mainColors, theme } from '../../utils/theme';
 
 const MAX_SHEET_WIDTH = 1000;
 const ACTIVE_CLASS = 'sheet-note-active';
@@ -112,6 +112,7 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
 
   return (
     <CenteredContainer>
+      <SolidHeaderStyle />
       <ScrollContainer ref={scrollRef}>
         {!isMusicViewValid && (
           <FallbackContainer>
@@ -146,13 +147,16 @@ const ScrollContainer = styled.div`
   overflow-y: auto;
   display: flex;
   justify-content: center;
+  /* don't stretch the sheet to the viewport height, or its bottom padding overflows and can't be scrolled to */
+  align-items: flex-start;
 `;
 
 const SheetContainer = styled.div`
   max-width: ${MAX_SHEET_WIDTH}px;
-  /* room for the song header above and the fixed player controls below */
+  /* room for the song header above; below, enough room to scroll the last line well above the fixed
+     player controls, also on mobile where 100vh reaches under the browser toolbar */
   padding-top: 90px;
-  padding-bottom: 140px;
+  padding-bottom: max(220px, 50vh);
 
   svg {
     display: block;
@@ -166,11 +170,25 @@ const SheetContainer = styled.div`
   }
 `;
 
+// The song header floats over the scrolling sheet, so give it a solid background to keep it readable.
+const SolidHeaderStyle = createGlobalStyle`
+  .settingsButtons {
+    top: 0;
+    padding-top: 3px;
+    background-color: ${theme.colors.white};
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  }
+`;
+
 const PlayerControlsContainer = styled.div`
   position: fixed;
   bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
-  margin-top: auto;
+  justify-content: center;
+  background-color: ${mainColors.lightestGrey};
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.12);
 `;
 
 const FallbackContainer = styled.div`
