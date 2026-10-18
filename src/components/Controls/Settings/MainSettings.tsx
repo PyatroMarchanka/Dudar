@@ -26,7 +26,13 @@ import { routes } from "../../../router/routes";
 import { SongPageModal } from "../../global/SongPageModal";
 import { isFluteInstrument } from "../../../brand";
 import { useSelectStyles } from "../../global/selectStyles";
-import { getAutoLatencyMs, getSyncOffsetMs, setSyncOffsetMs, syncOffsetOptionsMs } from "../../../utils/audioSync";
+import {
+  getAutoLatencyMs,
+  getSyncOffsetMs,
+  noDelayOffsetMs,
+  setSyncOffsetMs,
+  syncOffsetOptionsMs,
+} from "../../../utils/audioSync";
 
 type Props = {
   midiPlayer?: MidiPlayer | null;
@@ -142,7 +148,13 @@ export const MainSettings = ({ midiPlayer, showSongInfo = true }: Props) => {
         >
           {syncOffsetOptionsMs.map((ms) => (
             <MenuItem key={ms} value={ms}>
-              <b>{ms === 0 ? `${t("soundSyncAuto")} (${getAutoLatencyMs()} ms)` : `${ms > 0 ? "+" : ""}${ms} ms`}</b>
+              <b>
+                {ms === noDelayOffsetMs
+                  ? t("soundSyncOff")
+                  : ms === 0
+                  ? `${t("soundSyncAuto")} (${getAutoLatencyMs()} ms)`
+                  : `${ms > 0 ? "+" : ""}${ms} ms`}
+              </b>
             </MenuItem>
           ))}
         </Select>
