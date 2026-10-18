@@ -16,6 +16,7 @@
   "silentMode": "Cichy tryb (tylko metronom)",
   "soundSync": "Synchronizacja dźwięku (Bluetooth)",
   "soundSyncAuto": "Auto",
+  "soundSyncOff": "Bez opóźnienia",
   "musicSheetsSettings": "Widok nut",
   "noMusicSheets": "Ten utwór nie może być wyświetlony jako nuty.",
   "noMusicSheetsSubtitle": "Możesz zobaczyć go w widoku dudy",
