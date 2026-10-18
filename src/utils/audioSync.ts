@@ -16,7 +16,10 @@ import * as Tone from 'tone';
 const offsetStorageKey = 'audioSyncOffsetMs';
 const maxAutoLatencyMs = 1000;
 
-export const syncOffsetOptionsMs = [-100, -50, 0, 50, 100, 150, 200, 250, 300, 400, 500];
+// Marker value for "No delay": the visuals are not held back at all.
+export const noDelayOffsetMs = -1;
+
+export const syncOffsetOptionsMs = [noDelayOffsetMs, -100, -50, 0, 50, 100, 150, 200, 250, 300, 400, 500];
 
 let manualOffsetMs = readStoredOffset();
 
@@ -51,4 +54,5 @@ export const getAutoLatencyMs = (): number => {
   }
 };
 
-export const getVisualDelayMs = () => Math.max(getAutoLatencyMs() + manualOffsetMs, 0);
+export const getVisualDelayMs = () =>
+  manualOffsetMs === noDelayOffsetMs ? 0 : Math.max(getAutoLatencyMs() + manualOffsetMs, 0);
