@@ -1,5 +1,5 @@
-import React, { useContext, useRef } from "react";
-import { IconButton, Slider } from "@material-ui/core";
+import React, { useContext, useRef, useState } from "react";
+import { CircularProgress, IconButton, Slider } from "@material-ui/core";
 import styled from "styled-components";
 import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
@@ -39,7 +39,7 @@ const muiTheme = createTheme({
 
 export const PlayerControls = ({ player }: Props) => {
   const {
-    state: { midi, progress, isPlaying, songLength, isPreclick, activeSong },
+    state: { midi, progress, isPlaying, songLength, isPreclick, activeSong, metronome },
     setProgress,
     setIsPlaying,
   } = useContext(store);
@@ -47,21 +47,31 @@ export const PlayerControls = ({ player }: Props) => {
   // Bumped on every play, stop and pause, so a play that is still waiting
   // for the audio doesn't start after the user has already stopped it.
   const playRequest = useRef(0);
+  // True while waiting for the sounds to download before playing.
+  const [isLoadingSounds, setIsLoadingSounds] = useState(false);
+  // Bumped when the audio count-in starts, so the visual one starts with it.
+  const [preclickStart, setPreclickStart] = useState(0);
 
   const onPlay = async () => {
     const request = ++playRequest.current;
     setIsPlaying(true);
     const play = isPreclick ? player?.playWithPreclick : player?.playMidi;
 
-    if (play) {
+    if (play && player) {
       // Wake the audio up inside the tap, before the player starts: after the
       // app was in the background the context can be suspended and only a
-      // user gesture is allowed to resume it.
-      await prepareAudioForPlayback();
+      // user gesture is allowed to resume it. Then wait for the samples, or
+      // the first notes play silently while they are still downloading.
+      setIsLoadingSounds(true);
+      await prepareAudioForPlayback(player.waitForSounds(isPreclick || metronome));
       if (request !== playRequest.current) {
         return;
       }
+      setIsLoadingSounds(false);
       play(midi, progress?.percent || 0, activeSong!.timeSignature);
+      if (isPreclick) {
+        setPreclickStart((count) => count + 1);
+      }
       gtmPush({ song_name: activeSong!.name });
       songApi.updateSongViewsCount(activeSong!);
     }
@@ -69,6 +79,7 @@ export const PlayerControls = ({ player }: Props) => {
 
   const onStop = () => {
     playRequest.current++;
+    setIsLoadingSounds(false);
     setIsPlaying(false);
     player?.stop();
     setProgress(100, 0, 0);
@@ -76,6 +87,7 @@ export const PlayerControls = ({ player }: Props) => {
 
   const onPause = () => {
     playRequest.current++;
+    setIsLoadingSounds(false);
     setIsPlaying(false);
     player?.stop();
   };
@@ -118,7 +130,7 @@ export const PlayerControls = ({ player }: Props) => {
       </Row>
       <Buttons>
         <TempoSlider player={player} />
-        <Preclick />
+        <Preclick startSignal={preclickStart} />
         <PlayStop>
           <IconButton onClick={onStop} className="icon">
             <Icon
@@ -128,10 +140,13 @@ export const PlayerControls = ({ player }: Props) => {
               className="play-icon"
             />
           </IconButton>
-          <PlayStopButton
-            isPlaying={isPlaying}
-            handlePlaying={isPlaying ? onPause : onPlay}
-          />
+          <PlayButtonWrap>
+            <PlayStopButton
+              isPlaying={isPlaying}
+              handlePlaying={isPlaying ? onPause : onPlay}
+            />
+            {isLoadingSounds && <CircularProgress size={44} className="loading-sounds" />}
+          </PlayButtonWrap>
           <LoopBars player={player} />
         </PlayStop>
       </Buttons>
@@ -159,6 +174,20 @@ const PlayStop = styled.div`
   .icon {
     padding: 0;
     margin: 12px;
+  }
+`;
+
+const PlayButtonWrap = styled.div`
+  position: relative;
+  display: flex;
+
+  .loading-sounds {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -22px 0 0 -22px;
+    color: ${mainColors.darkRed};
+    pointer-events: none;
   }
 `;
 

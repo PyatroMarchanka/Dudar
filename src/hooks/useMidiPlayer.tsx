@@ -6,6 +6,7 @@ import {
 } from "../utils/MidiPlayer";
 import { store } from "../context";
 import { getUserOnboardingFinished } from "../constants/localStorage";
+import { loadSampler } from "../utils/midiUtils/sampler";
 
 export const useMidiPlayer = (
   handleNote: MidiNoteHandler,
@@ -55,6 +56,13 @@ export const useMidiPlayer = (
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, [midiPlayer]);
+
+  // Download the chosen bagpipe's samples right away, before play is pressed.
+  useEffect(() => {
+    if (bagpipeType) {
+      loadSampler(bagpipeType);
+    }
+  }, [bagpipeType]);
 
   useEffect(() => {
     if (midiPlayer && bagpipeType) {

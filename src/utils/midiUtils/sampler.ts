@@ -59,8 +59,6 @@ const fluteUrls = {
   "D#6": "samples/flute-samples/D#6.mp3",
 };
 
-type SamplerUrls = { [note: string]: string };
-
 const samplerUrls = {
   openDuda: openDudaUrls,
   belTrad: belTradUrls,
@@ -71,40 +69,68 @@ const samplerUrls = {
 
 type SamplerKey = keyof typeof samplerUrls;
 
-const createSampler = (urls: SamplerUrls) => new Tone.Sampler({ urls, baseUrl: "/" }).toDestination();
+type SamplerEntry = { sampler: Tone.Sampler; loaded: Promise<void> };
 
-let samplers = {} as Record<SamplerKey, Tone.Sampler>;
+// Samplers are made on first use, one per bagpipe sound set, so only the
+// samples of the chosen bagpipe are downloaded. Loading every set at once
+// (about 15 MB) made the chosen one arrive late on a slow connection and the
+// first notes of a song played silently.
+let samplers: Partial<Record<SamplerKey, SamplerEntry>> = {};
+
+const createSampler = (key: SamplerKey): SamplerEntry => {
+  let sampler: Tone.Sampler;
+  const loaded = new Promise<void>((resolve) => {
+    sampler = new Tone.Sampler({
+      urls: samplerUrls[key],
+      baseUrl: "/",
+      onload: () => resolve(),
+      onerror: () => resolve(),
+    }).toDestination();
+  });
+  return { sampler: sampler!, loaded };
+};
+
+const getSamplerKey = (bagpipeType: BagpipeTypes): SamplerKey => {
+  switch (bagpipeType) {
+    case BagpipeTypes.BelarusianTraditionalDuda:
+      return "belTrad";
+    case BagpipeTypes.Dudelsack:
+    case BagpipeTypes.Highlander:
+      return "dudelsack";
+    case BagpipeTypes.Polish:
+      return "polish";
+    case BagpipeTypes.TinWhistle:
+      return "flute";
+    default:
+      return "openDuda";
+  }
+};
+
+const getSamplerEntry = (bagpipeType: BagpipeTypes): SamplerEntry => {
+  const key = getSamplerKey(bagpipeType);
+  if (!samplers[key]) {
+    samplers[key] = createSampler(key);
+  }
+  return samplers[key]!;
+};
+
+// Starts downloading the samples of a bagpipe, resolving once they are ready.
+export const loadSampler = (bagpipeType: BagpipeTypes): Promise<void> => getSamplerEntry(bagpipeType).loaded;
 
 // Samplers are tied to the AudioContext they were made on, so they are
 // rebuilt whenever the context is replaced after the app was in the
 // background. The samples come back from the browser cache.
-const createSamplers = () => {
-  Object.values(samplers).forEach((oldSampler) => oldSampler.dispose());
-  samplers = (Object.keys(samplerUrls) as SamplerKey[]).reduce((acc, key) => {
-    acc[key] = createSampler(samplerUrls[key]);
-    return acc;
-  }, {} as Record<SamplerKey, Tone.Sampler>);
+const rebuildSamplers = () => {
+  (Object.keys(samplers) as SamplerKey[]).forEach((key) => {
+    samplers[key]!.sampler.dispose();
+    samplers[key] = createSampler(key);
+  });
 };
 
-createSamplers();
-onAudioContextReset(createSamplers);
+onAudioContextReset(rebuildSamplers);
 watchAudioContext();
 
-const getSampler = (bagpipeType: BagpipeTypes): Tone.Sampler => {
-  switch (bagpipeType) {
-    case BagpipeTypes.BelarusianTraditionalDuda:
-      return samplers.belTrad;
-    case BagpipeTypes.Dudelsack:
-    case BagpipeTypes.Highlander:
-      return samplers.dudelsack;
-    case BagpipeTypes.Polish:
-      return samplers.polish;
-    case BagpipeTypes.TinWhistle:
-      return samplers.flute;
-    default:
-      return samplers.openDuda;
-  }
-};
+const getSampler = (bagpipeType: BagpipeTypes): Tone.Sampler => getSamplerEntry(bagpipeType).sampler;
 
 const getVelocity = (bagpipeType: BagpipeTypes, volume: number) => {
   switch (bagpipeType) {

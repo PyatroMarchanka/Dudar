@@ -17,7 +17,9 @@ const resetListeners = new Set<ResetListener>();
 const clockCheckMs = 300;
 // Less than this much audio time over clockCheckMs means the clock is stuck.
 const minClockAdvanceSec = 0.05;
-const samplesWaitMs = 3000;
+// Longest wait for the sounds before playing anyway, for a very slow or
+// broken connection.
+const samplesWaitMs = 20000;
 const resumeWaitMs = 500;
 
 let isChecking = false;
@@ -101,13 +103,13 @@ export const checkAudioHealth = async () => {
   }
 };
 
-// Resumes audio before playback starts and waits for the samples, so the
-// first notes aren't lost. Call it straight from the play button handler.
-// Never waits long: on iOS resume() can stay pending while the context is
-// interrupted, and playback must start anyway.
-export const prepareAudioForPlayback = async () => {
+// Resumes audio before playback starts and waits for the sounds it needs, so
+// the first notes aren't lost. Call it straight from the play button handler.
+// The resume never waits long: on iOS resume() can stay pending while the
+// context is interrupted, and playback must start anyway.
+export const prepareAudioForPlayback = async (soundsLoaded: Promise<unknown> = Tone.loaded()) => {
   await Promise.race([resumeAudio(), waitMs(resumeWaitMs)]);
-  await Promise.race([Tone.loaded().catch(() => {}), waitMs(samplesWaitMs)]);
+  await Promise.race([soundsLoaded.catch(() => {}), waitMs(samplesWaitMs)]);
 };
 
 const unlockEvents = ["pointerdown", "touchend", "keydown"];
