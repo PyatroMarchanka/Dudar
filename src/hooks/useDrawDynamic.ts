@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useMemo, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { store } from '../context';
 import { cleanLines, drawDynamic } from '../utils/drawUtils/drawAll';
 import { MidiPlayer } from '../utils/MidiPlayer';
@@ -6,13 +6,38 @@ import { sizes } from '../constants/style';
 
 import { useNotesMoving } from './useNotesMoving';
 
+// The player reports its position from a timer, a few times per screen frame and unevenly.
+// Between reports the roll keeps moving at the song's speed, but never more than this far ahead.
+const maxExtrapolationMs = 80;
+// A reported jump bigger than this (seek, loop, restart) is shown at once instead of smoothed
+const maxSmoothedGapTicks = 200;
+
 export const useDrawDynamic = (player: MidiPlayer | null) => {
   const {
-    state: { showPianoRoll, activeSong, songNotes, bagpipeType, midiData, progress, isPlaying, songLength },
+    state: { showPianoRoll, activeSong, bagpipeType, midiData, isPlaying, songLength },
     setProgress,
   } = useContext(store);
   const canvasRef = useRef(null);
   const { notes, setTick, tick } = useNotesMoving();
+
+  // The latest playhead position and when it arrived. Updated on every player report without
+  // re-rendering React; the animation loop below reads it once per frame.
+  const reportedRef = useRef({ tick: 0, at: 0 });
+  const drawnTickRef = useRef(0);
+  const isPlayingRef = useRef(isPlaying);
+  isPlayingRef.current = isPlaying;
+  const playerRef = useRef(player);
+  playerRef.current = player;
+
+  const moveTo = (newTick: number) => {
+    reportedRef.current = { tick: newTick, at: performance.now() };
+  };
+
+  // Position set from React state: paused seeking, stop, a new song
+  useEffect(() => {
+    moveTo(tick);
+    drawnTickRef.current = tick;
+  }, [tick]);
 
   const dragStateRef = useRef<{ pointerId: number; startX: number; startTick: number } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -20,7 +45,7 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!midiData || !activeSong) return;
     e.currentTarget.setPointerCapture(e.pointerId);
-    dragStateRef.current = { pointerId: e.pointerId, startX: e.clientX, startTick: tick };
+    dragStateRef.current = { pointerId: e.pointerId, startX: e.clientX, startTick: drawnTickRef.current };
     setIsDragging(true);
   };
 
@@ -57,7 +82,7 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
 
   useEffect(() => {
     if (player && showPianoRoll) {
-      player.handleNotesMoving = setTick;
+      player.handleNotesMoving = moveTo;
     }
   }, [player, showPianoRoll]);
 
@@ -68,16 +93,33 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
     cleanLines(context!);
   }, [activeSong, bagpipeType]);
 
+  // One draw per screen frame
   useEffect(() => {
     let animationFrameId: number;
     const canvas = canvasRef.current;
     const context: CanvasRenderingContext2D | null = canvas && (canvas as HTMLCanvasElement)!.getContext('2d');
 
-    if (!context) return;
+    if (!context || !activeSong || !midiData) return;
 
-    //RENDER
     const render = () => {
-      drawDynamic(context, bagpipeType, tick, midiData, notes, activeSong!);
+      const reported = reportedRef.current;
+      let frameTick = reported.tick;
+
+      if (isPlayingRef.current && !dragStateRef.current) {
+        const ticksPerMs = playerRef.current?.getTicksPerMs() || 0;
+        const sinceReport = Math.min(performance.now() - reported.at, maxExtrapolationMs);
+        frameTick = reported.tick + Math.max(sinceReport, 0) * ticksPerMs;
+
+        // Small step backwards: a report landed slightly behind what was already drawn. Hold
+        // still for a moment rather than jitter back.
+        const drawn = drawnTickRef.current;
+        if (frameTick < drawn && drawn - frameTick < maxSmoothedGapTicks) {
+          frameTick = drawn;
+        }
+      }
+
+      drawnTickRef.current = frameTick;
+      drawDynamic(context, bagpipeType, frameTick, midiData, notes, activeSong);
       animationFrameId = window.requestAnimationFrame(render);
     };
     render();
@@ -85,29 +127,7 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [tick, bagpipeType, midiData, notes, activeSong]);
-
-  // Initial render to show notes before playback starts
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const context: CanvasRenderingContext2D | null = canvas && (canvas as HTMLCanvasElement)!.getContext('2d');
-
-    if (context && activeSong && midiData) {
-      drawDynamic(context, bagpipeType, 0, midiData, notes, activeSong);
-    }
-  }, [activeSong, midiData]);
-
-  // Subscribe to progress change - when stopped (percent=100, time=0), render initial state
-  useEffect(() => {
-    if (progress && progress.percent === 0) {
-      const canvas = canvasRef.current;
-      const context: CanvasRenderingContext2D | null = canvas && (canvas as HTMLCanvasElement)!.getContext('2d');
-
-      if (context && activeSong && midiData) {
-        drawDynamic(context, bagpipeType, 0, midiData, notes, activeSong);
-      }
-    }
-  }, [progress, notes, activeSong, midiData, bagpipeType]);
+  }, [bagpipeType, midiData, notes, activeSong]);
 
   return {
     canvasRef,
