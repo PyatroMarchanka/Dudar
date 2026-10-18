@@ -1,155 +1,32 @@
 import { Note } from '@tonejs/midi/dist/Note';
-import { useContext, useEffect, useState, useMemo, useRef } from 'react';
-import { sizes } from '../constants/style';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { store } from '../context';
-
-const getNotesChunks = (notes: Note[], canvasWidth: number) => {
-  const result: Note[][] = [[]];
-  const chunkSize = canvasWidth / 2;
-  const buffer = chunkSize * 0.5; // 50% buffer for smooth transitions
-
-  let min = 0;
-  let max = chunkSize;
-  let minWithBuffer = -buffer;
-  let maxWithBuffer = max + buffer;
-  let currentChunk = 0;
-
-  for (let i = 0; i < notes.length; i++) {
-    const note = notes[i];
-    const noteStart = note.ticks;
-    const noteEnd = noteStart + note.durationTicks;
-
-    // Move to next chunk if note is beyond current chunk
-    while (noteStart > maxWithBuffer) {
-      min = max;
-      max += chunkSize;
-      minWithBuffer = min - buffer;
-      maxWithBuffer = max + buffer;
-      currentChunk++;
-      result.push([]);
-    }
-
-    // Include note if it's within range or extends into chunk
-    if ((noteStart >= minWithBuffer && noteStart <= maxWithBuffer) || (noteStart < min && noteEnd > min)) {
-      result[currentChunk].push(note);
-    }
-  }
-
-  return result;
-};
 
 export const useNotesMoving = () => {
   const {
-    state: { midiData, isPlaying, progress, screenSize, loop },
+    state: { midiData, isPlaying, progress },
   } = useContext(store);
-  const chunkedNotesRef = useRef<Note[][]>([]);
-  const currentChunkIndexRef = useRef(0);
-  const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
   const [tick, setTick] = useState(0);
-  const [previousPreviousNotes, setPreviousPreviousNotes] = useState<Note[] | undefined>([]);
-  const [previousNotes, setPreviousNotes] = useState<Note[] | undefined>([]);
-  const [nextNotes, setNextNotes] = useState<Note[] | undefined>([]);
-  const [nextToNextNotes, setNextToNextNotes] = useState<Note[] | undefined>([]);
-  const [nextToNextToNextNotes, setNextToNextToNextNotes] = useState<Note[] | undefined>([]);
 
-  // Keep ref in sync with state
-  useEffect(() => {
-    currentChunkIndexRef.current = currentChunkIndex;
-  }, [currentChunkIndex]);
+  // Melody notes sorted by start tick. The piano roll picks the visible ones on every frame
+  // from the current tick and the canvas width (see drawNotes), so nothing here has to track
+  // which part of the song is on screen.
+  const notes = useMemo<Note[]>(() => {
+    const track = midiData?.tracks.find((track) => track.notes.length);
+    return track ? [...track.notes].sort((a, b) => a.ticks - b.ticks) : [];
+  }, [midiData]);
 
   useEffect(() => {
-    const chunkedNotes = chunkedNotesRef.current;
-    if (progress === undefined || !chunkedNotes.length) {
+    if (progress === undefined || isPlaying) {
       return;
     }
 
-    const newIndex = Math.floor((chunkedNotes.length * (progress.percent - 1)) / 100);
-    const currentIndex = currentChunkIndexRef.current;
-
-    if (!isPlaying) {
-      setTick(Math.floor((midiData?.durationTicks || 0) * (progress.percent / 100)));
-    }
-
-    // Only update if index actually changed
-    if (newIndex !== currentIndex) {
-      setCurrentChunkIndex(newIndex);
-      setPreviousPreviousNotes(chunkedNotes[newIndex - 2] || []);
-      setPreviousNotes(chunkedNotes[newIndex - 1] || []);
-      setNextNotes(chunkedNotes[newIndex] || []);
-      setNextToNextNotes(chunkedNotes[newIndex + 1] || []);
-      setNextToNextToNextNotes(chunkedNotes[newIndex + 2] || []);
-    }
+    setTick(Math.floor((midiData?.durationTicks || 0) * (progress.percent / 100)));
   }, [progress, isPlaying]);
-
-  useEffect(() => {
-    if (!isPlaying) return;
-
-    const chunkedNotes = chunkedNotesRef.current;
-    const currentIndex = currentChunkIndexRef.current;
-    const currentNextNotes = chunkedNotes[currentIndex];
-
-    if (!currentNextNotes || currentNextNotes.length === 0) return;
-
-    const lastNote = currentNextNotes[currentNextNotes.length - 1];
-    if (lastNote?.ticks && lastNote.ticks < tick - lastNote.durationTicks) {
-      const newIndex = currentIndex + 1;
-      setPreviousPreviousNotes(chunkedNotes[newIndex - 2] || []);
-      setPreviousNotes(chunkedNotes[newIndex - 1] || []);
-      setNextNotes(chunkedNotes[newIndex] || []);
-      setNextToNextNotes(chunkedNotes[newIndex + 1] || []);
-      setNextToNextToNextNotes(chunkedNotes[newIndex + 2] || []);
-      setCurrentChunkIndex(newIndex);
-    }
-  }, [tick, isPlaying]);
-
-  // Memoize canvas width calculation
-  const canvasWidthInTicks = useMemo(() => {
-    return (screenSize.width < sizes.maxCanvasWidth ? screenSize.width : sizes.maxCanvasWidth) / sizes.notesScale;
-  }, [screenSize.width]);
-
-  useEffect(() => {
-    if (midiData) {
-      const tracks = midiData?.tracks.filter((track) => track.notes.length);
-      if (!tracks || tracks.length === 0) return;
-
-      const notes = tracks[0].notes;
-      const chunks = getNotesChunks(notes, canvasWidthInTicks);
-
-      chunkedNotesRef.current = chunks;
-      setPreviousPreviousNotes([]);
-      setPreviousNotes([]);
-      setNextNotes(chunks[0] || []);
-      setNextToNextNotes(chunks[1] || []);
-      setNextToNextToNextNotes(chunks[2] || []);
-      setCurrentChunkIndex(0);
-    }
-  }, [midiData, canvasWidthInTicks]);
-
-  // Reset notes to initial state when stop button is clicked
-  useEffect(() => {
-    if (!isPlaying && progress && progress.percent === 0 && progress.time === 0) {
-      const chunkedNotes = chunkedNotesRef.current;
-      if (chunkedNotes && chunkedNotes.length > 0) {
-        // Force state updates
-        setTick(0);
-        setCurrentChunkIndex(0);
-        setPreviousPreviousNotes([]);
-        setPreviousNotes([]);
-        setNextNotes(chunkedNotes[0] || []);
-        setNextToNextNotes(chunkedNotes[1] || []);
-        setNextToNextToNextNotes(chunkedNotes[2] || []);
-      }
-    }
-  }, [isPlaying, progress]);
 
   return {
     tick,
     setTick,
-    previousPreviousNotes,
-    previousNotes,
-    nextNotes,
-    nextToNextNotes,
-    nextToNextToNextNotes,
-    setNextNotes,
+    notes,
   };
 };

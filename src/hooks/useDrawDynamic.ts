@@ -12,8 +12,7 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
     setProgress,
   } = useContext(store);
   const canvasRef = useRef(null);
-  const { previousPreviousNotes, previousNotes, nextNotes, nextToNextNotes, nextToNextToNextNotes, setTick, tick } =
-    useNotesMoving();
+  const { notes, setTick, tick } = useNotesMoving();
 
   const dragStateRef = useRef<{ pointerId: number; startX: number; startTick: number } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -78,18 +77,7 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
 
     //RENDER
     const render = () => {
-      drawDynamic(
-        context,
-        bagpipeType,
-        tick,
-        midiData,
-        previousNotes,
-        nextNotes,
-        nextToNextNotes,
-        activeSong!,
-        previousPreviousNotes,
-        nextToNextToNextNotes
-      );
+      drawDynamic(context, bagpipeType, tick, midiData, notes, activeSong!);
       animationFrameId = window.requestAnimationFrame(render);
     };
     render();
@@ -97,17 +85,7 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [
-    tick,
-    bagpipeType,
-    midiData,
-    previousNotes,
-    nextNotes,
-    nextToNextNotes,
-    activeSong,
-    previousPreviousNotes,
-    nextToNextToNextNotes,
-  ]);
+  }, [tick, bagpipeType, midiData, notes, activeSong]);
 
   // Initial render to show notes before playback starts
   useEffect(() => {
@@ -115,18 +93,7 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
     const context: CanvasRenderingContext2D | null = canvas && (canvas as HTMLCanvasElement)!.getContext('2d');
 
     if (context && activeSong && midiData) {
-      drawDynamic(
-        context,
-        bagpipeType,
-        0,
-        midiData,
-        previousNotes,
-        nextNotes,
-        nextToNextNotes,
-        activeSong,
-        previousPreviousNotes,
-        nextToNextToNextNotes
-      );
+      drawDynamic(context, bagpipeType, 0, midiData, notes, activeSong);
     }
   }, [activeSong, midiData]);
 
@@ -137,31 +104,10 @@ export const useDrawDynamic = (player: MidiPlayer | null) => {
       const context: CanvasRenderingContext2D | null = canvas && (canvas as HTMLCanvasElement)!.getContext('2d');
 
       if (context && activeSong && midiData) {
-        drawDynamic(
-          context,
-          bagpipeType,
-          0,
-          midiData,
-          previousNotes,
-          nextNotes,
-          nextToNextNotes,
-          activeSong,
-          previousPreviousNotes,
-          nextToNextToNextNotes
-        );
+        drawDynamic(context, bagpipeType, 0, midiData, notes, activeSong);
       }
     }
-  }, [
-    progress,
-    previousNotes,
-    nextNotes,
-    nextToNextNotes,
-    previousPreviousNotes,
-    nextToNextToNextNotes,
-    activeSong,
-    midiData,
-    bagpipeType,
-  ]);
+  }, [progress, notes, activeSong, midiData, bagpipeType]);
 
   return {
     canvasRef,
