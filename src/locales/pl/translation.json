@@ -159,10 +159,6 @@
     "text": "Wybrany utwór nie może być odtworzony na wybranym instrumencie.",
     "tryChange": "Proszę spróbować zmienić utwór lub dostosować ustawienia instrumentu."
   },
-  "continueModal": {
-    "title": "Witamy z powrotem!",
-    "body": "Znów jesteś w aplikacji."
-  },
   "blog": {
     "title": "Blog",
     "readMore": "Czytaj więcej",
