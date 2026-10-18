@@ -44,7 +44,7 @@ export const Dudar = () => {
   };
 
   const playerRef = useRef(null);
-  const { Player: midiPlayer, continueElement } = useMidiPlayer(
+  const { Player: midiPlayer } = useMidiPlayer(
     handleNote,
     setProgress,
     playerRef
@@ -81,7 +81,6 @@ export const Dudar = () => {
   return (
     <Container>
       <GlobalStyle />
-      {continueElement}
       <LoginReminderContainer />
       <DonationButton />
       <Logger />

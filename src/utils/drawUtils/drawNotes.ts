@@ -24,16 +24,35 @@ import { sizes } from "../../constants/style";
   return this;
 };
 
-export const drawNotes = (
-  ctx: CanvasRenderingContext2D,
-  bagpipeType: BagpipeTypes,
-  tick: number,
-  previousNotes?: Note[],
-  nextNotes?: Note[],
-  nextToNextNotes?: Note[],
-  previousPreviousNotes?: Note[],
-  nextToNextToNextNotes?: Note[]
-) => {
+// Index of the first note that starts at or after `tick` (notes are sorted by start tick)
+const firstNoteFrom = (notes: Note[], tick: number) => {
+  let lo = 0;
+  let hi = notes.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if (notes[mid].ticks < tick) {
+      lo = mid + 1;
+    } else {
+      hi = mid;
+    }
+  }
+  return lo;
+};
+
+const longestDurationCache = new WeakMap<Note[], number>();
+
+const getLongestDuration = (notes: Note[]) => {
+  let longest = longestDurationCache.get(notes);
+  if (longest === undefined) {
+    longest = notes.reduce((max, note) => Math.max(max, note.durationTicks), 0);
+    longestDurationCache.set(notes, longest);
+  }
+  return longest;
+};
+
+export const drawNotes = (ctx: CanvasRenderingContext2D, bagpipeType: BagpipeTypes, tick: number, notes?: Note[]) => {
+  if (!notes || !notes.length) return;
+
   // Pre-calculate shared values once
   const imageProperties = bagpipes[bagpipeType].imagesProperties;
   const tickScaled = tick * sizes.notesScale;
@@ -42,50 +61,42 @@ export const drawNotes = (
   const brickHeightHalf = imageProperties.notes.brickHeightHalf;
   const brickHeight = imageProperties.notes.brickhHeight;
   const { notesToLines, holesPositions, overblownNotes } = bagpipes[bagpipeType];
-  
+
   // Pre-cache colors
   const colorPast = mainColors.darkRed;
   const colorNormal = mainColors.darkerGray;
   // Upper-octave flute notes share lines with the lower octave, so they get their own color
   const colorOverblown = mainColors.orange;
-  
-  // Combine all notes into single array to iterate once
-  const allNotes = [
-    ...(previousPreviousNotes || []),
-    ...(previousNotes || []),
-    ...(nextNotes || []),
-    ...(nextToNextNotes || []),
-    ...(nextToNextToNextNotes || [])
-  ];
-  
-  // Draw all notes in one pass
-  for (let i = 0; i < allNotes.length; i++) {
-    const note = allNotes[i];
+
+  // Tick range that fits on the canvas, derived from its actual width
+  const leftEdgeTick = tick - brickLeftMargin / sizes.notesScale;
+  const rightEdgeTick = tick + (canvasWidth - brickLeftMargin) / sizes.notesScale;
+  // A long note that started before the left edge can still reach into view
+  const firstIdx = firstNoteFrom(notes, leftEdgeTick - getLongestDuration(notes));
+
+  for (let i = firstIdx; i < notes.length; i++) {
+    const note = notes[i];
+    if (note.ticks > rightEdgeTick) break;
+
     const pitch = note.pitch as SharpNotes;
-    
+
     // Get Y position
     const noteName = pitch + note.octave;
     const yPos = holesPositions.linesYPositions[notesToLines[noteName]];
     if (!yPos) continue;
-    
+
     // Calculate positions
     const startPos = note.ticks * sizes.notesScale - tickScaled + brickLeftMargin;
     const noteWidth = note.durationTicks * sizes.notesScale;
     const endPos = startPos + noteWidth;
-    
+
     // Skip off-screen notes
     if (endPos < 0 || startPos > canvasWidth) continue;
-    
+
     // Draw note
     ctx.beginPath();
     // @ts-ignore
-    ctx.roundRect(
-      startPos,
-      yPos - brickHeightHalf,
-      noteWidth,
-      brickHeight,
-      10
-    );
+    ctx.roundRect(startPos, yPos - brickHeightHalf, noteWidth, brickHeight, 10);
     if (startPos < brickLeftMargin) {
       ctx.fillStyle = colorPast;
     } else {

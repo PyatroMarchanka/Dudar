@@ -11,6 +11,7 @@ import { BagpipeTypes, SharpNotesEnum } from "../interfaces";
 import { TimeSignatures } from "../dataset/songs/interfaces";
 import { isFluteInstrument } from "../brand";
 import { getVisualDelayMs } from "./audioSync";
+import { registerAudioContextRef } from "./audioContext";
 
 export type MidiNoteHandler = (note: number) => void;
 export type PlaybackProgressHandler = (
@@ -66,6 +67,7 @@ export class MidiPlayer {
   barLength = 1;
   isPlaying = false;
   handleNotesMoving?: NotesMovingHandler;
+  handleProgress?: PlaybackProgressHandler;
   // Visual updates waiting for their sound to reach the speakers.
   visualTimers = new Set<ReturnType<typeof setTimeout>>();
 
@@ -84,6 +86,7 @@ export class MidiPlayer {
     this.loopData.loopBars = loopBars;
     this.timeSignature = timeSignature || "4/4";
     this.bagpipeType = bagpipeType;
+    registerAudioContextRef(playRef);
 
     if (this.playRef.current) {
       this.playRef.current?.setBand256(-5);
@@ -99,6 +102,7 @@ export class MidiPlayer {
   ) => {
     console.log("initPlayer");
     Player = new MidiPlayerLib.Player(function (event: any) {});
+    this.handleProgress = handleProgress;
     Player.on("playing", ({ tick }: any) => {
       const percentRemaining = Player.getSongPercentRemaining();
       const songTime = Player.getSongTime();
@@ -142,6 +146,14 @@ export class MidiPlayer {
       update();
     }, delayMs);
     this.visualTimers.add(timer);
+  }
+
+  // A seek drops the pending visual updates, so show the new position right away.
+  // Otherwise dragging the progress bar keeps cancelling them and the view freezes.
+  showSeekPosition() {
+    if (!(Player as any).totalTicks) return;
+    this.handleProgress?.(Player.getSongPercentRemaining(), Player.getSongTime(), Player.getSongTimeRemaining());
+    this.handleNotesMoving?.(Player.getCurrentTick());
   }
 
   clearPendingVisuals() {
@@ -311,6 +323,7 @@ export class MidiPlayer {
     this.clearPendingVisuals();
     Player.skipToPercent(percent);
     this.setCurrentBarStart();
+    this.showSeekPosition();
     if (isPlaying) {
       Player.play();
       this.stopAllNotes();
@@ -323,10 +336,11 @@ export class MidiPlayer {
   // pull the view back to the old position. Loop jumps keep them
   // (clearPending = false): the bar before the jump is still being heard.
   setTick = (tick: number, isPlaying: boolean, clearPending = true) => {
+    Player.skipToTick(tick);
     if (clearPending) {
       this.clearPendingVisuals();
+      this.showSeekPosition();
     }
-    Player.skipToTick(tick);
     if (isPlaying) {
       Player.play();
       this.stopAllNotes();
@@ -337,6 +351,9 @@ export class MidiPlayer {
   setTranspose: SetTransposeType = (num: number) => {
     this.transpose = num;
   };
+
+  // How fast the playhead moves, so the piano roll can move smoothly between "playing" events
+  getTicksPerMs = () => ((Player as any).division * Player.tempo) / 60000;
 
   setMidiData = (midi: Midi) => {
     this.midiData = midi;

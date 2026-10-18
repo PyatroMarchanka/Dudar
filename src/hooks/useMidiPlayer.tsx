@@ -6,7 +6,6 @@ import {
 } from "../utils/MidiPlayer";
 import { store } from "../context";
 import { getUserOnboardingFinished } from "../constants/localStorage";
-import ContinueModal from "../components/global/ContinueModal";
 
 export const useMidiPlayer = (
   handleNote: MidiNoteHandler,
@@ -14,12 +13,11 @@ export const useMidiPlayer = (
   playerRef: any
 ) => {
   const {
-    state: { tempo, metronome, loopBars, activeSong, bagpipeType, isPlaying },
+    state: { tempo, metronome, loopBars, activeSong, bagpipeType },
     setIsPlaying,
     setLoop,
   } = useContext(store);
   const [midiPlayer, setMidiPlayer] = useState<MidiPlayer | null>(null);
-  const [isCountinueModalOpen, setIsCountinueModalOpen] = useState(false);
 
   const switchIsPlaying = () => {
     setIsPlaying(false);
@@ -40,25 +38,23 @@ export const useMidiPlayer = (
   };
 
   useEffect(() => {
-    if (document.visibilityState === "hidden") {
-      midiPlayer?.pause();
-
-      if (isPlaying) {
-        setIsCountinueModalOpen(true);
-      }
-      setIsPlaying(false);
-      return;
-    }
-
     initPlayer();
-  }, [document.visibilityState]);
+  }, []);
 
-  const continueElement = (
-    <ContinueModal
-      open={isCountinueModalOpen}
-      setOpen={setIsCountinueModalOpen}
-    />
-  );
+  // Pause when the app goes to the background. The player is kept as is, so
+  // pressing play afterwards continues from the same place.
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        midiPlayer?.pause();
+        setIsPlaying(false);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [midiPlayer]);
 
   useEffect(() => {
     if (midiPlayer && bagpipeType) {
@@ -74,5 +70,5 @@ export const useMidiPlayer = (
     }
   }, [activeSong, midiPlayer]);
 
-  return { Player: midiPlayer, setMidiPlayer, continueElement };
+  return { Player: midiPlayer, setMidiPlayer };
 };

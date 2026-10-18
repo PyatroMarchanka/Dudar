@@ -1,15 +1,16 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { store } from '../../context';
 import { transposeNote } from '../../utils/midiUtils';
 import { buildSheet, Sheet, TICKS_PER_QUARTER } from './notation';
 import { findNoteAt, getKeyInfo, renderSheet, RenderedSheet } from './utils';
+import { detectMode, pitchClassOf, signatureTonic } from './mode';
 import { MidiPlayer } from '../../utils/MidiPlayer';
 import { useNotesMoving } from '../../hooks/useNotesMoving';
 import { PlayerControls } from '../Controls/PlayerControls';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@material-ui/core';
-import { mainColors } from '../../utils/theme';
+import { mainColors, theme } from '../../utils/theme';
 
 const MAX_SHEET_WIDTH = 1000;
 const ACTIVE_CLASS = 'sheet-note-active';
@@ -38,7 +39,7 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
     }
   }, [player, setTick]);
 
-  const sheet = useMemo<Sheet | null>(() => {
+  const sheetData = useMemo<{ sheet: Sheet; keySignature: string } | null>(() => {
     if (!midiData || !activeSong) return null;
     // The metronome is appended as the last track; the melody is the first track with notes.
     const melody = midiData.tracks.find((track) => track.notes.length);
@@ -50,12 +51,17 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
         ticks: note.ticks,
         durationTicks: note.durationTicks,
       }));
-      return buildSheet(notes, midiData.header.ppq, activeSong.timeSignature);
+      // Minor melodies are written with the relative major's key signature, e.g. A minor without sharps.
+      const mode = detectMode(notes, pitchClassOf(tonality));
+      return {
+        sheet: buildSheet(notes, midiData.header.ppq, activeSong.timeSignature),
+        keySignature: signatureTonic(tonality, mode),
+      };
     } catch (error) {
       console.error('Failed to build music sheet', error);
       return null;
     }
-  }, [midiData, activeSong, transpose]);
+  }, [midiData, activeSong, transpose, tonality]);
 
   useEffect(() => {
     const element = scrollRef.current;
@@ -66,18 +72,18 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
     if (!sheetRef.current || !width) return;
     renderedRef.current = null;
     activeRef.current = { index: -1, line: -1 };
-    if (!sheet) {
+    if (!sheetData) {
       setIsMusicViewValid(!midiData);
       return;
     }
     try {
-      renderedRef.current = renderSheet(sheetRef.current, sheet, getKeyInfo(tonality), width);
+      renderedRef.current = renderSheet(sheetRef.current, sheetData.sheet, getKeyInfo(sheetData.keySignature), width);
       setIsMusicViewValid(true);
     } catch (error) {
       console.error('Failed to render music sheet', error);
       setIsMusicViewValid(false);
     }
-  }, [sheet, tonality, width, midiData]);
+  }, [sheetData, width, midiData]);
 
   // Highlight the sounding note without re-rendering the score.
   useEffect(() => {
@@ -106,6 +112,7 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
 
   return (
     <CenteredContainer>
+      <SolidHeaderStyle />
       <ScrollContainer ref={scrollRef}>
         {!isMusicViewValid && (
           <FallbackContainer>
@@ -140,13 +147,16 @@ const ScrollContainer = styled.div`
   overflow-y: auto;
   display: flex;
   justify-content: center;
+  /* don't stretch the sheet to the viewport height, or its bottom padding overflows and can't be scrolled to */
+  align-items: flex-start;
 `;
 
 const SheetContainer = styled.div`
   max-width: ${MAX_SHEET_WIDTH}px;
-  /* room for the song header above and the fixed player controls below */
+  /* room for the song header above; below, enough room to scroll the last line well above the fixed
+     player controls, also on mobile where 100vh reaches under the browser toolbar */
   padding-top: 90px;
-  padding-bottom: 140px;
+  padding-bottom: max(220px, 50vh);
 
   svg {
     display: block;
@@ -160,11 +170,25 @@ const SheetContainer = styled.div`
   }
 `;
 
+// The song header floats over the scrolling sheet, so give it a solid background to keep it readable.
+const SolidHeaderStyle = createGlobalStyle`
+  .settingsButtons {
+    top: 0;
+    padding-top: 3px;
+    background-color: ${theme.colors.white};
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  }
+`;
+
 const PlayerControlsContainer = styled.div`
   position: fixed;
   bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
-  margin-top: auto;
+  justify-content: center;
+  background-color: ${mainColors.lightestGrey};
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.12);
 `;
 
 const FallbackContainer = styled.div`
