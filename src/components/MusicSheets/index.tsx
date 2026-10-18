@@ -4,6 +4,7 @@ import { store } from '../../context';
 import { transposeNote } from '../../utils/midiUtils';
 import { buildSheet, Sheet, TICKS_PER_QUARTER } from './notation';
 import { findNoteAt, getKeyInfo, renderSheet, RenderedSheet } from './utils';
+import { detectMode, pitchClassOf, signatureTonic } from './mode';
 import { MidiPlayer } from '../../utils/MidiPlayer';
 import { useNotesMoving } from '../../hooks/useNotesMoving';
 import { PlayerControls } from '../Controls/PlayerControls';
@@ -38,7 +39,7 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
     }
   }, [player, setTick]);
 
-  const sheet = useMemo<Sheet | null>(() => {
+  const sheetData = useMemo<{ sheet: Sheet; keySignature: string } | null>(() => {
     if (!midiData || !activeSong) return null;
     // The metronome is appended as the last track; the melody is the first track with notes.
     const melody = midiData.tracks.find((track) => track.notes.length);
@@ -50,12 +51,17 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
         ticks: note.ticks,
         durationTicks: note.durationTicks,
       }));
-      return buildSheet(notes, midiData.header.ppq, activeSong.timeSignature);
+      // Minor melodies are written with the relative major's key signature, e.g. A minor without sharps.
+      const mode = detectMode(notes, pitchClassOf(tonality));
+      return {
+        sheet: buildSheet(notes, midiData.header.ppq, activeSong.timeSignature),
+        keySignature: signatureTonic(tonality, mode),
+      };
     } catch (error) {
       console.error('Failed to build music sheet', error);
       return null;
     }
-  }, [midiData, activeSong, transpose]);
+  }, [midiData, activeSong, transpose, tonality]);
 
   useEffect(() => {
     const element = scrollRef.current;
@@ -66,18 +72,18 @@ const MusicSheet: React.FC<MusicSheetProps> = ({ player }) => {
     if (!sheetRef.current || !width) return;
     renderedRef.current = null;
     activeRef.current = { index: -1, line: -1 };
-    if (!sheet) {
+    if (!sheetData) {
       setIsMusicViewValid(!midiData);
       return;
     }
     try {
-      renderedRef.current = renderSheet(sheetRef.current, sheet, getKeyInfo(tonality), width);
+      renderedRef.current = renderSheet(sheetRef.current, sheetData.sheet, getKeyInfo(sheetData.keySignature), width);
       setIsMusicViewValid(true);
     } catch (error) {
       console.error('Failed to render music sheet', error);
       setIsMusicViewValid(false);
     }
-  }, [sheet, tonality, width, midiData]);
+  }, [sheetData, width, midiData]);
 
   // Highlight the sounding note without re-rendering the score.
   useEffect(() => {
