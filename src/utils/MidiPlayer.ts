@@ -155,6 +155,12 @@ export class MidiPlayer {
     });
   };
 
+  // Where MIDISounds downloads its instruments (the click among them) from.
+  getClickSoundUrls = (): string[] => {
+    const loader = this.playRef.current?.player?.loader;
+    return loader ? instruments.map((n) => loader.instrumentInfo(n).url) : [];
+  };
+
   // Resolves once the sounds this playback needs are downloaded and decoded.
   waitForSounds = (withClick: boolean): Promise<void> =>
     Promise.all([loadSampler(this.bagpipeType), withClick ? this.waitForClickSound() : undefined]).then(() => {});

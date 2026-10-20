@@ -14,6 +14,7 @@ import ImportExport from "@material-ui/icons/ImportExport";
 import VolumeOff from "@material-ui/icons/VolumeOff";
 import BluetoothAudio from "@material-ui/icons/BluetoothAudio";
 import { InstrumentTypes } from "./InstrumentTypes";
+import { OfflineSave } from "./OfflineSave";
 import { Contacts } from "../../Contacts";
 import { DonationButtonBig } from "../../global/DonationButtonBig";
 import { TunerButton } from "../../global/TunerButton";
@@ -159,6 +160,8 @@ export const MainSettings = ({ midiPlayer, showSongInfo = true }: Props) => {
           ))}
         </Select>
       </Row>
+      <Line />
+      <OfflineSave midiPlayer={midiPlayer} />
       <Line />
       <Row>
         <Icon

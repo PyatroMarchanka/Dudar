@@ -114,6 +114,13 @@ const getSamplerEntry = (bagpipeType: BagpipeTypes): SamplerEntry => {
   return samplers[key]!;
 };
 
+// The URLs a bagpipe's samples are fetched from, encoded the way Tone.js
+// encodes them, so they can be saved for offline use under the same keys.
+export const getSampleUrls = (bagpipeType: BagpipeTypes): string[] =>
+  Object.values(samplerUrls[getSamplerKey(bagpipeType)]).map(
+    (path) => "/" + path.split("/").map(encodeURIComponent).join("/")
+  );
+
 // Starts downloading the samples of a bagpipe, resolving once they are ready.
 export const loadSampler = (bagpipeType: BagpipeTypes): Promise<void> => getSamplerEntry(bagpipeType).loaded;
 
