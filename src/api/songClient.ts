@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Song } from '../dataset/songs/interfaces';
 import { links } from './links';
 
-const resolveSongUrl = (pathName: string) => {
+export const resolveSongUrl = (pathName: string) => {
   const cleanedPath = pathName.replace(/^\/?midi\//, '');
   const baseUrl = `${process.env.PUBLIC_URL ?? ''}/midi`.replace(/\/+/g, '/').replace(/\/$/, '');
   return `${baseUrl}/${cleanedPath}`;
