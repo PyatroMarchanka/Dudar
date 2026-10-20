@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { mainColors, theme } from "../../../utils/theme";
 import { Icon } from "../../global/Icon";
 import { MainSettings } from "./MainSettings";
+import { settingsColors } from "./styles";
 import { useTranslation } from "react-i18next";
 
 interface Props {
@@ -17,11 +18,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: mainColors.lightestGrey,
     color: "#fff",
-    [theme.breakpoints.down("md")]: {
-      width: "100%",
-    },
-    [theme.breakpoints.up("md")]: {
-      width: "500px",
+    width: "100%",
+    maxWidth: "100vw",
+    overflowX: "hidden",
+    [theme.breakpoints.up("sm")]: {
+      width: "440px",
     },
   },
 }));
@@ -55,7 +56,7 @@ export const Settings = ({ midiPlayer, showSongInfo = true }: Props) => {
         <Content>
           <Header>
             <IconButton onClick={() => setOpen(false)} className="close">
-              <Icon type="back" fill={theme.colors.white} className="icon" />
+              <Icon type="back" fill={settingsColors.ink} className="icon" />
             </IconButton>
             <Title>{t("settings")}</Title>
           </Header>
@@ -85,12 +86,12 @@ const Header = styled.div`
 
 const Title = styled.h3`
   font-family: Arial, Helvetica, sans-serif;
-  color: black;
+  color: ${settingsColors.ink};
   width: 100%;
   text-align: center;
 `;
 
 const Content = styled.div`
-  padding: 10px;
+  padding: 10px 0;
   z-index: 10;
 `;
