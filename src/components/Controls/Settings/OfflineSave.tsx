@@ -5,8 +5,8 @@ import { Button, CircularProgress } from "@material-ui/core";
 import OfflinePin from "@material-ui/icons/OfflinePin";
 import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
-import { mainColors } from "../../../utils/theme";
 import { Icon } from "../../global/Icon";
+import { Control, Hint, Label, Row, RowTitle, settingsColors } from "./styles";
 import { isOfflineSaveSupported, isSavedForOffline, OfflineProgress, saveForOffline } from "../../../utils/offline";
 
 type Props = {
@@ -55,22 +55,26 @@ export const OfflineSave = ({ midiPlayer }: Props) => {
   const percent = progress.total ? Math.round((progress.done / progress.total) * 100) : 0;
 
   return (
-    <Container>
+    <>
       <Row>
-        <Icon type="material" fill={mainColors.darkerGray} Icon={OfflinePin} />
-        <Title>{t("offline.title")}</Title>
-        {status === "saving" ? (
-          <Saving>
-            <CircularProgress size={20} variant={progress.total ? "determinate" : "indeterminate"} value={percent} />
-            <span>{percent}%</span>
-          </Saving>
-        ) : (
-          <Button onClick={onSave} className="save-button">
-            {t(status === "saved" ? "offline.update" : "offline.save")}
-          </Button>
-        )}
+        <Label>
+          <Icon type="material" fill={settingsColors.ink} Icon={OfflinePin} />
+          <RowTitle>{t("offline.title")}</RowTitle>
+        </Label>
+        <Control>
+          {status === "saving" ? (
+            <Saving>
+              <CircularProgress size={20} variant={progress.total ? "determinate" : "indeterminate"} value={percent} />
+              <span>{percent}%</span>
+            </Saving>
+          ) : (
+            <SaveButton onClick={onSave} variant="outlined">
+              {t(status === "saved" ? "offline.update" : "offline.save")}
+            </SaveButton>
+          )}
+        </Control>
       </Row>
-      <Hint isError={status === "error" || status === "partly"}>
+      <StatusHint isError={status === "error" || status === "partly"}>
         {t(
           status === "saved"
             ? "offline.saved"
@@ -80,52 +84,33 @@ export const OfflineSave = ({ midiPlayer }: Props) => {
             ? "offline.error"
             : "offline.hint"
         )}
-      </Hint>
-    </Container>
+      </StatusHint>
+    </>
   );
 };
 
-const Container = styled.div`
-  padding: 0 20px 12px;
-`;
-
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  flex-wrap: nowrap;
-
-  .save-button {
-    margin-left: auto;
-    color: ${mainColors.darkRed};
+const SaveButton = styled(Button)`
+  && {
+    border-color: ${settingsColors.accent};
+    border-radius: 28px;
+    color: ${settingsColors.accent};
     font-weight: 600;
     white-space: nowrap;
   }
 `;
 
-const Title = styled.h3`
-  color: ${mainColors.midGrey};
-  font-weight: 600;
-  font-size: 20px;
-  font-family: Arial, Helvetica, sans-serif;
-  margin-left: 20px;
-`;
-
 const Saving = styled.div`
-  margin-left: auto;
   display: flex;
   align-items: center;
   gap: 8px;
-  color: ${mainColors.midGrey};
+  color: ${settingsColors.ink};
   font-family: Arial, Helvetica, sans-serif;
 
   .MuiCircularProgress-root {
-    color: ${mainColors.darkRed};
+    color: ${settingsColors.accent};
   }
 `;
 
-const Hint = styled.div<{ isError: boolean }>`
-  margin-top: -8px;
-  font-size: 13px;
-  font-family: Arial, Helvetica, sans-serif;
-  color: ${({ isError }: { isError: boolean }) => (isError ? mainColors.darkRed : mainColors.midGrey)};
+const StatusHint = styled(Hint)<{ isError: boolean }>`
+  color: ${({ isError }: { isError: boolean }) => (isError ? settingsColors.accent : settingsColors.ink)};
 `;

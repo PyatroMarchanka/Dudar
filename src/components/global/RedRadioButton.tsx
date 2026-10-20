@@ -5,7 +5,7 @@ export const RedRadio = withStyles({
   root: {
     color: mainColors.lightGrey,
     "&$checked": {
-      color: mainColors.red,
+      color: mainColors.darkRed,
     },
   },
   checked: {},

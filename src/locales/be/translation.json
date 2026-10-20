@@ -9,6 +9,11 @@
     "success": "Паспяхова"
   },
   "settings": "Налады",
+  "settingsSections": {
+    "instrument": "Інструмент",
+    "playback": "Прайграванне",
+    "app": "Праграма"
+  },
   "instrumentType": "Тып інструмента",
   "transposeMelody": "Танальнасць дуды",
   "whistleTonality": "Танальнасць свістка",

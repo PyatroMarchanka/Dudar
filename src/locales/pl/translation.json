@@ -9,6 +9,11 @@
     "success": "Sukces"
   },
   "settings": "Ustawienia",
+  "settingsSections": {
+    "instrument": "Instrument",
+    "playback": "Odtwarzanie",
+    "app": "Aplikacja"
+  },
   "instrumentType": "Typ instrumentu",
   "transposeMelody": "Tonacja dudy",
   "whistleTonality": "Tonacja whistle'a",

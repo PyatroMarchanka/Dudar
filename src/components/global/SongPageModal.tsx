@@ -6,6 +6,7 @@ import { SongPage } from "../screens/SongPage";
 import { mainColors, theme } from "../../utils/theme";
 import { Icon } from "./Icon";
 import { HelpOutline } from "@material-ui/icons";
+import { Row, RowTitle, settingsColors } from "../Controls/Settings/styles";
 
 interface Props {}
 
@@ -48,27 +49,21 @@ export const SongPageModal = (props: Props) => {
       >
         <SongPage onClose={() => setOpen(false)} />
       </SwipeableDrawer>
-      <Row onClick={() => setOpen(true)}>
-        <Icon type="material" fill={mainColors.darkerGray} Icon={HelpOutline} />
-        <Title>{t("songInfo.title")}</Title>
-      </Row>
+      <SongInfoRow onClick={() => setOpen(true)}>
+        <Icon type="material" fill={settingsColors.accent} Icon={HelpOutline} />
+        <SongInfoTitle as="span">{t("songInfo.title")}</SongInfoTitle>
+      </SongInfoRow>
     </div>
   );
 };
 
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  padding-left: 20px;
-  padding-right: 20px;
-  flex-wrap: nowrap;
+const SongInfoRow = styled(Row)`
+  margin: 0 20px;
+  padding: 0;
+  justify-content: center;
   cursor: pointer;
 `;
 
-const Title = styled.h3`
-  color: ${mainColors.midGrey};
-  font-weight: 600;
-  font-size: 20px;
-  font-family: Arial, Helvetica, sans-serif;
-  margin-left: 20px;
+const SongInfoTitle = styled(RowTitle)`
+  flex: 0 1 auto;
 `;
