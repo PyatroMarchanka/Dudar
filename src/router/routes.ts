@@ -6,6 +6,7 @@ export const routes = {
   info: "info",
   play: "play",
   abc: "abc",
+  melody: "melody",
   main: "/",
   about: "/about",
   article: "/article",
@@ -17,5 +18,6 @@ export const routes = {
   admin: "/admin",
   adminSong: "/admin/song",
   playlists: "/playlists",
+  melodies: "/melodies",
   contacts: "/contacts",
 };

@@ -14,7 +14,7 @@ import { DonationButton } from "../global/DonationButton";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { routes } from "../../router/routes";
 import { PlayPageHeader } from "../Dudar/PlayPage";
-import { AbcPlayPageHeader } from "../Dudar/AbcPlayPage";
+import { AbcPlayPageHeader, UserMelodyPlayPageHeader } from "../Dudar/AbcPlayPage";
 import { store } from "../../context";
 import { useDimensions } from "../../hooks/useDimensions";
 import { useGoogleProfile } from "../../hooks/useGoogleProfile";
@@ -92,6 +92,10 @@ export const Dudar = () => {
         </Route>
         <Route exact path={`${path}/${routes.abc}`}>
           <AbcPlayPageHeader midiPlayer={midiPlayer} />
+          {isSongUnavailable || !bagpipeType ? <NoSong /> : PlayerComponent}
+        </Route>
+        <Route exact path={`${path}/${routes.melody}/:id`}>
+          <UserMelodyPlayPageHeader midiPlayer={midiPlayer} />
           {isSongUnavailable || !bagpipeType ? <NoSong /> : PlayerComponent}
         </Route>
       </Switch>
