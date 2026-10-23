@@ -4,7 +4,6 @@ import { Link, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button as MuiButton, CircularProgress, TextField, Typography } from '@material-ui/core';
 import { Navbar } from '../global/Navbar';
-import { Icon } from '../global/Icon';
 import { ShareButton } from '../ShareButton';
 import { Button } from '../global/Button';
 import { store } from '../../context';
@@ -165,10 +164,8 @@ export const MyMelodies = () => {
           </Card>
         ) : (
           <>
-            <SavedContainer>
-              <SectionTitle variant="h4" className="sectionSubtitle">
-                {t('melodies.saved')}
-              </SectionTitle>
+            <>
+              <SectionTitle variant="h5">{t('melodies.saved')}</SectionTitle>
               {loadError ? (
                 <ErrorText>{t('melodies.loadError')}</ErrorText>
               ) : !melodies ? (
@@ -179,9 +176,6 @@ export const MyMelodies = () => {
                 <List>
                   {melodies.map((melody) => (
                     <Item key={melody.id}>
-                      <PlayIcon>
-                        <Icon type="song-play" fill={mainColors.red} />
-                      </PlayIcon>
                       <ItemTitle to={`${routes.app}/${routes.melody}/${melody.id}`}>{melody.title}</ItemTitle>
                       <ItemDate>{new Date(melody.updatedAt).toLocaleDateString()}</ItemDate>
                       <ItemActions>
@@ -189,14 +183,6 @@ export const MyMelodies = () => {
                           url={`${window.location.origin}${routes.app}/${routes.melody}/${melody.id}`}
                           title={melody.title}
                         />
-                        <MuiButton
-                          component={Link}
-                          to={`${routes.app}/${routes.melody}/${melody.id}`}
-                          color="primary"
-                          size="small"
-                        >
-                          {t('melodies.play')}
-                        </MuiButton>
                         <MuiButton size="small" onClick={() => onEdit(melody)}>
                           {t('melodies.edit')}
                         </MuiButton>
@@ -208,7 +194,7 @@ export const MyMelodies = () => {
                   ))}
                 </List>
               )}
-            </SavedContainer>
+            </>
 
             <Card ref={editorRef}>
               <TextField
@@ -338,61 +324,31 @@ const ErrorText = styled(Typography)`
   margin-top: 0.5rem !important;
 `;
 
-const SavedContainer = styled.div`
-  padding: 1rem;
-  background-color: ${mainColors.lightestGrey};
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
-
 const SectionTitle = styled(Typography)`
   color: ${mainColors.darkerGray};
-  margin-bottom: 1rem !important;
+  margin-bottom: 0.5rem !important;
 `;
 
 const List = styled.ul`
   list-style: none;
-  margin: 0;
+  margin: 0 0 2rem;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
 `;
 
 const Item = styled.li`
   font-family: 'Roboto', sans-serif;
-  background: white;
-  border-radius: 6px;
-  padding: 0.5rem;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  grid-template-areas:
-    'icon title actions'
-    'icon date actions';
-  align-items: center;
-  column-gap: 0.5rem;
-  transition: all 0.2s ease;
-
-  &:hover {
-    transform: translateX(5px);
-    background-color: ${mainColors.lightGrey};
-  }
-
-  @media (max-width: ${mediaQueries.mobile}) {
-    grid-template-columns: auto 1fr;
-    grid-template-areas: 'icon title' 'icon date' 'actions actions';
-  }
-`;
-
-const PlayIcon = styled.span`
-  grid-area: icon;
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid ${mainColors.lightGrey};
 `;
 
 const ItemTitle = styled(Link)`
-  grid-area: title;
+  flex: 1 1 12rem;
   color: ${mainColors.darkerGray};
-  font-size: 14px;
   font-weight: 500;
   text-decoration: none;
   overflow-wrap: anywhere;
@@ -403,15 +359,12 @@ const ItemTitle = styled(Link)`
 `;
 
 const ItemDate = styled.span`
-  grid-area: date;
   font-size: 12px;
   color: ${mainColors.midGrey};
 `;
 
 const ItemActions = styled.div`
-  grid-area: actions;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin-left: -8px;
 `;
