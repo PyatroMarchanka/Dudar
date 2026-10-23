@@ -4,6 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button as MuiButton, CircularProgress, TextField, Typography } from '@material-ui/core';
 import { Navbar } from '../global/Navbar';
+import { Icon } from '../global/Icon';
 import { ShareButton } from '../ShareButton';
 import { Button } from '../global/Button';
 import { store } from '../../context';
@@ -164,43 +165,50 @@ export const MyMelodies = () => {
           </Card>
         ) : (
           <>
-            <SectionTitle variant="h5">{t('melodies.saved')}</SectionTitle>
-            {loadError ? (
-              <ErrorText>{t('melodies.loadError')}</ErrorText>
-            ) : !melodies ? (
-              <CircularProgress />
-            ) : !melodies.length ? (
-              <Typography>{t('melodies.noMelodies')}</Typography>
-            ) : (
-              <List>
-                {melodies.map((melody) => (
-                  <Item key={melody.id}>
-                    <ItemTitle to={`${routes.app}/${routes.melody}/${melody.id}`}>{melody.title}</ItemTitle>
-                    <ItemDate>{new Date(melody.updatedAt).toLocaleDateString()}</ItemDate>
-                    <ItemActions>
-                      <ShareButton
-                        url={`${window.location.origin}${routes.app}/${routes.melody}/${melody.id}`}
-                        title={melody.title}
-                      />
-                      <MuiButton
-                        component={Link}
-                        to={`${routes.app}/${routes.melody}/${melody.id}`}
-                        color="primary"
-                        size="small"
-                      >
-                        {t('melodies.play')}
-                      </MuiButton>
-                      <MuiButton size="small" onClick={() => onEdit(melody)}>
-                        {t('melodies.edit')}
-                      </MuiButton>
-                      <MuiButton size="small" onClick={() => onDelete(melody)}>
-                        {t('melodies.delete')}
-                      </MuiButton>
-                    </ItemActions>
-                  </Item>
-                ))}
-              </List>
-            )}
+            <SavedContainer>
+              <SectionTitle variant="h4" className="sectionSubtitle">
+                {t('melodies.saved')}
+              </SectionTitle>
+              {loadError ? (
+                <ErrorText>{t('melodies.loadError')}</ErrorText>
+              ) : !melodies ? (
+                <CircularProgress />
+              ) : !melodies.length ? (
+                <Typography>{t('melodies.noMelodies')}</Typography>
+              ) : (
+                <List>
+                  {melodies.map((melody) => (
+                    <Item key={melody.id}>
+                      <PlayIcon>
+                        <Icon type="song-play" fill={mainColors.red} />
+                      </PlayIcon>
+                      <ItemTitle to={`${routes.app}/${routes.melody}/${melody.id}`}>{melody.title}</ItemTitle>
+                      <ItemDate>{new Date(melody.updatedAt).toLocaleDateString()}</ItemDate>
+                      <ItemActions>
+                        <ShareButton
+                          url={`${window.location.origin}${routes.app}/${routes.melody}/${melody.id}`}
+                          title={melody.title}
+                        />
+                        <MuiButton
+                          component={Link}
+                          to={`${routes.app}/${routes.melody}/${melody.id}`}
+                          color="primary"
+                          size="small"
+                        >
+                          {t('melodies.play')}
+                        </MuiButton>
+                        <MuiButton size="small" onClick={() => onEdit(melody)}>
+                          {t('melodies.edit')}
+                        </MuiButton>
+                        <MuiButton size="small" onClick={() => onDelete(melody)}>
+                          {t('melodies.delete')}
+                        </MuiButton>
+                      </ItemActions>
+                    </Item>
+                  ))}
+                </List>
+              )}
+            </SavedContainer>
 
             <Card ref={editorRef}>
               <TextField
@@ -230,8 +238,8 @@ export const MyMelodies = () => {
                   parsed?.error
                     ? `${t('melodies.invalid')}: ${parsed.error}`
                     : parsed?.title
-                    ? t('melodies.valid')
-                    : t('melodies.empty')
+                      ? t('melodies.valid')
+                      : t('melodies.empty')
                 }
               />
               {saveError && <ErrorText>{saveError}</ErrorText>}
@@ -330,9 +338,16 @@ const ErrorText = styled(Typography)`
   margin-top: 0.5rem !important;
 `;
 
+const SavedContainer = styled.div`
+  padding: 1rem;
+  background-color: ${mainColors.lightestGrey};
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
 const SectionTitle = styled(Typography)`
   color: ${mainColors.darkerGray};
-  margin: 1rem 0 1rem !important;
+  margin-bottom: 1rem !important;
 `;
 
 const List = styled.ul`
@@ -347,25 +362,37 @@ const List = styled.ul`
 const Item = styled.li`
   font-family: 'Roboto', sans-serif;
   background: white;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  padding: 0.5rem;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr auto;
   grid-template-areas:
-    'title actions'
-    'date actions';
+    'icon title actions'
+    'icon date actions';
   align-items: center;
-  column-gap: 1rem;
+  column-gap: 0.5rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateX(5px);
+    background-color: ${mainColors.lightGrey};
+  }
 
   @media (max-width: ${mediaQueries.mobile}) {
-    grid-template-columns: 1fr;
-    grid-template-areas: 'title' 'date' 'actions';
+    grid-template-columns: auto 1fr;
+    grid-template-areas: 'icon title' 'icon date' 'actions actions';
   }
+`;
+
+const PlayIcon = styled.span`
+  grid-area: icon;
+  display: flex;
 `;
 
 const ItemTitle = styled(Link)`
   grid-area: title;
   color: ${mainColors.darkerGray};
+  font-size: 14px;
   font-weight: 500;
   text-decoration: none;
   overflow-wrap: anywhere;
@@ -377,8 +404,8 @@ const ItemTitle = styled(Link)`
 
 const ItemDate = styled.span`
   grid-area: date;
-  font-size: 0.8rem;
-  color: #999;
+  font-size: 12px;
+  color: ${mainColors.midGrey};
 `;
 
 const ItemActions = styled.div`
