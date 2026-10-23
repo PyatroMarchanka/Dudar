@@ -7,6 +7,8 @@ import { Header, SettingsButtons } from "./common";
 import { SongTitle } from "./SongTitle";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { useEffect } from "react";
+import { ShareButton } from "../ShareButton";
+import { routes } from "../../router/routes";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
@@ -26,10 +28,11 @@ export const UserMelodyPlayPageHeader = ({ midiPlayer }: Props) => {
   const { id } = useParams<{ id: string }>();
   const { abc, title } = useAbcFromMelody(id);
   useAbcSong(abc, title);
-  return <AbcHeader midiPlayer={midiPlayer} />;
+  const shareUrl = `${window.location.origin}${routes.app}/${routes.melody}/${id}`;
+  return <AbcHeader midiPlayer={midiPlayer} shareUrl={shareUrl} />;
 };
 
-const AbcHeader = ({ midiPlayer }: Props) => {
+const AbcHeader = ({ midiPlayer, shareUrl }: Props & { shareUrl?: string }) => {
   const songTitle = useSongTitle();
 
   useEffect(() => {
@@ -41,6 +44,7 @@ const AbcHeader = ({ midiPlayer }: Props) => {
       <Header>
         <SongTitle title={songTitle ?? noSongsLabel} />
       </Header>
+      {shareUrl && <ShareButton url={shareUrl} title={songTitle ?? undefined} />}
       <Settings midiPlayer={midiPlayer} showSongInfo={false} />
     </SettingsButtons>
   );

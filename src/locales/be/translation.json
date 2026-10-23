@@ -252,7 +252,10 @@
     "newestSongs": "Найноўшыя мелодыі",
     "latestUpdates": "Апошнія абнаўленні",
     "showAllUpdates": "Паказаць усе абнаўленні",
-    "showFewerUpdates": "Паказаць менш"
+    "showFewerUpdates": "Паказаць менш",
+    "myMelodiesTitle": "Запішыце сваю мелодыю",
+    "myMelodiesText": "Ёсць мелодыя ў галаве? Запішыце яе ў натацыі ABC, захавайце і грайце з аплікатурай дуды. Спасылкай на мелодыю можна падзяліцца з сябрамі.",
+    "myMelodiesButton": "Мае мелодыі"
   },
   "navbar": {
     "learn": "Вучыся з Dudahero",

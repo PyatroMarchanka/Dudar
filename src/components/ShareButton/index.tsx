@@ -11,8 +11,14 @@ import { Icon } from '../global/Icon';
 
 const COPIED_RESET_MS = 1500;
 
+interface Props {
+  // Share this link and title instead of the open catalog song
+  url?: string;
+  title?: string;
+}
+
 // Share icon for the open song: copy its link, the native share sheet or a messenger
-export const ShareButton = () => {
+export const ShareButton = ({ url: customUrl, title: customTitle }: Props) => {
   const { t } = useTranslation('translation');
   const {
     state: { activeSong },
@@ -30,10 +36,10 @@ export const ShareButton = () => {
     return () => clearTimeout(timeout);
   }, [copied]);
 
-  if (!activeSong) return null;
+  if (!customUrl && !activeSong) return null;
 
-  const url = `${window.location.origin}${routes.app}/${routes.play}/${activeSong.id}`;
-  const title = songTitle ?? activeSong.name;
+  const url = customUrl ?? `${window.location.origin}${routes.app}/${routes.play}/${activeSong?.id}`;
+  const title = customTitle ?? songTitle ?? activeSong?.name ?? '';
   const canNativeShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
   const label = t('share.share');
 

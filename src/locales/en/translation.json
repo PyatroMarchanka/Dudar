@@ -249,7 +249,10 @@
     "newestSongs": "Newest Songs",
     "latestUpdates": "Latest updates",
     "showAllUpdates": "Show all updates",
-    "showFewerUpdates": "Show fewer updates"
+    "showFewerUpdates": "Show fewer updates",
+    "myMelodiesTitle": "Write your own melody",
+    "myMelodiesText": "Have a tune in your head? Write it in ABC notation, save it and play it with the bagpipe fingering. You can share a link to it with friends.",
+    "myMelodiesButton": "My melodies"
   },
   "navbar": {
     "learn": "Learn with Dudahero",
