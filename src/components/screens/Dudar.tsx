@@ -22,6 +22,7 @@ import { NoSong } from "../NoSong";
 import { LoginReminderContainer } from "../LoginReminder";
 import Logger from "../global/Logger";
 import MusicSheet from "../MusicSheets";
+import { PlaybackDebug } from "../PlaybackDebug";
 
 export const Dudar = () => {
   let { path } = useRouteMatch();
@@ -84,6 +85,7 @@ export const Dudar = () => {
       <LoginReminderContainer />
       <DonationButton />
       <Logger />
+      <PlaybackDebug />
       <BackdropSpinner isOpen={isSongLoading} />
       <Switch>
         <Route exact path={`${path}/${routes.play}/:id`}>
