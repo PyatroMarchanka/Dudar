@@ -1,23 +1,62 @@
-import { useContext, useEffect, useMemo, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { melodiesApi } from "../api/melodies";
 import { store } from "../context";
 import { notesMaps } from "../dataset/bagpipesNotesMaps";
 import { SharpNotesEnum } from "../interfaces";
 import { abcToMidi, convertNoteToMidiPitch, prepareSongMidi } from "../utils/midiUtils";
 
-// Loads a song from ABC notation passed in the `abc` query param
-// (e.g. /app/abc?abc=X:1%0AT:...), converts it to MIDI with abcjs and feeds
-// it through the same pipeline a regular catalog song uses. Unlike
-// useLoadSong, it never touches the song catalog (no useSong/useSongList),
-// so it's safe to use standalone, including inside an iframe.
+// ABC notation passed in the `abc` query param (e.g. /app/abc?abc=X:1%0AT:...)
+export const useAbcFromQuery = () => {
+  const location = useLocation();
+  return new URLSearchParams(location.search).get("abc");
+};
+
+// ABC notation and title of a melody a user saved (/app/melody/:id). `abc` is
+// `undefined` while it's loading and `null` when it can't be loaded.
+export const useAbcFromMelody = (id: string) => {
+  const { setIsSongLoading } = useContext(store);
+  const [abc, setAbc] = useState<string | null | undefined>(undefined);
+  const [title, setTitle] = useState<string>();
+
+  useEffect(() => {
+    let cancelled = false;
+    setAbc(undefined);
+    setIsSongLoading(true);
+    melodiesApi
+      .getMelody(id)
+      .then((melody) => {
+        if (cancelled) return;
+        setTitle(melody.title);
+        setAbc(melody.abc);
+      })
+      .catch((error) => {
+        if (cancelled) return;
+        console.log(error);
+        setAbc(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  return { abc, title };
+};
+
+// Loads a song from ABC notation (see the two hooks above), converts it to
+// MIDI with abcjs and feeds it through the same pipeline a regular catalog
+// song uses. Unlike useLoadSong, it never touches the song catalog (no
+// useSong/useSongList), so it's safe to use standalone, including inside an
+// iframe. `title`, when given, replaces the tune's own T: title.
 //
 // The tune keeps its written key and is rearranged onto the fingering of the
 // selected instrument in the selected key (the transpose setting), e.g. an E
 // minor tune on a D whistle or a duda in G. So in ABC mode transpose changes
 // the instrument, not the melody. Catalog songs are instead already written
 // for an A instrument, and transpose shifts the melody with it.
-export const useAbcSong = () => {
-  const location = useLocation();
+export const useAbcSong = (abc: string | null | undefined, title?: string) => {
   const {
     state: { tempo, transpose, bagpipeType },
     setActiveSong,
@@ -29,7 +68,6 @@ export const useAbcSong = () => {
     setTempo,
   } = useContext(store);
 
-  const abc = new URLSearchParams(location.search).get("abc");
   const playableNotes = useMemo(
     () => Object.keys(notesMaps[bagpipeType] ?? {}).map((note) => convertNoteToMidiPitch(note as SharpNotesEnum)),
     [bagpipeType]
@@ -38,8 +76,10 @@ export const useAbcSong = () => {
   const tempoAppliedForAbc = useRef<string | null>(null);
 
   useEffect(() => {
+    if (abc === undefined) return;
     if (!abc) {
       setActiveSong(null);
+      setIsSongLoading(false);
       setIsSongUnavailable(true);
       return;
     }
@@ -52,7 +92,7 @@ export const useAbcSong = () => {
         const { buffer, song } = abcToMidi(abc, { instrument: { transpose, playableNotes } });
         if (cancelled) return;
 
-        setActiveSong(song);
+        setActiveSong(title ? { ...song, name: title } : song);
         setIsSongUnavailable(false);
 
         const { midi, songWithMetronome, songLength } = await prepareSongMidi(

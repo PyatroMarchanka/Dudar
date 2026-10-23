@@ -249,14 +249,18 @@
     "newestSongs": "Newest Songs",
     "latestUpdates": "Latest updates",
     "showAllUpdates": "Show all updates",
-    "showFewerUpdates": "Show fewer updates"
+    "showFewerUpdates": "Show fewer updates",
+    "myMelodiesTitle": "Write your own melody",
+    "myMelodiesText": "Have a tune in your head? Write it in ABC notation, save it and play it with the bagpipe fingering. You can share a link to it with friends.",
+    "myMelodiesButton": "My melodies"
   },
   "navbar": {
     "learn": "Learn with Dudahero",
     "playlists": "Playlist Editor",
     "blog": "Articles",
     "contacts": "Contacts",
-    "admin": "Admin"
+    "admin": "Admin",
+    "melodies": "My melodies"
   },
   "topSongs": {
     "title": "Most Played Songs"
@@ -277,5 +281,34 @@
     "recorder": "Recorder",
     "bagpipesLink": "Looking for bagpipes? Visit",
     "available": "Available now:"
+  },
+  "melodies": {
+    "title": "My melodies",
+    "subtitle": "Write a tune in ABC notation, save it and play it on your bagpipe or whistle.",
+    "learnAbc": "How to write ABC notation",
+    "loginRequired": "Log in to save your own melodies.",
+    "nameLabel": "Title",
+    "abcLabel": "ABC notation",
+    "valid": "Looks good, the melody can be played",
+    "invalid": "Cannot read this ABC",
+    "empty": "Paste or type a tune in ABC notation",
+    "save": "Save melody",
+    "update": "Save changes",
+    "cancelEdit": "Cancel",
+    "paste": "Paste from clipboard",
+    "clipboardEmpty": "The clipboard is empty",
+    "pasteError": "Could not read the clipboard. Long-press the field below and paste manually.",
+    "tryIt": "Try in player",
+    "example": "Insert example",
+    "privacy": "Your melodies are not listed anywhere. Anyone you send a melody link to can play it.",
+    "saved": "Saved melodies",
+    "noMelodies": "You have no saved melodies yet.",
+    "play": "Play",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Delete \"{{title}}\"?",
+    "saveError": "Could not save the melody",
+    "loadError": "Could not load your melodies",
+    "deleteError": "Could not delete the melody"
   }
 }

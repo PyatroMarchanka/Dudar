@@ -4,6 +4,7 @@ import { Buffer } from "buffer";
 import { IStats, Song, TimeSignatures } from "../../dataset/songs/interfaces";
 import { BagpipeTypes } from "../../interfaces";
 import { toArrayBuffer } from "../commonUtils";
+import { normalizeAbcMidi } from "./normalizeAbcMidi";
 
 // Meters that have a matching public/midi/common/metronome-X-Y.mid file.
 // Anything else (including time signatures the app otherwise supports, like
@@ -171,8 +172,14 @@ export const abcToMidi = (abc: string, { instrument }: AbcToMidiOptions = {}): A
     }
   }
 
+  // The tempo is read from the MIDI itself (not tune.getBpm()), since the
+  // player runs the MIDI's ticks at this tempo. getBpm() counts a different
+  // beat in compound meters like 6/8.
+  const normalized = normalizeAbcMidi(midiBuffer);
+  midiBuffer = normalized.buffer;
+
   const timeSignature = meterToTimeSignature(tune.getMeterFraction());
-  const bpm = tune.getBpm();
+  const bpm = normalized.bpm ?? tune.getBpm();
   // useLoadSong/prepareSongMidi halve originalTempo before applying it, so
   // store double the real tempo to match the convention used by regular songs.
   const originalTempo = bpm ? Math.round(bpm * 2) : undefined;

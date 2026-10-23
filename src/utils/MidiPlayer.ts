@@ -13,6 +13,7 @@ import { TimeSignatures } from "../dataset/songs/interfaces";
 import { isFluteInstrument } from "../brand";
 import { getVisualDelayMs } from "./audioSync";
 import { registerAudioContextRef } from "./audioContext";
+import { logNoteOff, logNoteOn, logPlayback } from "./playbackDebug";
 
 export type MidiNoteHandler = (note: number) => void;
 export type PlaybackProgressHandler = (
@@ -330,6 +331,7 @@ export class MidiPlayer {
   };
 
   keyDown(note: number, volume = 0.5) {
+    logNoteOn(note);
     playNote(
       this.bagpipeType,
       (midiNumbersToNotes as any)[note + this.transpose + 12],
@@ -339,6 +341,7 @@ export class MidiPlayer {
   }
 
   keyUp(noteNumber: number) {
+    logNoteOff(noteNumber);
     if (this.envelopes) {
       if (this.envelopes[noteNumber]?.cancel) {
         this.envelopes[noteNumber].cancel();
@@ -406,6 +409,7 @@ export class MidiPlayer {
     // fired, so melody notes go silent until real time catches back up.
     // Re-anchoring via setTick() at the current tick fixes the reference
     // point instead of letting it drift.
+    logPlayback(`TEMPO ${Player.tempo} -> ${newTempo} (restart ${this.isPlaying})`);
     const currentTick = Player.getCurrentTick();
     Player.tempo = newTempo;
     (Player as any).setTempo(newTempo);
@@ -502,6 +506,7 @@ export class MidiPlayer {
   };
 
   stopAllNotes = () => {
+    logPlayback("STOP ALL");
     if (this.envelopes) {
       Object.values(this.envelopes).forEach((num) => {
         if (typeof num === "number") {

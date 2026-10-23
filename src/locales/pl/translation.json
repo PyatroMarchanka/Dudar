@@ -249,14 +249,18 @@
     "newestSongs": "Najnowsze utwory",
     "latestUpdates": "Najnowsze aktualizacje",
     "showAllUpdates": "Pokaż wszystkie aktualizacje",
-    "showFewerUpdates": "Pokaż mniej"
+    "showFewerUpdates": "Pokaż mniej",
+    "myMelodiesTitle": "Zapisz własną melodię",
+    "myMelodiesText": "Masz melodię w głowie? Zapisz ją w notacji ABC, zachowaj i graj z palcowaniem dud. Link do melodii możesz wysłać znajomym.",
+    "myMelodiesButton": "Moje melodie"
   },
   "navbar": {
     "learn": "Ucz się z Dudahero",
     "playlists": "Edytor playlist",
     "blog": "Artykuły",
     "contacts": "Kontakty",
-    "admin": "Admin"
+    "admin": "Admin",
+    "melodies": "Moje melodie"
   },
   "topSongs": {
     "title": "Najczęściej odtwarzane utwory"
@@ -277,5 +281,34 @@
     "recorder": "Flet prosty",
     "bagpipesLink": "Szukasz dud? Odwiedź",
     "available": "Dostępne teraz:"
+  },
+  "melodies": {
+    "title": "Moje melodie",
+    "subtitle": "Zapisz melodię w notacji ABC, zachowaj ją i graj na dudach lub flecie.",
+    "learnAbc": "Jak pisać w notacji ABC",
+    "loginRequired": "Zaloguj się, aby zapisywać własne melodie.",
+    "nameLabel": "Tytuł",
+    "abcLabel": "Notacja ABC",
+    "valid": "Wszystko w porządku, melodię można zagrać",
+    "invalid": "Nie można odczytać ABC",
+    "empty": "Wklej lub wpisz melodię w notacji ABC",
+    "save": "Zapisz melodię",
+    "update": "Zapisz zmiany",
+    "cancelEdit": "Anuluj",
+    "paste": "Wklej ze schowka",
+    "clipboardEmpty": "Schowek jest pusty",
+    "pasteError": "Nie udało się odczytać schowka. Przytrzymaj pole poniżej i wklej ręcznie.",
+    "tryIt": "Wypróbuj w odtwarzaczu",
+    "example": "Wstaw przykład",
+    "privacy": "Twoje melodie nie są nigdzie wyświetlane. Każdy, komu wyślesz link do melodii, może ją zagrać.",
+    "saved": "Zapisane melodie",
+    "noMelodies": "Nie masz jeszcze zapisanych melodii.",
+    "play": "Graj",
+    "edit": "Edytuj",
+    "delete": "Usuń",
+    "confirmDelete": "Usunąć „{{title}}”?",
+    "saveError": "Nie udało się zapisać melodii",
+    "loadError": "Nie udało się wczytać twoich melodii",
+    "deleteError": "Nie udało się usunąć melodii"
   }
 }

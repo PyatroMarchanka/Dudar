@@ -70,6 +70,19 @@ export const MobileMenu = ({
       </MenuItem>
       <MenuItem
         component={Link}
+        to={routes.melodies}
+        onClick={onClose}
+        selected={location.pathname === routes.melodies}
+        style={{
+          padding: "12px 24px",
+          color:
+            location.pathname === routes.melodies ? mainColors.orange : "inherit",
+        }}
+      >
+        {t("navbar.melodies")}
+      </MenuItem>
+      <MenuItem
+        component={Link}
         to={routes.learningBook}
         onClick={onClose}
         selected={location.pathname === routes.learningBook}

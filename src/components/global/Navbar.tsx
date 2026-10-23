@@ -75,6 +75,14 @@ export const Navbar = () => {
           </NavItem>
           <NavItem>
             <StyledLink
+              to={routes.melodies}
+              className={location.pathname === routes.melodies ? "active" : ""}
+            >
+              {t("navbar.melodies")}
+            </StyledLink>
+          </NavItem>
+          <NavItem>
+            <StyledLink
               to={routes.learningBook}
               className={location.pathname === routes.learningBook ? "active" : ""}
             >
