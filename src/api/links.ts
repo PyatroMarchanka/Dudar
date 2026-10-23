@@ -22,6 +22,10 @@ const favoritesLinks = {
   favorites: `${process.env.REACT_APP_BACKEND_URL}/v1/favorites`,
 }
 
+const melodiesLinks = {
+  melodies: `${process.env.REACT_APP_BACKEND_URL}/v1/melodies`,
+}
+
 const adminLinks = {
   adminSong: `${process.env.REACT_APP_BACKEND_URL}/v1/admin/song`
 }
@@ -41,6 +45,7 @@ export const links = {
   ...adminLinks,
   ...playlistsLinks,
   ...favoritesLinks,
+  ...melodiesLinks,
   ...articleLinks,
   ...updatesLinks,
 }
