@@ -249,7 +249,10 @@
     "newestSongs": "Najnowsze utwory",
     "latestUpdates": "Najnowsze aktualizacje",
     "showAllUpdates": "Pokaż wszystkie aktualizacje",
-    "showFewerUpdates": "Pokaż mniej"
+    "showFewerUpdates": "Pokaż mniej",
+    "myMelodiesTitle": "Zapisz własną melodię",
+    "myMelodiesText": "Masz melodię w głowie? Zapisz ją w notacji ABC, zachowaj i graj z palcowaniem dud. Link do melodii możesz wysłać znajomym.",
+    "myMelodiesButton": "Moje melodie"
   },
   "navbar": {
     "learn": "Ucz się z Dudahero",

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Typography } from "@material-ui/core";
 import styled from "styled-components";
 import { mediaQueries } from "../../constants/style";
@@ -81,6 +82,15 @@ export const About = () => {
               <Typography>{t("aboutPage.highlander")}</Typography>
             </li>
           </BagpipesList>
+          <MyMelodiesSection>
+            <Typography variant="h4" className="sectionSubtitle">
+              {t("aboutPage.myMelodiesTitle")}
+            </Typography>
+            <Typography className="description">{t("aboutPage.myMelodiesText")}</Typography>
+            <Link to={routes.melodies}>
+              <Button type="big">{t("aboutPage.myMelodiesButton")}</Button>
+            </Link>
+          </MyMelodiesSection>
           <LatestUpdates />
           <BlogSection>
             <Typography variant="h4" className="sectionSubtitle">
@@ -195,6 +205,14 @@ const BlogSection = styled.div`
   padding: 20px;
   background: #f8f8f8;
   border-radius: 10px;
+`;
+
+const MyMelodiesSection = styled.div`
+  margin: 2rem 0;
+
+  a {
+    text-decoration: none;
+  }
 `;
 
 const BlogLinks = styled.ul`

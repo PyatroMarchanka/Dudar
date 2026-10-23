@@ -4,6 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button as MuiButton, CircularProgress, TextField, Typography } from '@material-ui/core';
 import { Navbar } from '../global/Navbar';
+import { ShareButton } from '../ShareButton';
 import { Button } from '../global/Button';
 import { store } from '../../context';
 import { routes } from '../../router/routes';
@@ -208,6 +209,10 @@ export const MyMelodies = () => {
                     <ItemTitle to={`${routes.app}/${routes.melody}/${melody.id}`}>{melody.title}</ItemTitle>
                     <ItemDate>{new Date(melody.updatedAt).toLocaleDateString()}</ItemDate>
                     <ItemActions>
+                      <ShareButton
+                        url={`${window.location.origin}${routes.app}/${routes.melody}/${melody.id}`}
+                        title={melody.title}
+                      />
                       <MuiButton
                         component={Link}
                         to={`${routes.app}/${routes.melody}/${melody.id}`}
@@ -355,5 +360,6 @@ const ItemActions = styled.div`
   grid-area: actions;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   margin-left: -8px;
 `;
