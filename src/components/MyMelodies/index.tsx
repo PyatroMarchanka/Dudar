@@ -119,6 +119,8 @@ export const MyMelodies = () => {
 
   const onTry = () => {
     if (parsed?.title) {
+      // Close the phone keyboard first, otherwise the player measures the shrunken window and cuts the bagpipe.
+      (document.activeElement as HTMLElement | null)?.blur?.();
       history.push(`${routes.app}/${routes.abc}?abc=${encodeURIComponent(abc)}`);
     }
   };
