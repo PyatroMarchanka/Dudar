@@ -283,7 +283,8 @@ const Card = styled.div`
 const AbcField = styled(TextField)`
   textarea {
     font-family: 'Roboto Mono', Menlo, Consolas, monospace;
-    font-size: 14px;
+    /* iOS Safari zooms the page into any input under 16px and keeps the zoom on later screens */
+    font-size: 16px;
   }
 `;
 
