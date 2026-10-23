@@ -9,11 +9,25 @@
     "success": "Sukces"
   },
   "settings": "Ustawienia",
+  "settingsSections": {
+    "instrument": "Instrument",
+    "playback": "Odtwarzanie",
+    "app": "Aplikacja"
+  },
   "instrumentType": "Typ instrumentu",
   "transposeMelody": "Tonacja dudy",
   "whistleTonality": "Tonacja whistle'a",
   "preclick": "Wstępne odliczanie",
   "silentMode": "Cichy tryb (tylko metronom)",
+  "offline": {
+    "title": "Offline",
+    "save": "Zapisz",
+    "update": "Odśwież",
+    "hint": "Zapisz dźwięki tych dud i wszystkie utwory, aby ćwiczyć bez internetu.",
+    "saved": "Zapisano: te dudy i wszystkie utwory działają bez internetu.",
+    "partly": "Nie udało się zapisać części plików. Spróbuj ponownie z lepszym połączeniem.",
+    "error": "Nie udało się zapisać. Sprawdź połączenie i spróbuj ponownie."
+  },
   "soundSync": "Synchronizacja dźwięku (Bluetooth)",
   "soundSyncAuto": "Auto",
   "soundSyncOff": "Bez opóźnienia",

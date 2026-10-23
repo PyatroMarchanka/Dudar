@@ -6,7 +6,12 @@ import { mainColors } from "../../utils/theme";
 import { store } from "../../context";
 import { Icon } from "../global/Icon";
 
-export const Preclick = () => {
+interface Props {
+  // Changes when the audio count-in starts.
+  startSignal: number;
+}
+
+export const Preclick = ({ startSignal }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const {
@@ -30,10 +35,18 @@ export const Preclick = () => {
     setUpInterval(interval);
   };
 
+  // Starts with the audio count-in, not on the tap: the sounds may still be
+  // downloading then, and the two count-ins would drift apart.
   useEffect(() => {
-    if (isPlaying) {
+    if (startSignal && isPlaying) {
       startPreclick();
-    } else {
+    }
+  }, [startSignal]);
+
+  useEffect(() => {
+    if (!isPlaying) {
+      interval && clearInterval(interval);
+      setTickIdx(0);
       setIsOpen(false);
     }
   }, [isPlaying]);

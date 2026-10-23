@@ -4,7 +4,7 @@ import { store } from "../../../context";
 import { BagpipeTypes } from "../../../interfaces";
 import { RedRadio } from "../../global/RedRadioButton";
 import styled from "styled-components";
-import { mainColors } from "../../../utils/theme";
+import { settingsColors } from "./styles";
 import { bagpipes } from "../../../dataset/bagpipes";
 import { useUpdateUserSettings } from "../../../hooks/useGoogleProfile";
 import Modal from "../../global/Modal";
@@ -76,7 +76,7 @@ export const InstrumentTypes = () => {
       </TypeItem>
 
       <Modal
-        triggerComponent={<IconButton><Icon type="material" Icon={Add} /></IconButton>}
+        triggerComponent={<IconButton><Icon type="material" fill={settingsColors.ink} Icon={Add} /></IconButton>}
       >
         {belarusianDudaTypes.map((type, i) => (
         <TypeItem key={type} onClick={() => onChange(type as BagpipeTypes)}>
@@ -109,6 +109,7 @@ const BelDuda = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  padding-right: 8px;
 `;
 
 const InstrumentTypesContainer = styled.div`
@@ -121,17 +122,18 @@ const TypeItem = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  width: 90%;
-  padding: 0 3%;
+  min-width: 0;
+  padding: 0 20px 0 12px;
+  cursor: pointer;
 `;
 
 const BigTitle = styled.h3`
-  color: ${mainColors.midGrey};
+  color: ${settingsColors.ink};
   font-family: "Inter";
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
   line-height: 140%;
   letter-spacing: 0.003em;
-  margin-left: 10px;
+  margin: 10px 0 10px 4px;
 `;

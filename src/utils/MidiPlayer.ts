@@ -2,6 +2,7 @@ import MidiPlayerLib from "midi-player-js";
 import { Midi } from "@tonejs/midi";
 import {
   getDroneLength,
+  loadSampler,
   playNote,
   // samplerPlayDrumLoop,
   stopNote,
@@ -47,6 +48,8 @@ const metronomeTick = 1219;
 const drone = 731;
 
 export const instruments = [bagpipeChanter, metronomeTick, drone];
+
+const clickSoundWaitMs = 3000;
 
 export class MidiPlayer {
   playRef: any;
@@ -131,6 +134,36 @@ export class MidiPlayer {
       console.log("end of file");
     });
   };
+
+  // The count-in and metronome click is played by MIDISounds, which downloads
+  // it on its own, apart from the bagpipe samples.
+  waitForClickSound = (): Promise<void> => {
+    const sounds = this.playRef.current;
+    const loader = sounds?.player?.loader;
+    if (!loader) {
+      return Promise.resolve();
+    }
+    if (loader.loaded(loader.instrumentInfo(metronomeTick).variable)) {
+      return Promise.resolve();
+    }
+    sounds.cacheInstrument(metronomeTick);
+    // The click comes from a third-party server, so a failed download (or no
+    // connection) must not hold up the song for long.
+    return new Promise((resolve) => {
+      loader.waitLoad(resolve);
+      setTimeout(resolve, clickSoundWaitMs);
+    });
+  };
+
+  // Where MIDISounds downloads its instruments (the click among them) from.
+  getClickSoundUrls = (): string[] => {
+    const loader = this.playRef.current?.player?.loader;
+    return loader ? instruments.map((n) => loader.instrumentInfo(n).url) : [];
+  };
+
+  // Resolves once the sounds this playback needs are downloaded and decoded.
+  waitForSounds = (withClick: boolean): Promise<void> =>
+    Promise.all([loadSampler(this.bagpipeType), withClick ? this.waitForClickSound() : undefined]).then(() => {});
 
   // Sound comes out later than it is triggered (Tone.js lookahead plus the
   // output device, a lot more with Bluetooth headphones), so the visuals are

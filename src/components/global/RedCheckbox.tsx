@@ -5,7 +5,7 @@ export const RedCheckbox = withStyles({
   root: {
     color: mainColors.lightGrey,
     "&$checked": {
-      color: mainColors.red,
+      color: mainColors.darkRed,
     },
     marginLeft: "auto",
   },

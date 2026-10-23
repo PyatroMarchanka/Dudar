@@ -11,7 +11,9 @@ import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { CacheFirst } from 'workbox-strategies';
+import { CacheFirst, NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+import { offlineCaches } from './utils/offlineCaches';
 
 clientsClaim();
 
@@ -58,6 +60,63 @@ registerRoute(
       // least-recently used images are removed.
       new ExpirationPlugin({ maxEntries: 50 }),
     ],
+  })
+);
+
+// Offline support: the sounds, songs and song catalog stay available after
+// they were loaded once (or saved with "Save for offline" in the settings),
+// so the app keeps working with a bad or no connection.
+
+// Bagpipe samples and MIDI files never change under the same URL.
+registerRoute(
+  ({ url }) => url.origin === self.location.origin && url.pathname.startsWith('/samples/'),
+  new CacheFirst({
+    cacheName: offlineCaches.samples,
+    plugins: [new CacheableResponsePlugin({ statuses: [200] })],
+  })
+);
+
+registerRoute(
+  ({ url }) => url.origin === self.location.origin && url.pathname.startsWith('/midi/'),
+  new CacheFirst({
+    cacheName: offlineCaches.midi,
+    plugins: [new CacheableResponsePlugin({ statuses: [200] })],
+  })
+);
+
+// The metronome and count-in click sounds, loaded by MIDISounds from a
+// third-party server as scripts (opaque responses, hence status 0).
+registerRoute(
+  ({ url }) => url.origin === 'https://surikov.github.io',
+  new CacheFirst({
+    cacheName: offlineCaches.clickSounds,
+    plugins: [new CacheableResponsePlugin({ statuses: [0, 200] })],
+  })
+);
+
+// Backend reads (song catalog, profile and settings, playlists, articles):
+// fresh when the network answers in time, the last saved copy otherwise.
+registerRoute(
+  ({ url, request }) =>
+    request.method === 'GET' && url.pathname.startsWith('/v1/') && !url.pathname.startsWith('/v1/auth'),
+  new NetworkFirst({
+    cacheName: offlineCaches.api,
+    networkTimeoutSeconds: 5,
+    matchOptions: { ignoreVary: true },
+    plugins: [new CacheableResponsePlugin({ statuses: [200] })],
+  })
+);
+
+registerRoute(
+  ({ url }) => url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://maxcdn.bootstrapcdn.com',
+  new StaleWhileRevalidate({ cacheName: offlineCaches.styles })
+);
+
+registerRoute(
+  ({ url }) => url.origin === 'https://fonts.gstatic.com',
+  new CacheFirst({
+    cacheName: offlineCaches.fonts,
+    plugins: [new CacheableResponsePlugin({ statuses: [0, 200] }), new ExpirationPlugin({ maxEntries: 30 })],
   })
 );
 

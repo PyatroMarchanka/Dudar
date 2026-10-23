@@ -5,9 +5,11 @@ import { Typography } from "@material-ui/core";
 import { mainColors } from "../../utils/theme";
 import { Icon } from "../global/Icon";
 
-interface Props {}
+interface Props {
+  color?: string;
+}
 
-export const Contacts = ({}: Props) => {
+export const Contacts = ({ color }: Props) => {
   return (
     <RowCentered>
       <a
@@ -25,7 +27,7 @@ export const Contacts = ({}: Props) => {
           Piatro Marchanka
         </Typography>
       </a>
-      <FeedbackForm />
+      <FeedbackForm color={color} />
     </RowCentered>
   );
 };
@@ -39,7 +41,7 @@ const Row = styled.div`
 
 const RowCentered = styled(Row)`
   justify-content: space-between;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 
    > a, div {
     padding: 20px;

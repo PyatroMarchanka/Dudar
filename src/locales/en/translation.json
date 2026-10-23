@@ -9,11 +9,25 @@
     "success": "Success"
   },
   "settings": "Settings",
+  "settingsSections": {
+    "instrument": "Instrument",
+    "playback": "Playback",
+    "app": "App"
+  },
   "instrumentType": "Instrument Type",
   "transposeMelody": "Bagpipe tonality",
   "whistleTonality": "Whistle key",
   "preclick": "Preclick",
   "silentMode": "Silent mode (metronome only)",
+  "offline": {
+    "title": "Offline",
+    "save": "Save",
+    "update": "Update",
+    "hint": "Save the sounds of this bagpipe and all songs to practise without internet.",
+    "saved": "Saved: this bagpipe and all songs work without internet.",
+    "partly": "Some files could not be saved. Try again with a better connection.",
+    "error": "Could not save. Check the connection and try again."
+  },
   "soundSync": "Sound sync (Bluetooth)",
   "soundSyncAuto": "Auto",
   "soundSyncOff": "No delay",

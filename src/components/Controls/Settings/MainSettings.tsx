@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { store } from "../../../context";
 import { MidiPlayer } from "../../../utils/MidiPlayer";
-import { mainColors } from "../../../utils/theme";
 import { Icon } from "../../global/Icon";
 import Transpose from "../Transpose";
 import { RedCheckbox } from "../../global/RedCheckbox";
@@ -14,12 +13,12 @@ import ImportExport from "@material-ui/icons/ImportExport";
 import VolumeOff from "@material-ui/icons/VolumeOff";
 import BluetoothAudio from "@material-ui/icons/BluetoothAudio";
 import { InstrumentTypes } from "./InstrumentTypes";
+import { OfflineSave } from "./OfflineSave";
 import { Contacts } from "../../Contacts";
 import { DonationButtonBig } from "../../global/DonationButtonBig";
 import { TunerButton } from "../../global/TunerButton";
 import { useUpdateUserSettings } from "../../../hooks/useGoogleProfile";
-import { Link } from "react-router-dom";
-import { MenuItem, Select, Typography } from "@material-ui/core";
+import { MenuItem, Select } from "@material-ui/core";
 import { MusicNote, Home } from "@material-ui/icons";
 import { Views } from "../../../interfaces/user";
 import { routes } from "../../../router/routes";
@@ -33,6 +32,7 @@ import {
   setSyncOffsetMs,
   syncOffsetOptionsMs,
 } from "../../../utils/audioSync";
+import { Control, Label, Row, RowTitle, Section, SectionTitle, settingsColors } from "./styles";
 
 type Props = {
   midiPlayer?: MidiPlayer | null;
@@ -62,139 +62,154 @@ export const MainSettings = ({ midiPlayer, showSongInfo = true }: Props) => {
 
   return (
     <Container>
-      <DonationButtonBig />
       <TunerButton />
-      <Row as="a" href={routes.main}>
-        <Icon type="material" fill={mainColors.darkerGray} Icon={Home} />
-        <Title>{t("login.mainPage")}</Title>
-      </Row>
-      {showSongInfo && (
-        <>
-          <Line />
-          <SongPageModal />
-        </>
-      )}
-      <Line />
-      <Row>
-        <Icon type="duda" className="duda" />
-        <Title>{t("instrumentType")}</Title>
-      </Row>
-      <InstrumentTypes />
-      <Line />
-      {midiPlayer && (
+      <HomeLink href={routes.main}>
+        <Icon type="material" fill={settingsColors.accent} Icon={Home} />
+        <span>{t("login.mainPage")}</span>
+      </HomeLink>
+      {showSongInfo && <SongPageModal />}
+
+      <Section>
+        <SectionTitle>{t("settingsSections.instrument")}</SectionTitle>
+        <InstrumentTypes />
+        {midiPlayer && (
+          <Row>
+            <Label>
+              <Icon type="material" fill={settingsColors.ink} Icon={ImportExport} />
+              <RowTitle>{t(isFluteInstrument(bagpipeType) ? "whistleTonality" : "transposeMelody")}</RowTitle>
+            </Label>
+            <Control>
+              <Transpose midiPlayer={midiPlayer} />
+            </Control>
+          </Row>
+        )}
+      </Section>
+
+      <Section>
+        <SectionTitle>{t("settingsSections.playback")}</SectionTitle>
         <Row>
-          <Icon
-            type="material"
-            fill={mainColors.darkerGray}
-            Icon={ImportExport}
+          <Label>
+            <Icon type="material" fill={settingsColors.ink} Icon={AvTimerIcon} />
+            <RowTitle>{t("preclick")}</RowTitle>
+          </Label>
+          <RedCheckbox
+            checked={isPreclick}
+            onChange={() => {
+              setIsPreclick(!isPreclick);
+              updateUserSettings({ isPreclick: !isPreclick });
+            }}
+            name="checkedG"
           />
-          <Title>{t(isFluteInstrument(bagpipeType) ? "whistleTonality" : "transposeMelody")}</Title>
-          <Transpose midiPlayer={midiPlayer} />
         </Row>
-      )}
-      <Line />
-      <Row>
-        <Icon type="material" fill={mainColors.darkerGray} Icon={AvTimerIcon} />
-        <Title>{t("preclick")}</Title>
-        <RedCheckbox
-          checked={isPreclick}
-          onChange={() => {
-            setIsPreclick(!isPreclick);
-            updateUserSettings({ isPreclick: !isPreclick });
-          }}
-          name="checkedG"
-        />
-      </Row>
-      <Line />
-      <Row>
-        <Icon type="material" fill={mainColors.darkerGray} Icon={MusicNote} />
-        <Title>{t("musicSheetsSettings")}</Title>
-        <RedCheckbox
-          checked={isMusicSheets}
-          onChange={() => {
-            updateUserSettings({
-              view: !isMusicSheets ? Views.MusicSheets : Views.Bagpipe,
-            });
-            setIsMusicSheet(!isMusicSheets);
-          }}
-          name="checkedG"
-        />
-      </Row>
-      <Line />
-      <Row>
-        <Icon type="material" fill={mainColors.darkerGray} Icon={VolumeOff} />
-        <Title>{t("silentMode")}</Title>
-        <RedCheckbox
-          checked={isSilentMode}
-          onChange={() => {
-            setIsSilentMode(!isSilentMode);
-            updateUserSettings({ isPreclick: !isSilentMode });
-          }}
-          name="checkedG"
-        />
-      </Row>
-      <Line />
-      <Row>
-        <Icon type="material" fill={mainColors.darkerGray} Icon={BluetoothAudio} />
-        <Title>{t("soundSync")}</Title>
-        <Select
-          className={selectClasses.select}
-          value={syncOffset}
-          onChange={(e) => {
-            const ms = Number(e.target.value);
-            setSyncOffsetMs(ms);
-            setSyncOffset(ms);
-          }}
-        >
-          {syncOffsetOptionsMs.map((ms) => (
-            <MenuItem key={ms} value={ms}>
-              <b>
-                {ms === noDelayOffsetMs
-                  ? t("soundSyncOff")
-                  : ms === 0
-                  ? `${t("soundSyncAuto")} (${getAutoLatencyMs()} ms)`
-                  : `${ms > 0 ? "+" : ""}${ms} ms`}
-              </b>
-            </MenuItem>
-          ))}
-        </Select>
-      </Row>
-      <Line />
-      <Row>
-        <Icon
-          type="material"
-          fill={mainColors.darkerGray}
-          Icon={LanguageIcon}
-        />
-        <Title>{t("languages.lang")}</Title>
-        <LanguageSelector />
-      </Row>
-      <Line />
-      <Contacts />
+        <Row>
+          <Label>
+            <Icon type="material" fill={settingsColors.ink} Icon={MusicNote} />
+            <RowTitle>{t("musicSheetsSettings")}</RowTitle>
+          </Label>
+          <RedCheckbox
+            checked={isMusicSheets}
+            onChange={() => {
+              updateUserSettings({
+                view: !isMusicSheets ? Views.MusicSheets : Views.Bagpipe,
+              });
+              setIsMusicSheet(!isMusicSheets);
+            }}
+            name="checkedG"
+          />
+        </Row>
+        <Row>
+          <Label>
+            <Icon type="material" fill={settingsColors.ink} Icon={VolumeOff} />
+            <RowTitle>{t("silentMode")}</RowTitle>
+          </Label>
+          <RedCheckbox
+            checked={isSilentMode}
+            onChange={() => {
+              setIsSilentMode(!isSilentMode);
+              updateUserSettings({ isPreclick: !isSilentMode });
+            }}
+            name="checkedG"
+          />
+        </Row>
+        <Row>
+          <Label>
+            <Icon type="material" fill={settingsColors.ink} Icon={BluetoothAudio} />
+            <RowTitle>{t("soundSync")}</RowTitle>
+          </Label>
+          <Control>
+            <Select
+              className={selectClasses.select}
+              value={syncOffset}
+              onChange={(e) => {
+                const ms = Number(e.target.value);
+                setSyncOffsetMs(ms);
+                setSyncOffset(ms);
+              }}
+            >
+              {syncOffsetOptionsMs.map((ms) => (
+                <MenuItem key={ms} value={ms}>
+                  <b>
+                    {ms === noDelayOffsetMs
+                      ? t("soundSyncOff")
+                      : ms === 0
+                      ? `${t("soundSyncAuto")} (${getAutoLatencyMs()} ms)`
+                      : `${ms > 0 ? "+" : ""}${ms} ms`}
+                  </b>
+                </MenuItem>
+              ))}
+            </Select>
+          </Control>
+        </Row>
+      </Section>
+
+      <Section>
+        <SectionTitle>{t("settingsSections.app")}</SectionTitle>
+        <OfflineSave midiPlayer={midiPlayer} />
+        <Row>
+          <Label>
+            <Icon type="material" fill={settingsColors.ink} Icon={LanguageIcon} />
+            <RowTitle>{t("languages.lang")}</RowTitle>
+          </Label>
+          <Control>
+            <LanguageSelector />
+          </Control>
+        </Row>
+      </Section>
+
+      <Footer>
+        <Contacts color={settingsColors.accent} />
+        <DonationButtonBig />
+      </Footer>
     </Container>
   );
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+  padding-bottom: 16px;
+`;
 
-const Row = styled.div`
+// Styled as an outlined twin of the tuner button so it reads as navigation, not a setting
+const HomeLink = styled.a`
   display: flex;
   align-items: center;
-  padding-left: 20px;
-  padding-right: 20px;
-  flex-wrap: nowrap;
-  color: inherit;
-  text-decoration: none;
-`;
-
-const Line = styled.div`
-  border-bottom: 2px solid ${mainColors.lightGrey};
-`;
-
-const Title = styled.h3`
-  color: ${mainColors.midGrey};
-  font-weight: 600;
-  font-size: 20px;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 20px 8px;
+  padding: 8px 16px;
+  border: 2px solid ${settingsColors.accent};
+  border-radius: 28px;
+  color: ${settingsColors.accent};
   font-family: Arial, Helvetica, sans-serif;
-  margin-left: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    background-color: rgba(169, 20, 47, 0.08);
+  }
+`;
+
+const Footer = styled(Section)`
+  padding-top: 8px;
 `;

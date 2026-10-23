@@ -5,9 +5,11 @@ import { FeedbackTypes, telegramClient } from "../../utils/feedback/client";
 import { useTranslation } from "react-i18next";
 import { mainColors } from "../../utils/theme";
 
-interface Props {}
+interface Props {
+  color?: string;
+}
 
-export const FeedbackForm = (props: Props) => {
+export const FeedbackForm = ({ color = mainColors.orange }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [name, setName] = useState("");
@@ -48,7 +50,7 @@ export const FeedbackForm = (props: Props) => {
               label={t("feedback.message")}
             />
             <Button
-              color={mainColors.orange}
+              color={color}
               disabled={!message || !name}
               onClick={(e) => sendMessage(e)}
             >
@@ -67,7 +69,7 @@ export const FeedbackForm = (props: Props) => {
         onClose={() => setIsSnackBar(false)}
         message={t("feedback.thanks")}
       />
-      <Button color={mainColors.orange} onClick={() => setIsOpen(true)}>
+      <Button color={color} onClick={() => setIsOpen(true)}>
         {t("feedback.haveAQuestion")}
       </Button>
     </>
