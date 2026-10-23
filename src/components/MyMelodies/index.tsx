@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Link, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -52,6 +52,7 @@ export const MyMelodies = () => {
   const [abc, setAbc] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string>();
+  const editorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -102,7 +103,7 @@ export const MyMelodies = () => {
     setTitle(melody.title);
     setAbc(melody.abc);
     setSaveError(undefined);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    editorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const onDelete = async (melody: UserMelody) => {
@@ -114,6 +115,21 @@ export const MyMelodies = () => {
     } catch (error) {
       console.log(error);
       window.alert(t('melodies.deleteError') ?? '');
+    }
+  };
+
+  const onPaste = async () => {
+    setSaveError(undefined);
+    try {
+      const text = await navigator.clipboard.readText();
+      if (!text.trim()) {
+        setSaveError(t('melodies.clipboardEmpty') || undefined);
+        return;
+      }
+      setAbc(text);
+    } catch (error) {
+      console.log(error);
+      setSaveError(t('melodies.pasteError') || undefined);
     }
   };
 
@@ -148,55 +164,6 @@ export const MyMelodies = () => {
           </Card>
         ) : (
           <>
-            <Card>
-              <TextField
-                label={t('melodies.nameLabel')}
-                value={title}
-                placeholder={parsed?.title}
-                onChange={(e) => setTitle(e.target.value)}
-                inputProps={{ maxLength: MAX_TITLE_LENGTH }}
-                InputLabelProps={{ shrink: true }}
-                fullWidth
-                margin="normal"
-              />
-              <AbcField
-                label={t('melodies.abcLabel')}
-                value={abc}
-                onChange={(e) => setAbc(e.target.value)}
-                placeholder={EXAMPLE_ABC}
-                multiline
-                minRows={10}
-                maxRows={24}
-                fullWidth
-                margin="normal"
-                variant="outlined"
-                InputLabelProps={{ shrink: true }}
-                error={!!parsed?.error}
-                helperText={
-                  parsed?.error
-                    ? `${t('melodies.invalid')}: ${parsed.error}`
-                    : parsed?.title
-                    ? t('melodies.valid')
-                    : t('melodies.empty')
-                }
-              />
-              {saveError && <ErrorText>{saveError}</ErrorText>}
-              <Actions>
-                <Button onClick={onSave} disabled={!canSave}>
-                  {isSaving ? <CircularProgress size={16} /> : editingId ? t('melodies.update') : t('melodies.save')}
-                </Button>
-                <MuiButton variant="outlined" onClick={onTry} disabled={!parsed?.title}>
-                  {t('melodies.tryIt')}
-                </MuiButton>
-                {editingId ? (
-                  <MuiButton onClick={resetForm}>{t('melodies.cancelEdit')}</MuiButton>
-                ) : (
-                  !abc && <MuiButton onClick={() => setAbc(EXAMPLE_ABC)}>{t('melodies.example')}</MuiButton>
-                )}
-              </Actions>
-              <Hint>{t('melodies.privacy')}</Hint>
-            </Card>
-
             <SectionTitle variant="h5">{t('melodies.saved')}</SectionTitle>
             {loadError ? (
               <ErrorText>{t('melodies.loadError')}</ErrorText>
@@ -234,6 +201,60 @@ export const MyMelodies = () => {
                 ))}
               </List>
             )}
+
+            <Card ref={editorRef}>
+              <TextField
+                label={t('melodies.nameLabel')}
+                value={title}
+                placeholder={parsed?.title}
+                onChange={(e) => setTitle(e.target.value)}
+                inputProps={{ maxLength: MAX_TITLE_LENGTH }}
+                InputLabelProps={{ shrink: true }}
+                fullWidth
+                margin="normal"
+              />
+              <AbcField
+                label={t('melodies.abcLabel')}
+                value={abc}
+                onChange={(e) => setAbc(e.target.value)}
+                placeholder={EXAMPLE_ABC}
+                multiline
+                minRows={10}
+                maxRows={24}
+                fullWidth
+                margin="normal"
+                variant="outlined"
+                InputLabelProps={{ shrink: true }}
+                error={!!parsed?.error}
+                helperText={
+                  parsed?.error
+                    ? `${t('melodies.invalid')}: ${parsed.error}`
+                    : parsed?.title
+                    ? t('melodies.valid')
+                    : t('melodies.empty')
+                }
+              />
+              {saveError && <ErrorText>{saveError}</ErrorText>}
+              <Actions>
+                <Button onClick={onSave} disabled={!canSave}>
+                  {isSaving ? <CircularProgress size={16} /> : editingId ? t('melodies.update') : t('melodies.save')}
+                </Button>
+                {!!navigator.clipboard?.readText && (
+                  <MuiButton variant="outlined" onClick={onPaste}>
+                    {t('melodies.paste')}
+                  </MuiButton>
+                )}
+                <MuiButton variant="outlined" onClick={onTry} disabled={!parsed?.title}>
+                  {t('melodies.tryIt')}
+                </MuiButton>
+                {editingId ? (
+                  <MuiButton onClick={resetForm}>{t('melodies.cancelEdit')}</MuiButton>
+                ) : (
+                  !abc && <MuiButton onClick={() => setAbc(EXAMPLE_ABC)}>{t('melodies.example')}</MuiButton>
+                )}
+              </Actions>
+              <Hint>{t('melodies.privacy')}</Hint>
+            </Card>
           </>
         )}
       </Content>
@@ -272,6 +293,7 @@ const Subtitle = styled(Typography)`
 `;
 
 const Card = styled.div`
+  margin-top: 2rem;
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
@@ -310,7 +332,7 @@ const ErrorText = styled(Typography)`
 
 const SectionTitle = styled(Typography)`
   color: ${mainColors.darkerGray};
-  margin: 2rem 0 1rem !important;
+  margin: 1rem 0 1rem !important;
 `;
 
 const List = styled.ul`
