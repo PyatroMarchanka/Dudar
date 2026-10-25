@@ -94,14 +94,30 @@ registerRoute(
   })
 );
 
-// Backend reads (song catalog, profile and settings, playlists, articles):
+// Backend reads. Public content (song catalog, top and new songs, articles,
+// categories, app updates) is answered from the saved copy at once and
+// refreshed in the background, so the app doesn't wait for the server on
+// open. User data (profile and settings, playlists, favorites, melodies) is
 // fresh when the network answers in time, the last saved copy otherwise.
+const isBackendRead = ({ url, request }) =>
+  request.method === 'GET' && url.pathname.startsWith('/v1/') && !url.pathname.startsWith('/v1/auth');
+const publicContentPaths = ['/v1/songs', '/v1/articles', '/v1/categories', '/v1/updates'];
+const isPublicContent = (url) => publicContentPaths.some((path) => url.pathname.startsWith(path));
+
 registerRoute(
-  ({ url, request }) =>
-    request.method === 'GET' && url.pathname.startsWith('/v1/') && !url.pathname.startsWith('/v1/auth'),
+  ({ url, request }) => isBackendRead({ url, request }) && isPublicContent(url),
+  new StaleWhileRevalidate({
+    cacheName: offlineCaches.api,
+    matchOptions: { ignoreVary: true },
+    plugins: [new CacheableResponsePlugin({ statuses: [200] })],
+  })
+);
+
+registerRoute(
+  ({ url, request }) => isBackendRead({ url, request }) && !isPublicContent(url),
   new NetworkFirst({
     cacheName: offlineCaches.api,
-    networkTimeoutSeconds: 5,
+    networkTimeoutSeconds: 3,
     matchOptions: { ignoreVary: true },
     plugins: [new CacheableResponsePlugin({ statuses: [200] })],
   })

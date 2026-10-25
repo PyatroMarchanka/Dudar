@@ -10,6 +10,7 @@ export const resolveSongUrl = (pathName: string) => {
 
 export const songServerClient = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
+  timeout: 20000,
 });
 
 export const songApi = {
