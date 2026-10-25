@@ -4,7 +4,7 @@ import { Song, SongListByBagpipe } from "../dataset/songs/interfaces";
 import { BagpipeTypes } from "../interfaces";
 import { useIsCyrylicLang } from "../locales";
 import { getAvailableTagsFromLists } from "../dataset/songs/utils";
-import { songApi } from "../api/songClient";
+import { loadSongList } from "../api/appData";
 import { useHistory } from "react-router-dom";
 import { routes } from "../router/routes";
 import {
@@ -22,7 +22,7 @@ export const useSongListShort = () => {
 
   const loadAllSongs = async () => {
     try {
-      const songList = await songApi.getSongList();
+      const songList = await loadSongList();
       setAllSongs(songList);
     } catch (error) {
       console.log(error);
@@ -75,7 +75,7 @@ export const useSongList = (onStop?: () => void) => {
 
   const loadAllSongs = async () => {
     try {
-      const songList = await songApi.getSongList();
+      const songList = await loadSongList();
       setAllSongs(songList);
     } catch (error) {
       console.log(error);

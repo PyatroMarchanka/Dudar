@@ -4,6 +4,13 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { register } from "./serviceWorkerRegistration";
 import { HelmetProvider } from 'react-helmet-async';
+import { preloadAppData } from "./api/appData";
+import { isEmbeddablePage } from "./components/AppDataLoader";
+
+// Start the backend requests before React renders anything
+if (!isEmbeddablePage()) {
+  preloadAppData();
+}
 
 ReactDOM.render(
   <React.StrictMode>
