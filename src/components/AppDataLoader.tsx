@@ -7,6 +7,9 @@ import { BackdropSpinner } from './global/BackdropSpinner';
 // The ABC player is embedded in other sites and works without the catalog
 export const isEmbeddablePage = () => window.location.pathname.startsWith(`${routes.app}/${routes.abc}`);
 
+// The spinner never holds the app for longer than this, whatever the server does
+const MAX_SPINNER_MS = 6000;
+
 interface Props {
   children: ReactNode;
 }
@@ -18,6 +21,12 @@ export const AppDataLoader = ({ children }: Props) => {
   const [isEmbedded] = useState(isEmbeddablePage);
   const { loading: isProfileLoading } = useGoogleProfile();
   const [isSongListLoading, setIsSongListLoading] = useState(!isEmbedded);
+  const [isTimedOut, setIsTimedOut] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsTimedOut(true), MAX_SPINNER_MS);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (!isSongListLoading) return;
@@ -29,7 +38,7 @@ export const AppDataLoader = ({ children }: Props) => {
   return (
     <>
       {children}
-      <BackdropSpinner isOpen={!isEmbedded && (isProfileLoading || isSongListLoading)} />
+      <BackdropSpinner isOpen={!isEmbedded && !isTimedOut && (isProfileLoading || isSongListLoading)} />
     </>
   );
 };
