@@ -7,6 +7,7 @@ import { defaultUser, User, UserSettings } from "../interfaces/user";
 export const userClient = axios.create({
   baseURL: process.env.REACT_APP_BACKEND_URL,
   withCredentials: true,
+  timeout: 10000,
 });
 
 export const localstorageUserApi = {
