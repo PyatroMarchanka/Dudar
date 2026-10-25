@@ -3,6 +3,7 @@ import { store } from "../context";
 import { defaultUser, User, UserSettings } from "../interfaces/user";
 import { useChangeLanguage } from "../locales";
 import { userApi } from "../api/user";
+import { loadUserProfile } from "../api/appData";
 import { isFluteBrand } from "../brand";
 import { BagpipeTypes, Languages } from "../interfaces";
 import { fallbackLanguage } from "../i18n";
@@ -15,6 +16,12 @@ export const useUpdateUserSettings = () => {
 
   return { updateUserSettings };
 };
+
+// The profile request whose settings were already put into the state. Screens
+// and the navbar all call useGoogleProfile, but the settings are applied once
+// per profile request, so moving between pages doesn't send new requests or
+// undo settings changed in this session.
+let appliedProfileRequest: Promise<User | undefined> | undefined;
 
 export const useGoogleProfile = () => {
   const {
@@ -32,13 +39,11 @@ export const useGoogleProfile = () => {
 
   const [loading, setLoading] = useState(true);
   const changeLanguage = useChangeLanguage();
-  const { updateUserSettings } = useUpdateUserSettings();
 
   const setAllUserData = (userData: User) => {
     if (!userData) {
       return;
     }
-    console.log(userData.settings);
     const {
       bagpipeType,
       isPreclick,
@@ -83,9 +88,15 @@ export const useGoogleProfile = () => {
   };
 
   const fetchUserProfile = async () => {
+    const request = loadUserProfile();
+    if (request === appliedProfileRequest) {
+      setLoading(false);
+      return;
+    }
+    appliedProfileRequest = request;
+
     try {
-      const response = await userApi.getUserData();
-      const data = response;
+      const data = await request;
       setUserData(data);
       if (data) {
         setAllUserData(data);
@@ -97,7 +108,6 @@ export const useGoogleProfile = () => {
         } as UserSettings;
 
         setAllUserData({ ...defaultUser, settings });
-        updateUserSettings(defaultUser.settings);
       }
     } catch (err) {
       console.log(err);

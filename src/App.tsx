@@ -5,6 +5,7 @@ import { detectOS } from "./utils/detectOS";
 import { useWakeLock } from "./hooks/useWakeLock";
 import { AppRouter } from "./router";
 import { loadGapiInsideDOM } from "gapi-script";
+import { AppDataLoader } from "./components/AppDataLoader";
 
 function App() {
   const [OS, setOS] = useState<string>("");
@@ -18,7 +19,9 @@ function App() {
 
   return (
     <ContextProvider>
-      <AppRouter />
+      <AppDataLoader>
+        <AppRouter />
+      </AppDataLoader>
     </ContextProvider>
   );
 }

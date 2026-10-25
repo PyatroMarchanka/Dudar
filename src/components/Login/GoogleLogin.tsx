@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { loginServer } from "../../api/user";
+import { resetUserProfile } from "../../api/appData";
 import { store } from "../../context";
 import { useHistory } from "react-router-dom";
 import { routes } from "../../router/routes";
@@ -20,6 +21,8 @@ const GoogleAuth = () => {
     });
 
     setUserData(res.data);
+    // Load and apply the settings of the user who just logged in
+    resetUserProfile();
     history.push(routes.main);
 
   };
