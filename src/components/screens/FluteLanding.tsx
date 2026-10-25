@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
@@ -41,11 +42,11 @@ export const FluteLanding = () => {
         <DonationButtonBig />
         {songId && (
           <GetStarted>
-            <a href={`${routes.app}/${routes.play}/${songId}`}>
+            <Link to={`${routes.app}/${routes.play}/${songId}`}>
               <Button className="getStarted" type="big">
                 {t('mainPage.getStarted')}
               </Button>
-            </a>
+            </Link>
           </GetStarted>
         )}
       </HeroSection>
