@@ -5,6 +5,7 @@ import { store } from "../context";
 import { notesMaps } from "../dataset/bagpipesNotesMaps";
 import { SharpNotesEnum } from "../interfaces";
 import { abcToMidi, convertNoteToMidiPitch, prepareSongMidi } from "../utils/midiUtils";
+import { isMelodyRoll, MelodyRoll } from "../utils/midiUtils/melodyRoll";
 
 // ABC notation passed in the `abc` query param (e.g. /app/abc?abc=X:1%0AT:...)
 export const useAbcFromQuery = () => {
@@ -12,23 +13,31 @@ export const useAbcFromQuery = () => {
   return new URLSearchParams(location.search).get("abc");
 };
 
-// ABC notation and title of a melody a user saved (/app/melody/:id). `abc` is
-// `undefined` while it's loading and `null` when it can't be loaded.
+// A melody a user saved (/app/melody/:id): its ABC notation or piano-roll
+// notes, whichever it was made with, and its title. The one it's made with is
+// `undefined` while loading and `null` when it can't be loaded; the other one
+// stays `undefined`.
 export const useAbcFromMelody = (id: string) => {
   const { setIsSongLoading } = useContext(store);
   const [abc, setAbc] = useState<string | null | undefined>(undefined);
+  const [roll, setRoll] = useState<MelodyRoll | undefined>(undefined);
   const [title, setTitle] = useState<string>();
 
   useEffect(() => {
     let cancelled = false;
     setAbc(undefined);
+    setRoll(undefined);
     setIsSongLoading(true);
     melodiesApi
       .getMelody(id)
       .then((melody) => {
         if (cancelled) return;
         setTitle(melody.title);
-        setAbc(melody.abc);
+        if (melody.format === 'roll' && isMelodyRoll(melody.roll)) {
+          setRoll(melody.roll);
+        } else {
+          setAbc(melody.abc ?? null);
+        }
       })
       .catch((error) => {
         if (cancelled) return;
@@ -42,7 +51,7 @@ export const useAbcFromMelody = (id: string) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  return { abc, title };
+  return { abc, roll, title };
 };
 
 // Loads a song from ABC notation (see the two hooks above), converts it to
