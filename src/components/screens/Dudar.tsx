@@ -10,7 +10,6 @@ import { DynamicCanvas } from "../Canvas/DynamicCanvas";
 import { convertMidiPitchToNote } from "../../utils/midiUtils";
 import { MidiPlayerComponent } from "../MidiPlayerComponent";
 import { BackdropSpinner } from "../global/BackdropSpinner";
-import { DonationButton } from "../global/DonationButton";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { routes } from "../../router/routes";
 import { PlayPageHeader } from "../Dudar/PlayPage";
@@ -83,7 +82,6 @@ export const Dudar = () => {
     <Container>
       <GlobalStyle />
       <LoginReminderContainer />
-      <DonationButton />
       <Logger />
       <PlaybackDebug />
       <BackdropSpinner isOpen={isSongLoading} />

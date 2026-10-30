@@ -25,6 +25,7 @@ import {
   DeleteSweep,
   GridOn,
   MusicNote,
+  ViewWeek,
   OpenInNew,
   PlayArrow,
   Redo,
@@ -113,6 +114,8 @@ export const MelodyEditor = () => {
   const [gridId, setGridId] = useState(GRID_AUTO);
   const [viewBars, setViewBars] = useState('1');
   const [viewStart, setViewStart] = useState(0);
+  // Where Play starts: the start of a bar, moved by dragging the marker above the bars
+  const [playStart, setPlayStart] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [laneOverrides, setLaneOverrides] = useState<Record<number, number>>({});
   const [noteMenu, setNoteMenu] = useState<NoteMenu | null>(null);
@@ -134,6 +137,7 @@ export const MelodyEditor = () => {
     const draft = loadDraft(draftKey);
     setSelected(null);
     setViewStart(0);
+    setPlayStart(0);
     setLaneOverrides({});
 
     if (!id) {
@@ -206,6 +210,11 @@ export const MelodyEditor = () => {
       setViewStart(Math.max(0, Math.floor((rollEnd - 1) / viewTicks) * viewTicks));
     }
   }, [viewStart, rollEnd, viewTicks]);
+
+  // Bars were removed: the start marker stays on a bar that exists
+  useEffect(() => {
+    if (playStart >= rollEnd) setPlayStart(Math.max(0, rollEnd - barTicks));
+  }, [playStart, rollEnd, barTicks]);
 
   // The page follows the playhead
   useEffect(() => {
@@ -328,7 +337,7 @@ export const MelodyEditor = () => {
       stop();
     } else {
       setSelected(null);
-      play(viewStart);
+      play(playStart);
     }
   };
 
@@ -515,13 +524,13 @@ export const MelodyEditor = () => {
       </TopBar>
 
       <Toolbar>
-        <Group>
+        <Group aria-label={t('melodyEditor.notesGroup')}>
           <SelectIcon as={MusicNote} />
           <Select
             value={lengthId}
             onChange={(e) => onLengthChange(e.target.value)}
             aria-label={t('melodyEditor.length')}
-            title={t('melodyEditor.length') ?? ''}
+            title={t('melodyEditor.length')}
           >
             {NOTE_LENGTHS.map((option) => (
               <option key={option.id} value={option.id}>
@@ -543,50 +552,7 @@ export const MelodyEditor = () => {
               </option>
             ))}
           </Select>
-          <Select
-            className="narrow"
-            value={viewBars}
-            onChange={(e) => onViewChange(e.target.value)}
-            aria-label={t('melodyEditor.view')}
-            title={t('melodyEditor.view') ?? ''}
-          >
-            {VIEW_BARS.map((value) => (
-              <option key={value} value={value}>
-                {t(`melodyEditor.viewBars.${value.replace('.', '_')}`)}
-              </option>
-            ))}
-          </Select>
-        </Group>
-        <Group>
-          <IconButton
-            size="small"
-            onClick={() => goTo(0)}
-            disabled={viewStart === 0}
-            aria-label={t('melodyEditor.toStart')}
-          >
-            <SkipPrevious />
-          </IconButton>
-          <IconButton size="small" onClick={goPrev} disabled={viewStart === 0} aria-label={t('melodyEditor.prev')}>
-            <ChevronLeft />
-          </IconButton>
-          <BarText>{barText}</BarText>
-          <IconButton size="small" onClick={goNext} disabled={!canGoNext} aria-label={t('melodyEditor.next')}>
-            <ChevronRight />
-          </IconButton>
-          <AddBarButton size="small" startIcon={<Add />} onClick={onAddBar} title={t('melodyEditor.addBar') ?? ''}>
-            <span>{t('melodyEditor.bar')}</span>
-          </AddBarButton>
-          <IconButton
-            size="small"
-            onClick={onDeleteBars}
-            disabled={roll.bars <= barsOnScreen}
-            aria-label={t('melodyEditor.deleteBars')}
-            title={t('melodyEditor.deleteBars') ?? ''}
-          >
-            <DeleteSweep />
-          </IconButton>
-        </Group>
-        <Group>
+          <Divider />
           <NoteButton
             size="small"
             disabled={selectedLane === -1 || lanes[selectedLane].pitches.length < 2}
@@ -610,7 +576,26 @@ export const MelodyEditor = () => {
           >
             <Delete />
           </IconButton>
-          <PortraitOnly>{playControls}</PortraitOnly>
+        </Group>
+        <Group>
+          <SelectIcon as={ViewWeek} />
+          <Select
+            className="narrow"
+            value={viewBars}
+            onChange={(e) => onViewChange(e.target.value)}
+            aria-label={t('melodyEditor.view')}
+            title={t('melodyEditor.view')}
+          >
+            {VIEW_BARS.map((value) => (
+              <option key={value} value={value}>
+                {t(`melodyEditor.viewBars.${value.replace('.', '_')}`)}
+              </option>
+            ))}
+          </Select>
+          <PortraitOnly>
+            <Divider />
+            {playControls}
+          </PortraitOnly>
         </Group>
       </Toolbar>
 
@@ -625,6 +610,7 @@ export const MelodyEditor = () => {
           snap={grid}
           selected={selected}
           playheadTick={playheadTick}
+          playStart={playStart}
           emptyHint={t('melodyEditor.emptyHint')}
           onTap={onTap}
           onLabelTap={onLabelTap}
@@ -634,7 +620,45 @@ export const MelodyEditor = () => {
             setRoll(setNoteTiming(roll, index, tick, duration));
             setSelected(index);
           }}
+          onNoteDoubleTap={(index) => {
+            setRoll(removeNote(roll, index));
+            setSelected(null);
+          }}
+          onPlayStart={setPlayStart}
         />
+        <Footer>
+          <PageButton onClick={goPrev} disabled={viewStart === 0} aria-label={t('melodyEditor.prev')}>
+            <ChevronLeft />
+          </PageButton>
+          <Group>
+            <IconButton
+              size="small"
+              onClick={() => goTo(0)}
+              disabled={viewStart === 0}
+              aria-label={t('melodyEditor.toStart')}
+              title={t('melodyEditor.toStart')}
+            >
+              <SkipPrevious />
+            </IconButton>
+            <BarText>{barText}</BarText>
+            <Divider />
+            <AddBarButton size="small" startIcon={<Add />} onClick={onAddBar} title={t('melodyEditor.addBar')}>
+              <span>{t('melodyEditor.bar')}</span>
+            </AddBarButton>
+            <IconButton
+              size="small"
+              onClick={onDeleteBars}
+              disabled={roll.bars <= barsOnScreen}
+              aria-label={t('melodyEditor.deleteBars')}
+              title={t('melodyEditor.deleteBars')}
+            >
+              <DeleteSweep />
+            </IconButton>
+          </Group>
+          <PageButton onClick={goNext} disabled={!canGoNext} aria-label={t('melodyEditor.next')}>
+            <ChevronRight />
+          </PageButton>
+        </Footer>
       </CanvasArea>
 
       <Menu
@@ -862,11 +886,11 @@ const Select = styled.select`
   padding: 4px 6px;
   height: 34px;
   /* Long choices ("1/16 triplet") are cut short when closed, so the toolbar fits one row on a sideways phone */
-  max-width: 6.1rem;
+  max-width: 7rem;
   text-overflow: ellipsis;
 
   &.narrow {
-    max-width: 4.9rem;
+    max-width: 6rem;
   }
 `;
 
@@ -875,6 +899,37 @@ const SelectIcon = styled.span`
   font-size: 18px !important;
   color: ${mainColors.midGrey};
   margin-left: 4px;
+`;
+
+const Divider = styled.span`
+  width: 1px;
+  height: 24px;
+  margin: 0 6px;
+  background: ${mainColors.lightGrey};
+`;
+
+const Footer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 2px 4px;
+  border-top: 1px solid ${mainColors.lightGrey};
+  background: ${mainColors.lightestGrey};
+`;
+
+// Previous and next page, in the bottom corners where thumbs reach them
+const PageButton = styled(IconButton)`
+  width: 44px;
+  height: 36px;
+  border-radius: 10px !important;
+  background: white !important;
+  border: 1px solid ${mainColors.lightGrey} !important;
+  color: ${mainColors.darkerGray} !important;
+
+  &.Mui-disabled {
+    opacity: 0.4;
+  }
 `;
 
 const LandscapeOnly = styled.div`
@@ -926,6 +981,7 @@ const CanvasArea = styled.div`
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
+  flex-direction: column;
   margin: 0 6px 6px;
   border: 1px solid ${mainColors.lightGrey};
   border-radius: 8px;

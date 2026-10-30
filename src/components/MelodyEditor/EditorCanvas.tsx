@@ -24,6 +24,8 @@ interface Props {
   snap: number;
   selected: number | null;
   playheadTick: number | null;
+  // Where Play starts (the start of a bar), shown as a marker above the bars
+  playStart: number;
   emptyHint: string;
   onTap: (laneIndex: number, tick: number) => void;
   onLabelTap: (laneIndex: number, position: { x: number; y: number }) => void;
@@ -32,12 +34,17 @@ interface Props {
   onDragStart: (index: number) => void;
   // A dragged note was let go at a new place
   onNoteTiming: (index: number, tick: number, duration: number) => void;
+  // A note was tapped twice in a row (or double-clicked)
+  onNoteDoubleTap: (index: number) => void;
+  // The play start marker was moved to the start of another bar
+  onPlayStart: (tick: number) => void;
 }
 
 // Width of the note names at the left
 const GUTTER = 44;
 const RIGHT_PAD = 8;
-const TOP_PAD = 18;
+// The strip above the lanes with bar numbers and the play start marker
+const TOP_PAD = 26;
 const BOTTOM_PAD = 6;
 // A horizontal move longer than this is a swipe to the next or previous page, not a tap
 const SWIPE_PX = 50;
@@ -47,6 +54,9 @@ const DRAG_START_PX = 6;
 // How far from a note's edge a press grabs the edge instead of the whole note
 const EDGE_TOUCH_PX = 16;
 const EDGE_MOUSE_PX = 8;
+// Two taps on the same note within this time delete it
+const DOUBLE_TAP_MS = 350;
+const START_COLOR = '#2e7d4f';
 
 interface Drag {
   pointerId: number;
@@ -96,12 +106,15 @@ export const EditorCanvas = (props: Props) => {
     snap,
     selected,
     playheadTick,
+    playStart,
     emptyHint,
     onTap,
     onLabelTap,
     onSwipe,
     onDragStart,
     onNoteTiming,
+    onNoteDoubleTap,
+    onPlayStart,
   } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -110,6 +123,9 @@ export const EditorCanvas = (props: Props) => {
   const dragRef = useRef<Drag | null>(null);
   const [preview, setPreview] = useState<DragPreview | null>(null);
   const [cursor, setCursor] = useState('default');
+  const lastTapRef = useRef<{ index: number; at: number } | null>(null);
+  // The play start marker while it's dragged: where it would land
+  const [startPreview, setStartPreview] = useState<number | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -189,7 +205,7 @@ export const EditorCanvas = (props: Props) => {
         ctx.font = '600 12px Roboto, sans-serif';
         ctx.textBaseline = 'top';
         ctx.textAlign = 'left';
-        ctx.fillText(String(bar + 1), x + 4, 3);
+        ctx.fillText(String(bar + 1), x + 18, 6);
       }
     }
 
@@ -273,6 +289,35 @@ export const EditorCanvas = (props: Props) => {
       ctx.fillText(emptyHint, GUTTER + (width - GUTTER) / 2, TOP_PAD + laneHeight * 0.5 - 2);
     }
 
+    // Play start marker: a flag in the strip above the bars and a line down through the lanes
+    const shownStart = startPreview ?? playStart;
+    ctx.fillStyle = START_COLOR;
+    ctx.strokeStyle = START_COLOR;
+    if (shownStart >= viewStart && shownStart < viewEnd) {
+      const x = xOf(shownStart) + 1;
+      ctx.beginPath();
+      ctx.moveTo(x, 4);
+      ctx.lineTo(x + 14, 11);
+      ctx.lineTo(x, 18);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath();
+      ctx.setLineDash([4, 4]);
+      ctx.moveTo(x, 4);
+      ctx.lineTo(x, height - BOTTOM_PAD);
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.setLineDash([]);
+    } else {
+      // Off this page: an arrow at the edge it lies beyond, with its bar number
+      const label = String(Math.round(shownStart / barTicks) + 1);
+      ctx.font = '600 12px Roboto, sans-serif';
+      ctx.textBaseline = 'middle';
+      const before = shownStart < viewStart;
+      ctx.textAlign = before ? 'left' : 'right';
+      ctx.fillText(before ? `◀ ${label}` : `${label} ▶`, before ? GUTTER + 44 : width - 8, 11);
+    }
+
     if (playheadTick !== null && playheadTick >= viewStart && playheadTick <= viewEnd) {
       const x = xOf(playheadTick);
       ctx.beginPath();
@@ -295,6 +340,8 @@ export const EditorCanvas = (props: Props) => {
     playheadTick,
     emptyHint,
     preview,
+    playStart,
+    startPreview,
   ]);
 
   // The note under a point and which part of it: an edge or the whole note
@@ -323,10 +370,18 @@ export const EditorCanvas = (props: Props) => {
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (startPreview !== null && pointerRef.current?.id === e.pointerId) {
+      setStartPreview(barStartAt(e));
+      return;
+    }
     const drag = dragRef.current;
     if (!drag || drag.pointerId !== e.pointerId) {
       // A mouse hovering over a note shows what a drag would do
       if (e.pointerType === 'mouse' && !pointerRef.current) {
+        if (inMarkerStrip(e)) {
+          setCursor('pointer');
+          return;
+        }
         const hit = hitNote(e);
         setCursor(!hit ? 'default' : hit.mode === 'move' ? 'grab' : 'ew-resize');
       }
@@ -345,9 +400,31 @@ export const EditorCanvas = (props: Props) => {
     setPreview({ index: drag.index, tick, duration });
   };
 
+  // The bar start nearest to a point, for the play start marker
+  const barStartAt = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const { pxPerTick } = getLayout(rect.width, rect.height, lanes.length, viewTicks);
+    const barTicks = getBarTicks(roll);
+    const tick = viewStart + (e.clientX - rect.left - GUTTER) / pxPerTick;
+    const bar = Math.round(tick / barTicks);
+    return Math.min(Math.max(bar, 0), roll.bars - 1) * barTicks;
+  };
+
+  const inMarkerStrip = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    return e.clientY - rect.top < TOP_PAD && e.clientX - rect.left >= GUTTER;
+  };
+
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (pointerRef.current) return;
     pointerRef.current = { id: e.pointerId, x: e.clientX, y: e.clientY };
+    // The strip above the bars moves the play start marker: tap a bar or drag the flag
+    if (inMarkerStrip(e)) {
+      dragRef.current = null;
+      e.currentTarget.setPointerCapture(e.pointerId);
+      setStartPreview(barStartAt(e));
+      return;
+    }
     const hit = hitNote(e);
     dragRef.current = hit
       ? { pointerId: e.pointerId, index: hit.index, mode: hit.mode, startX: e.clientX, active: false }
@@ -358,6 +435,7 @@ export const EditorCanvas = (props: Props) => {
     pointerRef.current = null;
     dragRef.current = null;
     setPreview(null);
+    setStartPreview(null);
   };
 
   const handlePointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -366,6 +444,12 @@ export const EditorCanvas = (props: Props) => {
     pointerRef.current = null;
     dragRef.current = null;
     if (!start || start.id !== e.pointerId) return;
+
+    if (startPreview !== null) {
+      onPlayStart(barStartAt(e));
+      setStartPreview(null);
+      return;
+    }
 
     if (drag?.active) {
       setPreview(null);
@@ -396,6 +480,17 @@ export const EditorCanvas = (props: Props) => {
     }
     const tick = viewStart + (x - GUTTER) / layout.pxPerTick;
     if (tick >= viewStart + viewTicks) return;
+
+    // A second tap on the same note right after the first deletes it
+    const tapped = drag?.index;
+    const last = lastTapRef.current;
+    const now = performance.now();
+    if (tapped !== undefined && last && last.index === tapped && now - last.at < DOUBLE_TAP_MS) {
+      lastTapRef.current = null;
+      onNoteDoubleTap(tapped);
+      return;
+    }
+    lastTapRef.current = tapped !== undefined ? { index: tapped, at: now } : null;
     onTap(laneIndex, tick);
   };
 
