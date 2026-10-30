@@ -7,6 +7,7 @@ import Admin from "../components/Admin";
 import EDuda from "../components/screens/Eduda";
 import { Playlists } from "../components/Playlist";
 import { MyMelodies } from "../components/MyMelodies";
+import { MelodyEditor } from "../components/MelodyEditor";
 import { ArticlesList } from "../components/Articles/ArticlesList";
 import BlogAdmin from "../components/Articles/Admin/BlogAdmin";
 import BlogUpdate from "../components/Articles/Admin/BlogUpdate";
@@ -57,6 +58,9 @@ export const AppRouter = () => {
         </Route>
         <Route path={routes.playlists}>
           <Playlists />
+        </Route>
+        <Route exact path={[routes.melodyEditor, `${routes.melodyEditor}/:id`]}>
+          <MelodyEditor />
         </Route>
         <Route path={routes.melodies}>
           <MyMelodies />

@@ -55,11 +55,11 @@ export const About = () => {
         </Typography>
         <DonationButtonBig />
         <GetStarted>
-          <a href={`${routes.app}/${routes.play}/${songId}`}>
+          <Link to={`${routes.app}/${routes.play}/${songId}`}>
             <Button className="getStarted" type="big">
               {t("mainPage.getStarted")}
             </Button>
-          </a>
+          </Link>
         </GetStarted>
       </HeroSection>
 
