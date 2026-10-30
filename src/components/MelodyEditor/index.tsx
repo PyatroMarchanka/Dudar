@@ -26,7 +26,6 @@ import {
   DeleteSweep,
   FileCopy,
   GridOn,
-  LayersClear,
   MusicNote,
   ViewWeek,
   OpenInNew,
@@ -49,7 +48,6 @@ import { getMelodyError, melodiesApi } from '../../api/melodies';
 import {
   addNote,
   BarsClip,
-  clearBars,
   copyBars,
   createRoll,
   getTonic,
@@ -358,16 +356,6 @@ export const MelodyEditor = () => {
     goTo(fromBar * barTicks);
   };
 
-  const firstBarOnScreen = Math.floor(viewStart / barTicks);
-  const screenEnd = (firstBarOnScreen + barsOnScreen) * barTicks;
-  const hasNotesOnScreen = roll.notes.some(
-    (note) => note[1] < screenEnd && note[1] + note[2] > firstBarOnScreen * barTicks
-  );
-  const onClearBars = () => {
-    setRoll(clearBars(roll, firstBarOnScreen, barsOnScreen));
-    setSelected(null);
-  };
-
   const onCopyBars = () => {
     const fromBar = Math.floor(viewStart / barTicks);
     const copied = copyBars(roll, fromBar, barsOnScreen);
@@ -542,7 +530,7 @@ export const MelodyEditor = () => {
     'melodyEditor.loopHint'
   )}`;
 
-  // Loop, Play and "open in player": in the top bar on a sideways screen, in the toolbar on an upright one
+  // Loop, Play and "open in player", in the footer between the page buttons
   const playControls = (
     <>
       <LoopButton
@@ -623,7 +611,6 @@ export const MelodyEditor = () => {
         <IconButton size="small" onClick={() => setSettingsOpen(true)} aria-label={t('melodyEditor.settings')}>
           <Settings />
         </IconButton>
-        <LandscapeOnly>{playControls}</LandscapeOnly>
         <SaveButton
           variant="contained"
           size="small"
@@ -722,15 +709,10 @@ export const MelodyEditor = () => {
               <Assignment />
             </IconButton>
           )}
-          <IconButton
-            size="small"
-            onClick={onClearBars}
-            disabled={!hasNotesOnScreen}
-            aria-label={t('melodyEditor.clearBars')}
-            title={t('melodyEditor.clearBars')}
-          >
-            <LayersClear />
-          </IconButton>
+          <Divider />
+          <AddBarButton size="small" startIcon={<Add />} onClick={onAddBar} title={t('melodyEditor.addBar')}>
+            <span>{t('melodyEditor.bar')}</span>
+          </AddBarButton>
           <IconButton
             size="small"
             onClick={onDeleteBars}
@@ -740,10 +722,6 @@ export const MelodyEditor = () => {
           >
             <DeleteSweep />
           </IconButton>
-          <PortraitOnly>
-            <Divider />
-            {playControls}
-          </PortraitOnly>
         </ToolbarRow>
       </Toolbar>
 
@@ -788,11 +766,8 @@ export const MelodyEditor = () => {
               <SkipPrevious />
             </IconButton>
             <BarText>{barText}</BarText>
-            <Divider />
-            <AddBarButton size="small" startIcon={<Add />} onClick={onAddBar} title={t('melodyEditor.addBar')}>
-              <span>{t('melodyEditor.bar')}</span>
-            </AddBarButton>
           </Group>
+          <Group>{playControls}</Group>
           <PageButton onClick={goNext} disabled={!canGoNext} aria-label={t('melodyEditor.next')}>
             <ChevronRight />
           </PageButton>
@@ -1098,22 +1073,6 @@ const PageButton = styled(IconButton)`
 
   &.Mui-disabled {
     opacity: 0.4;
-  }
-`;
-
-const LandscapeOnly = styled.div`
-  display: contents;
-
-  @media (orientation: portrait) {
-    display: none;
-  }
-`;
-
-const PortraitOnly = styled.div`
-  display: none;
-
-  @media (orientation: portrait) {
-    display: contents;
   }
 `;
 

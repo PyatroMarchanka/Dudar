@@ -221,11 +221,6 @@ export const pasteBars = (roll: MelodyRoll, clip: BarsClip, atBar: number): Melo
   return { ...roll, bars, notes: [...kept, ...pasted].sort(byStart) };
 };
 
-// Removes the notes of `count` bars from bar `fromBar` (0-based), keeping the bars.
-// A note running into them from before is cut at their start.
-export const clearBars = (roll: MelodyRoll, fromBar: number, count: number): MelodyRoll =>
-  pasteBars(roll, { ticks: Math.max(0, Math.min(count, roll.bars - fromBar)) * getBarTicks(roll), notes: [] }, fromBar);
-
 // Notes keep their place in time; the number of bars follows the new bar length
 export const setTimeSignature = (roll: MelodyRoll, timeSignature: TimeSignatures): MelodyRoll => {
   const total = getRollEnd(roll);
