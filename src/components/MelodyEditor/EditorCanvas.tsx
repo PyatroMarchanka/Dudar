@@ -1,7 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { mainColors } from '../../utils/theme';
-import { getBarTicks, getRollEnd, MelodyRoll } from '../../utils/midiUtils/melodyRoll';
+import {
+  dragNoteTiming,
+  getBarTicks,
+  getRollEnd,
+  MelodyRoll,
+  NoteDragMode,
+  setNoteTiming,
+} from '../../utils/midiUtils/melodyRoll';
 import { transposeNoteWithOctave } from '../../utils/midiUtils';
 import { getLaneIndex, Lane } from './lanes';
 
@@ -13,7 +20,7 @@ interface Props {
   transpose: number;
   viewStart: number;
   viewTicks: number;
-  // Grid of the selected note length
+  // Grid that new and dragged notes snap to
   snap: number;
   selected: number | null;
   playheadTick: number | null;
@@ -21,6 +28,10 @@ interface Props {
   onTap: (laneIndex: number, tick: number) => void;
   onLabelTap: (laneIndex: number, position: { x: number; y: number }) => void;
   onSwipe: (direction: 1 | -1) => void;
+  // A note was picked up to drag
+  onDragStart: (index: number) => void;
+  // A dragged note was let go at a new place
+  onNoteTiming: (index: number, tick: number, duration: number) => void;
 }
 
 // Width of the note names at the left
@@ -31,6 +42,25 @@ const BOTTOM_PAD = 6;
 // A horizontal move longer than this is a swipe to the next or previous page, not a tap
 const SWIPE_PX = 50;
 const TAP_SLOP_PX = 12;
+// A press on a note becomes a drag once it moves this far
+const DRAG_START_PX = 6;
+// How far from a note's edge a press grabs the edge instead of the whole note
+const EDGE_TOUCH_PX = 16;
+const EDGE_MOUSE_PX = 8;
+
+interface Drag {
+  pointerId: number;
+  index: number;
+  mode: NoteDragMode;
+  startX: number;
+  active: boolean;
+}
+
+interface DragPreview {
+  index: number;
+  tick: number;
+  duration: number;
+}
 
 const noteLabel = (note: string, transpose: number) => {
   const transposed = transposeNoteWithOctave(note as any, transpose);
@@ -70,11 +100,16 @@ export const EditorCanvas = (props: Props) => {
     onTap,
     onLabelTap,
     onSwipe,
+    onDragStart,
+    onNoteTiming,
   } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const pointerRef = useRef<{ id: number; x: number; y: number } | null>(null);
+  const dragRef = useRef<Drag | null>(null);
+  const [preview, setPreview] = useState<DragPreview | null>(null);
+  const [cursor, setCursor] = useState('default');
 
   useEffect(() => {
     const container = containerRef.current;
@@ -171,7 +206,9 @@ export const EditorCanvas = (props: Props) => {
 
     // Notes
     const brickHeight = Math.max(Math.min(laneHeight * 0.62, 30), 10);
-    roll.notes.forEach(([pitch, tick, duration], index) => {
+    // While a note is dragged, it and the neighbours it pushes are drawn where they'd land
+    const notes = preview ? setNoteTiming(roll, preview.index, preview.tick, preview.duration).notes : roll.notes;
+    notes.forEach(([pitch, tick, duration], index) => {
       if (tick >= viewEnd || tick + duration <= viewStart) return;
       const laneIndex = getLaneIndex(lanes, pitch);
       if (laneIndex === -1) return;
@@ -189,6 +226,14 @@ export const EditorCanvas = (props: Props) => {
         ctx.strokeStyle = mainColors.darkestRed;
         ctx.lineWidth = 2;
         ctx.stroke();
+        // Grips at both ends: drag them to change where the note starts and ends
+        if (w > 14) {
+          ctx.fillStyle = 'white';
+          const gripHeight = brickHeight * 0.5;
+          const gripY = y + (brickHeight - gripHeight) / 2;
+          ctx.fillRect(x + 3, gripY, 2, gripHeight);
+          ctx.fillRect(x + w - 5, gripY, 2, gripHeight);
+        }
       }
       const lane = lanes[laneIndex];
       if (lane.pitches.length > 1 && w > 26) {
@@ -237,17 +282,99 @@ export const EditorCanvas = (props: Props) => {
       ctx.lineWidth = 2;
       ctx.stroke();
     }
-  }, [size, roll, lanes, laneChoices, transpose, viewStart, viewTicks, snap, selected, playheadTick, emptyHint]);
+  }, [
+    size,
+    roll,
+    lanes,
+    laneChoices,
+    transpose,
+    viewStart,
+    viewTicks,
+    snap,
+    selected,
+    playheadTick,
+    emptyHint,
+    preview,
+  ]);
+
+  // The note under a point and which part of it: an edge or the whole note
+  const hitNote = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    if (x < GUTTER) return null;
+    const layout = getLayout(rect.width, rect.height, lanes.length, viewTicks);
+    const laneIndex = Math.floor((y - TOP_PAD) / layout.laneHeight);
+    if (laneIndex < 0 || laneIndex >= lanes.length) return null;
+    const tick = viewStart + (x - GUTTER) / layout.pxPerTick;
+    // A little slack around short notes, so they can still be grabbed by a finger
+    const slack = (e.pointerType === 'mouse' ? 2 : 6) / layout.pxPerTick;
+    const index = roll.notes.findIndex(
+      ([pitch, start, duration]) =>
+        lanes[laneIndex].pitches.includes(pitch) && start - slack <= tick && tick < start + duration + slack
+    );
+    if (index === -1) return null;
+    const [, start, duration] = roll.notes[index];
+    const width = duration * layout.pxPerTick;
+    const edge = Math.min(e.pointerType === 'mouse' ? EDGE_MOUSE_PX : EDGE_TOUCH_PX, width / 3);
+    const fromStart = (tick - start) * layout.pxPerTick;
+    const mode: NoteDragMode = fromStart < edge ? 'start' : fromStart > width - edge ? 'end' : 'move';
+    return { index, mode, pxPerTick: layout.pxPerTick };
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== e.pointerId) {
+      // A mouse hovering over a note shows what a drag would do
+      if (e.pointerType === 'mouse' && !pointerRef.current) {
+        const hit = hitNote(e);
+        setCursor(!hit ? 'default' : hit.mode === 'move' ? 'grab' : 'ew-resize');
+      }
+      return;
+    }
+    const dx = e.clientX - drag.startX;
+    if (!drag.active) {
+      if (Math.abs(dx) < DRAG_START_PX) return;
+      drag.active = true;
+      e.currentTarget.setPointerCapture(e.pointerId);
+      onDragStart(drag.index);
+    }
+    const rect = e.currentTarget.getBoundingClientRect();
+    const { pxPerTick } = getLayout(rect.width, rect.height, lanes.length, viewTicks);
+    const [tick, duration] = dragNoteTiming(roll, drag.index, drag.mode, dx / pxPerTick, snap);
+    setPreview({ index: drag.index, tick, duration });
+  };
 
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (pointerRef.current) return;
     pointerRef.current = { id: e.pointerId, x: e.clientX, y: e.clientY };
+    const hit = hitNote(e);
+    dragRef.current = hit
+      ? { pointerId: e.pointerId, index: hit.index, mode: hit.mode, startX: e.clientX, active: false }
+      : null;
+  };
+
+  const cancelDrag = () => {
+    pointerRef.current = null;
+    dragRef.current = null;
+    setPreview(null);
   };
 
   const handlePointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const start = pointerRef.current;
+    const drag = dragRef.current;
     pointerRef.current = null;
+    dragRef.current = null;
     if (!start || start.id !== e.pointerId) return;
+
+    if (drag?.active) {
+      setPreview(null);
+      const [, tick, duration] = roll.notes[drag.index];
+      if (preview && preview.index === drag.index && (preview.tick !== tick || preview.duration !== duration)) {
+        onNoteTiming(drag.index, preview.tick, preview.duration);
+      }
+      return;
+    }
 
     const dx = e.clientX - start.x;
     const dy = e.clientY - start.y;
@@ -276,10 +403,16 @@ export const EditorCanvas = (props: Props) => {
     <Container ref={containerRef}>
       <canvas
         ref={canvasRef}
-        style={{ width: size.width, height: size.height }}
+        style={{
+          width: size.width,
+          height: size.height,
+          cursor: preview ? (dragRef.current?.mode === 'move' ? 'grabbing' : 'ew-resize') : cursor,
+        }}
         onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
-        onPointerCancel={() => (pointerRef.current = null)}
+        onPointerCancel={cancelDrag}
+        onPointerLeave={(e) => e.pointerType === 'mouse' && !dragRef.current && setCursor('default')}
       />
     </Container>
   );

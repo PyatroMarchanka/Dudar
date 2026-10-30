@@ -86,6 +86,66 @@ export const updateNote = (roll: MelodyRoll, index: number, change: { pitch?: nu
   return addNote(removeNote(roll, index), change.pitch ?? pitch, tick, change.duration ?? duration);
 };
 
+// The grid line nearest to `tick`, counted from the start of its bar. The bar's
+// end counts as a line too, for grids that don't divide the bar (1/4 in 7/8).
+export const roundToGrid = (tick: number, grid: number, barTicks: number) => {
+  const barStart = Math.floor(tick / barTicks) * barTicks;
+  const onGrid = barStart + Math.round((tick - barStart) / grid) * grid;
+  const barEnd = barStart + barTicks;
+  return Math.abs(barEnd - tick) < Math.abs(onGrid - tick) || onGrid > barEnd ? barEnd : onGrid;
+};
+
+// What part of a note is dragged: the whole note, or its start or end edge
+export type NoteDragMode = 'move' | 'start' | 'end';
+
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
+// Where a note lands when dragged `delta` ticks, snapped to the grid. It may
+// push into the notes next to it, which then get shorter (see setNoteTiming),
+// but never so far that they would disappear. Returns [tick, duration].
+export const dragNoteTiming = (
+  roll: MelodyRoll,
+  index: number,
+  mode: NoteDragMode,
+  delta: number,
+  grid: number
+): [number, number] => {
+  const [, tick, duration] = roll.notes[index];
+  const end = tick + duration;
+  const barTicks = getBarTicks(roll);
+  const previous = roll.notes[index - 1];
+  const next = roll.notes[index + 1];
+  // A note never shrinks below one grid step, unless it was already shorter
+  const minLengthOf = (note: RollNote) => Math.min(grid, note[2]);
+  const minStart = previous ? previous[1] + minLengthOf(previous) : 0;
+  const maxEnd = next ? noteEnd(next) - minLengthOf(next) : MAX_ROLL_BARS * barTicks;
+  const minLength = Math.min(grid, duration);
+
+  if (mode === 'start') {
+    const start = clamp(roundToGrid(tick + delta, grid, barTicks), minStart, end - minLength);
+    return [start, end - start];
+  }
+  if (mode === 'end') {
+    const newEnd = clamp(roundToGrid(end + delta, grid, barTicks), tick + minLength, maxEnd);
+    return [tick, newEnd - tick];
+  }
+  const start = clamp(roundToGrid(tick + delta, grid, barTicks), minStart, maxEnd - duration);
+  return [start, duration];
+};
+
+// Sets a note's start and length, as given by dragNoteTiming. The note before
+// it ends where it starts and the note after it starts where it ends, if they overlapped.
+export const setNoteTiming = (roll: MelodyRoll, index: number, tick: number, duration: number): MelodyRoll => {
+  const end = tick + duration;
+  const notes = roll.notes.map((note, i): RollNote => {
+    if (i === index) return [note[0], tick, duration];
+    if (i === index - 1 && noteEnd(note) > tick) return [note[0], note[1], tick - note[1]];
+    if (i === index + 1 && note[1] < end) return [note[0], end, noteEnd(note) - end];
+    return note;
+  });
+  return fitBars({ ...roll, notes });
+};
+
 // The note that sounds at `tick` on one of `pitches` (the notes of a hole line)
 export const findNoteAt = (roll: MelodyRoll, tick: number, pitches: number[]) =>
   roll.notes.findIndex((note) => pitches.includes(note[0]) && note[1] <= tick && noteEnd(note) > tick);
