@@ -26,6 +26,7 @@ import {
   DeleteSweep,
   FileCopy,
   GridOn,
+  LayersClear,
   MusicNote,
   ViewWeek,
   OpenInNew,
@@ -48,6 +49,7 @@ import { getMelodyError, melodiesApi } from '../../api/melodies';
 import {
   addNote,
   BarsClip,
+  clearBars,
   copyBars,
   createRoll,
   findNoteAt,
@@ -353,6 +355,16 @@ export const MelodyEditor = () => {
     goTo(fromBar * barTicks);
   };
 
+  const firstBarOnScreen = Math.floor(viewStart / barTicks);
+  const screenEnd = (firstBarOnScreen + barsOnScreen) * barTicks;
+  const hasNotesOnScreen = roll.notes.some(
+    (note) => note[1] < screenEnd && note[1] + note[2] > firstBarOnScreen * barTicks
+  );
+  const onClearBars = () => {
+    setRoll(clearBars(roll, firstBarOnScreen, barsOnScreen));
+    setSelected(null);
+  };
+
   const onCopyBars = () => {
     const fromBar = Math.floor(viewStart / barTicks);
     const copied = copyBars(roll, fromBar, barsOnScreen);
@@ -546,8 +558,9 @@ export const MelodyEditor = () => {
         startIcon={isPlaying ? <Stop /> : <PlayArrow />}
         onClick={onPlay}
         disabled={!roll.notes.length && !isPlaying}
+        aria-label={isPlaying ? t('melodyEditor.stop') : t('melodyEditor.play')}
       >
-        {isPlaying ? t('melodyEditor.stop') : t('melodyEditor.play')}
+        <span>{isPlaying ? t('melodyEditor.stop') : t('melodyEditor.play')}</span>
       </PlayButton>
       <IconButton
         size="small"
@@ -674,7 +687,7 @@ export const MelodyEditor = () => {
           </IconButton>
         </ToolbarRow>
         <ToolbarRow aria-label={t('melodyEditor.barsGroup')}>
-          <SelectIcon as={ViewWeek} />
+          <SelectIcon as={ViewWeek} className="wide-only" />
           <Select
             className="narrow"
             value={viewBars}
@@ -706,6 +719,15 @@ export const MelodyEditor = () => {
               <Assignment />
             </IconButton>
           )}
+          <IconButton
+            size="small"
+            onClick={onClearBars}
+            disabled={!hasNotesOnScreen}
+            aria-label={t('melodyEditor.clearBars')}
+            title={t('melodyEditor.clearBars')}
+          >
+            <LayersClear />
+          </IconButton>
           <IconButton
             size="small"
             onClick={onDeleteBars}
@@ -1021,6 +1043,12 @@ const SelectIcon = styled.span`
   font-size: 18px !important;
   color: ${mainColors.midGrey};
   margin-left: 4px;
+
+  &.wide-only {
+    @media (max-width: 400px) {
+      display: none;
+    }
+  }
 `;
 
 const Divider = styled.span`
@@ -1101,9 +1129,20 @@ const LoopButton = styled(IconButton)`
   }
 `;
 
+// On narrow phones the label drops, leaving the icon
 const PlayButton = styled(MuiButton)`
   color: ${mainColors.darkerGray} !important;
   border-color: ${mainColors.orange} !important;
+
+  @media (max-width: 400px) {
+    min-width: 40px !important;
+    .MuiButton-startIcon {
+      margin: 0;
+    }
+    span > span:not(.MuiButton-startIcon) {
+      display: none;
+    }
+  }
 `;
 
 const CanvasArea = styled.div`

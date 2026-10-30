@@ -372,6 +372,7 @@
     "loopAll": "Zapętl całą melodię",
     "loopView": "Zapętl takty na ekranie",
     "loopOff": "Pętla wyłączona",
-    "loopHint": "Stuknij dwukrotnie, aby przełączyć"
+    "loopHint": "Stuknij dwukrotnie, aby przełączyć",
+    "clearBars": "Wyczyść takty na ekranie (takty zostaną)"
   }
 }

@@ -339,7 +339,7 @@
     "barsOf": "Bars {{from}}–{{to}} / {{total}}",
     "bar": "Bar",
     "addBar": "Add a bar after these",
-    "deleteBars": "Delete the bars on screen",
+    "deleteBars": "Remove the bars on screen",
     "play": "Play",
     "stop": "Stop",
     "openPlayer": "Open in player",
@@ -372,6 +372,7 @@
     "loopAll": "Loop the whole melody",
     "loopView": "Loop the bars on screen",
     "loopOff": "Loop off",
-    "loopHint": "Double tap to switch"
+    "loopHint": "Double tap to switch",
+    "clearBars": "Clear the bars on screen (keep the bars)"
   }
 }
