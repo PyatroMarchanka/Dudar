@@ -373,6 +373,7 @@
     "loopView": "Loop the bars on screen",
     "loopOff": "Loop off",
     "loopHint": "Double tap to switch",
-    "clearBars": "Clear the bars on screen (keep the bars)"
+    "clearBars": "Clear the bars on screen (keep the bars)",
+    "key": "Key (tonic)"
   }
 }

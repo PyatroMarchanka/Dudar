@@ -42,7 +42,7 @@ import {
 import { store } from '../../context';
 import { bagpipes } from '../../dataset/bagpipes';
 import { TimeSignatures } from '../../dataset/songs/interfaces';
-import { BagpipeTypes } from '../../interfaces';
+import { BagpipeTypes, SharpNotes } from '../../interfaces';
 import { routes } from '../../router/routes';
 import { mainColors } from '../../utils/theme';
 import { getMelodyError, melodiesApi } from '../../api/melodies';
@@ -52,6 +52,7 @@ import {
   clearBars,
   copyBars,
   createRoll,
+  getTonic,
   findNoteAt,
   getBarTicks,
   getRollEnd,
@@ -85,9 +86,11 @@ import {
 } from './lengths';
 import { useHistory as useUndoHistory } from './useHistory';
 import { auditionNote, LoopRange, usePreview } from './usePreview';
-import { transposeNoteWithOctave } from '../../utils/midiUtils';
+import { transposeNote, transposeNoteWithOctave } from '../../utils/midiUtils';
+import { pitchClassOf } from '../MusicSheets/mode';
 
 const MAX_TITLE_LENGTH = 200;
+const KEY_NOTES: SharpNotes[] = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
 const VIEW_BARS = ['0.5', '1', '2', '4'];
 // Two taps on the loop button this close together switch its mode
 const DOUBLE_TAP_MS = 350;
@@ -827,6 +830,8 @@ export const MelodyEditor = () => {
           setViewStart(0);
         }}
         onTempo={(bpm) => setRoll({ ...roll, bpm })}
+        transpose={transpose}
+        onTonic={(tonic) => setRoll({ ...roll, tonic })}
         onClear={onClear}
       />
 
@@ -848,6 +853,8 @@ interface SettingsDialogProps {
   bagpipeName: string;
   onTimeSignature: (timeSignature: TimeSignatures) => void;
   onTempo: (bpm: number) => void;
+  transpose: number;
+  onTonic: (tonic: number) => void;
   onClear: () => void;
 }
 
@@ -858,6 +865,8 @@ const SettingsDialog = ({
   bagpipeName,
   onTimeSignature,
   onTempo,
+  transpose,
+  onTonic,
   onClear,
 }: SettingsDialogProps) => {
   const { t: translate } = useTranslation('translation');
@@ -899,6 +908,17 @@ const SettingsDialog = ({
             {ROLL_TIME_SIGNATURES.map((value) => (
               <option key={value} value={value}>
                 {value}
+              </option>
+            ))}
+          </Select>
+        </Field>
+        <Field>
+          <label htmlFor="melody-tonic">{t('melodyEditor.key')}</label>
+          <Select id="melody-tonic" value={getTonic(roll)} onChange={(e) => onTonic(Number(e.target.value))}>
+            {/* Starting from the bagpipe's own tonic, named as they sound after transposing */}
+            {KEY_NOTES.map((note) => (
+              <option key={note} value={pitchClassOf(note)}>
+                {transposeNote(note, transpose)}
               </option>
             ))}
           </Select>

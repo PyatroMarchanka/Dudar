@@ -20,6 +20,9 @@ export interface MelodyRoll {
   ppq: number;
   bars: number;
   notes: RollNote[];
+  // Pitch class of the key's tonic (0 = C), written for an A instrument like the
+  // notes. Absent means A, the tonic of the bagpipes.
+  tonic?: number;
 }
 
 export const ROLL_PPQ = 480;
@@ -27,6 +30,9 @@ export const DEFAULT_ROLL_BPM = 100;
 export const MIN_ROLL_BPM = 20;
 export const MAX_ROLL_BPM = 400;
 const DEFAULT_BARS = 4;
+export const DEFAULT_TONIC = 9;
+
+export const getTonic = (roll: Pick<MelodyRoll, 'tonic'>) => roll.tonic ?? DEFAULT_TONIC;
 // Same caps as the server
 export const MAX_ROLL_NOTES = 3_000;
 export const MAX_ROLL_BARS = 500;
@@ -238,7 +244,8 @@ export const isMelodyRoll = (value: any): value is MelodyRoll =>
   Number.isFinite(value.bpm) &&
   Number.isFinite(value.ppq) &&
   Number.isInteger(value.bars) &&
-  Array.isArray(value.notes);
+  Array.isArray(value.notes) &&
+  (value.tonic === undefined || (Number.isInteger(value.tonic) && value.tonic >= 0 && value.tonic <= 11));
 
 const emptyStats = (): IStats => ({
   views: 0,
