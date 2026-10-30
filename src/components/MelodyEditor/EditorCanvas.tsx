@@ -30,7 +30,6 @@ interface Props {
   emptyHint: string;
   onTap: (laneIndex: number, tick: number) => void;
   onLabelTap: (laneIndex: number, position: { x: number; y: number }) => void;
-  onSwipe: (direction: 1 | -1) => void;
   // A note was picked up to drag
   onDragStart: (index: number) => void;
   // A dragged note was let go at a new place
@@ -49,8 +48,6 @@ const TONIC_LABEL_BACKGROUND = 'rgba(223, 120, 97, 0.18)';
 // The strip above the lanes with bar numbers and the play start marker
 const TOP_PAD = 26;
 const BOTTOM_PAD = 6;
-// A horizontal move longer than this is a swipe to the next or previous page, not a tap
-const SWIPE_PX = 50;
 const TAP_SLOP_PX = 12;
 // A press on a note becomes a drag once it moves this far
 const DRAG_START_PX = 6;
@@ -113,7 +110,6 @@ export const EditorCanvas = (props: Props) => {
     emptyHint,
     onTap,
     onLabelTap,
-    onSwipe,
     onDragStart,
     onNoteTiming,
     onNoteDoubleTap,
@@ -475,10 +471,7 @@ export const EditorCanvas = (props: Props) => {
 
     const dx = e.clientX - start.x;
     const dy = e.clientY - start.y;
-    if (Math.abs(dx) > SWIPE_PX && Math.abs(dx) > Math.abs(dy)) {
-      onSwipe(dx < 0 ? 1 : -1);
-      return;
-    }
+    // A move is not a tap; pages change only with the buttons
     if (Math.abs(dx) > TAP_SLOP_PX || Math.abs(dy) > TAP_SLOP_PX) return;
 
     const rect = e.currentTarget.getBoundingClientRect();
@@ -531,7 +524,7 @@ const Container = styled.div`
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
-  /* Taps and swipes are handled by the editor, not the browser (no scrolling or zoom) */
+  /* Taps and drags are handled by the editor, not the browser (no scrolling or zoom) */
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;

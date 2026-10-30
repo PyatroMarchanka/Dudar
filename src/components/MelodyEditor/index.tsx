@@ -762,7 +762,6 @@ export const MelodyEditor = () => {
           emptyHint={t('melodyEditor.emptyHint')}
           onTap={onTap}
           onLabelTap={onLabelTap}
-          onSwipe={(direction) => (direction > 0 ? goNext() : goPrev())}
           onDragStart={(index) => setSelected(index)}
           onNoteTiming={(index, tick, duration) => {
             setRoll(setNoteTiming(roll, index, tick, duration));
