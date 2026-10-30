@@ -362,6 +362,16 @@
     "edit": "Edytuj melodię",
     "gridAuto": "Auto",
     "gridLabel": "Przyciągaj nuty do tej siatki przy dodawaniu i przeciąganiu",
-    "notesGroup": "Nuty"
+    "notesGroup": "Nuty",
+    "barsGroup": "Takty",
+    "copyBars": "Kopiuj takty na ekranie",
+    "pasteBars": "Wklej skopiowane takty tutaj w miejsce tych",
+    "copiedBar": "Skopiowano takt {{bar}}",
+    "copiedBars": "Skopiowano takty {{from}}–{{to}}",
+    "pasted": "Wklejono od taktu {{bar}}",
+    "loopAll": "Zapętl całą melodię",
+    "loopView": "Zapętl takty na ekranie",
+    "loopOff": "Pętla wyłączona",
+    "loopHint": "Stuknij dwukrotnie, aby przełączyć"
   }
 }

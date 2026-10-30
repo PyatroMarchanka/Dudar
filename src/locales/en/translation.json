@@ -362,6 +362,16 @@
     "edit": "Edit melody",
     "gridAuto": "Auto",
     "gridLabel": "Snap notes to this grid when adding or dragging them",
-    "notesGroup": "Notes"
+    "notesGroup": "Notes",
+    "barsGroup": "Bars",
+    "copyBars": "Copy the bars on screen",
+    "pasteBars": "Paste the copied bars here, replacing these",
+    "copiedBar": "Bar {{bar}} copied",
+    "copiedBars": "Bars {{from}}–{{to}} copied",
+    "pasted": "Pasted from bar {{bar}}",
+    "loopAll": "Loop the whole melody",
+    "loopView": "Loop the bars on screen",
+    "loopOff": "Loop off",
+    "loopHint": "Double tap to switch"
   }
 }

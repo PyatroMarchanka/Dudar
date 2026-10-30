@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import * as Tone from 'tone';
 import { BagpipeTypes } from '../../interfaces';
 import { prepareAudioForPlayback } from '../../utils/audioContext';
-import { getRollEnd, MelodyRoll } from '../../utils/midiUtils/melodyRoll';
+import { getRollEnd, MelodyRoll, RollNote } from '../../utils/midiUtils/melodyRoll';
 import { loadSampler, playNoteFor, stopAllNotes } from '../../utils/midiUtils/sampler';
 
 // Notes are handed to the audio clock a little ahead, so Stop never leaves
@@ -11,6 +11,9 @@ const SCHEDULE_AHEAD_SEC = 0.15;
 const SCHEDULE_EVERY_MS = 40;
 // Time to start the first note after Play is pressed
 const START_DELAY_SEC = 0.1;
+
+// [from, to) in ticks
+export type LoopRange = [number, number];
 
 export const pitchToNoteName = (pitch: number, transpose: number) => Tone.Frequency(pitch + transpose, 'midi').toNote();
 
@@ -22,10 +25,14 @@ export const usePreview = (roll: MelodyRoll, transpose: number) => {
 
   const stop = useCallback(() => stopRef.current(), []);
 
+  // Plays from `fromTick`; with `loop` ([from, to) in ticks) it repeats that
+  // part until stopped, starting at its beginning if `fromTick` is outside it
   const play = useCallback(
-    async (fromTick: number) => {
+    async (startTick: number, loop?: LoopRange) => {
       stopRef.current();
       const { bagpipeType, notes, bpm, ppq } = roll;
+      const loopRange = loop && loop[1] > loop[0] ? loop : undefined;
+      const fromTick = loopRange && (startTick < loopRange[0] || startTick >= loopRange[1]) ? loopRange[0] : startTick;
       let cancelled = false;
       setPlayheadTick(fromTick);
       stopRef.current = () => {
@@ -39,15 +46,32 @@ export const usePreview = (roll: MelodyRoll, transpose: number) => {
       const secondsPerTick = 60 / (bpm * ppq);
       const endTick = Math.max(getRollEnd(roll), ...notes.map((note) => note[1] + note[2]));
       const startTime = Tone.now() + START_DELAY_SEC;
-      const queue = notes.filter((note) => note[1] >= fromTick);
-      let next = 0;
+      // When looping, the notes of the looped part, cut at its end
+      const queue = loopRange
+        ? notes
+            .filter((note) => note[1] >= loopRange[0] && note[1] < loopRange[1])
+            .map((note): RollNote => [note[0], note[1], Math.min(note[2], loopRange[1] - note[1])])
+        : notes;
+      const loopTicks = loopRange ? loopRange[1] - loopRange[0] : 0;
+      // The first time through starts at fromTick, later ones at the start of the loop
+      let pass = 0;
+      let next = queue.findIndex((note) => note[1] >= fromTick);
+      if (next === -1) next = queue.length;
 
       const schedule = () => {
         const horizon = Tone.now() + SCHEDULE_AHEAD_SEC;
-        while (next < queue.length) {
+        for (;;) {
+          if (next >= queue.length) {
+            if (!loopRange) return;
+            const nextPassTime = startTime + (loopRange[0] - fromTick + (pass + 1) * loopTicks) * secondsPerTick;
+            if (nextPassTime > horizon) return;
+            pass++;
+            next = 0;
+            continue;
+          }
           const [pitch, tick, duration] = queue[next];
-          const time = startTime + (tick - fromTick) * secondsPerTick;
-          if (time > horizon) break;
+          const time = startTime + (tick - fromTick + pass * loopTicks) * secondsPerTick;
+          if (time > horizon) return;
           playNoteFor(bagpipeType, pitchToNoteName(pitch, transpose), time, duration * secondsPerTick);
           next++;
         }
@@ -57,17 +81,22 @@ export const usePreview = (roll: MelodyRoll, transpose: number) => {
 
       let frame = 0;
       const draw = () => {
-        const tick = fromTick + Math.max(Tone.now() - startTime, 0) / secondsPerTick;
-        if (tick >= endTick) {
+        let tick = fromTick + Math.max(Tone.now() - startTime, 0) / secondsPerTick;
+        if (loopRange) {
+          if (tick >= loopRange[1]) tick = loopRange[0] + ((tick - loopRange[1]) % loopTicks);
+        } else if (tick >= endTick) {
           stopRef.current();
           return;
         }
         setPlayheadTick(tick);
+        // Showing the playhead can start another playback (the loop changed), which stops this one
+        if (cancelled) return;
         frame = window.requestAnimationFrame(draw);
       };
       frame = window.requestAnimationFrame(draw);
 
       stopRef.current = () => {
+        cancelled = true;
         window.clearInterval(timer);
         window.cancelAnimationFrame(frame);
         stopAllNotes(bagpipeType as BagpipeTypes);
