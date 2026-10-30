@@ -6,7 +6,6 @@ import { PlaylistCreator } from "./PlaylistCreator";
 import styled, { createGlobalStyle } from "styled-components";
 import { usePlaylists } from "../../hooks/usePlaylists";
 import { TabPanel } from "./TabPanel";
-import { DonationButton } from "../global/DonationButton";
 import { Navbar } from "../global/Navbar";
 
 interface Props {}
@@ -39,7 +38,6 @@ export const Playlists = (props: Props) => {
     <Container>
       <GlobalStyle />
       <Navbar />
-      <DonationButton/>
       <AppBar position="static">
         <Tabs
           variant="fullWidth"

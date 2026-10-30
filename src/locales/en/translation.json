@@ -361,6 +361,7 @@
     "done": "Done",
     "edit": "Edit melody",
     "gridAuto": "Auto",
-    "gridLabel": "Snap notes to this grid when adding or dragging them"
+    "gridLabel": "Snap notes to this grid when adding or dragging them",
+    "notesGroup": "Notes"
   }
 }

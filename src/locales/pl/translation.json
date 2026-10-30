@@ -361,6 +361,7 @@
     "done": "Gotowe",
     "edit": "Edytuj melodię",
     "gridAuto": "Auto",
-    "gridLabel": "Przyciągaj nuty do tej siatki przy dodawaniu i przeciąganiu"
+    "gridLabel": "Przyciągaj nuty do tej siatki przy dodawaniu i przeciąganiu",
+    "notesGroup": "Nuty"
   }
 }
