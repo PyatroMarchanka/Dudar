@@ -181,6 +181,40 @@ export const removeBars = (roll: MelodyRoll, fromBar: number, count: number): Me
   return { ...roll, bars: roll.bars - removed, notes };
 };
 
+// Bars copied in the editor: their notes, counted from the start of the first one
+export interface BarsClip {
+  ticks: number;
+  notes: RollNote[];
+}
+
+// Copies `count` bars starting at bar `fromBar` (0-based). A note running past
+// the last of them is cut at its end.
+export const copyBars = (roll: MelodyRoll, fromBar: number, count: number): BarsClip => {
+  const barTicks = getBarTicks(roll);
+  const from = fromBar * barTicks;
+  const to = from + Math.max(1, Math.min(count, roll.bars - fromBar)) * barTicks;
+  const notes = roll.notes
+    .filter((note) => note[1] >= from && note[1] < to)
+    .map((note): RollNote => [note[0], note[1] - from, Math.min(noteEnd(note), to) - note[1]]);
+  return { ticks: to - from, notes };
+};
+
+// Puts copied bars at bar `atBar` (0-based), replacing what was there. Adds bars
+// when they run past the end, and cuts short a note sounding into them.
+export const pasteBars = (roll: MelodyRoll, clip: BarsClip, atBar: number): MelodyRoll => {
+  const barTicks = getBarTicks(roll);
+  const from = atBar * barTicks;
+  const to = Math.min(from + clip.ticks, MAX_ROLL_BARS * barTicks);
+  const kept = roll.notes
+    .filter((note) => note[1] < from || note[1] >= to)
+    .map((note): RollNote => (note[1] < from && noteEnd(note) > from ? [note[0], note[1], from - note[1]] : note));
+  const pasted = clip.notes
+    .filter((note) => from + note[1] < to)
+    .map((note): RollNote => [note[0], from + note[1], Math.min(note[2], to - from - note[1])]);
+  const bars = Math.max(roll.bars, Math.ceil(to / barTicks));
+  return { ...roll, bars, notes: [...kept, ...pasted].sort(byStart) };
+};
+
 // Notes keep their place in time; the number of bars follows the new bar length
 export const setTimeSignature = (roll: MelodyRoll, timeSignature: TimeSignatures): MelodyRoll => {
   const total = getRollEnd(roll);

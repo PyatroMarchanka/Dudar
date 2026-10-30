@@ -2,7 +2,9 @@ import { Midi } from '@tonejs/midi';
 import { BagpipeTypes } from '../../interfaces';
 import {
   addNote,
+  copyBars,
   createRoll,
+  pasteBars,
   dragNoteTiming,
   roundToGrid,
   setNoteTiming,
@@ -140,5 +142,34 @@ describe('melodyRoll', () => {
     // The last note can grow past the end, and bars are added
     const [tick, duration] = dragNoteTiming(roll, 2, 'end', Q * 20, Q);
     expect(setNoteTiming(roll, 2, tick, duration).bars).toBe(6);
+  });
+
+  it('copies bars and pastes them over others', () => {
+    const bar = Q * 4;
+    let roll = empty();
+    roll = addNote(roll, 69, 0, Q).roll;
+    roll = addNote(roll, 71, bar + Q, Q * 4).roll; // runs into bar 3
+    roll = addNote(roll, 72, bar * 2 + Q * 2, Q).roll;
+    const clip = copyBars(roll, 1, 1);
+    // The long note is cut at the end of the copied bar
+    expect(clip).toEqual({ ticks: bar, notes: [[71, Q, Q * 3]] });
+    // Pasting over bar 1 replaces its note, and the long note sounding into bar 3 is cut
+    const pasted = pasteBars(roll, clip, 2);
+    expect(pasted.notes).toEqual([
+      [69, 0, Q],
+      [71, bar + Q, Q * 3],
+      [71, bar * 2 + Q, Q * 3],
+    ]);
+    // Pasting past the end adds bars
+    const twoBars = copyBars(roll, 0, 2);
+    expect(twoBars.ticks).toBe(bar * 2);
+    const longer = pasteBars(roll, twoBars, 3);
+    expect(longer.bars).toBe(5);
+    expect(longer.notes.slice(-2)).toEqual([
+      [69, bar * 3, Q],
+      [71, bar * 4 + Q, Q * 3],
+    ]);
+    // Copying past the last bar copies what exists
+    expect(copyBars(roll, 3, 4).ticks).toBe(bar);
   });
 });

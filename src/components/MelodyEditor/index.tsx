@@ -19,16 +19,20 @@ import {
 import {
   Add,
   ArrowBack,
+  Assignment,
   ChevronLeft,
   ChevronRight,
   Delete,
   DeleteSweep,
+  FileCopy,
   GridOn,
   MusicNote,
   ViewWeek,
   OpenInNew,
   PlayArrow,
   Redo,
+  Repeat,
+  RepeatOne,
   Settings,
   SkipPrevious,
   Stop,
@@ -43,6 +47,8 @@ import { mainColors } from '../../utils/theme';
 import { getMelodyError, melodiesApi } from '../../api/melodies';
 import {
   addNote,
+  BarsClip,
+  copyBars,
   createRoll,
   findNoteAt,
   getBarTicks,
@@ -52,6 +58,7 @@ import {
   MAX_ROLL_NOTES,
   MelodyRoll,
   MIN_ROLL_BPM,
+  pasteBars,
   removeBars,
   removeNote,
   ROLL_TIME_SIGNATURES,
@@ -75,11 +82,19 @@ import {
   snapTick,
 } from './lengths';
 import { useHistory as useUndoHistory } from './useHistory';
-import { auditionNote, usePreview } from './usePreview';
+import { auditionNote, LoopRange, usePreview } from './usePreview';
 import { transposeNoteWithOctave } from '../../utils/midiUtils';
 
 const MAX_TITLE_LENGTH = 200;
 const VIEW_BARS = ['0.5', '1', '2', '4'];
+// Two taps on the loop button this close together switch its mode
+const DOUBLE_TAP_MS = 350;
+
+// Loop the whole melody, or the bars on screen
+type LoopMode = 'all' | 'view';
+
+// Copied bars stay while the app is open, so they can be pasted into another melody
+let copiedBars: BarsClip | null = null;
 
 interface NoteMenu {
   top: number;
@@ -117,6 +132,10 @@ export const MelodyEditor = () => {
   // Where Play starts: the start of a bar, moved by dragging the marker above the bars
   const [playStart, setPlayStart] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
+  const [loopOn, setLoopOn] = useState(false);
+  const [loopMode, setLoopMode] = useState<LoopMode>('all');
+  const lastLoopTapRef = useRef(0);
+  const [clip, setClip] = useState<BarsClip | null>(copiedBars);
   const [laneOverrides, setLaneOverrides] = useState<Record<number, number>>({});
   const [noteMenu, setNoteMenu] = useState<NoteMenu | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -204,6 +223,22 @@ export const MelodyEditor = () => {
 
   const { play, stop, isPlaying, playheadTick } = usePreview({ ...roll, bagpipeType }, transpose);
 
+  const loopRange: LoopRange | undefined = !loopOn
+    ? undefined
+    : loopMode === 'all'
+      ? [0, rollEnd]
+      : [viewStart, Math.min(viewStart + viewTicks, rollEnd)];
+  const loopKey = loopRange ? loopRange.join('-') : 'off';
+
+  // The loop was switched or moved to other bars while playing: carry on with the new one
+  const lastLoopKeyRef = useRef(loopKey);
+  useEffect(() => {
+    if (lastLoopKeyRef.current === loopKey) return;
+    lastLoopKeyRef.current = loopKey;
+    if (playheadTick !== null) play(Math.floor(playheadTick), loopRange);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loopKey]);
+
   // Bars were removed or got shorter: stay inside the melody
   useEffect(() => {
     if (viewStart > 0 && viewStart >= rollEnd) {
@@ -216,13 +251,14 @@ export const MelodyEditor = () => {
     if (playStart >= rollEnd) setPlayStart(Math.max(0, rollEnd - barTicks));
   }, [playStart, rollEnd, barTicks]);
 
-  // The page follows the playhead
+  // The page follows the playhead, unless the bars on screen are looped (then paging moves the loop)
+  const loopsView = loopOn && loopMode === 'view';
   useEffect(() => {
-    if (playheadTick === null) return;
+    if (playheadTick === null || loopsView) return;
     if (playheadTick >= viewStart + viewTicks || playheadTick < viewStart) {
       setViewStart(Math.floor(playheadTick / viewTicks) * viewTicks);
     }
-  }, [playheadTick, viewStart, viewTicks]);
+  }, [playheadTick, viewStart, viewTicks, loopsView]);
 
   const selectedNote = selected !== null ? roll.notes[selected] : undefined;
   const selectedLane = selectedNote ? getLaneIndex(lanes, selectedNote[0]) : -1;
@@ -317,6 +353,52 @@ export const MelodyEditor = () => {
     goTo(fromBar * barTicks);
   };
 
+  const onCopyBars = () => {
+    const fromBar = Math.floor(viewStart / barTicks);
+    const copied = copyBars(roll, fromBar, barsOnScreen);
+    copiedBars = copied;
+    setClip(copied);
+    const count = Math.round(copied.ticks / barTicks);
+    setMessage(
+      count > 1
+        ? t('melodyEditor.copiedBars', { from: fromBar + 1, to: fromBar + count })
+        : t('melodyEditor.copiedBar', { bar: fromBar + 1 })
+    );
+  };
+
+  const onPasteBars = () => {
+    if (!clip) return;
+    const atBar = Math.floor(viewStart / barTicks);
+    const pasted = pasteBars(roll, clip, atBar);
+    if (pasted.notes.length > MAX_ROLL_NOTES) {
+      setMessage(t('melodyEditor.tooManyNotes', { max: MAX_ROLL_NOTES }));
+      return;
+    }
+    setRoll(pasted);
+    setSelected(null);
+    setViewStart(atBar * barTicks);
+    setMessage(t('melodyEditor.pasted', { bar: atBar + 1 }));
+  };
+
+  // One tap turns the loop on or off, two quick taps switch between looping
+  // the whole melody and the bars on screen
+  const onLoopTap = () => {
+    const now = Date.now();
+    const isDoubleTap = now - lastLoopTapRef.current < DOUBLE_TAP_MS;
+    lastLoopTapRef.current = isDoubleTap ? 0 : now;
+    if (isDoubleTap) {
+      const mode = loopMode === 'all' ? 'view' : 'all';
+      setLoopMode(mode);
+      setLoopOn(true);
+      setMessage(t(mode === 'all' ? 'melodyEditor.loopAll' : 'melodyEditor.loopView'));
+    } else {
+      setLoopOn(!loopOn);
+      setMessage(
+        loopOn ? t('melodyEditor.loopOff') : t(loopMode === 'all' ? 'melodyEditor.loopAll' : 'melodyEditor.loopView')
+      );
+    }
+  };
+
   const onViewChange = (value: string) => {
     const ticks = barTicks * Number(value);
     setViewBars(value);
@@ -337,7 +419,7 @@ export const MelodyEditor = () => {
       stop();
     } else {
       setSelected(null);
-      play(playStart);
+      play(playStart, loopRange);
     }
   };
 
@@ -441,9 +523,23 @@ export const MelodyEditor = () => {
 
   const noteName = (note: string) => transposeNoteWithOctave(note as any, transpose);
 
-  // Play and "open in player": in the top bar on a sideways screen, in the toolbar on an upright one
+  const loopLabel = `${t(loopMode === 'all' ? 'melodyEditor.loopAll' : 'melodyEditor.loopView')}. ${t(
+    'melodyEditor.loopHint'
+  )}`;
+
+  // Loop, Play and "open in player": in the top bar on a sideways screen, in the toolbar on an upright one
   const playControls = (
     <>
+      <LoopButton
+        size="small"
+        className={loopOn ? 'on' : undefined}
+        onClick={onLoopTap}
+        aria-label={loopLabel}
+        aria-pressed={loopOn}
+        title={loopLabel}
+      >
+        {loopMode === 'all' ? <Repeat /> : <RepeatOne />}
+      </LoopButton>
       <PlayButton
         size="small"
         variant="outlined"
@@ -524,7 +620,7 @@ export const MelodyEditor = () => {
       </TopBar>
 
       <Toolbar>
-        <Group aria-label={t('melodyEditor.notesGroup')}>
+        <ToolbarRow aria-label={t('melodyEditor.notesGroup')}>
           <SelectIcon as={MusicNote} />
           <Select
             value={lengthId}
@@ -576,8 +672,8 @@ export const MelodyEditor = () => {
           >
             <Delete />
           </IconButton>
-        </Group>
-        <Group>
+        </ToolbarRow>
+        <ToolbarRow aria-label={t('melodyEditor.barsGroup')}>
           <SelectIcon as={ViewWeek} />
           <Select
             className="narrow"
@@ -592,11 +688,38 @@ export const MelodyEditor = () => {
               </option>
             ))}
           </Select>
+          <IconButton
+            size="small"
+            onClick={onCopyBars}
+            aria-label={t('melodyEditor.copyBars')}
+            title={t('melodyEditor.copyBars')}
+          >
+            <FileCopy />
+          </IconButton>
+          {clip && (
+            <IconButton
+              size="small"
+              onClick={onPasteBars}
+              aria-label={t('melodyEditor.pasteBars')}
+              title={t('melodyEditor.pasteBars')}
+            >
+              <Assignment />
+            </IconButton>
+          )}
+          <IconButton
+            size="small"
+            onClick={onDeleteBars}
+            disabled={roll.bars <= barsOnScreen}
+            aria-label={t('melodyEditor.deleteBars')}
+            title={t('melodyEditor.deleteBars')}
+          >
+            <DeleteSweep />
+          </IconButton>
           <PortraitOnly>
             <Divider />
             {playControls}
           </PortraitOnly>
-        </Group>
+        </ToolbarRow>
       </Toolbar>
 
       <CanvasArea>
@@ -645,15 +768,6 @@ export const MelodyEditor = () => {
             <AddBarButton size="small" startIcon={<Add />} onClick={onAddBar} title={t('melodyEditor.addBar')}>
               <span>{t('melodyEditor.bar')}</span>
             </AddBarButton>
-            <IconButton
-              size="small"
-              onClick={onDeleteBars}
-              disabled={roll.bars <= barsOnScreen}
-              aria-label={t('melodyEditor.deleteBars')}
-              title={t('melodyEditor.deleteBars')}
-            >
-              <DeleteSweep />
-            </IconButton>
           </Group>
           <PageButton onClick={goNext} disabled={!canGoNext} aria-label={t('melodyEditor.next')}>
             <ChevronRight />
@@ -875,6 +989,14 @@ const Group = styled.div`
   gap: 2px;
 `;
 
+// On an upright phone each row takes the full width, spread out
+const ToolbarRow = styled(Group)`
+  @media (orientation: portrait) {
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+`;
+
 const Select = styled.select`
   /* iOS Safari zooms into controls under 16px */
   font-size: 16px;
@@ -969,6 +1091,14 @@ const BarText = styled.span`
   font-weight: 500;
   color: ${mainColors.darkerGray};
   white-space: nowrap;
+`;
+
+// Lit up while looping; the icon tells which loop
+const LoopButton = styled(IconButton)`
+  &.on {
+    color: white !important;
+    background: ${mainColors.orange} !important;
+  }
 `;
 
 const PlayButton = styled(MuiButton)`
