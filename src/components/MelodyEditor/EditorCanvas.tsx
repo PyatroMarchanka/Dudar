@@ -5,6 +5,7 @@ import {
   dragNoteTiming,
   getBarTicks,
   getRollEnd,
+  getTonic,
   MelodyRoll,
   NoteDragMode,
   setNoteTiming,
@@ -43,6 +44,8 @@ interface Props {
 // Width of the note names at the left
 const GUTTER = 44;
 const RIGHT_PAD = 8;
+// Behind the tonic's name in the note names column
+const TONIC_LABEL_BACKGROUND = 'rgba(223, 120, 97, 0.18)';
 // The strip above the lanes with bar numbers and the play start marker
 const TOP_PAD = 26;
 const BOTTOM_PAD = 6;
@@ -154,6 +157,8 @@ export const EditorCanvas = (props: Props) => {
     const barTicks = getBarTicks(roll);
     const rollEnd = getRollEnd(roll);
     const beatTicks = roll.timeSignature.endsWith('/8') ? roll.ppq / 2 : roll.ppq;
+    const tonic = getTonic(roll);
+    const isTonicLane = (lane: Lane) => lane.pitches.some((pitch) => pitch % 12 === tonic);
 
     ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = 'white';
@@ -209,14 +214,14 @@ export const EditorCanvas = (props: Props) => {
       }
     }
 
-    // Hole lines, as on the play screen
-    lanes.forEach((_, index) => {
+    // Hole lines, as on the play screen. The tonic's lines are darker.
+    lanes.forEach((lane, index) => {
       const y = laneCenter(layout, index);
       ctx.beginPath();
       ctx.moveTo(GUTTER, y);
       ctx.lineTo(width, y);
-      ctx.strokeStyle = mainColors.greyColor;
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = isTonicLane(lane) ? mainColors.midGrey : mainColors.greyColor;
+      ctx.lineWidth = isTonicLane(lane) ? 3 : 2;
       ctx.stroke();
     });
 
@@ -274,11 +279,19 @@ export const EditorCanvas = (props: Props) => {
     lanes.forEach((lane, index) => {
       const choice = lane.pitches.indexOf(laneChoices[index]);
       const name = noteLabel(lane.notes[choice === -1 ? 0 : choice], transpose);
-      ctx.fillStyle = mainColors.darkerGray;
-      ctx.font = `600 ${Math.min(14, Math.max(laneHeight * 0.45, 10))}px Roboto, sans-serif`;
+      const y = laneCenter(layout, index);
+      if (isTonicLane(lane)) {
+        const pillHeight = Math.min(laneHeight - 4, 24);
+        ctx.fillStyle = TONIC_LABEL_BACKGROUND;
+        ctx.beginPath();
+        ctx.roundRect(4, y - pillHeight / 2, GUTTER - 8, pillHeight, 6);
+        ctx.fill();
+      }
+      ctx.fillStyle = isTonicLane(lane) ? mainColors.darkRed : mainColors.darkerGray;
+      ctx.font = `${isTonicLane(lane) ? 700 : 600} ${Math.min(14, Math.max(laneHeight * 0.45, 10))}px Roboto, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(name + (lane.pitches.length > 1 ? '▾' : ''), GUTTER / 2, laneCenter(layout, index));
+      ctx.fillText(name + (lane.pitches.length > 1 ? '▾' : ''), GUTTER / 2, y);
     });
 
     if (!roll.notes.length) {

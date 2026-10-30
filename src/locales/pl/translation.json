@@ -373,6 +373,7 @@
     "loopView": "Zapętl takty na ekranie",
     "loopOff": "Pętla wyłączona",
     "loopHint": "Stuknij dwukrotnie, aby przełączyć",
-    "clearBars": "Wyczyść takty na ekranie (takty zostaną)"
+    "clearBars": "Wyczyść takty na ekranie (takty zostaną)",
+    "key": "Tonacja (tonika)"
   }
 }
