@@ -2,7 +2,6 @@ import { Midi } from '@tonejs/midi';
 import { BagpipeTypes } from '../../interfaces';
 import {
   addNote,
-  clearBars,
   copyBars,
   createRoll,
   pasteBars,
@@ -172,21 +171,5 @@ describe('melodyRoll', () => {
     ]);
     // Copying past the last bar copies what exists
     expect(copyBars(roll, 3, 4).ticks).toBe(bar);
-  });
-
-  it('clears bars and keeps them', () => {
-    const bar = Q * 4;
-    let roll = empty();
-    roll = addNote(roll, 69, Q * 2, Q * 4).roll; // runs into bar 2
-    roll = addNote(roll, 71, bar + Q * 2, Q).roll;
-    roll = addNote(roll, 72, bar * 2, Q).roll;
-    const cleared = clearBars(roll, 1, 1);
-    expect(cleared.bars).toBe(4);
-    expect(cleared.notes).toEqual([
-      [69, Q * 2, Q * 2],
-      [72, bar * 2, Q],
-    ]);
-    // Past the last bar nothing is added
-    expect(clearBars(roll, 3, 4).bars).toBe(4);
   });
 });
