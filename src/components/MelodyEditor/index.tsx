@@ -530,7 +530,7 @@ export const MelodyEditor = () => {
     'melodyEditor.loopHint'
   )}`;
 
-  // Loop, Play and "open in player", in the footer between the page buttons
+  // Loop and Play, in the footer between the page buttons
   const playControls = (
     <>
       <LoopButton
@@ -553,14 +553,6 @@ export const MelodyEditor = () => {
       >
         <span>{isPlaying ? t('melodyEditor.stop') : t('melodyEditor.play')}</span>
       </PlayButton>
-      <IconButton
-        size="small"
-        onClick={onOpenPlayer}
-        aria-label={t('melodyEditor.openPlayer')}
-        title={t('melodyEditor.openPlayer') ?? ''}
-      >
-        <OpenInNew />
-      </IconButton>
     </>
   );
 
@@ -610,6 +602,14 @@ export const MelodyEditor = () => {
         </IconButton>
         <IconButton size="small" onClick={() => setSettingsOpen(true)} aria-label={t('melodyEditor.settings')}>
           <Settings />
+        </IconButton>
+        <IconButton
+          size="small"
+          onClick={onOpenPlayer}
+          aria-label={t('melodyEditor.openPlayer')}
+          title={t('melodyEditor.openPlayer') ?? ''}
+        >
+          <OpenInNew />
         </IconButton>
         <SaveButton
           variant="contained"
