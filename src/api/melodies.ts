@@ -1,22 +1,26 @@
 import { links } from './links';
 import { userClient } from './user';
 import { withAuth } from './utils';
+import { MelodyRoll } from '../utils/midiUtils/melodyRoll';
 
 export interface UserMelody {
   id: string;
   title: string;
-  abc: string;
+  // "abc": typed as ABC notation; "roll": drawn in the piano-roll editor
+  format: 'abc' | 'roll';
+  abc?: string;
+  roll?: MelodyRoll;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface MelodyInput {
-  title: string;
-  abc: string;
-}
+export type MelodyInput =
+  | { title: string; format?: 'abc'; abc: string }
+  | { title: string; format: 'roll'; roll: MelodyRoll };
 
-// Melodies users wrote themselves, stored as ABC notation. They're converted
-// to MIDI in the browser (abcToMidi) when played, like /app/abc.
+// Melodies users made themselves, either as ABC notation or drawn in the
+// piano-roll editor. Both are converted to MIDI in the browser when played
+// (abcToMidi / rollToMidi).
 export const melodiesApi = {
   getMyMelodies: async (): Promise<UserMelody[]> => {
     const res = await userClient.get<{ melodies: UserMelody[] }>(links.melodies, withAuth());

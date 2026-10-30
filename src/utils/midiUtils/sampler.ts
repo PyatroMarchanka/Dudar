@@ -163,6 +163,20 @@ export const playNote = (bagpipeType: BagpipeTypes, note?: string, volume = 0.5)
   noteSampler.triggerAttack([note], undefined, getVelocity(bagpipeType, volume));
 };
 
+// Plays a note for a set time on the audio clock (the melody editor's preview).
+// `time` is a Tone.js context time; nothing is played while samples still load.
+export const playNoteFor = (bagpipeType: BagpipeTypes, note: string, time: number, duration: number, volume = 0.5) => {
+  const noteSampler = getSampler(bagpipeType);
+  if (!noteSampler.loaded) {
+    return;
+  }
+  noteSampler.triggerAttackRelease(note, duration, time, getVelocity(bagpipeType, volume));
+};
+
+export const stopAllNotes = (bagpipeType: BagpipeTypes) => {
+  getSampler(bagpipeType).releaseAll();
+};
+
 export const stopNote = (bagpipeType: BagpipeTypes, note?: string) => {
   if (!note) {
     return;

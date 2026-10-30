@@ -101,7 +101,7 @@ export const MyMelodies = () => {
   const onEdit = (melody: UserMelody) => {
     setEditingId(melody.id);
     setTitle(melody.title);
-    setAbc(melody.abc);
+    setAbc(melody.abc ?? '');
     setSaveError(undefined);
     editorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
@@ -146,12 +146,13 @@ export const MyMelodies = () => {
       <Navbar />
       <Content>
         <Title variant="h4">{t('melodies.title')}</Title>
-        <Subtitle>
-          {t('melodies.subtitle')}{' '}
-          <a href="https://abcnotation.com/learn" target="_blank" rel="noreferrer">
-            {t('melodies.learnAbc')}
-          </a>
-        </Subtitle>
+        <Subtitle>{t('melodies.createSubtitle')}</Subtitle>
+        <CreateCard>
+          <Button type="big" onClick={() => history.push(routes.melodyEditor)}>
+            {t('melodies.create')}
+          </Button>
+          <Hint>{t('melodies.createHint')}</Hint>
+        </CreateCard>
 
         {!isLoggedIn ? (
           <Card>
@@ -183,7 +184,14 @@ export const MyMelodies = () => {
                           url={`${window.location.origin}${routes.app}/${routes.melody}/${melody.id}`}
                           title={melody.title}
                         />
-                        <MuiButton size="small" onClick={() => onEdit(melody)}>
+                        <MuiButton
+                          size="small"
+                          onClick={() =>
+                            melody.format === 'roll'
+                              ? history.push(`${routes.melodyEditor}/${melody.id}`)
+                              : onEdit(melody)
+                          }
+                        >
                           {t('melodies.edit')}
                         </MuiButton>
                         <MuiButton size="small" onClick={() => onDelete(melody)}>
@@ -197,6 +205,13 @@ export const MyMelodies = () => {
             </>
 
             <Card ref={editorRef}>
+              <SectionTitle variant="h6">{t('melodies.abcSection')}</SectionTitle>
+              <Hint>
+                {t('melodies.subtitle')}{' '}
+                <a href="https://abcnotation.com/learn" target="_blank" rel="noreferrer">
+                  {t('melodies.learnAbc')}
+                </a>
+              </Hint>
               <TextField
                 label={t('melodies.nameLabel')}
                 value={title}
@@ -298,6 +313,23 @@ const Card = styled.div`
   }
 `;
 
+const CreateCard = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 1rem;
+  margin-bottom: 1.5rem;
+
+  button {
+    margin-left: 0;
+  }
+
+  p {
+    margin-top: 0 !important;
+    flex: 1 1 14rem;
+  }
+`;
+
 const AbcField = styled(TextField)`
   textarea {
     font-family: 'Roboto Mono', Menlo, Consolas, monospace;
@@ -317,6 +349,10 @@ const Actions = styled.div`
 const Hint = styled(Typography).attrs({ variant: 'body2' })`
   color: ${mainColors.darkerGray};
   margin-top: 1rem !important;
+
+  a {
+    color: ${mainColors.orange};
+  }
 `;
 
 const ErrorText = styled(Typography)`

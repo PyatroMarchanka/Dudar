@@ -7,6 +7,7 @@ export const routes = {
   play: "play",
   abc: "abc",
   melody: "melody",
+  draft: "draft",
   main: "/",
   about: "/about",
   article: "/article",
@@ -19,5 +20,6 @@ export const routes = {
   adminSong: "/admin/song",
   playlists: "/playlists",
   melodies: "/melodies",
+  melodyEditor: "/melodies/editor",
   contacts: "/contacts",
 };
