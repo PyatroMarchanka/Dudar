@@ -32,6 +32,13 @@ export const NOTE_LENGTHS: NoteLength[] = [
 
 export const DEFAULT_LENGTH_ID = '4';
 
+// Grids notes snap to when added or dragged. "auto" follows the note length select.
+export const GRID_AUTO = 'auto';
+export const GRIDS = NOTE_LENGTHS.filter((length) => ['4', '8', '16', '32', '4t', '8t', '16t'].includes(length.id));
+
+export const getGridTicks = (gridId: string, length: NoteLength) =>
+  gridId === GRID_AUTO ? length.snap : (GRIDS.find((grid) => grid.id === gridId)?.ticks ?? length.snap);
+
 export const getNoteLength = (id: string) => NOTE_LENGTHS.find((length) => length.id === id) ?? NOTE_LENGTHS[3];
 
 // The length a stored note matches, to show it in the select when it's selected

@@ -3,6 +3,9 @@ import { BagpipeTypes } from '../../interfaces';
 import {
   addNote,
   createRoll,
+  dragNoteTiming,
+  roundToGrid,
+  setNoteTiming,
   findNoteAt,
   getBarTicks,
   insertBars,
@@ -102,5 +105,40 @@ describe('melodyRoll', () => {
     expect(song.originalTempo).toBe(240);
     expect(song.timeSignature).toBe('6/8');
     expect(song.name).toBe('Test');
+  });
+
+  it('rounds to the grid from the start of each bar', () => {
+    const bar78 = 7 * 240;
+    expect(roundToGrid(130, 120, 1920)).toBe(120);
+    expect(roundToGrid(1920 + 170, 120, 1920)).toBe(1920 + 120);
+    expect(roundToGrid(bar78 + 500, 480, bar78)).toBe(bar78 + 480);
+    expect(roundToGrid(1600, 480, bar78)).toBe(bar78);
+  });
+
+  it('drags a note on the grid, pushing into its neighbours without removing them', () => {
+    let roll = addNote(empty(), 69, 0, Q).roll;
+    roll = addNote(roll, 71, Q, Q).roll;
+    roll = addNote(roll, 72, Q * 2, Q).roll;
+    // Move the middle note right by a bit more than an eighth: lands on the grid
+    expect(dragNoteTiming(roll, 1, 'move', 260, Q / 2)).toEqual([Q + Q / 2, Q]);
+    // ...and the next note starts later
+    expect(setNoteTiming(roll, 1, Q + Q / 2, Q).notes).toEqual([
+      [69, 0, Q],
+      [71, Q + Q / 2, Q],
+      [72, Q * 2 + Q / 2, Q / 2],
+    ]);
+    // It can't push a neighbour shorter than one grid step
+    expect(dragNoteTiming(roll, 1, 'move', Q * 5, Q / 2)).toEqual([Q + Q / 2, Q]);
+    expect(dragNoteTiming(roll, 1, 'move', -Q * 5, Q / 4)).toEqual([Q / 4, Q]);
+    // Edges
+    expect(dragNoteTiming(roll, 1, 'start', -Q / 2, Q / 4)).toEqual([Q / 2, Q + Q / 2]);
+    expect(dragNoteTiming(roll, 1, 'start', Q * 3, Q / 4)).toEqual([Q * 2 - Q / 4, Q / 4]);
+    expect(dragNoteTiming(roll, 1, 'end', 50, Q / 3)).toEqual([Q, Q]);
+    expect(dragNoteTiming(roll, 1, 'end', 100, Q / 3)).toEqual([Q, Q + Q / 3]);
+    // Shortening leaves a rest
+    expect(setNoteTiming(roll, 1, Q, Q / 2).notes[2]).toEqual([72, Q * 2, Q]);
+    // The last note can grow past the end, and bars are added
+    const [tick, duration] = dragNoteTiming(roll, 2, 'end', Q * 20, Q);
+    expect(setNoteTiming(roll, 2, tick, duration).bars).toBe(6);
   });
 });

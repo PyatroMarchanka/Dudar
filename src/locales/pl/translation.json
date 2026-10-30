@@ -325,7 +325,6 @@
     "saved": "Melodia zapisana",
     "saveError": "Nie udało się zapisać melodii",
     "length": "Długość nuty",
-    "triplet": "triola",
     "view": "Takty na ekranie",
     "viewBars": {
       "0_5": "½ taktu",
@@ -360,6 +359,8 @@
     "clear": "Usuń wszystkie nuty",
     "confirmClear": "Usunąć wszystkie nuty tej melodii?",
     "done": "Gotowe",
-    "edit": "Edytuj melodię"
+    "edit": "Edytuj melodię",
+    "gridAuto": "Auto",
+    "gridLabel": "Przyciągaj nuty do tej siatki przy dodawaniu i przeciąganiu"
   }
 }

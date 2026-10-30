@@ -325,7 +325,6 @@
     "saved": "Melody saved",
     "saveError": "Could not save the melody",
     "length": "Note length",
-    "triplet": "triplet",
     "view": "Bars on screen",
     "viewBars": {
       "0_5": "½ bar",
@@ -360,6 +359,8 @@
     "clear": "Delete all notes",
     "confirmClear": "Delete all notes of this melody?",
     "done": "Done",
-    "edit": "Edit melody"
+    "edit": "Edit melody",
+    "gridAuto": "Auto",
+    "gridLabel": "Snap notes to this grid when adding or dragging them"
   }
 }

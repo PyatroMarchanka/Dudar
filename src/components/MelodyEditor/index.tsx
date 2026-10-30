@@ -23,6 +23,8 @@ import {
   ChevronRight,
   Delete,
   DeleteSweep,
+  GridOn,
+  MusicNote,
   OpenInNew,
   PlayArrow,
   Redo,
@@ -52,6 +54,7 @@ import {
   removeBars,
   removeNote,
   ROLL_TIME_SIGNATURES,
+  setNoteTiming,
   setTimeSignature,
   updateNote,
 } from '../../utils/midiUtils/melodyRoll';
@@ -60,7 +63,16 @@ import '../../utils/drawUtils/drawNotes';
 import { EditorCanvas } from './EditorCanvas';
 import { clearDraft, loadDraft, NEW_DRAFT_KEY, saveDraft } from './draft';
 import { getLaneChoices, getLaneIndex, getLanes } from './lanes';
-import { DEFAULT_LENGTH_ID, findNoteLength, getNoteLength, NOTE_LENGTHS, snapTick } from './lengths';
+import {
+  DEFAULT_LENGTH_ID,
+  findNoteLength,
+  getGridTicks,
+  getNoteLength,
+  GRID_AUTO,
+  GRIDS,
+  NOTE_LENGTHS,
+  snapTick,
+} from './lengths';
 import { useHistory as useUndoHistory } from './useHistory';
 import { auditionNote, usePreview } from './usePreview';
 import { transposeNoteWithOctave } from '../../utils/midiUtils';
@@ -98,6 +110,7 @@ export const MelodyEditor = () => {
   const [loadState, setLoadState] = useState<'loading' | 'ready' | 'error' | 'notRoll'>(id ? 'loading' : 'ready');
 
   const [lengthId, setLengthId] = useState(DEFAULT_LENGTH_ID);
+  const [gridId, setGridId] = useState(GRID_AUTO);
   const [viewBars, setViewBars] = useState('1');
   const [viewStart, setViewStart] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -179,6 +192,7 @@ export const MelodyEditor = () => {
   );
 
   const length = getNoteLength(lengthId);
+  const grid = getGridTicks(gridId, length);
   const barTicks = getBarTicks(roll);
   const rollEnd = getRollEnd(roll);
   const viewTicks = barTicks * Number(viewBars);
@@ -228,7 +242,7 @@ export const MelodyEditor = () => {
       return;
     }
     const pitch = laneChoices[laneIndex];
-    const start = snapTick(tick, length.snap, barTicks);
+    const start = snapTick(tick, grid, barTicks);
     const result = addNote(roll, pitch, start, length.ticks);
     setRoll(result.roll);
     setSelected(result.index);
@@ -412,10 +426,34 @@ export const MelodyEditor = () => {
       ? t('melodyEditor.barsOf', { from: firstBar, to: lastBar, total: roll.bars })
       : t('melodyEditor.barOf', { bar: firstBar, total: roll.bars });
 
+  // Short enough to read in a closed select on a phone: "1/4 ·" is dotted, "1/8 ³" a triplet (the 3 over a triplet in a score)
   const lengthLabel = (lengthOption: (typeof NOTE_LENGTHS)[number]) =>
-    `${lengthOption.label}${lengthOption.dotted ? ' ·' : ''}${lengthOption.triplet ? ` ${t('melodyEditor.triplet')}` : ''}`;
+    `${lengthOption.label}${lengthOption.dotted ? ' ·' : ''}${lengthOption.triplet ? ' ³' : ''}`;
 
   const noteName = (note: string) => transposeNoteWithOctave(note as any, transpose);
+
+  // Play and "open in player": in the top bar on a sideways screen, in the toolbar on an upright one
+  const playControls = (
+    <>
+      <PlayButton
+        size="small"
+        variant="outlined"
+        startIcon={isPlaying ? <Stop /> : <PlayArrow />}
+        onClick={onPlay}
+        disabled={!roll.notes.length && !isPlaying}
+      >
+        {isPlaying ? t('melodyEditor.stop') : t('melodyEditor.play')}
+      </PlayButton>
+      <IconButton
+        size="small"
+        onClick={onOpenPlayer}
+        aria-label={t('melodyEditor.openPlayer')}
+        title={t('melodyEditor.openPlayer') ?? ''}
+      >
+        <OpenInNew />
+      </IconButton>
+    </>
+  );
 
   if (loadState !== 'ready') {
     return (
@@ -464,6 +502,7 @@ export const MelodyEditor = () => {
         <IconButton size="small" onClick={() => setSettingsOpen(true)} aria-label={t('melodyEditor.settings')}>
           <Settings />
         </IconButton>
+        <LandscapeOnly>{playControls}</LandscapeOnly>
         <SaveButton
           variant="contained"
           size="small"
@@ -477,6 +516,7 @@ export const MelodyEditor = () => {
 
       <Toolbar>
         <Group>
+          <SelectIcon as={MusicNote} />
           <Select
             value={lengthId}
             onChange={(e) => onLengthChange(e.target.value)}
@@ -489,7 +529,22 @@ export const MelodyEditor = () => {
               </option>
             ))}
           </Select>
+          <SelectIcon as={GridOn} />
           <Select
+            value={gridId}
+            onChange={(e) => setGridId(e.target.value)}
+            aria-label={t('melodyEditor.gridLabel')}
+            title={t('melodyEditor.gridLabel')}
+          >
+            <option value={GRID_AUTO}>{t('melodyEditor.gridAuto')}</option>
+            {GRIDS.map((option) => (
+              <option key={option.id} value={option.id}>
+                {lengthLabel(option)}
+              </option>
+            ))}
+          </Select>
+          <Select
+            className="narrow"
             value={viewBars}
             onChange={(e) => onViewChange(e.target.value)}
             aria-label={t('melodyEditor.view')}
@@ -518,9 +573,9 @@ export const MelodyEditor = () => {
           <IconButton size="small" onClick={goNext} disabled={!canGoNext} aria-label={t('melodyEditor.next')}>
             <ChevronRight />
           </IconButton>
-          <MuiButton size="small" startIcon={<Add />} onClick={onAddBar} title={t('melodyEditor.addBar') ?? ''}>
-            {t('melodyEditor.bar')}
-          </MuiButton>
+          <AddBarButton size="small" startIcon={<Add />} onClick={onAddBar} title={t('melodyEditor.addBar') ?? ''}>
+            <span>{t('melodyEditor.bar')}</span>
+          </AddBarButton>
           <IconButton
             size="small"
             onClick={onDeleteBars}
@@ -555,23 +610,7 @@ export const MelodyEditor = () => {
           >
             <Delete />
           </IconButton>
-          <PlayButton
-            size="small"
-            variant="outlined"
-            startIcon={isPlaying ? <Stop /> : <PlayArrow />}
-            onClick={onPlay}
-            disabled={!roll.notes.length && !isPlaying}
-          >
-            {isPlaying ? t('melodyEditor.stop') : t('melodyEditor.play')}
-          </PlayButton>
-          <IconButton
-            size="small"
-            onClick={onOpenPlayer}
-            aria-label={t('melodyEditor.openPlayer')}
-            title={t('melodyEditor.openPlayer') ?? ''}
-          >
-            <OpenInNew />
-          </IconButton>
+          <PortraitOnly>{playControls}</PortraitOnly>
         </Group>
       </Toolbar>
 
@@ -583,13 +622,18 @@ export const MelodyEditor = () => {
           transpose={transpose}
           viewStart={viewStart}
           viewTicks={viewTicks}
-          snap={length.snap}
+          snap={grid}
           selected={selected}
           playheadTick={playheadTick}
           emptyHint={t('melodyEditor.emptyHint')}
           onTap={onTap}
           onLabelTap={onLabelTap}
           onSwipe={(direction) => (direction > 0 ? goNext() : goPrev())}
+          onDragStart={(index) => setSelected(index)}
+          onNoteTiming={(index, tick, duration) => {
+            setRoll(setNoteTiming(roll, index, tick, duration));
+            setSelected(index);
+          }}
         />
       </CanvasArea>
 
@@ -797,7 +841,7 @@ const Toolbar = styled.div`
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 2px 10px;
+  gap: 2px 4px;
   padding: 2px 6px;
 `;
 
@@ -817,11 +861,54 @@ const Select = styled.select`
   border-radius: 8px;
   padding: 4px 6px;
   height: 34px;
-  max-width: 9.5rem;
+  /* Long choices ("1/16 triplet") are cut short when closed, so the toolbar fits one row on a sideways phone */
+  max-width: 6.1rem;
+  text-overflow: ellipsis;
+
+  &.narrow {
+    max-width: 4.9rem;
+  }
+`;
+
+// Tells the note length and grid selects apart
+const SelectIcon = styled.span`
+  font-size: 18px !important;
+  color: ${mainColors.midGrey};
+  margin-left: 4px;
+`;
+
+const LandscapeOnly = styled.div`
+  display: contents;
+
+  @media (orientation: portrait) {
+    display: none;
+  }
+`;
+
+const PortraitOnly = styled.div`
+  display: none;
+
+  @media (orientation: portrait) {
+    display: contents;
+  }
+`;
+
+// The "Bar" label drops on narrow screens, leaving the + icon
+const AddBarButton = styled(MuiButton)`
+  min-width: 0 !important;
+
+  @media (max-width: 760px) {
+    .MuiButton-startIcon {
+      margin: 0;
+    }
+    span > span:not(.MuiButton-startIcon) {
+      display: none;
+    }
+  }
 `;
 
 const BarText = styled.span`
-  min-width: 5.5rem;
+  min-width: 4.8rem;
   text-align: center;
   font-size: 14px;
   font-weight: 500;
