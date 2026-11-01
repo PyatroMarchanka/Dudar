@@ -46,6 +46,11 @@ import { routes } from '../../router/routes';
 import { mainColors } from '../../utils/theme';
 import { getMelodyError, melodiesApi, ReviewStatus, reviewStatusOf } from '../../api/melodies';
 import { adminMelodiesApi } from '../../api/adminMelodies';
+import { adminSongsApi } from '../../api/adminSongs';
+import { songApi } from '../../api/songClient';
+import { Song } from '../../dataset/songs/interfaces';
+import { midiToRoll } from '../../utils/midiUtils/midiToRoll';
+import { findBagpipesForMelody } from '../../utils/midiUtils/catalogMelody';
 import {
   addNote,
   BarsClip,
@@ -56,6 +61,7 @@ import {
   getBarTicks,
   getRollEnd,
   insertBars,
+  isMelodyRoll,
   MAX_ROLL_BPM,
   MAX_ROLL_NOTES,
   MelodyRoll,
@@ -110,12 +116,15 @@ interface NoteMenu {
 
 const snapshotOf = (title: string, roll: MelodyRoll) => JSON.stringify({ title: title.trim(), roll });
 
-// The piano-roll editor for My melodies: /melodies/editor (new) and /melodies/editor/:id
+// The piano-roll editor for My melodies: /melodies/editor (new) and /melodies/editor/:id.
+// For admins it also edits the notes of a catalog song: /admin/song-notes/:songId
 export const MelodyEditor = () => {
   const { t: translate } = useTranslation('translation');
   const t = (key: string, options?: object): string => String(translate(key, options as any) ?? '');
   const history = useHistory();
-  const { id } = useParams<{ id?: string }>();
+  const { id, songId } = useParams<{ id?: string; songId?: string }>();
+  // An admin editing a catalog song's notes, whether the song is stored as notes or as a .mid file
+  const isCatalog = !!songId;
   const location = useLocation();
   const {
     state: { bagpipeType: settingsBagpipe, transpose, userData },
@@ -125,20 +134,26 @@ export const MelodyEditor = () => {
   // Opened from the review page. The page waits for the profile, so it doesn't
   // load as a plain visitor first.
   const fromReview = !!id && new URLSearchParams(location.search).get('admin') === '1';
-  const waitingForProfile = fromReview && !isLoggedIn;
+  const waitingForProfile = (fromReview || isCatalog) && !isLoggedIn;
   // An admin editing a melody someone else made, however the editor was opened:
   // it loads and saves through the admin API, never offers Submit for review
   // and goes back to the review page. Known once the melody is loaded.
   const [isAdminMode, setIsAdminMode] = useState(false);
-  const draftKey = id ? (isAdmin ? `admin-${id}` : id) : NEW_DRAFT_KEY;
-  const backPath = isAdminMode ? `${routes.adminMelody}/${id}` : routes.melodies;
+  const draftKey = songId ? `song-${songId}` : id ? (isAdmin ? `admin-${id}` : id) : NEW_DRAFT_KEY;
+  const backPath = isCatalog ? routes.admin : isAdminMode ? `${routes.adminMelody}/${id}` : routes.melodies;
 
   const undoable = useUndoHistory<MelodyRoll>(createRoll(settingsBagpipe));
   const { value: roll, set: setRoll, reset: resetRoll } = undoable;
   const [title, setTitle] = useState('');
   // What the server has, to tell whether there is anything to save. Null until first saved.
   const [savedSnapshot, setSavedSnapshot] = useState<string | null>(null);
-  const [loadState, setLoadState] = useState<'loading' | 'ready' | 'error' | 'notRoll'>(id ? 'loading' : 'ready');
+  const [loadState, setLoadState] = useState<'loading' | 'ready' | 'error' | 'notRoll'>(
+    id || songId ? 'loading' : 'ready'
+  );
+  // The catalog song being edited, and what the conversion from its .mid file left out
+  const [catalogSong, setCatalogSong] = useState<Song | null>(null);
+  const [conversion, setConversion] = useState<{ notes: number; bars: number; warnings: string[] } | null>(null);
+  const [loadErrorText, setLoadErrorText] = useState<string>();
 
   const [lengthId, setLengthId] = useState(DEFAULT_LENGTH_ID);
   const [gridId, setGridId] = useState(GRID_AUTO);
@@ -171,6 +186,65 @@ export const MelodyEditor = () => {
     if (waitingForProfile) {
       setLoadState('loading');
       return;
+    }
+    if (songId) {
+      let cancelled = false;
+      const draft = loadDraft(draftKey);
+      setSelected(null);
+      setViewStart(0);
+      setPlayStart(0);
+      setLaneOverrides({});
+      setLoadState('loading');
+      setLoadErrorText(undefined);
+      setConversion(null);
+      (async () => {
+        const song = await adminSongsApi.get(songId);
+        if (song.source === 'melody' && song.melody) {
+          // Stored as notes already
+          if (song.melody.format !== 'roll' || !isMelodyRoll(song.melody.roll)) {
+            return { song, notRoll: true as const };
+          }
+          return { song, notRoll: false as const, roll: song.melody.roll, converted: null };
+        }
+        // A .mid file: converted to notes here, stored as notes when saved
+        const file = await songApi.getSong(song);
+        const { roll, warnings } = midiToRoll(await file.arrayBuffer(), {
+          bagpipeType: song.bagpipesToPlay?.[0] ?? settingsBagpipe,
+          timeSignature: song.timeSignature,
+          bpm: song.originalTempo ? Math.round(Number(song.originalTempo) / 2) : undefined,
+        });
+        return {
+          song,
+          notRoll: false as const,
+          roll,
+          converted: { notes: roll.notes.length, bars: roll.bars, warnings },
+        };
+      })()
+        .then((loaded) => {
+          if (cancelled) return;
+          setCatalogSong(loaded.song);
+          if (loaded.notRoll) {
+            setLoadState('notRoll');
+            return;
+          }
+          setIsAdminMode(false);
+          setReviewStatus('draft');
+          setConversion(loaded.converted);
+          // Notes converted from a file aren't stored yet: that counts as unsaved
+          setSavedSnapshot(loaded.converted ? null : snapshotOf(loaded.song.name, loaded.roll));
+          resetRoll(draft?.roll ?? loaded.roll);
+          setTitle(draft?.title ?? loaded.song.name);
+          setLoadState('ready');
+        })
+        .catch((error) => {
+          if (cancelled) return;
+          console.log(error);
+          setLoadErrorText(error?.response?.data?.error || error?.message);
+          setLoadState('error');
+        });
+      return () => {
+        cancelled = true;
+      };
     }
     let cancelled = false;
     const draft = loadDraft(draftKey);
@@ -215,7 +289,7 @@ export const MelodyEditor = () => {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, isAdmin, waitingForProfile]);
+  }, [id, songId, isAdmin, waitingForProfile]);
 
   const isDirty =
     savedSnapshot === null ? roll.notes.length > 0 || !!title.trim() : snapshotOf(title, roll) !== savedSnapshot;
@@ -453,7 +527,9 @@ export const MelodyEditor = () => {
       return;
     }
     stop();
-    if (id && !isDirty) {
+    if (isCatalog && catalogSong && !isDirty) {
+      history.push(`${routes.app}/${routes.play}/${catalogSong.id}`);
+    } else if (id && !isDirty) {
       history.push(`${routes.app}/${routes.melody}/${id}`);
     } else {
       saveDraft(draftKey, { title, roll });
@@ -482,6 +558,27 @@ export const MelodyEditor = () => {
     setIsSaving(true);
     try {
       const input = { title: finalTitle, format: 'roll' as const, roll };
+      if (songId) {
+        // A catalog song: the notes go into the song for everyone, and it is played from them from now on.
+        // The bagpipes it had stay when they can still play the notes; a song left with none gets those found from the notes.
+        const canPlay = findBagpipesForMelody({ format: 'roll', roll }, finalTitle);
+        const kept = (catalogSong?.bagpipesToPlay ?? []).filter((bagpipe) => canPlay.includes(bagpipe));
+        const bagpipesToPlay = kept.length ? kept : canPlay;
+        const updated = await adminSongsApi.saveNotes(songId, {
+          name: finalTitle,
+          melody: { format: 'roll', roll },
+          timeSignature: roll.timeSignature,
+          originalTempo: Math.round(roll.bpm * 2),
+          bagpipesToPlay: bagpipesToPlay.length ? bagpipesToPlay : undefined,
+        });
+        setCatalogSong(updated);
+        setConversion(null);
+        setSavedSnapshot(snapshotOf(finalTitle, roll));
+        setTitle(finalTitle);
+        clearDraft(draftKey);
+        setMessage(t('melodyEditor.saved'));
+        return;
+      }
       const saved =
         id && isAdminMode
           ? await adminMelodiesApi.update(id, input)
@@ -508,7 +605,7 @@ export const MelodyEditor = () => {
   // The top-bar button: Save while there is something to save; then, for the
   // owner, Submit for review; then a disabled label with where the review is
   const topAction: 'save' | 'submit' | 'pending' | 'approved' =
-    isAdminMode || !id || isDirty
+    isAdminMode || isCatalog || !id || isDirty
       ? 'save'
       : reviewStatus === 'pending'
         ? 'pending'
@@ -619,7 +716,7 @@ export const MelodyEditor = () => {
           ) : (
             <>
               <Typography>
-                {loadState === 'notRoll' ? t('melodyEditor.notRoll') : t('melodyEditor.loadError')}
+                {loadState === 'notRoll' ? t('melodyEditor.notRoll') : loadErrorText || t('melodyEditor.loadError')}
               </Typography>
               <MuiButton variant="outlined" onClick={() => history.push(backPath)}>
                 {t('melodyEditor.back')}
@@ -637,7 +734,9 @@ export const MelodyEditor = () => {
         <IconButton
           size="small"
           onClick={() => history.push(backPath)}
-          aria-label={isAdminMode ? t('melodyEditor.backToReview') : t('melodyEditor.back')}
+          aria-label={
+            isAdminMode ? t('melodyEditor.backToReview') : isCatalog ? 'Back to the song list' : t('melodyEditor.back')
+          }
         >
           <ArrowBack />
         </IconButton>
@@ -674,7 +773,9 @@ export const MelodyEditor = () => {
           size="small"
           disableElevation
           onClick={topAction === 'submit' ? onSubmitForReview : onSave}
-          disabled={isSaving || topAction === 'pending' || topAction === 'approved' || (isAdminMode && !isDirty)}
+          disabled={
+            isSaving || topAction === 'pending' || topAction === 'approved' || ((isAdminMode || isCatalog) && !isDirty)
+          }
           title={topAction === 'submit' ? t('melodyEditor.submitHint') : undefined}
         >
           {isSaving ? (
@@ -690,6 +791,19 @@ export const MelodyEditor = () => {
           )}
         </SaveButton>
       </TopBar>
+
+      {conversion && catalogSong && (
+        <ConversionBanner>
+          Converted from the MIDI file: {conversion.notes} notes in {conversion.bars} bars. It is stored as editable
+          notes when you save, and then plays for everyone from them.{' '}
+          <a href={`${routes.app}/${routes.play}/${catalogSong.id}`} target="_blank" rel="noopener noreferrer">
+            Play the original
+          </a>
+          {conversion.warnings.map((warning) => (
+            <div key={warning}>⚠ {warning}</div>
+          ))}
+        </ConversionBanner>
+      )}
 
       <Toolbar>
         <ToolbarRow aria-label={t('melodyEditor.notesGroup')}>
@@ -1023,6 +1137,14 @@ const Centered = styled.div`
   gap: 1rem;
   padding: 1rem;
   text-align: center;
+`;
+
+const ConversionBanner = styled.div`
+  padding: 6px 12px;
+  font-size: 13px;
+  line-height: 1.4;
+  background: #fff8e1;
+  border-bottom: 1px solid ${mainColors.lightGrey};
 `;
 
 const TopBar = styled.div`

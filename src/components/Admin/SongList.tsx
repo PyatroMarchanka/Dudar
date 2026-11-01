@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { songApi } from '../../api/songClient';
+import { adminSongsApi } from '../../api/adminSongs';
+import { routes } from '../../router/routes';
 import { Song, SongTypes } from '../../dataset/songs/interfaces';
 
 // All catalog songs (/admin)
@@ -13,9 +15,33 @@ export const SongList = () => {
     key: 'name',
   });
 
+  // What to remove by hand after deleting a song that has a .mid file
+  const [leftover, setLeftover] = useState<Song | null>(null);
+  const [error, setError] = useState<string>();
+
   useEffect(() => {
-    songApi.getSongList().then(setSongs);
+    adminSongsApi
+      .list()
+      .then(setSongs)
+      .catch(() => songApi.getSongList().then(setSongs));
   }, []);
+
+  const onDelete = async (song: Song) => {
+    const fileNote =
+      song.source === 'melody'
+        ? ''
+        : '\n\nThe .mid file stays in the repository until it is deleted in a deploy; only the list entry is removed now.';
+    if (!song._id || !window.confirm(`Delete "${song.name}" from the song list for all users?${fileNote}`)) return;
+    setError(undefined);
+    try {
+      await adminSongsApi.remove(song._id);
+      setSongs((list) => list.filter((item) => item._id !== song._id));
+      setLeftover(song.source === 'melody' ? null : song);
+    } catch (err: any) {
+      console.log(err);
+      setError(err?.response?.data?.error || 'Could not delete the song');
+    }
+  };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -44,6 +70,15 @@ export const SongList = () => {
   return (
     <>
       <h1>Song List</h1>
+      {error && <Notice className="error">{error}</Notice>}
+      {leftover && (
+        <Notice>
+          "{leftover.name}" is removed from the list. To remove its file for good, delete{' '}
+          <code>{leftover.pathName}</code> from <code>public/midi</code> and the entry with id{' '}
+          <code>{leftover.id}</code> from <code>list.json</code> in dudahero-midi, then deploy. Until then the file is
+          just unused. <button onClick={() => setLeftover(null)}>OK</button>
+        </Notice>
+      )}
       <TypeFilter />
       <SearchInput type="text" placeholder="Search songs..." value={searchTerm} onChange={handleSearchChange} />
       <TableWrapper>
@@ -61,6 +96,8 @@ export const SongList = () => {
               <th>Time Signature</th>
               <th>Transcribed By</th>
               <th>Links</th>
+              <th>Notes</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -86,6 +123,12 @@ export const SongList = () => {
                 <td>{song.timeSignature ? 'X' : ''}</td>
                 <td>{song.transcribedBy ? 'X' : ''}</td>
                 <td>{song.links?.length ? 'X' : ''}</td>
+                <td>
+                  <Link to={`${routes.adminSongNotes}/${song._id}`}>Edit notes</Link>
+                </td>
+                <td>
+                  <DeleteButton onClick={() => onDelete(song)}>Delete</DeleteButton>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -166,4 +209,26 @@ const UserTuneMark = styled.span`
   background: #e8f5e9;
   color: #2e7d32;
   white-space: nowrap;
+`;
+
+const Notice = styled.p`
+  max-width: 800px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: #fff8e1;
+  line-height: 1.5;
+
+  &.error {
+    background: #ffebee;
+    color: #c62828;
+  }
+`;
+
+const DeleteButton = styled.button`
+  color: #c62828;
+  background: none;
+  border: 1px solid #c62828;
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
 `;

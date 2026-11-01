@@ -393,5 +393,10 @@
       "approved": "In the song list",
       "rejected": "Sent back"
     }
+  },
+  "songUpdates": {
+    "updated": "Songs were updated",
+    "thisSong": "This song was updated",
+    "refresh": "Refresh"
   }
 }
