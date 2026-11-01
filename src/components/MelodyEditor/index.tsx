@@ -121,10 +121,16 @@ export const MelodyEditor = () => {
     state: { bagpipeType: settingsBagpipe, transpose, userData },
   } = useContext(store);
   const isLoggedIn = !!userData?._id;
-  // An admin editing someone's melody from the review page (?admin=1): loads and
-  // saves through the admin API and goes back to the review page
-  const isAdminMode = !!id && !!userData?.isAdmin && new URLSearchParams(location.search).get('admin') === '1';
-  const draftKey = id ? (isAdminMode ? `admin-${id}` : id) : NEW_DRAFT_KEY;
+  const isAdmin = !!userData?.isAdmin;
+  // Opened from the review page. The page waits for the profile, so it doesn't
+  // load as a plain visitor first.
+  const fromReview = !!id && new URLSearchParams(location.search).get('admin') === '1';
+  const waitingForProfile = fromReview && !isLoggedIn;
+  // An admin editing a melody someone else made, however the editor was opened:
+  // it loads and saves through the admin API, never offers Submit for review
+  // and goes back to the review page. Known once the melody is loaded.
+  const [isAdminMode, setIsAdminMode] = useState(false);
+  const draftKey = id ? (isAdmin ? `admin-${id}` : id) : NEW_DRAFT_KEY;
   const backPath = isAdminMode ? `${routes.adminMelody}/${id}` : routes.melodies;
 
   const undoable = useUndoHistory<MelodyRoll>(createRoll(settingsBagpipe));
@@ -162,6 +168,10 @@ export const MelodyEditor = () => {
       justSavedIdRef.current = null;
       return;
     }
+    if (waitingForProfile) {
+      setLoadState('loading');
+      return;
+    }
     let cancelled = false;
     const draft = loadDraft(draftKey);
     setSelected(null);
@@ -174,14 +184,17 @@ export const MelodyEditor = () => {
       setTitle(draft?.title ?? '');
       setSavedSnapshot(null);
       setReviewStatus('draft');
+      setIsAdminMode(false);
       setLoadState('ready');
       return;
     }
 
     setLoadState('loading');
-    (isAdminMode ? adminMelodiesApi.get(id) : melodiesApi.getMelody(id))
+    // Admins load through the admin API, which tells whose melody it is
+    (isAdmin ? adminMelodiesApi.get(id) : melodiesApi.getMelody(id))
       .then((melody) => {
         if (cancelled) return;
+        setIsAdminMode(isAdmin && 'ownerId' in melody && melody.ownerId !== userData?._id);
         if (melody.format !== 'roll' || !melody.roll) {
           setLoadState('notRoll');
           return;
@@ -202,7 +215,7 @@ export const MelodyEditor = () => {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, isAdminMode]);
+  }, [id, isAdmin, waitingForProfile]);
 
   const isDirty =
     savedSnapshot === null ? roll.notes.length > 0 || !!title.trim() : snapshotOf(title, roll) !== savedSnapshot;
