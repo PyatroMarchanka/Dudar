@@ -27,7 +27,8 @@ const melodiesLinks = {
 }
 
 const adminLinks = {
-  adminSong: `${process.env.REACT_APP_BACKEND_URL}/v1/admin/song`
+  adminSong: `${process.env.REACT_APP_BACKEND_URL}/v1/admin/song`,
+  adminMelodies: `${process.env.REACT_APP_BACKEND_URL}/v1/admin/melodies`,
 }
 
 const articleLinks = {

@@ -18,6 +18,8 @@ export const routes = {
   logout: "/logout",
   admin: "/admin",
   adminSong: "/admin/song",
+  adminReview: "/admin/review",
+  adminMelody: "/admin/melody",
   playlists: "/playlists",
   melodies: "/melodies",
   melodyEditor: "/melodies/editor",

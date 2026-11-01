@@ -56,7 +56,12 @@ export const saveForOffline = async (
   navigator.storage?.persist?.().catch(() => {});
 
   const songs = await fetchSongList();
-  const songUrls = Array.from(new Set(songs.filter((song) => song.pathName).map((song) => resolveSongUrl(song.pathName))));
+  // Songs approved from user melodies have no file: their notes come with the song list
+  const songUrls = Array.from(
+    new Set(
+      songs.filter((song) => song.pathName && song.source !== 'melody').map((song) => resolveSongUrl(song.pathName))
+    )
+  );
 
   const downloads: Download[] = [
     ...getSampleUrls(bagpipeType).map((url) => ({ cacheName: offlineCaches.samples, url })),
