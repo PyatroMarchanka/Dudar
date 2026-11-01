@@ -5,6 +5,8 @@ export const offlineCaches = {
   midi: 'midi-v1',
   clickSounds: 'click-sounds-v1',
   api: 'api-v1',
+  // The notes of songs stored in the database, one entry per version of a song
+  songNotes: 'song-notes-v1',
   styles: 'styles-v1',
   fonts: 'fonts-v1',
 };

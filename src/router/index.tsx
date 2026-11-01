@@ -19,13 +19,18 @@ import { MetaTags } from "../components/SEO/MetaTags";
 import { StructuredData } from "../components/SEO/StructuredData";
 import { FluteLanding } from "../components/screens/FluteLanding";
 import { isFluteBrand } from "../brand";
+import { SongUpdateNotice } from "../components/SongUpdateNotice";
 
 export const AppRouter = () => {
   return (
     <Router>
       <MetaTags />
+      <SongUpdateNotice />
       <StructuredData />
       <Switch>
+        <Route exact path={`${routes.adminSongNotes}/:songId`}>
+          <MelodyEditor />
+        </Route>
         <Route path={routes.admin}>
           <Admin />
         </Route>

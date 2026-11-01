@@ -50,6 +50,8 @@ export const MelodyDraftPlayPageHeader = ({ midiPlayer }: Props) => {
   const editorUrl =
     key === "new"
       ? routes.melodyEditor
+      : key.startsWith("song-")
+      ? `${routes.adminSongNotes}/${key.slice("song-".length)}`
       : key.startsWith("admin-")
       ? `${routes.melodyEditor}/${key.slice("admin-".length)}?admin=1`
       : `${routes.melodyEditor}/${key}`;

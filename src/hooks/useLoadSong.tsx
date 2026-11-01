@@ -59,7 +59,7 @@ export const useLoadSong = () => {
         let normalizeOctaves = true;
         if (isMelodySong(song)) {
           // Approved from a user's melody: built in the browser, there is no file to fetch
-          ({ buffer, normalizeOctaves } = melodySongToMidi(song, { transpose, playableNotes }));
+          ({ buffer, normalizeOctaves } = await melodySongToMidi(song, { transpose, playableNotes }));
         } else {
           const file = await songApi.getSong(song);
           buffer = await file.arrayBuffer();

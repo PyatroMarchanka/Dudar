@@ -1,4 +1,5 @@
 import { Midi } from '@tonejs/midi';
+import { songApi } from '../../api/songClient';
 import { Song, SongMelody } from '../../dataset/songs/interfaces';
 import { notesMaps } from '../../dataset/bagpipesNotesMaps';
 import { BagpipeTypes, SharpNotesEnum } from '../../interfaces';
@@ -7,8 +8,10 @@ import { findBagpipesForSong } from './findBagpipesForSong';
 import { convertNoteToMidiPitch } from './noteUtils';
 import { isMelodyRoll, rollToMidi } from './melodyRoll';
 
-// A catalog song approved from a user's melody: it has no .mid file, its notes are in `song.melody`
-export const isMelodySong = (song: Song) => song.source === 'melody' && !!song.melody;
+// A catalog song stored as notes in the database (approved from a user's
+// melody, or edited in the notes editor): it has no .mid file to play. The
+// song list carries only the notes' format; the notes are loaded when played.
+export const isMelodySong = (song: Song) => song.source === 'melody';
 
 // Only ABC melodies depend on the instrument: like on the melody's own link,
 // the tune keeps its written key and is rearranged onto the instrument's fingering
@@ -17,8 +20,8 @@ export const isAbcMelodySong = (song: Song) => isMelodySong(song) && song.melody
 // Builds the MIDI of a melody song in the browser, the same way /app/melody/:id
 // plays the melody it came from. `normalizeOctaves` is the matching
 // prepareSongMidi flag: off, since the notes already sit in the instrument's range.
-export const melodySongToMidi = (song: Song, instrument: AbcInstrument) => {
-  const melody = song.melody;
+export const melodySongToMidi = async (song: Song, instrument: AbcInstrument) => {
+  const melody = song.melody?.roll || song.melody?.abc ? song.melody : (await songApi.getSongNotes(song)).melody;
   if (melody?.format === 'roll' && isMelodyRoll(melody.roll)) {
     return { buffer: rollToMidi(melody.roll, song.name).buffer, normalizeOctaves: false };
   }

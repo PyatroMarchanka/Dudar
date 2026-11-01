@@ -393,5 +393,10 @@
       "approved": "Na liście utworów",
       "rejected": "Zwrócono"
     }
+  },
+  "songUpdates": {
+    "updated": "Utwory zostały zaktualizowane",
+    "thisSong": "Ten utwór został zaktualizowany",
+    "refresh": "Odśwież"
   }
 }
