@@ -1,5 +1,10 @@
-import { Song } from '../../dataset/songs/interfaces';
+import { Midi } from '@tonejs/midi';
+import { Song, SongMelody } from '../../dataset/songs/interfaces';
+import { notesMaps } from '../../dataset/bagpipesNotesMaps';
+import { BagpipeTypes, SharpNotesEnum } from '../../interfaces';
 import { abcToMidi, AbcInstrument } from './abcToMidi';
+import { findBagpipesForSong } from './findBagpipesForSong';
+import { convertNoteToMidiPitch } from './noteUtils';
 import { isMelodyRoll, rollToMidi } from './melodyRoll';
 
 // A catalog song approved from a user's melody: it has no .mid file, its notes are in `song.melody`
@@ -21,4 +26,29 @@ export const melodySongToMidi = (song: Song, instrument: AbcInstrument) => {
     return { buffer: abcToMidi(melody.abc, { instrument }).buffer, normalizeOctaves: false };
   }
   throw new Error('The song has no notes');
+};
+
+const notesOfBagpipe = (bagpipeType: BagpipeTypes) =>
+  Object.keys(notesMaps[bagpipeType] ?? {}).map((note) => convertNoteToMidiPitch(note as SharpNotesEnum));
+
+// The bagpipes that can play a melody, checked note by note with
+// findBagpipesForSong, as the melody will sound in the catalog (transpose 0).
+// A drawn melody is checked as written. An ABC melody is rearranged for each
+// bagpipe first, as the player does, and then checked against that bagpipe.
+export const findBagpipesForMelody = (melody: SongMelody, title = ''): BagpipeTypes[] => {
+  if (melody.format === 'roll') {
+    if (!isMelodyRoll(melody.roll)) return [];
+    return findBagpipesForSong(new Midi(rollToMidi(melody.roll, title).buffer));
+  }
+  if (!melody.abc) return [];
+  return Object.values(BagpipeTypes).filter((bagpipeType) => {
+    try {
+      const { buffer } = abcToMidi(melody.abc!, {
+        instrument: { transpose: 0, playableNotes: notesOfBagpipe(bagpipeType) },
+      });
+      return findBagpipesForSong(new Midi(buffer)).includes(bagpipeType);
+    } catch (error) {
+      return false;
+    }
+  });
 };

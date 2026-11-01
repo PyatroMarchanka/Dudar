@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
@@ -6,11 +6,10 @@ import { adminMelodiesApi, AdminMelody, CatalogFields } from '../../api/adminMel
 import { getMelodyError, reviewStatusOf } from '../../api/melodies';
 import { songApi } from '../../api/songClient';
 import { Song, SongTags, SongTypes, TimeSignatures } from '../../dataset/songs/interfaces';
-import { BagpipeTypes } from '../../interfaces';
 import { getTranslationKeyByBagpipeType } from '../../interfaces/enumUtils';
-import { store } from '../../context';
 import { routes } from '../../router/routes';
 import { abcToMidi } from '../../utils/midiUtils';
+import { findBagpipesForMelody } from '../../utils/midiUtils/catalogMelody';
 import { ReviewBadge } from '../MyMelodies/ReviewBadge';
 import { REVIEW_CHANGED_EVENT } from './AdminMenu';
 
@@ -18,14 +17,15 @@ const TIME_SIGNATURES: TimeSignatures[] = ['3/4', '4/4', '5/4', '6/4', '6/8', '7
 const DEFAULT_BPM = 100;
 
 // The approve form, in real BPM; sent as the catalog's double tempo
-type CatalogForm = Omit<CatalogFields, 'originalTempo'> & { bpm: number };
+// Bagpipes aren't in it: they are found from the melody's notes
+type CatalogForm = Omit<CatalogFields, 'originalTempo' | 'bagpipesToPlay'> & { bpm: number };
 
 const formatDate = (date?: string) => (date ? new Date(date).toLocaleString() : '');
 
 // What the melody itself says about its meter and tempo
-const readMelody = (melody: AdminMelody): { timeSignature: string; bpm: number; bagpipe?: string } => {
+const readMelody = (melody: AdminMelody): { timeSignature: string; bpm: number } => {
   if (melody.format === 'roll' && melody.roll) {
-    return { timeSignature: melody.roll.timeSignature, bpm: melody.roll.bpm, bagpipe: melody.roll.bagpipeType };
+    return { timeSignature: melody.roll.timeSignature, bpm: melody.roll.bpm };
   }
   try {
     const { song } = abcToMidi(melody.abc ?? '');
@@ -39,12 +39,11 @@ const readMelody = (melody: AdminMelody): { timeSignature: string; bpm: number; 
 };
 
 // Prefilled from the catalog song of an earlier approval, otherwise from the melody
-const initialForm = (melody: AdminMelody, song: Song | null, fallbackBagpipe: string): CatalogForm => {
+const initialForm = (melody: AdminMelody, song: Song | null): CatalogForm => {
   if (song) {
     return {
       name: song.name,
       type: song.type,
-      bagpipesToPlay: song.bagpipesToPlay,
       timeSignature: song.timeSignature,
       bpm: song.originalTempo ? Math.round(Number(song.originalTempo) / 2) : DEFAULT_BPM,
       labels: song.labels ?? [],
@@ -52,11 +51,10 @@ const initialForm = (melody: AdminMelody, song: Song | null, fallbackBagpipe: st
       transcribedBy: song.transcribedBy ?? melody.ownerName ?? '',
     };
   }
-  const { timeSignature, bpm, bagpipe } = readMelody(melody);
+  const { timeSignature, bpm } = readMelody(melody);
   return {
     name: melody.title,
     type: SongTypes.Other,
-    bagpipesToPlay: [bagpipe || fallbackBagpipe],
     timeSignature,
     bpm,
     labels: [],
@@ -70,9 +68,6 @@ export const ReviewMelody = () => {
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const { t } = useTranslation('translation');
-  const {
-    state: { bagpipeType },
-  } = useContext(store);
 
   const [melody, setMelody] = useState<AdminMelody | null>(null);
   const [loadError, setLoadError] = useState<string>();
@@ -92,7 +87,7 @@ export const ReviewMelody = () => {
         song = await songApi.getSongData(loaded.catalogSongId).catch(() => null);
       }
       setMelody(loaded);
-      setForm(initialForm(loaded, song, bagpipeType));
+      setForm(initialForm(loaded, song));
       setComment(loaded.reviewComment ?? '');
       setAbcTitle(loaded.title);
       setAbcText(loaded.abc ?? '');
@@ -116,6 +111,13 @@ export const ReviewMelody = () => {
       return error?.message || 'Cannot read this ABC';
     }
   }, [abcText, melody?.format]);
+
+  // The bagpipes that can play the saved melody, from its notes
+  const bagpipesToPlay = useMemo(
+    () =>
+      melody ? findBagpipesForMelody({ format: melody.format, abc: melody.abc, roll: melody.roll }, melody.title) : [],
+    [melody]
+  );
 
   if (loadError) return <p>{loadError}</p>;
   if (!melody || !form) return <p>Loading...</p>;
@@ -143,8 +145,8 @@ export const ReviewMelody = () => {
     }, 'Melody saved');
 
   const onApprove = () => {
-    if (!form.bagpipesToPlay.length) {
-      setMessage('Choose at least one bagpipe');
+    if (!bagpipesToPlay.length) {
+      setMessage('No bagpipe can play all the notes of this melody');
       return;
     }
     run(
@@ -152,6 +154,7 @@ export const ReviewMelody = () => {
         const { bpm, ...fields } = form;
         const { melody: approved } = await adminMelodiesApi.approve(melody.id, {
           ...fields,
+          bagpipesToPlay,
           originalTempo: Math.round(bpm * 2),
           comment: comment.trim() || undefined,
         });
@@ -266,19 +269,16 @@ export const ReviewMelody = () => {
           </select>
         </Field>
         <Field>
-          <span>Bagpipes to play</span>
-          <Checks>
-            {Object.values(BagpipeTypes).map((type) => (
-              <label key={type}>
-                <input
-                  type="checkbox"
-                  checked={form.bagpipesToPlay.includes(type)}
-                  onChange={() => setField('bagpipesToPlay', toggle(form.bagpipesToPlay, type))}
-                />
-                {t(`dudas.${getTranslationKeyByBagpipeType(type)}`)}
-              </label>
-            ))}
-          </Checks>
+          <span>Bagpipes to play (found from the notes)</span>
+          {bagpipesToPlay.length ? (
+            <BagpipeList>
+              {bagpipesToPlay.map((type) => (
+                <li key={type}>{t(`dudas.${getTranslationKeyByBagpipeType(type)}`)}</li>
+              ))}
+            </BagpipeList>
+          ) : (
+            <ErrorText>No bagpipe can play all the notes of this melody.</ErrorText>
+          )}
         </Field>
         <Field>
           <span>Time signature</span>
@@ -480,4 +480,9 @@ const ApproveButton = styled.button`
 
 const RejectButton = styled(ApproveButton)`
   background: #c62828;
+`;
+
+const BagpipeList = styled.ul`
+  margin: 0;
+  padding-left: 18px;
 `;
