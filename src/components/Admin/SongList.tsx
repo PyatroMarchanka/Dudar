@@ -39,6 +39,11 @@ export const SongList = () => {
       setLeftover(song.source === 'melody' ? null : song);
     } catch (err: any) {
       console.log(err);
+      if (err?.response?.status === 404) {
+        // Already deleted: the list on screen was out of date
+        setSongs((list) => list.filter((item) => item._id !== song._id));
+        return;
+      }
       setError(err?.response?.data?.error || 'Could not delete the song');
     }
   };
