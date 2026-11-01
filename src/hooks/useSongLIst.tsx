@@ -5,6 +5,7 @@ import { BagpipeTypes } from "../interfaces";
 import { useIsCyrylicLang } from "../locales";
 import { getAvailableTagsFromLists } from "../dataset/songs/utils";
 import { loadSongList } from "../api/appData";
+import { prefetchSongNotes } from "../utils/prefetchSongNotes";
 import { useHistory } from "react-router-dom";
 import { routes } from "../router/routes";
 import {
@@ -134,4 +135,8 @@ export const useSongList = (onStop?: () => void) => {
   useEffect(() => {
     loadAllSongs();
   }, []);
+
+  useEffect(() => {
+    prefetchSongNotes(allSongs);
+  }, [allSongs]);
 };
