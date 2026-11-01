@@ -11,7 +11,7 @@ import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { CacheFirst, NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
+import { CacheFirst, NetworkFirst, NetworkOnly, StaleWhileRevalidate } from 'workbox-strategies';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { BroadcastUpdatePlugin } from 'workbox-broadcast-update';
 import { offlineCaches } from './utils/offlineCaches';
@@ -101,7 +101,16 @@ registerRoute(
 // open. User data (profile and settings, playlists, favorites, melodies) is
 // fresh when the network answers in time, the last saved copy otherwise.
 const isBackendRead = ({ url, request }) =>
-  request.method === 'GET' && url.pathname.startsWith('/v1/') && !url.pathname.startsWith('/v1/auth');
+  request.method === 'GET' &&
+  url.pathname.startsWith('/v1/') &&
+  !url.pathname.startsWith('/v1/auth') &&
+  !url.pathname.startsWith('/v1/admin');
+
+// Admin pages always ask the server: a saved copy would show songs that were just deleted or edited
+registerRoute(
+  ({ url, request }) => request.method === 'GET' && url.pathname.startsWith('/v1/admin'),
+  new NetworkOnly()
+);
 const publicContentPaths = ['/v1/songs', '/v1/articles', '/v1/categories', '/v1/updates'];
 const isPublicContent = (url) => publicContentPaths.some((path) => url.pathname.startsWith(path));
 
