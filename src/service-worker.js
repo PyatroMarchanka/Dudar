@@ -11,8 +11,9 @@ import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { CacheFirst, NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
+import { CacheFirst, NetworkFirst, NetworkOnly, StaleWhileRevalidate } from 'workbox-strategies';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+import { BroadcastUpdatePlugin } from 'workbox-broadcast-update';
 import { offlineCaches } from './utils/offlineCaches';
 
 clientsClaim();
@@ -100,9 +101,40 @@ registerRoute(
 // open. User data (profile and settings, playlists, favorites, melodies) is
 // fresh when the network answers in time, the last saved copy otherwise.
 const isBackendRead = ({ url, request }) =>
-  request.method === 'GET' && url.pathname.startsWith('/v1/') && !url.pathname.startsWith('/v1/auth');
+  request.method === 'GET' &&
+  url.pathname.startsWith('/v1/') &&
+  !url.pathname.startsWith('/v1/auth') &&
+  !url.pathname.startsWith('/v1/admin');
+
+// Admin pages always ask the server: a saved copy would show songs that were just deleted or edited
+registerRoute(
+  ({ url, request }) => request.method === 'GET' && url.pathname.startsWith('/v1/admin'),
+  new NetworkOnly()
+);
 const publicContentPaths = ['/v1/songs', '/v1/articles', '/v1/categories', '/v1/updates'];
 const isPublicContent = (url) => publicContentPaths.some((path) => url.pathname.startsWith(path));
+
+// The notes of a song stored in the database come under a URL with ?v=<updatedAt>,
+// which changes with every edit of the song: a copy never goes stale, so keep it.
+// Old versions leave when the cache is full.
+registerRoute(
+  ({ url, request }) =>
+    request.method === 'GET' && /^\/v1\/songs\/[0-9a-f]{24}$/.test(url.pathname) && url.searchParams.has('v'),
+  new CacheFirst({
+    cacheName: offlineCaches.songNotes,
+    plugins: [new CacheableResponsePlugin({ statuses: [200] }), new ExpirationPlugin({ maxEntries: 800 })],
+  })
+);
+
+// The song list: told to the page when a refresh brought something new, so it can say songs were updated
+registerRoute(
+  ({ url, request }) => request.method === 'GET' && url.pathname === '/v1/songs',
+  new StaleWhileRevalidate({
+    cacheName: offlineCaches.api,
+    matchOptions: { ignoreVary: true },
+    plugins: [new CacheableResponsePlugin({ statuses: [200] }), new BroadcastUpdatePlugin()],
+  })
+);
 
 registerRoute(
   ({ url, request }) => isBackendRead({ url, request }) && isPublicContent(url),

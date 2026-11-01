@@ -3,6 +3,10 @@ import { userClient } from './user';
 import { withAuth } from './utils';
 import { MelodyRoll } from '../utils/midiUtils/melodyRoll';
 
+// draft: only the owner sees it. pending: sent for review. approved: in the
+// song catalog. rejected: sent back by an admin.
+export type ReviewStatus = 'draft' | 'pending' | 'approved' | 'rejected';
+
 export interface UserMelody {
   id: string;
   title: string;
@@ -10,6 +14,11 @@ export interface UserMelody {
   format: 'abc' | 'roll';
   abc?: string;
   roll?: MelodyRoll;
+  reviewStatus?: ReviewStatus;
+  // Only in the owner's own list
+  submittedAt?: string;
+  reviewedAt?: string;
+  reviewComment?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -46,7 +55,25 @@ export const melodiesApi = {
   removeMelody: async (id: string): Promise<void> => {
     await userClient.delete(`${links.melodies}/${encodeURIComponent(id)}`, withAuth());
   },
+
+  // Send a saved draft (or a rejected melody) to the admins
+  submitMelody: async (id: string): Promise<UserMelody> => {
+    const res = await userClient.post<UserMelody>(`${links.melodies}/${encodeURIComponent(id)}/submit`, {}, withAuth());
+    return res.data;
+  },
+
+  withdrawMelody: async (id: string): Promise<UserMelody> => {
+    const res = await userClient.post<UserMelody>(
+      `${links.melodies}/${encodeURIComponent(id)}/withdraw`,
+      {},
+      withAuth()
+    );
+    return res.data;
+  },
 };
+
+export const reviewStatusOf = (melody?: { reviewStatus?: ReviewStatus }): ReviewStatus =>
+  melody?.reviewStatus || 'draft';
 
 // The server answers validation failures with { error: "..." }
 export const getMelodyError = (error: any): string | undefined => error?.response?.data?.error;

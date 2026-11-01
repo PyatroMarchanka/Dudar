@@ -46,7 +46,15 @@ export const MelodyDraftPlayPageHeader = ({ midiPlayer }: Props) => {
   const history = useHistory();
   const draft = useMemo(() => loadDraft(key), [key]);
   useRollSong(draft?.roll ?? null, draft?.title || t("melodyEditor.untitled") || undefined);
-  const editorUrl = key === "new" ? routes.melodyEditor : `${routes.melodyEditor}/${key}`;
+  // An admin's draft of someone else's melody is kept under "admin-<id>"
+  const editorUrl =
+    key === "new"
+      ? routes.melodyEditor
+      : key.startsWith("song-")
+      ? `${routes.adminSongNotes}/${key.slice("song-".length)}`
+      : key.startsWith("admin-")
+      ? `${routes.melodyEditor}/${key.slice("admin-".length)}?admin=1`
+      : `${routes.melodyEditor}/${key}`;
 
   return (
     <AbcHeader midiPlayer={midiPlayer}>

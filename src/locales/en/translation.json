@@ -300,7 +300,7 @@
     "pasteError": "Could not read the clipboard. Long-press the field below and paste manually.",
     "tryIt": "Try in player",
     "example": "Insert example",
-    "privacy": "Your melodies are not listed anywhere. Anyone you send a melody link to can play it.",
+    "privacy": "Your melodies are not listed anywhere until you send one for review and an admin adds it to the song list. Anyone you send a melody link to can play it.",
     "saved": "Saved melodies",
     "noMelodies": "You have no saved melodies yet.",
     "play": "Play",
@@ -313,7 +313,10 @@
     "createSubtitle": "Make your own tunes, save them and play them on your bagpipe or whistle.",
     "create": "New melody",
     "createHint": "Draw a tune note by note on the holes of your bagpipe. No notation needed.",
-    "abcSection": "Or paste ABC notation"
+    "abcSection": "Or paste ABC notation",
+    "withdraw": "Take back",
+    "withdrawError": "Could not take the melody back",
+    "reviewComment": "Comment from the reviewer"
   },
   "melodyEditor": {
     "back": "Back to My melodies",
@@ -373,6 +376,27 @@
     "loopView": "Loop the bars on screen",
     "loopOff": "Loop off",
     "loopHint": "Double tap to switch",
-    "key": "Key (tonic)"
+    "key": "Key (tonic)",
+    "backToReview": "Back to the review",
+    "submit": "Submit for review",
+    "submitHint": "Send this melody to the admins, who can add it to the song list",
+    "confirmSubmit": "Send this melody for review? An admin will check it and can add it to the song list for everyone.",
+    "submitted": "Sent for review",
+    "submitError": "Could not send the melody for review",
+    "statusPending": "Waiting for review",
+    "statusApproved": "In the song list"
+  },
+  "review": {
+    "status": {
+      "draft": "Draft",
+      "pending": "Waiting for review",
+      "approved": "In the song list",
+      "rejected": "Sent back"
+    }
+  },
+  "songUpdates": {
+    "updated": "Songs were updated",
+    "thisSong": "This song was updated",
+    "refresh": "Refresh"
   }
 }
