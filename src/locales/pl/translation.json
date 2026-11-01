@@ -300,7 +300,7 @@
     "pasteError": "Nie udało się odczytać schowka. Przytrzymaj pole poniżej i wklej ręcznie.",
     "tryIt": "Wypróbuj w odtwarzaczu",
     "example": "Wstaw przykład",
-    "privacy": "Twoje melodie nie są nigdzie wyświetlane. Każdy, komu wyślesz link do melodii, może ją zagrać.",
+    "privacy": "Twoje melodie nie są nigdzie pokazywane, dopóki nie wyślesz melodii do sprawdzenia, a administrator nie doda jej do listy utworów. Każdy, komu wyślesz link do melodii, może ją odtworzyć.",
     "saved": "Zapisane melodie",
     "noMelodies": "Nie masz jeszcze zapisanych melodii.",
     "play": "Graj",
@@ -313,7 +313,10 @@
     "createSubtitle": "Twórz własne melodie, zapisuj je i graj na dudach lub flecie.",
     "create": "Nowa melodia",
     "createHint": "Rysuj melodię nuta po nucie na otworach dud. Notacja nie jest potrzebna.",
-    "abcSection": "Lub wklej notację ABC"
+    "abcSection": "Lub wklej notację ABC",
+    "withdraw": "Wycofaj",
+    "withdrawError": "Nie udało się wycofać melodii",
+    "reviewComment": "Komentarz recenzenta"
   },
   "melodyEditor": {
     "back": "Wróć do Moich melodii",
@@ -373,6 +376,22 @@
     "loopView": "Zapętl takty na ekranie",
     "loopOff": "Pętla wyłączona",
     "loopHint": "Stuknij dwukrotnie, aby przełączyć",
-    "key": "Tonacja (tonika)"
+    "key": "Tonacja (tonika)",
+    "backToReview": "Wróć do sprawdzania",
+    "submit": "Wyślij do sprawdzenia",
+    "submitHint": "Wyślij melodię administratorom, którzy mogą dodać ją do listy utworów",
+    "confirmSubmit": "Wysłać melodię do sprawdzenia? Administrator ją sprawdzi i może dodać do listy utworów dla wszystkich.",
+    "submitted": "Wysłano do sprawdzenia",
+    "submitError": "Nie udało się wysłać melodii do sprawdzenia",
+    "statusPending": "Czeka na sprawdzenie",
+    "statusApproved": "Na liście utworów"
+  },
+  "review": {
+    "status": {
+      "draft": "Szkic",
+      "pending": "Czeka na sprawdzenie",
+      "approved": "Na liście utworów",
+      "rejected": "Zwrócono"
+    }
   }
 }

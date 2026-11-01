@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Button as MuiButton,
@@ -44,7 +44,8 @@ import { TimeSignatures } from '../../dataset/songs/interfaces';
 import { BagpipeTypes, SharpNotes } from '../../interfaces';
 import { routes } from '../../router/routes';
 import { mainColors } from '../../utils/theme';
-import { getMelodyError, melodiesApi } from '../../api/melodies';
+import { getMelodyError, melodiesApi, ReviewStatus, reviewStatusOf } from '../../api/melodies';
+import { adminMelodiesApi } from '../../api/adminMelodies';
 import {
   addNote,
   BarsClip,
@@ -115,11 +116,16 @@ export const MelodyEditor = () => {
   const t = (key: string, options?: object): string => String(translate(key, options as any) ?? '');
   const history = useHistory();
   const { id } = useParams<{ id?: string }>();
-  const draftKey = id || NEW_DRAFT_KEY;
+  const location = useLocation();
   const {
     state: { bagpipeType: settingsBagpipe, transpose, userData },
   } = useContext(store);
   const isLoggedIn = !!userData?._id;
+  // An admin editing someone's melody from the review page (?admin=1): loads and
+  // saves through the admin API and goes back to the review page
+  const isAdminMode = !!id && !!userData?.isAdmin && new URLSearchParams(location.search).get('admin') === '1';
+  const draftKey = id ? (isAdminMode ? `admin-${id}` : id) : NEW_DRAFT_KEY;
+  const backPath = isAdminMode ? `${routes.adminMelody}/${id}` : routes.melodies;
 
   const undoable = useUndoHistory<MelodyRoll>(createRoll(settingsBagpipe));
   const { value: roll, set: setRoll, reset: resetRoll } = undoable;
@@ -143,6 +149,7 @@ export const MelodyEditor = () => {
   const [noteMenu, setNoteMenu] = useState<NoteMenu | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [reviewStatus, setReviewStatus] = useState<ReviewStatus>('draft');
   const [message, setMessage] = useState<string | null>(null);
   const [titleError, setTitleError] = useState(false);
   const titleRef = useRef<HTMLInputElement>(null);
@@ -166,19 +173,20 @@ export const MelodyEditor = () => {
       resetRoll(draft?.roll ?? createRoll(settingsBagpipe));
       setTitle(draft?.title ?? '');
       setSavedSnapshot(null);
+      setReviewStatus('draft');
       setLoadState('ready');
       return;
     }
 
     setLoadState('loading');
-    melodiesApi
-      .getMelody(id)
+    (isAdminMode ? adminMelodiesApi.get(id) : melodiesApi.getMelody(id))
       .then((melody) => {
         if (cancelled) return;
         if (melody.format !== 'roll' || !melody.roll) {
           setLoadState('notRoll');
           return;
         }
+        setReviewStatus(reviewStatusOf(melody));
         setSavedSnapshot(snapshotOf(melody.title, melody.roll));
         resetRoll(draft?.roll ?? melody.roll);
         setTitle(draft?.title ?? melody.title);
@@ -194,7 +202,7 @@ export const MelodyEditor = () => {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, isAdminMode]);
 
   const isDirty =
     savedSnapshot === null ? roll.notes.length > 0 || !!title.trim() : snapshotOf(title, roll) !== savedSnapshot;
@@ -461,7 +469,13 @@ export const MelodyEditor = () => {
     setIsSaving(true);
     try {
       const input = { title: finalTitle, format: 'roll' as const, roll };
-      const saved = id ? await melodiesApi.updateMelody(id, input) : await melodiesApi.addMelody(input);
+      const saved =
+        id && isAdminMode
+          ? await adminMelodiesApi.update(id, input)
+          : id
+            ? await melodiesApi.updateMelody(id, input)
+            : await melodiesApi.addMelody(input);
+      setReviewStatus(reviewStatusOf(saved));
       setSavedSnapshot(snapshotOf(finalTitle, roll));
       setTitle(finalTitle);
       clearDraft(draftKey);
@@ -473,6 +487,33 @@ export const MelodyEditor = () => {
     } catch (error) {
       console.log(error);
       setMessage(getMelodyError(error) || t('melodyEditor.saveError'));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // The top-bar button: Save while there is something to save; then, for the
+  // owner, Submit for review; then a disabled label with where the review is
+  const topAction: 'save' | 'submit' | 'pending' | 'approved' =
+    isAdminMode || !id || isDirty
+      ? 'save'
+      : reviewStatus === 'pending'
+        ? 'pending'
+        : reviewStatus === 'approved'
+          ? 'approved'
+          : 'submit';
+
+  const onSubmitForReview = async () => {
+    if (!id) return;
+    if (!window.confirm(t('melodyEditor.confirmSubmit'))) return;
+    setIsSaving(true);
+    try {
+      const submitted = await melodiesApi.submitMelody(id);
+      setReviewStatus(reviewStatusOf(submitted));
+      setMessage(t('melodyEditor.submitted'));
+    } catch (error) {
+      console.log(error);
+      setMessage(getMelodyError(error) || t('melodyEditor.submitError'));
     } finally {
       setIsSaving(false);
     }
@@ -567,7 +608,7 @@ export const MelodyEditor = () => {
               <Typography>
                 {loadState === 'notRoll' ? t('melodyEditor.notRoll') : t('melodyEditor.loadError')}
               </Typography>
-              <MuiButton variant="outlined" onClick={() => history.push(routes.melodies)}>
+              <MuiButton variant="outlined" onClick={() => history.push(backPath)}>
                 {t('melodyEditor.back')}
               </MuiButton>
             </>
@@ -580,7 +621,11 @@ export const MelodyEditor = () => {
   return (
     <Screen>
       <TopBar>
-        <IconButton size="small" onClick={() => history.push(routes.melodies)} aria-label={t('melodyEditor.back')}>
+        <IconButton
+          size="small"
+          onClick={() => history.push(backPath)}
+          aria-label={isAdminMode ? t('melodyEditor.backToReview') : t('melodyEditor.back')}
+        >
           <ArrowBack />
         </IconButton>
         <TitleInput
@@ -615,10 +660,21 @@ export const MelodyEditor = () => {
           variant="contained"
           size="small"
           disableElevation
-          onClick={onSave}
-          disabled={isSaving || (!isDirty && !!id)}
+          onClick={topAction === 'submit' ? onSubmitForReview : onSave}
+          disabled={isSaving || topAction === 'pending' || topAction === 'approved' || (isAdminMode && !isDirty)}
+          title={topAction === 'submit' ? t('melodyEditor.submitHint') : undefined}
         >
-          {isSaving ? <CircularProgress size={16} color="inherit" /> : t('melodyEditor.save')}
+          {isSaving ? (
+            <CircularProgress size={16} color="inherit" />
+          ) : topAction === 'submit' ? (
+            t('melodyEditor.submit')
+          ) : topAction === 'pending' ? (
+            t('melodyEditor.statusPending')
+          ) : topAction === 'approved' ? (
+            t('melodyEditor.statusApproved')
+          ) : (
+            t('melodyEditor.save')
+          )}
         </SaveButton>
       </TopBar>
 

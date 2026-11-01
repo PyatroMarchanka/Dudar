@@ -11,7 +11,8 @@ import { routes } from '../../router/routes';
 import { mainColors } from '../../utils/theme';
 import { mediaQueries } from '../../constants/style';
 import { abcToMidi } from '../../utils/midiUtils';
-import { getMelodyError, melodiesApi, UserMelody } from '../../api/melodies';
+import { getMelodyError, melodiesApi, reviewStatusOf, UserMelody } from '../../api/melodies';
+import { ReviewBadge } from './ReviewBadge';
 
 const EXAMPLE_ABC = `X:1
 T:My first tune
@@ -118,6 +119,28 @@ export const MyMelodies = () => {
     }
   };
 
+  const replaceMelody = (updated: UserMelody) =>
+    setMelodies((list) => (list ?? []).map((melody) => (melody.id === updated.id ? updated : melody)));
+
+  const onSubmitForReview = async (melody: UserMelody) => {
+    if (!window.confirm(t('melodyEditor.confirmSubmit') ?? '')) return;
+    try {
+      replaceMelody(await melodiesApi.submitMelody(melody.id));
+    } catch (error) {
+      console.log(error);
+      window.alert(getMelodyError(error) || t('melodyEditor.submitError') || '');
+    }
+  };
+
+  const onWithdraw = async (melody: UserMelody) => {
+    try {
+      replaceMelody(await melodiesApi.withdrawMelody(melody.id));
+    } catch (error) {
+      console.log(error);
+      window.alert(getMelodyError(error) || t('melodies.withdrawError') || '');
+    }
+  };
+
   const onPaste = async () => {
     setSaveError(undefined);
     try {
@@ -175,31 +198,50 @@ export const MyMelodies = () => {
                 <Typography>{t('melodies.noMelodies')}</Typography>
               ) : (
                 <List>
-                  {melodies.map((melody) => (
-                    <Item key={melody.id}>
-                      <ItemTitle to={`${routes.app}/${routes.melody}/${melody.id}`}>{melody.title}</ItemTitle>
-                      <ItemDate>{new Date(melody.updatedAt).toLocaleDateString()}</ItemDate>
-                      <ItemActions>
-                        <ShareButton
-                          url={`${window.location.origin}${routes.app}/${routes.melody}/${melody.id}`}
-                          title={melody.title}
-                        />
-                        <MuiButton
-                          size="small"
-                          onClick={() =>
-                            melody.format === 'roll'
-                              ? history.push(`${routes.melodyEditor}/${melody.id}`)
-                              : onEdit(melody)
-                          }
-                        >
-                          {t('melodies.edit')}
-                        </MuiButton>
-                        <MuiButton size="small" onClick={() => onDelete(melody)}>
-                          {t('melodies.delete')}
-                        </MuiButton>
-                      </ItemActions>
-                    </Item>
-                  ))}
+                  {melodies.map((melody) => {
+                    const status = reviewStatusOf(melody);
+                    return (
+                      <Item key={melody.id}>
+                        <ItemTitle to={`${routes.app}/${routes.melody}/${melody.id}`}>{melody.title}</ItemTitle>
+                        <ReviewBadge status={status} />
+                        <ItemDate>{new Date(melody.updatedAt).toLocaleDateString()}</ItemDate>
+                        <ItemActions>
+                          {(status === 'draft' || status === 'rejected') && (
+                            <MuiButton size="small" color="primary" onClick={() => onSubmitForReview(melody)}>
+                              {t('melodyEditor.submit')}
+                            </MuiButton>
+                          )}
+                          {status === 'pending' && (
+                            <MuiButton size="small" onClick={() => onWithdraw(melody)}>
+                              {t('melodies.withdraw')}
+                            </MuiButton>
+                          )}
+                          <ShareButton
+                            url={`${window.location.origin}${routes.app}/${routes.melody}/${melody.id}`}
+                            title={melody.title}
+                          />
+                          <MuiButton
+                            size="small"
+                            onClick={() =>
+                              melody.format === 'roll'
+                                ? history.push(`${routes.melodyEditor}/${melody.id}`)
+                                : onEdit(melody)
+                            }
+                          >
+                            {t('melodies.edit')}
+                          </MuiButton>
+                          <MuiButton size="small" onClick={() => onDelete(melody)}>
+                            {t('melodies.delete')}
+                          </MuiButton>
+                        </ItemActions>
+                        {status === 'rejected' && melody.reviewComment && (
+                          <ReviewComment>
+                            {t('melodies.reviewComment')}: {melody.reviewComment}
+                          </ReviewComment>
+                        )}
+                      </Item>
+                    );
+                  })}
                 </List>
               )}
             </>
@@ -403,4 +445,12 @@ const ItemActions = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+`;
+
+const ReviewComment = styled.p`
+  flex: 1 1 100%;
+  margin: 0.25rem 0 0;
+  font-size: 13px;
+  color: #c62828;
+  overflow-wrap: anywhere;
 `;

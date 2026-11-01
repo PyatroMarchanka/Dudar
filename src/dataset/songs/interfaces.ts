@@ -1,4 +1,12 @@
 import { BagpipeTypes } from "../../interfaces";
+import { MelodyRoll } from "../../utils/midiUtils/melodyRoll";
+
+// The notes of a catalog song made from a user's melody, copied when an admin approved it
+export interface SongMelody {
+  format: "abc" | "roll";
+  abc?: string;
+  roll?: MelodyRoll;
+}
 
 export enum SongTypes {
   Belarusian = "belarusian",
@@ -37,6 +45,11 @@ export interface Song {
   links: SongLink[];
   transcribedBy?: string;
   lyrycs?: string;
+  // "melody": approved from a user's melody and played from `melody`, with no .mid file
+  // (its pathName is only a unique placeholder). Absent: a file in public/midi.
+  source?: "file" | "melody";
+  sourceMelodyId?: string;
+  melody?: SongMelody;
   stats: IStats,
   createdAt?: Date,
   updatedAt?: Date,
