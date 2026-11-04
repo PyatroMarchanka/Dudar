@@ -93,3 +93,6 @@ export const isFluteBrand = currentBrand.brand === Brand.Flute;
 // User settings are shared between brands, so a saved instrument may belong to the other site
 export const resolveInstrumentForBrand = (type?: BagpipeTypes): BagpipeTypes =>
   type && currentBrand.instruments.includes(type) ? type : currentBrand.defaultInstrument;
+
+// The sister site (bagpipe <-> flute), linked from the main menu
+export const otherBrand: BrandConfig = brands[isFluteBrand ? Brand.Bagpipe : Brand.Flute];

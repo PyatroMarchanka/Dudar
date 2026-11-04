@@ -260,7 +260,9 @@
     "blog": "Articles",
     "contacts": "Contacts",
     "admin": "Admin",
-    "melodies": "My melodies"
+    "melodies": "My melodies",
+    "fluteVersion": "Flute version",
+    "bagpipeVersion": "Bagpipe version"
   },
   "topSongs": {
     "title": "Most Played Songs"

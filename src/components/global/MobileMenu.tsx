@@ -3,6 +3,7 @@ import { Menu, MenuItem } from "@material-ui/core";
 import { mainColors } from "../../utils/theme";
 import { routes } from "../../router/routes";
 import { useTranslation } from "react-i18next";
+import { isFluteBrand, otherBrand } from "../../brand";
 
 interface MobileMenuProps {
   mobileMenuAnchor: HTMLElement | null;
@@ -108,6 +109,14 @@ export const MobileMenu = ({
         }}
       >
         {t("navbar.contacts")}
+      </MenuItem>
+      <MenuItem
+        component="a"
+        href={otherBrand.siteUrl}
+        onClick={onClose}
+        style={{ padding: "12px 24px" }}
+      >
+        {t(isFluteBrand ? "navbar.bagpipeVersion" : "navbar.fluteVersion")}
       </MenuItem>
       {isAdmin && (
         <MenuItem

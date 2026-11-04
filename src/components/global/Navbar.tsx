@@ -1,5 +1,5 @@
 import { Link, useLocation, useHistory } from "react-router-dom";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { routes } from "../../router/routes";
 import { mainColors } from "../../utils/theme";
 import { mediaQueries } from "../../constants/style";
@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import { links } from "../../api/links";
 import { Button } from "../global/Button";
 import { MobileMenu } from "./MobileMenu";
-import { isFluteBrand } from "../../brand";
+import { isFluteBrand, otherBrand } from "../../brand";
 
 export const Navbar = () => {
   const location = useLocation();
@@ -96,6 +96,11 @@ export const Navbar = () => {
             >
               {t("navbar.contacts")}
             </StyledLink>
+          </NavItem>
+          <NavItem>
+            <StyledAnchor href={otherBrand.siteUrl}>
+              {t(isFluteBrand ? "navbar.bagpipeVersion" : "navbar.fluteVersion")}
+            </StyledAnchor>
           </NavItem>
           {userData?.isAdmin && (
             <NavItem>
@@ -284,7 +289,7 @@ const NavItem = styled.li`
   }
 `;
 
-const StyledLink = styled(Link)`
+const linkStyles = css`
   color: ${mainColors.darkOrange};
   text-decoration: none;
   font-weight: 500;
@@ -324,6 +329,14 @@ const StyledLink = styled(Link)`
     width: 100%;
     padding: 0.75rem;
   }
+`;
+
+const StyledLink = styled(Link)`
+  ${linkStyles}
+`;
+
+const StyledAnchor = styled.a`
+  ${linkStyles}
 `;
 
 const DesktopNavList = styled(NavList)`
