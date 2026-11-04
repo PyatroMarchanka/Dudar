@@ -54,19 +54,20 @@ const BRAND_OVERRIDE_KEY = 'brandOverride';
 const isBrand = (value: string | null | undefined): value is Brand =>
   !!value && (Object.values(Brand) as string[]).includes(value);
 
-// Dev/preview override: `?brand=flute` is remembered for the session, `?brand=` clears it.
+// `?brand=flute` / `?brand=bagpipe` picks the site version on any host and is remembered
+// in this browser (the main menu links use it); `?brand=` clears it.
 const getBrandOverride = (): Brand | undefined => {
   try {
     const param = new URLSearchParams(window.location.search).get('brand');
     if (param !== null) {
       if (isBrand(param)) {
-        sessionStorage.setItem(BRAND_OVERRIDE_KEY, param);
+        localStorage.setItem(BRAND_OVERRIDE_KEY, param);
         return param;
       }
-      sessionStorage.removeItem(BRAND_OVERRIDE_KEY);
+      localStorage.removeItem(BRAND_OVERRIDE_KEY);
       return undefined;
     }
-    const stored = sessionStorage.getItem(BRAND_OVERRIDE_KEY);
+    const stored = localStorage.getItem(BRAND_OVERRIDE_KEY);
     return isBrand(stored) ? stored : undefined;
   } catch {
     return undefined;
@@ -96,3 +97,6 @@ export const resolveInstrumentForBrand = (type?: BagpipeTypes): BagpipeTypes =>
 
 // The sister site (bagpipe <-> flute), linked from the main menu
 export const otherBrand: BrandConfig = brands[isFluteBrand ? Brand.Bagpipe : Brand.Flute];
+
+// Full page load, since the brand is resolved once per page
+export const otherBrandUrl = `/?brand=${otherBrand.brand}`;
