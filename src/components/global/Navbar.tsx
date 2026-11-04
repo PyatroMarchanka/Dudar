@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import { links } from "../../api/links";
 import { Button } from "../global/Button";
 import { MobileMenu } from "./MobileMenu";
-import { isFluteBrand, otherBrand } from "../../brand";
+import { isFluteBrand, otherBrandUrl } from "../../brand";
 
 export const Navbar = () => {
   const location = useLocation();
@@ -98,7 +98,7 @@ export const Navbar = () => {
             </StyledLink>
           </NavItem>
           <NavItem>
-            <StyledAnchor href={otherBrand.siteUrl}>
+            <StyledAnchor href={otherBrandUrl}>
               {t(isFluteBrand ? "navbar.bagpipeVersion" : "navbar.fluteVersion")}
             </StyledAnchor>
           </NavItem>
