@@ -3,7 +3,7 @@ import { Menu, MenuItem } from "@material-ui/core";
 import { mainColors } from "../../utils/theme";
 import { routes } from "../../router/routes";
 import { useTranslation } from "react-i18next";
-import { isFluteBrand, otherBrand } from "../../brand";
+import { isFluteBrand, otherBrandUrl } from "../../brand";
 
 interface MobileMenuProps {
   mobileMenuAnchor: HTMLElement | null;
@@ -112,7 +112,7 @@ export const MobileMenu = ({
       </MenuItem>
       <MenuItem
         component="a"
-        href={otherBrand.siteUrl}
+        href={otherBrandUrl}
         onClick={onClose}
         style={{ padding: "12px 24px" }}
       >
