@@ -260,7 +260,9 @@
     "blog": "Artykuły",
     "contacts": "Kontakty",
     "admin": "Admin",
-    "melodies": "Moje melodie"
+    "melodies": "Moje melodie",
+    "fluteVersion": "Wersja na flet",
+    "bagpipeVersion": "Wersja na dudy"
   },
   "topSongs": {
     "title": "Najczęściej odtwarzane utwory"
