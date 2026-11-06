@@ -5,7 +5,7 @@ import {
   dragNoteTiming,
   getBarTicks,
   getRollEnd,
-  getTonic,
+  BAGPIPE_TONIC,
   MelodyRoll,
   NoteDragMode,
   setNoteTiming,
@@ -18,6 +18,7 @@ interface Props {
   lanes: Lane[];
   // Pitch each lane adds on a tap
   laneChoices: number[];
+  // Semitones the melody's key is from A, for the note names
   transpose: number;
   viewStart: number;
   viewTicks: number;
@@ -153,8 +154,8 @@ export const EditorCanvas = (props: Props) => {
     const barTicks = getBarTicks(roll);
     const rollEnd = getRollEnd(roll);
     const beatTicks = roll.timeSignature.endsWith('/8') ? roll.ppq / 2 : roll.ppq;
-    const tonic = getTonic(roll);
-    const isTonicLane = (lane: Lane) => lane.pitches.some((pitch) => pitch % 12 === tonic);
+    // The notes are written for an A bagpipe, so the key's tonic is always A's hole
+    const isTonicLane = (lane: Lane) => lane.pitches.some((pitch) => pitch % 12 === BAGPIPE_TONIC);
 
     ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = 'white';

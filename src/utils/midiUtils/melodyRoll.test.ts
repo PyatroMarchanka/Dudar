@@ -1,6 +1,10 @@
 import { Midi } from '@tonejs/midi';
 import { BagpipeTypes } from '../../interfaces';
 import {
+  getKey,
+  getKeyTranspose,
+  keyToTranspose,
+  transposeToKey,
   addNote,
   copyBars,
   createRoll,
@@ -171,5 +175,23 @@ describe('melodyRoll', () => {
     ]);
     // Copying past the last bar copies what exists
     expect(copyBars(roll, 3, 4).ticks).toBe(bar);
+  });
+});
+
+describe('melody key', () => {
+  it('turns a key into the semitones from A, near the transpose setting', () => {
+    expect(keyToTranspose(9)).toBe(0); // A
+    expect(keyToTranspose(0)).toBe(3); // C, up a minor third
+    expect(keyToTranspose(7)).toBe(-2); // G
+    expect(keyToTranspose(0, -10)).toBe(-9); // C below, for a bagpipe set low
+    expect(transposeToKey(3)).toBe(0);
+    expect(transposeToKey(-2)).toBe(7);
+  });
+
+  it('follows the transpose setting until a key is chosen', () => {
+    expect(getKey({}, -2)).toBe(7);
+    expect(getKeyTranspose({}, -2)).toBe(-2);
+    expect(getKey({ tonic: 0 }, -2)).toBe(0);
+    expect(getKeyTranspose({ tonic: 0 }, -2)).toBe(3);
   });
 });
