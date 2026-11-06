@@ -20,8 +20,10 @@ export interface MelodyRoll {
   ppq: number;
   bars: number;
   notes: RollNote[];
-  // Pitch class of the key's tonic (0 = C), written for an A instrument like the
-  // notes. Absent means A, the tonic of the bagpipes.
+  // Pitch class (0 = C) of the key the melody is edited and heard in: the editor
+  // plays it on a bagpipe tuned to that key. The notes stay written for an A
+  // instrument whatever the key, so a melody is always saved in A. Absent means
+  // the key of the user's own bagpipe (the transpose setting).
   tonic?: number;
 }
 
@@ -30,9 +32,28 @@ export const DEFAULT_ROLL_BPM = 100;
 export const MIN_ROLL_BPM = 20;
 export const MAX_ROLL_BPM = 400;
 const DEFAULT_BARS = 4;
-export const DEFAULT_TONIC = 9;
+// The notes are written for a bagpipe in A
+export const BAGPIPE_TONIC = 9;
 
-export const getTonic = (roll: Pick<MelodyRoll, 'tonic'>) => roll.tonic ?? DEFAULT_TONIC;
+const pitchClass = (value: number) => ((value % 12) + 12) % 12;
+
+// The key a transpose setting puts the bagpipe in
+export const transposeToKey = (transpose: number) => pitchClass(BAGPIPE_TONIC + transpose);
+
+// Semitones from A to the key: of the two octaves, the one closer to `near`
+// (the transpose setting), so the editor sounds about where the player does
+export const keyToTranspose = (tonic: number, near = 0) => {
+  const up = pitchClass(tonic - BAGPIPE_TONIC);
+  const down = up - 12;
+  return Math.abs(down - near) < Math.abs(up - near) ? down : up;
+};
+
+// The key the editor shows and plays the melody in
+export const getKey = (roll: Pick<MelodyRoll, 'tonic'>, transpose: number) => roll.tonic ?? transposeToKey(transpose);
+
+// Semitones the editor shifts the melody by to sound in its key
+export const getKeyTranspose = (roll: Pick<MelodyRoll, 'tonic'>, transpose: number) =>
+  roll.tonic === undefined ? transpose : keyToTranspose(roll.tonic, transpose);
 // Same caps as the server
 export const MAX_ROLL_NOTES = 3_000;
 export const MAX_ROLL_BARS = 500;
