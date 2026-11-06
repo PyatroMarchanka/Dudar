@@ -56,7 +56,8 @@ import {
   BarsClip,
   copyBars,
   createRoll,
-  getTonic,
+  getKey,
+  getKeyTranspose,
   findNoteAt,
   getBarTicks,
   getRollEnd,
@@ -91,7 +92,7 @@ import {
 } from './lengths';
 import { useHistory as useUndoHistory } from './useHistory';
 import { auditionNote, LoopRange, usePreview } from './usePreview';
-import { transposeNote, transposeNoteWithOctave } from '../../utils/midiUtils';
+import { transposeNoteWithOctave } from '../../utils/midiUtils';
 import { pitchClassOf } from '../MusicSheets/mode';
 
 const MAX_TITLE_LENGTH = 200;
@@ -127,7 +128,7 @@ export const MelodyEditor = () => {
   const isCatalog = !!songId;
   const location = useLocation();
   const {
-    state: { bagpipeType: settingsBagpipe, transpose, userData },
+    state: { bagpipeType: settingsBagpipe, transpose: settingsTranspose, userData },
   } = useContext(store);
   const isLoggedIn = !!userData?._id;
   const isAdmin = !!userData?.isAdmin;
@@ -305,6 +306,8 @@ export const MelodyEditor = () => {
   }, [loadState, isDirty, draftKey, title, roll]);
 
   const bagpipeType: BagpipeTypes = bagpipes[roll.bagpipeType] ? roll.bagpipeType : settingsBagpipe;
+  // The melody is edited and heard on a bagpipe in its key, while its notes stay written for A
+  const transpose = getKeyTranspose(roll, settingsTranspose);
   const lanes = useMemo(() => getLanes(bagpipeType), [bagpipeType]);
   const usedChoices = useMemo(() => getLaneChoices(lanes, roll.notes), [lanes, roll.notes]);
   const laneChoices = useMemo(
@@ -987,7 +990,7 @@ export const MelodyEditor = () => {
           setViewStart(0);
         }}
         onTempo={(bpm) => setRoll({ ...roll, bpm })}
-        transpose={transpose}
+        melodyKey={getKey(roll, settingsTranspose)}
         onTonic={(tonic) => setRoll({ ...roll, tonic })}
         onClear={onClear}
       />
@@ -1010,7 +1013,8 @@ interface SettingsDialogProps {
   bagpipeName: string;
   onTimeSignature: (timeSignature: TimeSignatures) => void;
   onTempo: (bpm: number) => void;
-  transpose: number;
+  // Pitch class (0 = C) of the key the melody is edited in
+  melodyKey: number;
   onTonic: (tonic: number) => void;
   onClear: () => void;
 }
@@ -1022,7 +1026,7 @@ const SettingsDialog = ({
   bagpipeName,
   onTimeSignature,
   onTempo,
-  transpose,
+  melodyKey,
   onTonic,
   onClear,
 }: SettingsDialogProps) => {
@@ -1071,15 +1075,16 @@ const SettingsDialog = ({
         </Field>
         <Field>
           <label htmlFor="melody-tonic">{t('melodyEditor.key')}</label>
-          <Select id="melody-tonic" value={getTonic(roll)} onChange={(e) => onTonic(Number(e.target.value))}>
-            {/* Starting from the bagpipe's own tonic, named as they sound after transposing */}
+          <Select id="melody-tonic" value={melodyKey} onChange={(e) => onTonic(Number(e.target.value))}>
+            {/* The key of the bagpipe the melody is edited and heard on. It's saved in A whatever the key. */}
             {KEY_NOTES.map((note) => (
               <option key={note} value={pitchClassOf(note)}>
-                {transposeNote(note, transpose)}
+                {note}
               </option>
             ))}
           </Select>
         </Field>
+        <KeyHint>{t('melodyEditor.keyHint')}</KeyHint>
         <Field>
           <label htmlFor="melody-tempo">{t('melodyEditor.tempo')}</label>
           <TempoInput
@@ -1345,6 +1350,14 @@ const Field = styled.div`
   gap: 1rem;
   margin-bottom: 1rem;
   color: ${mainColors.darkerGray};
+  font-family: 'Roboto', sans-serif;
+`;
+
+const KeyHint = styled.p`
+  margin: -0.5rem 0 1rem;
+  font-size: 13px;
+  line-height: 1.35;
+  color: ${mainColors.midGrey};
   font-family: 'Roboto', sans-serif;
 `;
 
