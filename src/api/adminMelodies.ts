@@ -38,6 +38,25 @@ export interface CatalogFields {
   transcribedBy?: string;
 }
 
+// Approving writes the catalog song and clears the song caches: give it more time than the usual 10 s
+const APPROVE_TIMEOUT_MS = 30000;
+
+// What went wrong with an admin request, in words: the server's own reason
+// when it sent one, otherwise what kind of failure it was
+export const describeAdminError = (error: any): string => {
+  const data = error?.response?.data;
+  if (typeof data?.error === 'string' && data.error) return data.error;
+  const status = error?.response?.status;
+  if (status === 401 || status === 403) return 'Not allowed: log in again as an admin';
+  if (status === 404) return 'Not found on the server (404)';
+  if (status) return `The server answered with error ${status}${error.response.statusText ? ` ${error.response.statusText}` : ''}`;
+  if (error?.code === 'ECONNABORTED' || /timeout/i.test(error?.message ?? '')) {
+    return 'The server took too long to answer. Reload the page to see whether it went through.';
+  }
+  if (error?.request) return 'No answer from the server. Check your connection and try again.';
+  return error?.message || 'Something went wrong';
+};
+
 const url = (id: string, action = '') => `${links.adminMelodies}/${encodeURIComponent(id)}${action}`;
 
 // Review of the melodies users send in. The server lets only admins in.
@@ -66,7 +85,10 @@ export const adminMelodiesApi = {
   },
 
   approve: async (id: string, fields: CatalogFields & { comment?: string }) => {
-    const res = await userClient.post<{ melody: AdminMelody; song: Song }>(url(id, '/approve'), fields, withAuth());
+    const res = await userClient.post<{ melody: AdminMelody; song: Song }>(url(id, '/approve'), fields, {
+      ...withAuth(),
+      timeout: APPROVE_TIMEOUT_MS,
+    });
     return res.data;
   },
 

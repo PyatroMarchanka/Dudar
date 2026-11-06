@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import { adminMelodiesApi, AdminMelody, CatalogFields } from '../../api/adminMelodies';
-import { getMelodyError, reviewStatusOf } from '../../api/melodies';
+import { adminMelodiesApi, AdminMelody, CatalogFields, describeAdminError } from '../../api/adminMelodies';
+import { reviewStatusOf } from '../../api/melodies';
 import { songApi } from '../../api/songClient';
 import { Song, SongTags, SongTypes, TimeSignatures } from '../../dataset/songs/interfaces';
 import { getTranslationKeyByBagpipeType } from '../../interfaces/enumUtils';
@@ -93,7 +93,7 @@ export const ReviewMelody = () => {
       setAbcText(loaded.abc ?? '');
     } catch (error: any) {
       console.log(error);
-      setLoadError(error?.response?.data?.error || 'Could not load the melody');
+      setLoadError(`Could not load the melody: ${describeAdminError(error)}`);
     }
   };
 
@@ -133,7 +133,14 @@ export const ReviewMelody = () => {
       setMessage(done);
     } catch (error) {
       console.log(error);
-      setMessage(getMelodyError(error) || 'Something went wrong');
+      setMessage(describeAdminError(error));
+      // The request may have gone through even though no answer came back: show the melody as it is now
+      if (!(error as any)?.response) {
+        adminMelodiesApi
+          .get(id)
+          .then(setMelody)
+          .catch(() => undefined);
+      }
     } finally {
       setBusy(false);
     }
