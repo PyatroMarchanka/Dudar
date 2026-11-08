@@ -407,16 +407,20 @@ export class MidiPlayer {
     // last skip, not just from now on. That makes the tick jump backward
     // whenever the tempo is lowered, landing behind the events already
     // fired, so melody notes go silent until real time catches back up.
-    // Re-anchoring via setTick() at the current tick fixes the reference
-    // point instead of letting it drift.
+    // So the clock is re-anchored at the current tick.
+    //
+    // This runs on the very first note of every playback (the file's own
+    // tempo event is read later than that note), so it must not stop the
+    // notes that are sounding: doing that cut off the first note.
     logPlayback(`TEMPO ${Player.tempo} -> ${newTempo} (restart ${this.isPlaying})`);
     const currentTick = Player.getCurrentTick();
     Player.tempo = newTempo;
     (Player as any).setTempo(newTempo);
     this.bpm = bpm;
 
-    if (this.isPlaying) {
-      this.setTick(currentTick, true, false);
+    if (Player.isPlaying()) {
+      (Player as any).startTick = currentTick;
+      (Player as any).startTime = new Date().getTime();
     }
   };
 
