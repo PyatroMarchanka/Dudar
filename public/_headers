@@ -1,0 +1,10 @@
+# Keep the release site and Cloudflare preview hosts out of search results so
+# they don't compete with dudahero.org.
+https://release.dudahero.org/*
+  X-Robots-Tag: noindex
+
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex

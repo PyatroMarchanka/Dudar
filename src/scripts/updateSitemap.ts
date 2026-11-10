@@ -43,12 +43,6 @@ const generateSitemap = async () => {
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>${BASE_URL}/login</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>${BASE_URL}/playlists</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>weekly</changefreq>
@@ -75,7 +69,7 @@ const generateSitemap = async () => {
       console.log(`Found ${songs.length} songs`);
       return songs.map((song: Song) => `
   <url>
-    <loc>${BASE_URL}/play/${song.id}</loc>
+    <loc>${BASE_URL}/app/play/${encodeURIComponent(song.id)}</loc>
     <lastmod>${song.updatedAt ? new Date(song.updatedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>

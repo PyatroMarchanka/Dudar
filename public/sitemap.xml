@@ -21,12 +21,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/login</loc>
-    <lastmod>2026-03-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://dudahero.org/playlists</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>weekly</changefreq>
@@ -48,1453 +42,1453 @@
   <!-- Songs -->
   
   <url>
-    <loc>https://dudahero.org/play/belarusian_Juozas-Voldemaras---Dianos-Melodija-2---Спеўная-Мелодыя-2</loc>
+    <loc>https://dudahero.org/app/play/belarusian_Juozas-Voldemaras---Dianos-Melodija-2---%D0%A1%D0%BF%D0%B5%D1%9E%D0%BD%D0%B0%D1%8F-%D0%9C%D0%B5%D0%BB%D0%BE%D0%B4%D1%8B%D1%8F-2</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Juozas-Voldemaras---Dianos-Melodija-1---Спеўная-Мелодыя-1</loc>
+    <loc>https://dudahero.org/app/play/belarusian_Juozas-Voldemaras---Dianos-Melodija-1---%D0%A1%D0%BF%D0%B5%D1%9E%D0%BD%D0%B0%D1%8F-%D0%9C%D0%B5%D0%BB%D0%BE%D0%B4%D1%8B%D1%8F-1</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Juozas-Voldemaras---Kukavo-Gegule---Кувала-Зязюля</loc>
+    <loc>https://dudahero.org/app/play/belarusian_Juozas-Voldemaras---Kukavo-Gegule---%D0%9A%D1%83%D0%B2%D0%B0%D0%BB%D0%B0-%D0%97%D1%8F%D0%B7%D1%8E%D0%BB%D1%8F</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Верабей</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%92%D0%B5%D1%80%D0%B0%D0%B1%D0%B5%D0%B9</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Гапак-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%93%D0%B0%D0%BF%D0%B0%D0%BA-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Грачанікі-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%93%D1%80%D0%B0%D1%87%D0%B0%D0%BD%D1%96%D0%BA%D1%96-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_За-горою-каменою</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%97%D0%B0-%D0%B3%D0%BE%D1%80%D0%BE%D1%8E-%D0%BA%D0%B0%D0%BC%D0%B5%D0%BD%D0%BE%D1%8E</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Каханачка</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9A%D0%B0%D1%85%D0%B0%D0%BD%D0%B0%D1%87%D0%BA%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Лета</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9B%D0%B5%D1%82%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Матлёт</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9C%D0%B0%D1%82%D0%BB%D1%91%D1%82</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Млын</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9C%D0%BB%D1%8B%D0%BD</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Мяцеліца-мажорная-ад-Д.-Сухога</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9C%D1%8F%D1%86%D0%B5%D0%BB%D1%96%D1%86%D0%B0-%D0%BC%D0%B0%D0%B6%D0%BE%D1%80%D0%BD%D0%B0%D1%8F-%D0%B0%D0%B4-%D0%94.-%D0%A1%D1%83%D1%85%D0%BE%D0%B3%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Мяцеліца</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9C%D1%8F%D1%86%D0%B5%D0%BB%D1%96%D1%86%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_О-го-го,-каза</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9E-%D0%B3%D0%BE-%D0%B3%D0%BE%2C-%D0%BA%D0%B0%D0%B7%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ой-ты,-Косцюшко,-хорошій-мій-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9E%D0%B9-%D1%82%D1%8B%2C-%D0%9A%D0%BE%D1%81%D1%86%D1%8E%D1%88%D0%BA%D0%BE%2C-%D1%85%D0%BE%D1%80%D0%BE%D1%88%D1%96%D0%B9-%D0%BC%D1%96%D0%B9-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Полька-Глыбоцкая</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9F%D0%BE%D0%BB%D1%8C%D0%BA%D0%B0-%D0%93%D0%BB%D1%8B%D0%B1%D0%BE%D1%86%D0%BA%D0%B0%D1%8F</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Juozas-Voldemaras---Kaledine-Giesme</loc>
+    <loc>https://dudahero.org/app/play/belarusian_Juozas-Voldemaras---Kaledine-Giesme</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Бабыль</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%91%D0%B0%D0%B1%D1%8B%D0%BB%D1%8C</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Багародзіца</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%91%D0%B0%D0%B3%D0%B0%D1%80%D0%BE%D0%B4%D0%B7%D1%96%D1%86%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Галубка-на-вішні-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%93%D0%B0%D0%BB%D1%83%D0%B1%D0%BA%D0%B0-%D0%BD%D0%B0-%D0%B2%D1%96%D1%88%D0%BD%D1%96-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Добры-вечар-табе,-пане-гаспадару</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%94%D0%BE%D0%B1%D1%80%D1%8B-%D0%B2%D0%B5%D1%87%D0%B0%D1%80-%D1%82%D0%B0%D0%B1%D0%B5%2C-%D0%BF%D0%B0%D0%BD%D0%B5-%D0%B3%D0%B0%D1%81%D0%BF%D0%B0%D0%B4%D0%B0%D1%80%D1%83</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Дунаю-дунаю</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%94%D1%83%D0%BD%D0%B0%D1%8E-%D0%B4%D1%83%D0%BD%D0%B0%D1%8E</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Каваль</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9A%D0%B0%D0%B2%D0%B0%D0%BB%D1%8C</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Карапэт-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9A%D0%B0%D1%80%D0%B0%D0%BF%D1%8D%D1%82-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Кракавяк</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9A%D1%80%D0%B0%D0%BA%D0%B0%D0%B2%D1%8F%D0%BA</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Людзьвінка</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9B%D1%8E%D0%B4%D0%B7%D1%8C%D0%B2%D1%96%D0%BD%D0%BA%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Лявоніха</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9B%D1%8F%D0%B2%D0%BE%D0%BD%D1%96%D1%85%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ой-ты,-Косцюшко,-хорошій-мій</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9E%D0%B9-%D1%82%D1%8B%2C-%D0%9A%D0%BE%D1%81%D1%86%D1%8E%D1%88%D0%BA%D0%BE%2C-%D1%85%D0%BE%D1%80%D0%BE%D1%88%D1%96%D0%B9-%D0%BC%D1%96%D0%B9</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ой,-да-сонца</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9E%D0%B9%2C-%D0%B4%D0%B0-%D1%81%D0%BE%D0%BD%D1%86%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ой,-за-лесам</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9E%D0%B9%2C-%D0%B7%D0%B0-%D0%BB%D0%B5%D1%81%D0%B0%D0%BC</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Полька-Агата</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9F%D0%BE%D0%BB%D1%8C%D0%BA%D0%B0-%D0%90%D0%B3%D0%B0%D1%82%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Полька-Ліцьвінка</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9F%D0%BE%D0%BB%D1%8C%D0%BA%D0%B0-%D0%9B%D1%96%D1%86%D1%8C%D0%B2%D1%96%D0%BD%D0%BA%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Прыйшла-Каляда-ўвечары</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9F%D1%80%D1%8B%D0%B9%D1%88%D0%BB%D0%B0-%D0%9A%D0%B0%D0%BB%D1%8F%D0%B4%D0%B0-%D1%9E%D0%B2%D0%B5%D1%87%D0%B0%D1%80%D1%8B</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Juozas-Voldemaras---Senovinë-Polka</loc>
+    <loc>https://dudahero.org/app/play/belarusian_Juozas-Voldemaras---Senovin%C3%AB-Polka</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Із-пад-горкі</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%86%D0%B7-%D0%BF%D0%B0%D0%B4-%D0%B3%D0%BE%D1%80%D0%BA%D1%96</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Із-пад-горкі-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%86%D0%B7-%D0%BF%D0%B0%D0%B4-%D0%B3%D0%BE%D1%80%D0%BA%D1%96-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Базар</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%91%D0%B0%D0%B7%D0%B0%D1%80</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Бычок</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%91%D1%8B%D1%87%D0%BE%D0%BA</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Галубка-на-вішні</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%93%D0%B0%D0%BB%D1%83%D0%B1%D0%BA%D0%B0-%D0%BD%D0%B0-%D0%B2%D1%96%D1%88%D0%BD%D1%96</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Гапак</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%93%D0%B0%D0%BF%D0%B0%D0%BA</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Журавель</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%96%D1%83%D1%80%D0%B0%D0%B2%D0%B5%D0%BB%D1%8C</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Казачок-беларускі</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9A%D0%B0%D0%B7%D0%B0%D1%87%D0%BE%D0%BA-%D0%B1%D0%B5%D0%BB%D0%B0%D1%80%D1%83%D1%81%D0%BA%D1%96</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Карапэт</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9A%D0%B0%D1%80%D0%B0%D0%BF%D1%8D%D1%82</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Латышка</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9B%D0%B0%D1%82%D1%8B%D1%88%D0%BA%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Матлёт-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9C%D0%B0%D1%82%D0%BB%D1%91%D1%82-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ой,-ну-ну,-коза</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9E%D0%B9%2C-%D0%BD%D1%83-%D0%BD%D1%83%2C-%D0%BA%D0%BE%D0%B7%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ой,-стаіць-явор</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9E%D0%B9%2C-%D1%81%D1%82%D0%B0%D1%96%D1%86%D1%8C-%D1%8F%D0%B2%D0%BE%D1%80</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ай,-калядачкі,-нашы-нежачкі-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%90%D0%B9%2C-%D0%BA%D0%B0%D0%BB%D1%8F%D0%B4%D0%B0%D1%87%D0%BA%D1%96%2C-%D0%BD%D0%B0%D1%88%D1%8B-%D0%BD%D0%B5%D0%B6%D0%B0%D1%87%D0%BA%D1%96-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ай,-калядачкі,-нашы-нежачкі</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%90%D0%B9%2C-%D0%BA%D0%B0%D0%BB%D1%8F%D0%B4%D0%B0%D1%87%D0%BA%D1%96%2C-%D0%BD%D0%B0%D1%88%D1%8B-%D0%BD%D0%B5%D0%B6%D0%B0%D1%87%D0%BA%D1%96</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Анёл</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%90%D0%BD%D1%91%D0%BB</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Верабей-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%92%D0%B5%D1%80%D0%B0%D0%B1%D0%B5%D0%B9-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Казачок</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9A%D0%B0%D0%B7%D0%B0%D1%87%D0%BE%D0%BA</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Картузы</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9A%D0%B0%D1%80%D1%82%D1%83%D0%B7%D1%8B</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Каханачка-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9A%D0%B0%D1%85%D0%B0%D0%BD%D0%B0%D1%87%D0%BA%D0%B0-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Лявоніха-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9B%D1%8F%D0%B2%D0%BE%D0%BD%D1%96%D1%85%D0%B0-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Месяц</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9C%D0%B5%D1%81%D1%8F%D1%86</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Мікіта-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9C%D1%96%D0%BA%D1%96%D1%82%D0%B0-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_На-вараным-канёчку</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9D%D0%B0-%D0%B2%D0%B0%D1%80%D0%B0%D0%BD%D1%8B%D0%BC-%D0%BA%D0%B0%D0%BD%D1%91%D1%87%D0%BA%D1%83</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ойра</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9E%D0%B9%D1%80%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Полька-Ліцьвінка-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9F%D0%BE%D0%BB%D1%8C%D0%BA%D0%B0-%D0%9B%D1%96%D1%86%D1%8C%D0%B2%D1%96%D0%BD%D0%BA%D0%B0-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Полька-бабка</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9F%D0%BE%D0%BB%D1%8C%D0%BA%D0%B0-%D0%B1%D0%B0%D0%B1%D0%BA%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Саўка-ды-Грышка-ладзілі-дуду</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A1%D0%B0%D1%9E%D0%BA%D0%B0-%D0%B4%D1%8B-%D0%93%D1%80%D1%8B%D1%88%D0%BA%D0%B0-%D0%BB%D0%B0%D0%B4%D0%B7%D1%96%D0%BB%D1%96-%D0%B4%D1%83%D0%B4%D1%83</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Таўкачыкі</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A2%D0%B0%D1%9E%D0%BA%D0%B0%D1%87%D1%8B%D0%BA%D1%96</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Тодар-Кашкурэвіч---Вальс</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A2%D0%BE%D0%B4%D0%B0%D1%80-%D0%9A%D0%B0%D1%88%D0%BA%D1%83%D1%80%D1%8D%D0%B2%D1%96%D1%87---%D0%92%D0%B0%D0%BB%D1%8C%D1%81</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_У-Заенькі</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A3-%D0%97%D0%B0%D0%B5%D0%BD%D1%8C%D0%BA%D1%96</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Туман-Ярам</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A2%D1%83%D0%BC%D0%B0%D0%BD-%D0%AF%D1%80%D0%B0%D0%BC</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Царкоўка</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A6%D0%B0%D1%80%D0%BA%D0%BE%D1%9E%D0%BA%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Чобаты</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A7%D0%BE%D0%B1%D0%B0%D1%82%D1%8B</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Юрачка</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%AE%D1%80%D0%B0%D1%87%D0%BA%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Як-пушчу-стралу</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%AF%D0%BA-%D0%BF%D1%83%D1%88%D1%87%D1%83-%D1%81%D1%82%D1%80%D0%B0%D0%BB%D1%83</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/irish_Morrison's-Jig</loc>
+    <loc>https://dudahero.org/app/play/irish_Morrison's-Jig</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/irish_The-Kesh-jig</loc>
+    <loc>https://dudahero.org/app/play/irish_The-Kesh-jig</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_Cantiga-de-Santa-Maria-No.-384-(A-que-por)</loc>
+    <loc>https://dudahero.org/app/play/medieval_Cantiga-de-Santa-Maria-No.-384-(A-que-por)</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_Drumul-Draculuj</loc>
+    <loc>https://dudahero.org/app/play/medieval_Drumul-Draculuj</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Anthem-of-Ukraine</loc>
+    <loc>https://dudahero.org/app/play/other_Anthem-of-Ukraine</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Korpiklaani---Tuli-Kokko</loc>
+    <loc>https://dudahero.org/app/play/other_Korpiklaani---Tuli-Kokko</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_У-гушчарах</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A3-%D0%B3%D1%83%D1%88%D1%87%D0%B0%D1%80%D0%B0%D1%85</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Цяцерка</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A6%D1%8F%D1%86%D0%B5%D1%80%D0%BA%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Чобаты-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A7%D0%BE%D0%B1%D0%B0%D1%82%D1%8B-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Шчодры-вэчор</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A8%D1%87%D0%BE%D0%B4%D1%80%D1%8B-%D0%B2%D1%8D%D1%87%D0%BE%D1%80</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/irish_Sleepy-Maggie</loc>
+    <loc>https://dudahero.org/app/play/irish_Sleepy-Maggie</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_Ai-Vist-Lo-Lop</loc>
+    <loc>https://dudahero.org/app/play/medieval_Ai-Vist-Lo-Lop</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_Marazula</loc>
+    <loc>https://dudahero.org/app/play/medieval_Marazula</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_Platerspiel</loc>
+    <loc>https://dudahero.org/app/play/medieval_Platerspiel</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_Saltarello</loc>
+    <loc>https://dudahero.org/app/play/medieval_Saltarello</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_Totus-Floreo-(Codex-Buranus)</loc>
+    <loc>https://dudahero.org/app/play/medieval_Totus-Floreo-(Codex-Buranus)</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_Tourdion</loc>
+    <loc>https://dudahero.org/app/play/medieval_Tourdion</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/balkan_Gusta-mi-Magla-Padnala</loc>
+    <loc>https://dudahero.org/app/play/balkan_Gusta-mi-Magla-Padnala</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/balkan_Hrdza---Betar-Divka</loc>
+    <loc>https://dudahero.org/app/play/balkan_Hrdza---Betar-Divka</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/balkan_Sharena-Gaida</loc>
+    <loc>https://dudahero.org/app/play/balkan_Sharena-Gaida</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/schotland_High-Road-to-Gairloch</loc>
+    <loc>https://dudahero.org/app/play/schotland_High-Road-to-Gairloch</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/schotland_Scotland-The-Brave</loc>
+    <loc>https://dudahero.org/app/play/schotland_Scotland-The-Brave</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/schotland_The-Minstrel-Boy</loc>
+    <loc>https://dudahero.org/app/play/schotland_The-Minstrel-Boy</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/polish_Wiwat-Przyjacielski</loc>
+    <loc>https://dudahero.org/app/play/polish_Wiwat-Przyjacielski</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/polish_Абэрак</loc>
+    <loc>https://dudahero.org/app/play/polish_%D0%90%D0%B1%D1%8D%D1%80%D0%B0%D0%BA</loc>
     <lastmod>2025-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Тодар-Кашкурэвіч---Цмок</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A2%D0%BE%D0%B4%D0%B0%D1%80-%D0%9A%D0%B0%D1%88%D0%BA%D1%83%D1%80%D1%8D%D0%B2%D1%96%D1%87---%D0%A6%D0%BC%D0%BE%D0%BA</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ходзіла-будзіла-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A5%D0%BE%D0%B4%D0%B7%D1%96%D0%BB%D0%B0-%D0%B1%D1%83%D0%B4%D0%B7%D1%96%D0%BB%D0%B0-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/irish_Foggy-Dew</loc>
+    <loc>https://dudahero.org/app/play/irish_Foggy-Dew</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/irish_Gravel-walks</loc>
+    <loc>https://dudahero.org/app/play/irish_Gravel-walks</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_Cantiga-de-Santa-Maria-No.-384-(A-que-por)-bd</loc>
+    <loc>https://dudahero.org/app/play/medieval_Cantiga-de-Santa-Maria-No.-384-(A-que-por)-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_Palaestinalied</loc>
+    <loc>https://dudahero.org/app/play/medieval_Palaestinalied</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_The-Bear-Dance</loc>
+    <loc>https://dudahero.org/app/play/medieval_The-Bear-Dance</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_Totentanz</loc>
+    <loc>https://dudahero.org/app/play/medieval_Totentanz</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/balkan_Ajde-Jano</loc>
+    <loc>https://dudahero.org/app/play/balkan_Ajde-Jano</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/balkan_Δυο-πιδιά-ρωμιά-πιδιά---Dio-Paidia-Romia-Paidia-(Greek)</loc>
+    <loc>https://dudahero.org/app/play/balkan_%CE%94%CF%85%CE%BF-%CF%80%CE%B9%CE%B4%CE%B9%CE%AC-%CF%81%CF%89%CE%BC%CE%B9%CE%AC-%CF%80%CE%B9%CE%B4%CE%B9%CE%AC---Dio-Paidia-Romia-Paidia-(Greek)</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/schotland_Brown-Haired-Maiden</loc>
+    <loc>https://dudahero.org/app/play/schotland_Brown-Haired-Maiden</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/schotland_Waterloo</loc>
+    <loc>https://dudahero.org/app/play/schotland_Waterloo</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/polish_W-moim-ogródecku</loc>
+    <loc>https://dudahero.org/app/play/polish_W-moim-ogr%C3%B3decku</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Balamut</loc>
+    <loc>https://dudahero.org/app/play/other_Balamut</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Darjane-Marjane</loc>
+    <loc>https://dudahero.org/app/play/other_Darjane-Marjane</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Gods-Tower---Twilight-Sun</loc>
+    <loc>https://dudahero.org/app/play/other_Gods-Tower---Twilight-Sun</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Happy-Birthday-bd</loc>
+    <loc>https://dudahero.org/app/play/other_Happy-Birthday-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Levan-Polka-(Finnish)</loc>
+    <loc>https://dudahero.org/app/play/other_Levan-Polka-(Finnish)</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Тодар-Кашкурэвіч---Вальс-2</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A2%D0%BE%D0%B4%D0%B0%D1%80-%D0%9A%D0%B0%D1%88%D0%BA%D1%83%D1%80%D1%8D%D0%B2%D1%96%D1%87---%D0%92%D0%B0%D0%BB%D1%8C%D1%81-2</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Тодар-Кашкурэвіч---Ваўкавальс</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A2%D0%BE%D0%B4%D0%B0%D1%80-%D0%9A%D0%B0%D1%88%D0%BA%D1%83%D1%80%D1%8D%D0%B2%D1%96%D1%87---%D0%92%D0%B0%D1%9E%D0%BA%D0%B0%D0%B2%D0%B0%D0%BB%D1%8C%D1%81</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_У-Заенькі-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A3-%D0%97%D0%B0%D0%B5%D0%BD%D1%8C%D0%BA%D1%96-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_Bransle-Des-Lavandieres</loc>
+    <loc>https://dudahero.org/app/play/medieval_Bransle-Des-Lavandieres</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_Trotto</loc>
+    <loc>https://dudahero.org/app/play/medieval_Trotto</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/schotland_Highland-Laddie</loc>
+    <loc>https://dudahero.org/app/play/schotland_Highland-Laddie</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/schotland_Killiekrankie</loc>
+    <loc>https://dudahero.org/app/play/schotland_Killiekrankie</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/polish_Hej-Sokoły</loc>
+    <loc>https://dudahero.org/app/play/polish_Hej-Soko%C5%82y</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/polish_Lipka</loc>
+    <loc>https://dudahero.org/app/play/polish_Lipka</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/polish_Nie-mam-ja-konika</loc>
+    <loc>https://dudahero.org/app/play/polish_Nie-mam-ja-konika</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Bella-Ciao</loc>
+    <loc>https://dudahero.org/app/play/other_Bella-Ciao</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Celine-Dion---My-Heart-Will-Go-On</loc>
+    <loc>https://dudahero.org/app/play/other_Celine-Dion---My-Heart-Will-Go-On</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Happy-Birthday</loc>
+    <loc>https://dudahero.org/app/play/other_Happy-Birthday</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Korpiklaani---Beer-Beer</loc>
+    <loc>https://dudahero.org/app/play/other_Korpiklaani---Beer-Beer</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Metsatöl---Saaremaa-Vägimees</loc>
+    <loc>https://dudahero.org/app/play/other_Metsat%C3%B6l---Saaremaa-V%C3%A4gimees</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_My-Mother-Told-Me</loc>
+    <loc>https://dudahero.org/app/play/other_My-Mother-Told-Me</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Белы-Легіён</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%91%D0%B5%D0%BB%D1%8B-%D0%9B%D0%B5%D0%B3%D1%96%D1%91%D0%BD</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Магутны-Божа</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%9C%D0%B0%D0%B3%D1%83%D1%82%D0%BD%D1%8B-%D0%91%D0%BE%D0%B6%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Стары-Ольса---Літвін-bd</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%A1%D1%82%D0%B0%D1%80%D1%8B-%D0%9E%D0%BB%D1%8C%D1%81%D0%B0---%D0%9B%D1%96%D1%82%D0%B2%D1%96%D0%BD-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Стары-Ольса---Ружа-кветка</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%A1%D1%82%D0%B0%D1%80%D1%8B-%D0%9E%D0%BB%D1%8C%D1%81%D0%B0---%D0%A0%D1%83%D0%B6%D0%B0-%D0%BA%D0%B2%D0%B5%D1%82%D0%BA%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Тролль-Гнёт-Ель---Танцы-Троллей</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%A2%D1%80%D0%BE%D0%BB%D0%BB%D1%8C-%D0%93%D0%BD%D1%91%D1%82-%D0%95%D0%BB%D1%8C---%D0%A2%D0%B0%D0%BD%D1%86%D1%8B-%D0%A2%D1%80%D0%BE%D0%BB%D0%BB%D0%B5%D0%B9</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/scandinavian_Levan-Polka-(Finnish)-bd</loc>
+    <loc>https://dudahero.org/app/play/scandinavian_Levan-Polka-(Finnish)-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/scandinavian_Långdans-från-Sollerön</loc>
+    <loc>https://dudahero.org/app/play/scandinavian_L%C3%A5ngdans-fr%C3%A5n-Soller%C3%B6n</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Fifths</loc>
+    <loc>https://dudahero.org/app/play/exercises_Fifths</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Gallop</loc>
+    <loc>https://dudahero.org/app/play/exercises_Gallop</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Groups-With-Pauses-bd</loc>
+    <loc>https://dudahero.org/app/play/exercises_Groups-With-Pauses-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Left-Hand-Exercise-1-bd</loc>
+    <loc>https://dudahero.org/app/play/exercises_Left-Hand-Exercise-1-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Quarters-bd</loc>
+    <loc>https://dudahero.org/app/play/exercises_Quarters-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Pain---Shut-Your-Mouth</loc>
+    <loc>https://dudahero.org/app/play/other_Pain---Shut-Your-Mouth</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Stary-Olsa---Vitany</loc>
+    <loc>https://dudahero.org/app/play/other_Stary-Olsa---Vitany</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_The-Immortals---Techno-syndrome-(Mortal-Kombat)</loc>
+    <loc>https://dudahero.org/app/play/other_The-Immortals---Techno-syndrome-(Mortal-Kombat)</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Villeman-og-Magnhild</loc>
+    <loc>https://dudahero.org/app/play/other_Villeman-og-Magnhild</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Was-Wollen-Wir-Trinken-(Son-ar-chistr)</loc>
+    <loc>https://dudahero.org/app/play/other_Was-Wollen-Wir-Trinken-(Son-ar-chistr)</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Znich---Belarus</loc>
+    <loc>https://dudahero.org/app/play/other_Znich---Belarus</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Дрыгва---Заклік</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%94%D1%80%D1%8B%D0%B3%D0%B2%D0%B0---%D0%97%D0%B0%D0%BA%D0%BB%D1%96%D0%BA</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Кино---Перемен</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%9A%D0%B8%D0%BD%D0%BE---%D0%9F%D0%B5%D1%80%D0%B5%D0%BC%D0%B5%D0%BD</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Пагоня</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%9F%D0%B0%D0%B3%D0%BE%D0%BD%D1%8F</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Стары-Ольса---Вайтоўна</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%A1%D1%82%D0%B0%D1%80%D1%8B-%D0%9E%D0%BB%D1%8C%D1%81%D0%B0---%D0%92%D0%B0%D0%B9%D1%82%D0%BE%D1%9E%D0%BD%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Стары-Ольса---У-каралеўскім-войску</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%A1%D1%82%D0%B0%D1%80%D1%8B-%D0%9E%D0%BB%D1%8C%D1%81%D0%B0---%D0%A3-%D0%BA%D0%B0%D1%80%D0%B0%D0%BB%D0%B5%D1%9E%D1%81%D0%BA%D1%96%D0%BC-%D0%B2%D0%BE%D0%B9%D1%81%D0%BA%D1%83</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Тролль-Гнёт-Ель---Что-Совой-Об-Пень</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%A2%D1%80%D0%BE%D0%BB%D0%BB%D1%8C-%D0%93%D0%BD%D1%91%D1%82-%D0%95%D0%BB%D1%8C---%D0%A7%D1%82%D0%BE-%D0%A1%D0%BE%D0%B2%D0%BE%D0%B9-%D0%9E%D0%B1-%D0%9F%D0%B5%D0%BD%D1%8C</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/scandinavian_Fire-skilling-bd</loc>
+    <loc>https://dudahero.org/app/play/scandinavian_Fire-skilling-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/scandinavian_Herr-Mannelig</loc>
+    <loc>https://dudahero.org/app/play/scandinavian_Herr-Mannelig</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Broken-Fingers-Hardcore</loc>
+    <loc>https://dudahero.org/app/play/exercises_Broken-Fingers-Hardcore</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Forths-bd</loc>
+    <loc>https://dudahero.org/app/play/exercises_Forths-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Gallop-bd</loc>
+    <loc>https://dudahero.org/app/play/exercises_Gallop-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Right-Hand-Broken-Fingers-bd</loc>
+    <loc>https://dudahero.org/app/play/exercises_Right-Hand-Broken-Fingers-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Right-Hand-Broken-Fingers-bnd</loc>
+    <loc>https://dudahero.org/app/play/exercises_Right-Hand-Broken-Fingers-bnd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Stairs-Exercise-bd</loc>
+    <loc>https://dudahero.org/app/play/exercises_Stairs-Exercise-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Triplets</loc>
+    <loc>https://dudahero.org/app/play/exercises_Triplets</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Powerwolf---We-Drink-Your-Blood</loc>
+    <loc>https://dudahero.org/app/play/other_Powerwolf---We-Drink-Your-Blood</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Стары-Ольса---Бітва-пад-Воршай</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%A1%D1%82%D0%B0%D1%80%D1%8B-%D0%9E%D0%BB%D1%8C%D1%81%D0%B0---%D0%91%D1%96%D1%82%D0%B2%D0%B0-%D0%BF%D0%B0%D0%B4-%D0%92%D0%BE%D1%80%D1%88%D0%B0%D0%B9</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Стары-Ольса---Келіх-кола</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%A1%D1%82%D0%B0%D1%80%D1%8B-%D0%9E%D0%BB%D1%8C%D1%81%D0%B0---%D0%9A%D0%B5%D0%BB%D1%96%D1%85-%D0%BA%D0%BE%D0%BB%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Стары-Ольса---Літвін</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%A1%D1%82%D0%B0%D1%80%D1%8B-%D0%9E%D0%BB%D1%8C%D1%81%D0%B0---%D0%9B%D1%96%D1%82%D0%B2%D1%96%D0%BD</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Стары-Ольса---Песня-а-князю-Вітаўце</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%A1%D1%82%D0%B0%D1%80%D1%8B-%D0%9E%D0%BB%D1%8C%D1%81%D0%B0---%D0%9F%D0%B5%D1%81%D0%BD%D1%8F-%D0%B0-%D0%BA%D0%BD%D1%8F%D0%B7%D1%8E-%D0%92%D1%96%D1%82%D0%B0%D1%9E%D1%86%D0%B5</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Тры-чарапахі</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%A2%D1%80%D1%8B-%D1%87%D0%B0%D1%80%D0%B0%D0%BF%D0%B0%D1%85%D1%96</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/scandinavian_Herr-Mannelig-bd</loc>
+    <loc>https://dudahero.org/app/play/scandinavian_Herr-Mannelig-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/scandinavian_Jag-blåste-i-min-pipa</loc>
+    <loc>https://dudahero.org/app/play/scandinavian_Jag-bl%C3%A5ste-i-min-pipa</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/scandinavian_Ljugaren</loc>
+    <loc>https://dudahero.org/app/play/scandinavian_Ljugaren</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/scandinavian_Spilå-Jans-gånglåt-bd</loc>
+    <loc>https://dudahero.org/app/play/scandinavian_Spil%C3%A5-Jans-g%C3%A5ngl%C3%A5t-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/scandinavian_Steklåt-från-Särna</loc>
+    <loc>https://dudahero.org/app/play/scandinavian_Stekl%C3%A5t-fr%C3%A5n-S%C3%A4rna</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Fifths-bd</loc>
+    <loc>https://dudahero.org/app/play/exercises_Fifths-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Forths</loc>
+    <loc>https://dudahero.org/app/play/exercises_Forths</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Quarters</loc>
+    <loc>https://dudahero.org/app/play/exercises_Quarters</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Right-Hand-Exercise-1-bd</loc>
+    <loc>https://dudahero.org/app/play/exercises_Right-Hand-Exercise-1-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Triplets-bd</loc>
+    <loc>https://dudahero.org/app/play/exercises_Triplets-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Metsatol---Vaid-Vaprust</loc>
+    <loc>https://dudahero.org/app/play/other_Metsatol---Vaid-Vaprust</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Metsatöl---Ema-hääl-kutsub</loc>
+    <loc>https://dudahero.org/app/play/other_Metsat%C3%B6l---Ema-h%C3%A4%C3%A4l-kutsub</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_My-Mother-Told-Me-bd</loc>
+    <loc>https://dudahero.org/app/play/other_My-Mother-Told-Me-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Perciwal---A-story-you-wont-believe</loc>
+    <loc>https://dudahero.org/app/play/other_Perciwal---A-story-you-wont-believe</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Магутны-Божа-bd</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%9C%D0%B0%D0%B3%D1%83%D1%82%D0%BD%D1%8B-%D0%91%D0%BE%D0%B6%D0%B0-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Стары-Ольса---Ой-сівы-конь-бяжыць</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%A1%D1%82%D0%B0%D1%80%D1%8B-%D0%9E%D0%BB%D1%8C%D1%81%D0%B0---%D0%9E%D0%B9-%D1%81%D1%96%D0%B2%D1%8B-%D0%BA%D0%BE%D0%BD%D1%8C-%D0%B1%D1%8F%D0%B6%D1%8B%D1%86%D1%8C</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Стары-Ольса---У-карчме-(In-taberna)</loc>
+    <loc>https://dudahero.org/app/play/other_%D0%A1%D1%82%D0%B0%D1%80%D1%8B-%D0%9E%D0%BB%D1%8C%D1%81%D0%B0---%D0%A3-%D0%BA%D0%B0%D1%80%D1%87%D0%BC%D0%B5-(In-taberna)</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/scandinavian_Hambo_3-4_</loc>
+    <loc>https://dudahero.org/app/play/scandinavian_Hambo_3-4_</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/scandinavian_Krigsvisa-om-Danskarna</loc>
+    <loc>https://dudahero.org/app/play/scandinavian_Krigsvisa-om-Danskarna</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/scandinavian_Säckpipslåt-efter-Jont-Lars-Olsson</loc>
+    <loc>https://dudahero.org/app/play/scandinavian_S%C3%A4ckpipsl%C3%A5t-efter-Jont-Lars-Olsson</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/scandinavian_Vals-från-Enviken</loc>
+    <loc>https://dudahero.org/app/play/scandinavian_Vals-fr%C3%A5n-Enviken</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/scandinavian_Visa-från-Venjan-bd</loc>
+    <loc>https://dudahero.org/app/play/scandinavian_Visa-fr%C3%A5n-Venjan-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Arpeggios</loc>
+    <loc>https://dudahero.org/app/play/exercises_Arpeggios</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Arpeggios-bd</loc>
+    <loc>https://dudahero.org/app/play/exercises_Arpeggios-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Broken-Fingers-Hardcore-bd</loc>
+    <loc>https://dudahero.org/app/play/exercises_Broken-Fingers-Hardcore-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Groups-With-Pauses</loc>
+    <loc>https://dudahero.org/app/play/exercises_Groups-With-Pauses</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/exercises_Left-Hand-Broken-Fingers-bd</loc>
+    <loc>https://dudahero.org/app/play/exercises_Left-Hand-Broken-Fingers-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Полька-Бемоўская</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9F%D0%BE%D0%BB%D1%8C%D0%BA%D0%B0-%D0%91%D0%B5%D0%BC%D0%BE%D1%9E%D1%81%D0%BA%D0%B0%D1%8F</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ішла-Каліда,-калядуючы</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%86%D1%88%D0%BB%D0%B0-%D0%9A%D0%B0%D0%BB%D1%96%D0%B4%D0%B0%2C-%D0%BA%D0%B0%D0%BB%D1%8F%D0%B4%D1%83%D1%8E%D1%87%D1%8B</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ішла-Каліда,-калядуючы-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%86%D1%88%D0%BB%D0%B0-%D0%9A%D0%B0%D0%BB%D1%96%D0%B4%D0%B0%2C-%D0%BA%D0%B0%D0%BB%D1%8F%D0%B4%D1%83%D1%8E%D1%87%D1%8B-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Абэрак-Дзяніса-Сухога-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%90%D0%B1%D1%8D%D1%80%D0%B0%D0%BA-%D0%94%D0%B7%D1%8F%D0%BD%D1%96%D1%81%D0%B0-%D0%A1%D1%83%D1%85%D0%BE%D0%B3%D0%B0-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Абэрак-Дзяніса-Сухога_3-4_</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%90%D0%B1%D1%8D%D1%80%D0%B0%D0%BA-%D0%94%D0%B7%D1%8F%D0%BD%D1%96%D1%81%D0%B0-%D0%A1%D1%83%D1%85%D0%BE%D0%B3%D0%B0_3-4_</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/polish_W-moim-ogródecku-bd</loc>
+    <loc>https://dudahero.org/app/play/polish_W-moim-ogr%C3%B3decku-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/polish_Smyczyński-Ludwik---Polka-krotoszyńska</loc>
+    <loc>https://dudahero.org/app/play/polish_Smyczy%C5%84ski-Ludwik---Polka-krotoszy%C5%84ska</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/polish_Hej-Sokoły-bd</loc>
+    <loc>https://dudahero.org/app/play/polish_Hej-Soko%C5%82y-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/polish_Do-ciebie-Kasiuniu</loc>
+    <loc>https://dudahero.org/app/play/polish_Do-ciebie-Kasiuniu</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_А-мой-дзядзька-дуднік-быў</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%90-%D0%BC%D0%BE%D0%B9-%D0%B4%D0%B7%D1%8F%D0%B4%D0%B7%D1%8C%D0%BA%D0%B0-%D0%B4%D1%83%D0%B4%D0%BD%D1%96%D0%BA-%D0%B1%D1%8B%D1%9E</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Pirates-of-the-Caribbean---He's-a-Pirate</loc>
+    <loc>https://dudahero.org/app/play/other_Pirates-of-the-Caribbean---He's-a-Pirate</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Танец-М.Усцінава-bd</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A2%D0%B0%D0%BD%D0%B5%D1%86-%D0%9C.%D0%A3%D1%81%D1%86%D1%96%D0%BD%D0%B0%D0%B2%D0%B0-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/polish_Film-Chłopi---Jesień---Tańcuj</loc>
+    <loc>https://dudahero.org/app/play/polish_Film-Ch%C5%82opi---Jesie%C5%84---Ta%C5%84cuj</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/irish_I'm-Shipping-Up-to-Boston</loc>
+    <loc>https://dudahero.org/app/play/irish_I'm-Shipping-Up-to-Boston</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Michael-Peter-Vereno---Theme-1</loc>
+    <loc>https://dudahero.org/app/play/other_Michael-Peter-Vereno---Theme-1</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Абэрак-Дзяніса-Сухога</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%90%D0%B1%D1%8D%D1%80%D0%B0%D0%BA-%D0%94%D0%B7%D1%8F%D0%BD%D1%96%D1%81%D0%B0-%D0%A1%D1%83%D1%85%D0%BE%D0%B3%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Louis-Armstrong---Summertime</loc>
+    <loc>https://dudahero.org/app/play/other_Louis-Armstrong---Summertime</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_Louis-Armstrong---Summertime-bd</loc>
+    <loc>https://dudahero.org/app/play/other_Louis-Armstrong---Summertime-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Зайграй-жа-мне-дударочку</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%97%D0%B0%D0%B9%D0%B3%D1%80%D0%B0%D0%B9-%D0%B6%D0%B0-%D0%BC%D0%BD%D0%B5-%D0%B4%D1%83%D0%B4%D0%B0%D1%80%D0%BE%D1%87%D0%BA%D1%83</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_А-тапу-тапу-на-жоўтым-пяску</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%90-%D1%82%D0%B0%D0%BF%D1%83-%D1%82%D0%B0%D0%BF%D1%83-%D0%BD%D0%B0-%D0%B6%D0%BE%D1%9E%D1%82%D1%8B%D0%BC-%D0%BF%D1%8F%D1%81%D0%BA%D1%83</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Гаспадарочак,-ды-слаўны-паночак</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%93%D0%B0%D1%81%D0%BF%D0%B0%D0%B4%D0%B0%D1%80%D0%BE%D1%87%D0%B0%D0%BA%2C-%D0%B4%D1%8B-%D1%81%D0%BB%D0%B0%D1%9E%D0%BD%D1%8B-%D0%BF%D0%B0%D0%BD%D0%BE%D1%87%D0%B0%D0%BA</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_А-ляцела-сойка-цераз-наша-полька</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%90-%D0%BB%D1%8F%D1%86%D0%B5%D0%BB%D0%B0-%D1%81%D0%BE%D0%B9%D0%BA%D0%B0-%D1%86%D0%B5%D1%80%D0%B0%D0%B7-%D0%BD%D0%B0%D1%88%D0%B0-%D0%BF%D0%BE%D0%BB%D1%8C%D0%BA%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ты-каліна,-чырвоная</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A2%D1%8B-%D0%BA%D0%B0%D0%BB%D1%96%D0%BD%D0%B0%2C-%D1%87%D1%8B%D1%80%D0%B2%D0%BE%D0%BD%D0%B0%D1%8F</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Хадзілі,-блудзілі-валачобнічкі</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A5%D0%B0%D0%B4%D0%B7%D1%96%D0%BB%D1%96%2C-%D0%B1%D0%BB%D1%83%D0%B4%D0%B7%D1%96%D0%BB%D1%96-%D0%B2%D0%B0%D0%BB%D0%B0%D1%87%D0%BE%D0%B1%D0%BD%D1%96%D1%87%D0%BA%D1%96</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Тры-Янгалы</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A2%D1%80%D1%8B-%D0%AF%D0%BD%D0%B3%D0%B0%D0%BB%D1%8B</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ой-рана,-на-Івана</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9E%D0%B9-%D1%80%D0%B0%D0%BD%D0%B0%2C-%D0%BD%D0%B0-%D0%86%D0%B2%D0%B0%D0%BD%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ох-п'е,-чумак-п'е</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9E%D1%85-%D0%BF'%D0%B5%2C-%D1%87%D1%83%D0%BC%D0%B0%D0%BA-%D0%BF'%D0%B5</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ой-кумэ-кумэ,-добра-гарэлка</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9E%D0%B9-%D0%BA%D1%83%D0%BC%D1%8D-%D0%BA%D1%83%D0%BC%D1%8D%2C-%D0%B4%D0%BE%D0%B1%D1%80%D0%B0-%D0%B3%D0%B0%D1%80%D1%8D%D0%BB%D0%BA%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Як-пайшоў-я-на-базар</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%AF%D0%BA-%D0%BF%D0%B0%D0%B9%D1%88%D0%BE%D1%9E-%D1%8F-%D0%BD%D0%B0-%D0%B1%D0%B0%D0%B7%D0%B0%D1%80</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Одын-місяц-сходыць</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9E%D0%B4%D1%8B%D0%BD-%D0%BC%D1%96%D1%81%D1%8F%D1%86-%D1%81%D1%85%D0%BE%D0%B4%D1%8B%D1%86%D1%8C</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ой-капуста,-да-й-росада</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9E%D0%B9-%D0%BA%D0%B0%D0%BF%D1%83%D1%81%D1%82%D0%B0%2C-%D0%B4%D0%B0-%D0%B9-%D1%80%D0%BE%D1%81%D0%B0%D0%B4%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Не-ході,-козаче,-по-над-берэгамі</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9D%D0%B5-%D1%85%D0%BE%D0%B4%D1%96%2C-%D0%BA%D0%BE%D0%B7%D0%B0%D1%87%D0%B5%2C-%D0%BF%D0%BE-%D0%BD%D0%B0%D0%B4-%D0%B1%D0%B5%D1%80%D1%8D%D0%B3%D0%B0%D0%BC%D1%96</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/irish_Drowsy-Maggie-bd</loc>
+    <loc>https://dudahero.org/app/play/irish_Drowsy-Maggie-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/irish_Morrison's-Jig-bd</loc>
+    <loc>https://dudahero.org/app/play/irish_Morrison's-Jig-bd</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_Kastarvat---Kost-ar-c'hoat</loc>
+    <loc>https://dudahero.org/app/play/medieval_Kastarvat---Kost-ar-c'hoat</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/medieval_In-taberna</loc>
+    <loc>https://dudahero.org/app/play/medieval_In-taberna</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_UNIA---Долам</loc>
+    <loc>https://dudahero.org/app/play/other_UNIA---%D0%94%D0%BE%D0%BB%D0%B0%D0%BC</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_UNIA---Едзем</loc>
+    <loc>https://dudahero.org/app/play/other_UNIA---%D0%95%D0%B4%D0%B7%D0%B5%D0%BC</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_UNIA---Зара</loc>
+    <loc>https://dudahero.org/app/play/other_UNIA---%D0%97%D0%B0%D1%80%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_UNIA---Крынічанька</loc>
+    <loc>https://dudahero.org/app/play/other_UNIA---%D0%9A%D1%80%D1%8B%D0%BD%D1%96%D1%87%D0%B0%D0%BD%D1%8C%D0%BA%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/other_UNIA---Хлопец-пашаньку-паша</loc>
+    <loc>https://dudahero.org/app/play/other_UNIA---%D0%A5%D0%BB%D0%BE%D0%BF%D0%B5%D1%86-%D0%BF%D0%B0%D1%88%D0%B0%D0%BD%D1%8C%D0%BA%D1%83-%D0%BF%D0%B0%D1%88%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Ой,-вісна-красна</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%9E%D0%B9%2C-%D0%B2%D1%96%D1%81%D0%BD%D0%B0-%D0%BA%D1%80%D0%B0%D1%81%D0%BD%D0%B0</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Хадзіў-маладзец-па-загор'ю</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A5%D0%B0%D0%B4%D0%B7%D1%96%D1%9E-%D0%BC%D0%B0%D0%BB%D0%B0%D0%B4%D0%B7%D0%B5%D1%86-%D0%BF%D0%B0-%D0%B7%D0%B0%D0%B3%D0%BE%D1%80'%D1%8E</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Хадзіў-пахадзіў-Ясь-па-полі</loc>
+    <loc>https://dudahero.org/app/play/belarusian_%D0%A5%D0%B0%D0%B4%D0%B7%D1%96%D1%9E-%D0%BF%D0%B0%D1%85%D0%B0%D0%B4%D0%B7%D1%96%D1%9E-%D0%AF%D1%81%D1%8C-%D0%BF%D0%B0-%D0%BF%D0%BE%D0%BB%D1%96</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Dzianis-Sukhi---U-Dudku-Pajhraju</loc>
+    <loc>https://dudahero.org/app/play/belarusian_Dzianis-Sukhi---U-Dudku-Pajhraju</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Dzianis-Sukhi---A-moj-dziadźka-dudnik-byŭ</loc>
+    <loc>https://dudahero.org/app/play/belarusian_Dzianis-Sukhi---A-moj-dziad%C5%BAka-dudnik-by%C5%AD</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dudahero.org/play/belarusian_Dzianis-Sukhi---Ciacerka</loc>
+    <loc>https://dudahero.org/app/play/belarusian_Dzianis-Sukhi---Ciacerka</loc>
     <lastmod>2026-03-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
