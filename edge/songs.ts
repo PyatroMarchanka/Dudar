@@ -168,7 +168,7 @@ export const pageText: Record<Lang, PageText> = {
     playOn: (noun) => `▶ Іграць на ${noun}`,
     playIntro: (name) =>
       `Адкрыйце плэер, каб паслухаць «${name}» і сачыць за аплікатурай кожнай ноты, запаволіць тэмп, паўтараць складаныя такты або перайсці да нот.`,
-    subtitle: (type) => `${type} найгрыш`,
+    subtitle: (type) => `${type}`,
     aboutSong: 'Пра песню',
     lyrics: 'Тэкст',
     details: 'Падрабязнасці',
@@ -217,7 +217,7 @@ export const pageText: Record<Lang, PageText> = {
     playOn: (noun) => `▶ Zagraj na ${noun}`,
     playIntro: (name) =>
       `Otwórz odtwarzacz, aby posłuchać „${name}” i śledzić palcowanie każdej nuty, zwolnić tempo, zapętlić trudne takty lub przełączyć się na nuty.`,
-    subtitle: (type) => `${type} melodia`,
+    subtitle: (type) => `${type}`,
     aboutSong: 'O utworze',
     lyrics: 'Tekst',
     details: 'Szczegóły',
