@@ -13,6 +13,7 @@ import Videocam from "@material-ui/icons/Videocam";
 import Audiotrack from "@material-ui/icons/Audiotrack";
 import Info from "@material-ui/icons/Info";
 import { Icon } from "../global/Icon";
+import { songPagePath } from "../SEO/SongSeo";
 
 interface Props {
   onClose: () => void;
@@ -68,6 +69,13 @@ export const SongPage = ({ onClose }: Props) => {
         <Typography>
           <b>{activeSong?.name}</b>
         </Typography>
+        {activeSong?.id && (
+          <Typography variant="body2">
+            <a className="song-link" href={songPagePath(activeSong.id)} target="_blank" rel="noreferrer">
+              {t(`songInfo.songPage`)}
+            </a>
+          </Typography>
+        )}
       </SongProperty>
       {activeSong?.type && (
         <SongProperty>

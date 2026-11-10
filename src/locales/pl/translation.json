@@ -156,6 +156,7 @@
     "cancel": "Anuluj"
   },
   "songInfo": {
+    "songPage": "Strona utworu",
     "title": "Informacje o utworze",
     "name": "Nazwa",
     "tags": "Tagi",

@@ -38,6 +38,10 @@ registerRoute(
 
     if (url.pathname.startsWith('/_')) {
       return false;
+    } // Song pages are rendered by Cloudflare Pages Functions, not the app.
+
+    if (url.pathname === '/songs' || url.pathname.startsWith('/songs/')) {
+      return false;
     } // If this looks like a URL for a resource, because it contains // a file extension, skip.
 
     if (url.pathname.match(fileExtensionRegexp)) {
