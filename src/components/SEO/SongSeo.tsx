@@ -21,9 +21,12 @@ const truncate = (text: string, limit: number) => {
   return `${cut.slice(0, cut.lastIndexOf(' ') > 0 ? cut.lastIndexOf(' ') : cut.length)}…`;
 };
 
-export const songPagePath = (songId: string) => `${routes.app}/${routes.play}/${encodeURIComponent(songId)}`;
+// Public, server-rendered song page (functions/songs/[id].ts). The player points its
+// canonical there so search engines index the page with the about text and lyrics.
+export const songPagePath = (songId: string) => `/songs/${encodeURIComponent(songId)}`;
 
 // Per-song title, description, canonical, Open Graph and JSON-LD for the player page.
+// Keep the title and description in step with edge/songs.ts.
 export const SongSeo = ({ songId, title }: Props) => {
   const { t, i18n } = useTranslation('translation');
   const {
@@ -65,7 +68,7 @@ export const SongSeo = ({ songId, title }: Props) => {
         }}
         breadcrumbs={[
           { name: 'Home', url: routes.main },
-          { name: 'Songs', url: routes.playlists },
+          { name: 'Songs', url: '/songs' },
           { name: songTitle, url: path },
         ]}
       />

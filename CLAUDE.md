@@ -14,7 +14,6 @@ The project uses npm (`package-lock.json`, `packageManager: npm`), even though t
 - `npm run build`: production build into `build/`
 - `npm test`: Jest via react-scripts (watch mode). Run one file with `npm test -- src/path/to/file.test.ts`. The only tests so far are `src/components/MusicSheets/notation.test.ts`.
 - `npx tsc --noEmit`: type-check. There is no separate lint script; ESLint (`react-app` config) runs inside start and build.
-- `npm run update-sitemap`: regenerates `public/sitemap.xml` from the backend's songs and articles
 - `npm run songlist` points at a `load.ts` that no longer exists.
 
 Prettier config (`.prettierrc.js`): 120 columns, single quotes, trailing commas `es5`. Older files still use double quotes.
@@ -53,6 +52,14 @@ There are two view modes:
 - API clients are in `src/api/`. Every URL is built in `src/api/links.ts` from `REACT_APP_BACKEND_URL` (`/v1/...`).
 - Auth is Google OAuth. The JWT and user ID are stored in cookies (`jwtToken`, `userId`), and `withAuth()` in `src/api/utils.ts` builds the auth headers.
 - Beyond songs, the backend serves user profile and settings, playlists, articles and categories (the blog and "Learning Book"), and admin song editing.
+
+### SEO pages (Cloudflare Pages Functions)
+`functions/` holds Pages Functions that run at the edge before the SPA. Shared code is in `edge/songs.ts` (it may import only pure modules from `src/`, like `src/locales/transliterate.ts`). They read the catalog from `REACT_APP_BACKEND_URL` (`/v1/songs`), which must also be set as a Pages environment variable for the Functions runtime.
+- `/songs/:id`: server-rendered song page (about, lyrics, details, related songs, Play button). This is the canonical URL of a song.
+- `/songs`: the catalog grouped by type.
+- `/app/play/:id`: serves the SPA but rewrites title, description, Open Graph and canonical (to `/songs/:id`) with HTMLRewriter.
+- `/sitemap.xml`: built live from the catalog and articles.
+Functions responses are not covered by `public/_headers`, so they add `X-Robots-Tag: noindex` themselves on non-production hosts. Try them locally with `npx wrangler pages dev build --binding REACT_APP_BACKEND_URL=<url>`.
 
 ### Other
 - Routes are in `src/router/` (`routes.ts` holds the paths). Nested `/app` routes are defined in `Dudar.tsx`.
