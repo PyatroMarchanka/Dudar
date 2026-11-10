@@ -22,7 +22,7 @@ import { MenuItem, Select } from "@material-ui/core";
 import { MusicNote, Home } from "@material-ui/icons";
 import { Views } from "../../../interfaces/user";
 import { routes } from "../../../router/routes";
-import { SongPageModal } from "../../global/SongPageModal";
+import { SongInfoLink } from "../../global/SongInfoLink";
 import { isFluteInstrument } from "../../../brand";
 import { useSelectStyles } from "../../global/selectStyles";
 import {
@@ -67,7 +67,7 @@ export const MainSettings = ({ midiPlayer, showSongInfo = true }: Props) => {
         <Icon type="material" fill={settingsColors.accent} Icon={Home} />
         <span>{t("login.mainPage")}</span>
       </HomeLink>
-      {showSongInfo && <SongPageModal />}
+      {showSongInfo && <SongInfoLink />}
 
       <Section>
         <SectionTitle>{t("settingsSections.instrument")}</SectionTitle>

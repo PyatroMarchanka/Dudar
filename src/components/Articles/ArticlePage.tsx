@@ -250,6 +250,7 @@ const ArticlePage: React.FC = () => {
         image={post.featuredImage || '/android-chrome-192x192.png'}
         language={language}
         canonicalPath={canonicalPath}
+        hreflangPath={`/article/:lang/${slug}`}
         type="article"
       />
       <StructuredData

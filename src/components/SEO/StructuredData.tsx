@@ -23,11 +23,7 @@ interface StructuredDataProps {
     name: string;
     genre: string;
     description?: string;
-    bagpipeTypes: string[];
-    timeSignature: string;
-    tempo?: number;
-    tags: string[];
-    transcribedBy?: string;
+    lyrics?: string;
     url: string;
   };
   breadcrumbs?: Array<{
@@ -86,13 +82,6 @@ const routeSchemas = {
       "@type": "SearchAction",
       "target": `${siteUrl}/app?search={search_term_string}`,
       "query-input": "required name=search_term_string"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "120",
-      "bestRating": "5",
-      "worstRating": "1"
     }
   },
   [routes.app]: {
@@ -177,102 +166,20 @@ const getBreadcrumbSchema = (breadcrumbs: StructuredDataProps['breadcrumbs']) =>
 });
 
 const getSongSchema = (songData: StructuredDataProps['songData']): Record<string, any>[] => {
-  const musicRecordingSchema = {
+  const song = songData!;
+  const composition: Record<string, any> = {
     "@context": "https://schema.org",
-    "@type": "MusicRecording",
-    "name": songData!.name,
-    "genre": songData!.genre,
-    "description": songData!.description || `Learn to play ${songData!.name} on ${instrumentNoun}`,
-    "url": `${siteUrl}${songData!.url}`,
-    "keywords": [
-      songData!.name,
-      `${songData!.name} bagpipe`,
-      `${songData!.name} tutorial`,
-      `how to play ${songData!.name}`,
-      `${songData!.name} bagpipe tutorial`,
-      `learn ${songData!.name}`,
-      ...songData!.bagpipeTypes.map(type => `${songData!.name} ${type}`),
-      ...songData!.tags,
-      "bagpipe tutorial",
-      "bagpipe lesson",
-      "learn bagpipes"
-    ].join(", "),
-    "inLanguage": "en",
-    "byArtist": songData!.transcribedBy ? {
-      "@type": "Person",
-      "name": songData!.transcribedBy
-    } : undefined
-  };
-
-  const howToSchema = {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    "name": `How to Play ${songData!.name} on Bagpipes`,
-    "description": `Interactive tutorial for learning to play ${songData!.name} on ${instrumentNoun}. Step-by-step guide with MIDI support and multiple bagpipe types.`,
-    "url": `${siteUrl}${songData!.url}`,
-    "image": `${siteUrl}/android-chrome-192x192.png`,
-    "totalTime": "PT10M",
-    "estimatedCost": {
-      "@type": "MonetaryAmount",
-      "currency": "USD",
-      "value": "0"
-    },
-    "tool": songData!.bagpipeTypes.map(type => ({
-      "@type": "HowToTool",
-      "name": type
-    })),
-    "step": [
-      {
-        "@type": "HowToStep",
-        "name": "Select your bagpipe type",
-        "text": `Choose from ${songData!.bagpipeTypes.join(", ")} to play ${songData!.name}`,
-        "position": 1
-      },
-      {
-        "@type": "HowToStep",
-        "name": "Learn the melody",
-        "text": `Follow the interactive player to learn the notes and fingering for ${songData!.name}`,
-        "position": 2
-      },
-      {
-        "@type": "HowToStep",
-        "name": "Practice with MIDI",
-        "text": "Use the MIDI player to practice along with the music",
-        "position": 3
-      }
-    ],
-    "about": {
-      "@type": "Thing",
-      "name": "Bagpipe Playing"
-    },
-    "teach": true
-  };
-
-  const learningResourceSchema = {
-    "@context": "https://schema.org",
-    "@type": "LearningResource",
-    "name": `${songData!.name} - Bagpipe Tutorial`,
-    "description": `Interactive tutorial for learning ${songData!.name} on ${instrumentNoun} with step-by-step guidance`,
-    "url": `${siteUrl}${songData!.url}`,
-    "learningResourceType": ["Interactive Tutorial", "Music Lesson"],
-    "educationalLevel": "Beginner to Advanced",
-    "interactivityType": "active",
+    "@type": "MusicComposition",
+    "name": song.name,
+    "genre": song.genre,
+    "description": song.description || `Learn to play ${song.name} on ${instrumentNoun}`,
+    "url": `${siteUrl}${song.url}`,
     "isAccessibleForFree": true,
-    "inLanguage": "en",
-    "teaches": `How to play ${songData!.name} on ${instrumentNoun}`,
-    "about": [
-      {
-        "@type": "Thing",
-        "name": "Bagpipe Music"
-      },
-      {
-        "@type": "Thing",
-        "name": songData!.genre
-      }
-    ]
   };
-
-  return [musicRecordingSchema, howToSchema, learningResourceSchema];
+  if (song.lyrics) {
+    composition.lyrics = { "@type": "CreativeWork", "text": song.lyrics };
+  }
+  return [composition];
 };
 
 export const StructuredData: React.FC<StructuredDataProps> = ({ 

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import { Dudar } from "../components/screens/Dudar";
 import { About } from "../components/screens/About";
 import { routes } from "./routes";
@@ -74,6 +74,13 @@ export const AppRouter = () => {
           <EDuda />
         </Route>
         <Route path={routes.logout}>Logout</Route>
+        {/* /songs pages come from the server (functions/songs). If an older service
+            worker served the app shell for them instead, open the player. */}
+        <Route
+          path={`${routes.songs}/:id`}
+          render={({ match }) => <Redirect to={`${routes.app}/${routes.play}/${encodeURIComponent(match.params.id)}`} />}
+        />
+        <Redirect from={routes.songs} to={routes.playlists} />
       </Switch>
     </Router>
   );
