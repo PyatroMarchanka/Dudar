@@ -199,6 +199,8 @@ h2{font-size:21px;margin:32px 0 8px}
 .lyrics{white-space:pre-line;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
 ul.songs{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px 16px}
 ul.songs li{padding:4px 0;border-bottom:1px solid var(--line)}
+ul.songs a{color:var(--ink);text-decoration:none;font-weight:600}
+ul.songs a:hover{color:var(--accent);text-decoration:underline}
 footer{max-width:760px;margin:0 auto;padding:24px 16px;color:var(--muted);font-size:14px}
 `;
 
