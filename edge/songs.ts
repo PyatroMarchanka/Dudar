@@ -113,6 +113,7 @@ interface PageText {
   about: string;
   contacts: string;
   playOn: (noun: string) => string;
+  backToPlayer: string;
   playIntro: (name: string) => string;
   subtitle: (type: string, noun: string) => string;
   aboutSong: string;
@@ -137,6 +138,7 @@ export const pageText: Record<Lang, PageText> = {
     about: 'About',
     contacts: 'Contacts',
     playOn: (noun) => `▶ Play on ${noun}`,
+    backToPlayer: 'Back to the player',
     playIntro: (name) =>
       `Open the player to hear ${name} and follow the fingering for every note, slow it down, loop hard bars or switch to sheet music.`,
     subtitle: (type, noun) => `${type} ${noun} tune`,
@@ -166,6 +168,7 @@ export const pageText: Record<Lang, PageText> = {
     about: 'Пра праект',
     contacts: 'Кантакты',
     playOn: (noun) => `▶ Іграць на ${noun}`,
+    backToPlayer: 'Назад да плэера',
     playIntro: (name) =>
       `Адкрыйце плэер, каб паслухаць «${name}» і сачыць за аплікатурай кожнай ноты, запаволіць тэмп, паўтараць складаныя такты або перайсці да нот.`,
     subtitle: (type) => `${type}`,
@@ -215,6 +218,7 @@ export const pageText: Record<Lang, PageText> = {
     about: 'O projekcie',
     contacts: 'Kontakt',
     playOn: (noun) => `▶ Zagraj na ${noun}`,
+    backToPlayer: 'Wróć do odtwarzacza',
     playIntro: (name) =>
       `Otwórz odtwarzacz, aby posłuchać „${name}” i śledzić palcowanie każdej nuty, zwolnić tempo, zapętlić trudne takty lub przełączyć się na nuty.`,
     subtitle: (type) => `${type}`,
@@ -358,6 +362,8 @@ header.top a{color:var(--ink);text-decoration:none;font-weight:700}
 header.top img{width:32px;height:32px}
 header.top nav{margin-left:auto;display:flex;gap:16px;font-size:15px}
 main{max-width:760px;margin:0 auto;padding:16px 16px 48px}
+.back{display:inline-flex;align-items:center;gap:6px;margin:4px 0 0;font-weight:600;text-decoration:none;color:var(--ink)}
+.back:hover{color:var(--accent)}
 .crumbs{font-size:14px;color:var(--muted);margin:8px 0 0}
 .crumbs a{color:var(--muted)}
 h1{font-size:30px;line-height:1.25;margin:12px 0 4px}
@@ -500,6 +506,19 @@ export const renderSongPage = (song: Song, songs: Song[], site: Site, lang: Lang
   const links = (song.links || []).filter((link) => /^https?:\/\//.test(link.url));
 
   const body = `
+<a class="back" id="back-to-player" href="${esc(playerPath(song.id))}">← ${esc(text.backToPlayer)}</a>
+<script>
+// Came here from the player: go back in history so the player keeps its place
+document.getElementById('back-to-player').addEventListener('click', function (e) {
+  try {
+    var ref = document.referrer && new URL(document.referrer);
+    if (ref && ref.origin === location.origin && ref.pathname.indexOf('/app/') === 0 && history.length > 1) {
+      e.preventDefault();
+      history.back();
+    }
+  } catch (err) {}
+});
+</script>
 ${breadcrumbHtml(crumbs.map((c, i) => (i === crumbs.length - 1 ? { name: c.name } : c)))}
 <h1>${esc(song.name)}</h1>
 <p class="subtitle">${latin ? `${esc(latin)} · ` : ''}${esc(text.subtitle(shownType, nounText))}</p>

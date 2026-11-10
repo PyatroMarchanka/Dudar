@@ -20,7 +20,7 @@ interface Props {
 }
 
 // Header for the ABC-notation player (/app/abc?abc=...). Unlike
-// PlayPageHeader it doesn't render SongList or SongPageModal, since there is
+// PlayPageHeader it doesn't render SongList or SongInfoLink, since there is
 // no catalog song to browse or share - just keeps this route light enough
 // to embed in an iframe.
 export const AbcPlayPageHeader = ({ midiPlayer }: Props) => {
