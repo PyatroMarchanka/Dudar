@@ -8,6 +8,7 @@ import {
   loadSongs,
   notFoundPage,
   paramValue,
+  pickLang,
   renderSongPage,
   unavailablePage,
 } from '../../edge/songs';
@@ -23,5 +24,5 @@ export const onRequestGet = async ({ request, env, params }: PagesContext) => {
   }
   const song = findSong(songs, paramValue(params.id));
   if (!song) return notFoundPage(site);
-  return htmlResponse(renderSongPage(song, songs, site), site);
+  return htmlResponse(renderSongPage(song, songs, site, pickLang(request)), site);
 };

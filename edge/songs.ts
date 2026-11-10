@@ -87,6 +87,177 @@ export const instrumentLabels: Record<string, string> = {
 
 export const typeLabel = (type: string) => songTypeLabels[type] || 'Traditional';
 
+export type Lang = 'en' | 'be' | 'pl';
+
+// The pages are server-rendered, so the language comes from the Accept-Language header
+// (crawlers send none and get English). Song names, about texts and lyrics are shown as stored.
+export const pickLang = (request: Request): Lang => {
+  const header = (request.headers.get('Accept-Language') || '').toLowerCase();
+  const ranked = header
+    .split(',')
+    .map((part) => {
+      const [tag, q] = part.trim().split(';q=');
+      return { code: tag.split('-')[0], q: q ? Number(q) : 1 };
+    })
+    .filter((item) => item.q > 0)
+    .sort((a, b) => b.q - a.q);
+  const match = ranked.find((item) => ['en', 'be', 'pl'].includes(item.code));
+  return (match?.code as Lang) || 'en';
+};
+
+interface PageText {
+  home: string;
+  songs: string;
+  player: string;
+  learn: string;
+  about: string;
+  contacts: string;
+  playOn: (noun: string) => string;
+  playIntro: (name: string) => string;
+  subtitle: (type: string, noun: string) => string;
+  aboutSong: string;
+  lyrics: string;
+  details: string;
+  listen: string;
+  moreOfType: (type: string) => string;
+  allOfType: (type: string) => string;
+  footer: (siteName: string, noun: string) => string;
+  facts: { type: string; instruments: string; meter: string; tempo: string; transcribedBy: string };
+  noun: Record<string, string>;
+  types: Record<string, string>;
+  instruments: Record<string, string>;
+}
+
+export const pageText: Record<Lang, PageText> = {
+  en: {
+    home: 'Home',
+    songs: 'Songs',
+    player: 'Player',
+    learn: 'Learn',
+    about: 'About',
+    contacts: 'Contacts',
+    playOn: (noun) => `▶ Play on ${noun}`,
+    playIntro: (name) =>
+      `Open the player to hear ${name} and follow the fingering for every note, slow it down, loop hard bars or switch to sheet music.`,
+    subtitle: (type, noun) => `${type} ${noun} tune`,
+    aboutSong: 'About the song',
+    lyrics: 'Lyrics',
+    details: 'Details',
+    listen: 'Listen and watch',
+    moreOfType: (type) => `More ${type} tunes`,
+    allOfType: (type) => `All ${type} tunes`,
+    footer: (siteName, noun) => `${siteName}: learn to play the ${noun} with fingering animation and sheet music.`,
+    facts: {
+      type: 'Type',
+      instruments: 'Instruments',
+      meter: 'Time signature',
+      tempo: 'Tempo',
+      transcribedBy: 'Transcribed by',
+    },
+    noun: {},
+    types: {},
+    instruments: {},
+  },
+  be: {
+    home: 'Галоўная',
+    songs: 'Песні',
+    player: 'Плэер',
+    learn: 'Навучанне',
+    about: 'Пра праект',
+    contacts: 'Кантакты',
+    playOn: (noun) => `▶ Іграць на ${noun}`,
+    playIntro: (name) =>
+      `Адкрыйце плэер, каб паслухаць «${name}» і сачыць за аплікатурай кожнай ноты, запаволіць тэмп, паўтараць складаныя такты або перайсці да нот.`,
+    subtitle: (type) => `${type}`,
+    aboutSong: 'Пра песню',
+    lyrics: 'Тэкст',
+    details: 'Падрабязнасці',
+    listen: 'Паслухаць і паглядзець',
+    moreOfType: (type) => `Яшчэ ў раздзеле «${type}»`,
+    allOfType: (type) => `Усё ў раздзеле «${type}»`,
+    footer: (siteName, noun) => `${siteName}: вучыцеся іграць на ${noun} з аніміраванай аплікатурай і нотамі.`,
+    facts: {
+      type: 'Раздзел',
+      instruments: 'Інструменты',
+      meter: 'Памер',
+      tempo: 'Тэмп',
+      transcribedBy: 'Расшыфроўка',
+    },
+    noun: { bagpipe: 'дудзе', flute: 'флейце' },
+    types: {
+      belarusian: 'Беларускія',
+      schotland: 'Шатландскія',
+      irish: 'Ірландскія',
+      polish: 'Польскія',
+      balkan: 'Балканскія',
+      serbian: 'Сербскія',
+      medieval: 'Сярэднявечныя',
+      scandinavian: 'Скандынаўскія',
+      exercises: 'Практыкаванні',
+      composed: 'Аўтарскія',
+      other: 'Іншыя',
+    },
+    instruments: {
+      bd: 'Беларуская традыцыйная дуда',
+      bnd: 'Беларуская нятрадыцыйная закрытая дуда',
+      bod: 'Беларуская адкрытая дуда',
+      ddl: 'Дудельзак',
+      ghb: 'Вялікая горная валынка',
+      pl: 'Вялікапольская дуда',
+      tw: 'Тынавая свісцёлка',
+    },
+  },
+  pl: {
+    home: 'Strona główna',
+    songs: 'Utwory',
+    player: 'Odtwarzacz',
+    learn: 'Nauka',
+    about: 'O projekcie',
+    contacts: 'Kontakt',
+    playOn: (noun) => `▶ Zagraj na ${noun}`,
+    playIntro: (name) =>
+      `Otwórz odtwarzacz, aby posłuchać „${name}” i śledzić palcowanie każdej nuty, zwolnić tempo, zapętlić trudne takty lub przełączyć się na nuty.`,
+    subtitle: (type) => `${type}`,
+    aboutSong: 'O utworze',
+    lyrics: 'Tekst',
+    details: 'Szczegóły',
+    listen: 'Posłuchaj i obejrzyj',
+    moreOfType: (type) => `Więcej w dziale „${type}”`,
+    allOfType: (type) => `Wszystko w dziale „${type}”`,
+    footer: (siteName, noun) => `${siteName}: ucz się grać na ${noun} z animacją palcowania i nutami.`,
+    facts: {
+      type: 'Dział',
+      instruments: 'Instrumenty',
+      meter: 'Metrum',
+      tempo: 'Tempo',
+      transcribedBy: 'Transkrypcja',
+    },
+    noun: { bagpipe: 'dudach', flute: 'flecie' },
+    types: {
+      belarusian: 'Białoruskie',
+      schotland: 'Szkockie',
+      irish: 'Irlandzkie',
+      polish: 'Polskie',
+      balkan: 'Bałkańskie',
+      serbian: 'Serbskie',
+      medieval: 'Średniowieczne',
+      scandinavian: 'Skandynawskie',
+      exercises: 'Ćwiczenia',
+      composed: 'Autorskie',
+      other: 'Inne',
+    },
+    instruments: {
+      bd: 'Białoruska tradycyjna duda',
+      bnd: 'Białoruska nietradycyjna duda zamknięta',
+      bod: 'Białoruska duda otwarta',
+      ddl: 'Dudelsack',
+      ghb: 'Szkockie dudy Great Highland',
+      pl: 'Dudy wielkopolskie',
+      tw: 'Tin whistle',
+    },
+  },
+};
+
 export const songPath = (id: string) => `/songs/${encodeURIComponent(id)}`;
 export const playerPath = (id: string) => `/app/play/${encodeURIComponent(id)}`;
 
@@ -212,13 +383,16 @@ interface PageOptions {
   ogType?: string;
   jsonLd: unknown[];
   body: string;
+  lang?: Lang;
 }
 
-export const renderPage = ({ site, path, title, description, ogType = 'website', jsonLd, body }: PageOptions) => {
+export const renderPage = ({ site, path, title, description, ogType = 'website', jsonLd, body, lang = 'en' }: PageOptions) => {
+  const text = pageText[lang];
+  const nounText = text.noun[site.noun] || site.noun;
   const url = `${site.url}${path}`;
   const image = `${site.url}/android-chrome-512x512.png`;
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="${lang}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -245,12 +419,12 @@ ${jsonLd.map((data) => `<script type="application/ld+json">${ldJson(data)}</scri
 <header class="top">
 <a href="/"><img src="/duda.png" alt="" width="32" height="32"></a>
 <a href="/">${esc(site.name)}</a>
-<nav><a href="/songs">Songs</a><a href="/app">Player</a><a href="/learning-book">Learn</a></nav>
+<nav><a href="/songs">${esc(text.songs)}</a><a href="/app">${esc(text.player)}</a><a href="/learning-book">${esc(text.learn)}</a></nav>
 </header>
 <main>
 ${body}
 </main>
-<footer>${esc(site.name)}: learn to play the ${esc(site.noun)} with fingering animation and sheet music. <a href="/about">About</a> · <a href="/contacts">Contacts</a></footer>
+<footer>${esc(text.footer(site.name, nounText))} <a href="/about">${esc(text.about)}</a> · <a href="/contacts">${esc(text.contacts)}</a></footer>
 </body>
 </html>`;
 };
@@ -276,19 +450,25 @@ const songListHtml = (songs: Song[]) =>
     .map((song) => `<li><a href="${esc(songPath(song.id))}">${esc(song.name)}</a></li>`)
     .join('')}</ul>`;
 
-export const renderSongPage = (song: Song, songs: Song[], site: Site) => {
+export const renderSongPage = (song: Song, songs: Song[], site: Site, lang: Lang = 'en') => {
+  const text = pageText[lang];
+  const nounText = text.noun[site.noun] || site.noun;
+
   const path = songPath(song.id);
   const title = songTitle(song, site);
   const description = songDescription(song, site);
   const type = typeLabel(song.type);
+  const shownType = text.types[song.type] || type;
   const typePath = `/songs#${encodeURIComponent(song.type)}`;
-  const instruments = instrumentList(song);
+  const instruments = (song.bagpipesToPlay || [])
+    .map((code) => text.instruments[code] || instrumentLabels[code])
+    .filter(Boolean) as string[];
   const latin = isCyrilicWord(song.name) ? transliterate(song.name) : '';
   const related = relatedSongs(songs, song);
   const crumbs = [
-    { name: 'Home', path: '/' },
-    { name: 'Songs', path: '/songs' },
-    { name: type, path: typePath },
+    { name: text.home, path: '/' },
+    { name: text.songs, path: '/songs' },
+    { name: shownType, path: typePath },
     { name: song.name, path },
   ];
 
@@ -310,11 +490,11 @@ export const renderSongPage = (song: Song, songs: Song[], site: Site) => {
   };
 
   const facts: Array<[string, string]> = [
-    ['Type', type],
-    ...(instruments.length ? [['Instruments', instruments.join(', ')] as [string, string]] : []),
-    ...(song.timeSignature ? [['Time signature', song.timeSignature] as [string, string]] : []),
-    ...(song.originalTempo ? [['Tempo', `${Math.round(song.originalTempo / 2)} BPM`] as [string, string]] : []),
-    ...(song.transcribedBy ? [['Transcribed by', song.transcribedBy] as [string, string]] : []),
+    [text.facts.type, shownType],
+    ...(instruments.length ? [[text.facts.instruments, instruments.join(', ')] as [string, string]] : []),
+    ...(song.timeSignature ? [[text.facts.meter, song.timeSignature] as [string, string]] : []),
+    ...(song.originalTempo ? [[text.facts.tempo, `${Math.round(song.originalTempo / 2)} BPM`] as [string, string]] : []),
+    ...(song.transcribedBy ? [[text.facts.transcribedBy, song.transcribedBy] as [string, string]] : []),
   ];
 
   const links = (song.links || []).filter((link) => /^https?:\/\//.test(link.url));
@@ -322,21 +502,21 @@ export const renderSongPage = (song: Song, songs: Song[], site: Site) => {
   const body = `
 ${breadcrumbHtml(crumbs.map((c, i) => (i === crumbs.length - 1 ? { name: c.name } : c)))}
 <h1>${esc(song.name)}</h1>
-<p class="subtitle">${latin ? `${esc(latin)} · ` : ''}${esc(type)} ${esc(site.noun)} tune</p>
-<p><a class="play" href="${esc(playerPath(song.id))}">▶ Play on ${esc(site.noun)}</a></p>
-<p>Open the player to hear ${esc(song.name)} and follow the fingering for every note, slow it down, loop hard bars or switch to sheet music.</p>
-${song.about ? `<h2>About the song</h2>\n<p lang="${textLang(song.about)}">${esc(song.about.trim()).replace(/\n+/g, '</p><p>')}</p>` : ''}
-${song.lyrycs ? `<h2>Lyrics</h2>\n<div class="lyrics" lang="${textLang(song.lyrycs)}">${esc(song.lyrycs.trim())}</div>` : ''}
-<h2>Details</h2>
+<p class="subtitle">${latin ? `${esc(latin)} · ` : ''}${esc(text.subtitle(shownType, nounText))}</p>
+<p><a class="play" href="${esc(playerPath(song.id))}">${esc(text.playOn(nounText))}</a></p>
+<p>${esc(text.playIntro(song.name))}</p>
+${song.about ? `<h2>${esc(text.aboutSong)}</h2>\n<p lang="${textLang(song.about)}">${esc(song.about.trim()).replace(/\n+/g, '</p><p>')}</p>` : ''}
+${song.lyrycs ? `<h2>${esc(text.lyrics)}</h2>\n<div class="lyrics" lang="${textLang(song.lyrycs)}">${esc(song.lyrycs.trim())}</div>` : ''}
+<h2>${esc(text.details)}</h2>
 <dl class="facts">${facts.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>
 ${
   links.length
-    ? `<h2>Listen and watch</h2>\n<ul>${links
+    ? `<h2>${esc(text.listen)}</h2>\n<ul>${links
         .map((link) => `<li><a href="${esc(link.url)}" rel="noopener nofollow" target="_blank">${esc(link.name || link.url)}</a></li>`)
         .join('')}</ul>`
     : ''
 }
-${related.length ? `<h2>More ${esc(type)} tunes</h2>\n${songListHtml(related)}\n<p><a href="${esc(typePath)}">All ${esc(type)} tunes</a></p>` : ''}
+${related.length ? `<h2>${esc(text.moreOfType(shownType))}</h2>\n${songListHtml(related)}\n<p><a href="${esc(typePath)}">${esc(text.allOfType(shownType))}</a></p>` : ''}
 `;
 
   return renderPage({
@@ -347,6 +527,7 @@ ${related.length ? `<h2>More ${esc(type)} tunes</h2>\n${songListHtml(related)}\n
     ogType: 'music.song',
     jsonLd: [composition, breadcrumbLd(site, crumbs)],
     body,
+    lang,
   });
 };
 
@@ -410,6 +591,7 @@ export const htmlResponse = (html: string, site: Site, status = 200) => {
   const headers: Record<string, string> = {
     'Content-Type': 'text/html; charset=utf-8',
     'Cache-Control': 'public, max-age=600',
+    Vary: 'Accept-Language',
   };
   // _headers does not apply to Functions, so mark non-production hosts here
   if (!site.isProduction) headers['X-Robots-Tag'] = 'noindex';
