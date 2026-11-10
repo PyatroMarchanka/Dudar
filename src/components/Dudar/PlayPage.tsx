@@ -7,9 +7,10 @@ import { Header, SettingsButtons } from "./common";
 import { SongTitle } from "./SongTitle";
 import { MidiPlayer } from "../../utils/MidiPlayer";
 import { useLoadSong } from "../../hooks/useLoadSong";
-import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { FavoriteButton } from "../FavoriteButton";
 import { ShareButton } from "../ShareButton";
+import { SongSeo } from "../SEO/SongSeo";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
@@ -17,14 +18,12 @@ interface Props {
 
 export const PlayPageHeader = ({ midiPlayer }: Props) => {
   const songTitle = useSongTitle();
+  const { id } = useParams<{ id: string }>();
   useLoadSong();
-
-  useEffect(() => {
-    document.title = songTitle ?? noSongsLabel;
-  }, [songTitle]);
 
   return (
     <SettingsButtons className="settingsButtons">
+      <SongSeo songId={id} title={songTitle} />
       <SongList player={midiPlayer} />
       <Header>
         <SongTitle title={songTitle ?? noSongsLabel} />

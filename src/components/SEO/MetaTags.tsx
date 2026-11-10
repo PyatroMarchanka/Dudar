@@ -10,10 +10,14 @@ interface MetaTagsProps {
   title?: string;
   description?: string;
   image?: string;
+  // Ignored by search engines; accepted so existing callers keep compiling.
   keywords?: string;
   type?: string;
   language?: string;
   canonicalPath?: string;
+  // Path with a ":lang" placeholder for pages that exist in every language
+  // (e.g. "/article/:lang/my-post"). hreflang links are emitted only then.
+  hreflangPath?: string;
 }
 
 const bagpipeDefaultMeta = {
@@ -77,11 +81,11 @@ const routeMeta = isFluteBrand ? fluteRouteMeta : bagpipeRouteMeta;
 export const MetaTags: React.FC<MetaTagsProps> = ({ 
   title = defaultMeta.title,
   description = defaultMeta.description,
-  keywords = defaultMeta.keywords,
   image = defaultMeta.image,
   type = 'website',
   language = 'en',
-  canonicalPath
+  canonicalPath,
+  hreflangPath
 }) => {
   const location = useLocation();
   const currentRoute = location?.pathname;
@@ -89,26 +93,18 @@ export const MetaTags: React.FC<MetaTagsProps> = ({
 
   const finalTitle = routeSpecificMeta.title || title;
   const finalDescription = routeSpecificMeta.description || description;
-  const finalKeywords = routeSpecificMeta.keywords || keywords;
   const finalImage = image;
   const canonicalUrl = canonicalPath || currentRoute;
 
-  // Generate hreflang links for multi-language support
   const languages = ['en', 'be', 'pl'];
-  const hreflangLinks = languages.map(lang => {
-    let href = `${siteUrl}${canonicalUrl}`;
-    // For blog/article routes with language parameter
-    if (canonicalUrl.includes(':lang')) {
-      href = `${siteUrl}${canonicalUrl}`.replace(':lang', lang);
-    }
-    return { rel: 'alternate', hrefLang: lang, href };
-  });
+  const hreflangLinks = hreflangPath
+    ? languages.map((lang) => ({ hrefLang: lang, href: `${siteUrl}${hreflangPath.replace(':lang', lang)}` }))
+    : [];
 
   return (
     <Helmet>
       <title>{finalTitle}</title>
       <meta name="description" content={finalDescription} />
-      <meta name="keywords" content={finalKeywords} />
       <meta name="language" content={language} />
       
       {/* Open Graph / Facebook */}
@@ -130,10 +126,12 @@ export const MetaTags: React.FC<MetaTagsProps> = ({
       <link rel="canonical" href={`${siteUrl}${canonicalUrl}`} />
       
       {/* hreflang for multi-language support */}
-      {hreflangLinks.map((link, index) => (
-        <link key={index} rel={link.rel} hrefLang={link.hrefLang} href={link.href} />
+      {hreflangLinks.map((link) => (
+        <link key={link.hrefLang} rel="alternate" hrefLang={link.hrefLang} href={link.href} />
       ))}
-      <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/`} />
+      {hreflangPath && (
+        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}${hreflangPath.replace(':lang', 'en')}`} />
+      )}
     </Helmet>
   );
 }; 

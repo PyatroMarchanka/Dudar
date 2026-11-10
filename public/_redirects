@@ -1,0 +1,3 @@
+# Old song links (listed in the sitemap until Nov 2026) pointed at /play/<id>,
+# a path the app never had. Send them to the real player page.
+/play/*  /app/play/:splat  301
