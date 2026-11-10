@@ -85,6 +85,13 @@ export enum SongTags {
   Song = "song",
   Dance = "dance",
   Kaliady = "kaliady",
+  Easter = "easter",
+  Spring = "spring",
+  Wedding = "wedding",
+  Kupalle = "kupalle",
+  Harvest = "harvest",
+  Soldier = "soldier",
+  Autumn = "autumn",
 }
 
 export interface IPlaylist {
