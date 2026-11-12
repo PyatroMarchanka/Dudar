@@ -13,13 +13,41 @@ export const getFirstSongFromList = (lists: SongListByBagpipe): Song => {
   return brandSong || Object.values(lists)?.[0]?.[0];
 };
 
+// An id from the URL can still be percent-encoded: history only runs decodeURI on
+// the path, so links that encode "," (like old song pages) arrive as %2C.
+export const decodeSongId = (id: string) => {
+  try {
+    return decodeURIComponent(id);
+  } catch {
+    return id;
+  }
+};
+
 export const findSongInListById = (
   id: string,
   lists: SongListByBagpipe
 ): Song | undefined => {
   const allSongs = Object.values(lists).flat();
+  const decodedId = decodeSongId(id);
 
-  return allSongs.find((song) => song.id === id);
+  return allSongs.find((song) => song.id === id || song.id === decodedId);
+};
+
+const baseSongId = (id: string) => id.split("-bd").join("");
+
+// A song can exist in several variants (e.g. "<id>" and "<id>-bd" for different
+// bagpipes) with the same name, and each bagpipe's list keeps only one of them.
+// Finds the variant of `song` that the current lists hold.
+export const findSongVariantInList = (
+  song: Song,
+  lists: SongListByBagpipe
+): Song | undefined => {
+  const allSongs = Object.values(lists).flat();
+
+  return (
+    allSongs.find((other) => baseSongId(other.id) === baseSongId(song.id)) ||
+    allSongs.find((other) => other.type === song.type && other.name === song.name)
+  );
 };
 
 const fourToFourTicks = 480 * 4;

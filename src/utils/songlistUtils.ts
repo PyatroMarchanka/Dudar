@@ -30,16 +30,16 @@ export const sortSongsByBagpipe = (songs: Song[]): SongListByBagpipe => {
   songs?.forEach((song) => {
     song.bagpipesToPlay.forEach((bagpipeType) => {
       if (list[bagpipeType]) {
-        const isAlreadyInList = !!list[bagpipeType].find(
+        const sameNameIndex = list[bagpipeType].findIndex(
           (songFromList) => songFromList.name === song.name
         );
         const isSpecialForBagpipe = song.pathName.includes(`-${bagpipeType}`);
 
-        if (!isAlreadyInList) {
+        if (sameNameIndex === -1) {
           list[bagpipeType].push(song);
         } else if (isSpecialForBagpipe) {
-          list[bagpipeType] = list[bagpipeType].slice(0, -1);
-          list[bagpipeType].push(song);
+          // Replace the other variant of this song, not whichever song came last
+          list[bagpipeType][sameNameIndex] = song;
         }
       } else {
         list[bagpipeType] = [song];

@@ -263,7 +263,10 @@ export const pageText: Record<Lang, PageText> = {
 };
 
 export const songPath = (id: string) => `/songs/${encodeURIComponent(id)}`;
-export const playerPath = (id: string) => `/app/play/${encodeURIComponent(id)}`;
+// The player matches the id from the URL as react-router gives it, and history only
+// runs decodeURI on the path, which leaves %2C (",") and other reserved characters
+// encoded. So only what would break the URL is escaped here, and commas stay as is.
+export const playerPath = (id: string) => `/app/play/${encodeURI(id).replace(/[?#]/g, encodeURIComponent)}`;
 
 const backendUrl = (env: Env) => (env.REACT_APP_BACKEND_URL || env.BACKEND_URL || '').replace(/\/$/, '');
 
