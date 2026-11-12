@@ -1,3 +1,6 @@
 # Old song links (listed in the sitemap until Nov 2026) pointed at /play/<id>,
 # a path the app never had. Send them to the song page.
 /play/*  /songs/:splat  301
+
+# /about has no page of its own; the home page is the about page.
+/about  /  301

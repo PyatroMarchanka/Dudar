@@ -20,6 +20,7 @@ import { StructuredData } from "../components/SEO/StructuredData";
 import { FluteLanding } from "../components/screens/FluteLanding";
 import { isFluteBrand } from "../brand";
 import { SongUpdateNotice } from "../components/SongUpdateNotice";
+import { NotFound } from "../components/screens/NotFound";
 
 export const AppRouter = () => {
   return (
@@ -81,6 +82,9 @@ export const AppRouter = () => {
           render={({ match }) => <Redirect to={`${routes.app}/${routes.play}/${encodeURIComponent(match.params.id)}`} />}
         />
         <Redirect from={routes.songs} to={routes.playlists} />
+        <Route>
+          <NotFound />
+        </Route>
       </Switch>
     </Router>
   );

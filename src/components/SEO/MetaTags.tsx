@@ -18,7 +18,39 @@ interface MetaTagsProps {
   // Path with a ":lang" placeholder for pages that exist in every language
   // (e.g. "/article/:lang/my-post"). hreflang links are emitted only then.
   hreflangPath?: string;
+  // Languages the hreflang links are emitted for (default: all three).
+  hreflangLanguages?: string[];
+  // Keep the page out of search results (e.g. "not found" screens).
+  noindex?: boolean;
 }
+
+// Pages that are private, per-user or only make sense inside the app. They are
+// kept out of the index so Google doesn't report them as thin or soft-404 pages.
+const NOINDEX_PREFIXES = [
+  routes.login,
+  routes.logout,
+  routes.admin,
+  routes.articleAdmin,
+  routes.articleUpdate,
+  routes.articleAdminList,
+  routes.melodies,
+  routes.start,
+  `${routes.app}/${routes.abc}`,
+  `${routes.app}/${routes.melody}/`,
+  `${routes.app}/${routes.draft}/`,
+];
+
+export const isNoindexPath = (path: string) =>
+  NOINDEX_PREFIXES.some((prefix) => path === prefix || path.startsWith(prefix.endsWith('/') ? prefix : `${prefix}/`));
+
+// "/learning-book/" and "/learning-book" are the same page: canonicalize without the slash
+const normalizePath = (path = '/') => (path.length > 1 ? path.replace(/\/+$/, '') : path) || '/';
+
+export const NoIndex = () => (
+  <Helmet>
+    <meta name="robots" content="noindex" />
+  </Helmet>
+);
 
 const bagpipeDefaultMeta = {
   title: 'Duda Hero - Learn to Play Bagpipes | Interactive Music Education',
@@ -85,7 +117,9 @@ export const MetaTags: React.FC<MetaTagsProps> = ({
   type = 'website',
   language = 'en',
   canonicalPath,
-  hreflangPath
+  hreflangPath,
+  hreflangLanguages,
+  noindex
 }) => {
   const location = useLocation();
   const currentRoute = location?.pathname;
@@ -94,10 +128,11 @@ export const MetaTags: React.FC<MetaTagsProps> = ({
   const finalTitle = routeSpecificMeta.title || title;
   const finalDescription = routeSpecificMeta.description || description;
   const finalImage = image;
-  const canonicalUrl = canonicalPath || currentRoute;
+  const canonicalUrl = normalizePath(canonicalPath || currentRoute);
+  const robotsNoindex = noindex || isNoindexPath(currentRoute || '/');
 
-  const languages = ['en', 'be', 'pl'];
-  const hreflangLinks = hreflangPath
+  const languages = hreflangLanguages || ['en', 'be', 'pl'];
+  const hreflangLinks = hreflangPath && languages.length > 1
     ? languages.map((lang) => ({ hrefLang: lang, href: `${siteUrl}${hreflangPath.replace(':lang', lang)}` }))
     : [];
 
@@ -106,6 +141,7 @@ export const MetaTags: React.FC<MetaTagsProps> = ({
       <title>{finalTitle}</title>
       <meta name="description" content={finalDescription} />
       <meta name="language" content={language} />
+      {robotsNoindex && <meta name="robots" content="noindex" />}
       
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
@@ -129,8 +165,8 @@ export const MetaTags: React.FC<MetaTagsProps> = ({
       {hreflangLinks.map((link) => (
         <link key={link.hrefLang} rel="alternate" hrefLang={link.hrefLang} href={link.href} />
       ))}
-      {hreflangPath && (
-        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}${hreflangPath.replace(':lang', 'en')}`} />
+      {hreflangLinks.length > 0 && (
+        <link rel="alternate" hrefLang="x-default" href={hreflangLinks.find((l) => l.hrefLang === 'en')?.href || hreflangLinks[0].href} />
       )}
     </Helmet>
   );

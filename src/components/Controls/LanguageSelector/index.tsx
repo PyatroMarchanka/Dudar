@@ -8,9 +8,13 @@ import { useTranslation } from "react-i18next";
 import { useUpdateUserSettings } from "../../../hooks/useGoogleProfile";
 import { userLanguage } from "../../../constants/localStorage";
 
-interface Props {}
+interface Props {
+  // Shown language when it differs from the app language (e.g. an article's URL language)
+  value?: Languages;
+  onChange?: (language: Languages) => void;
+}
 
-const LanguageSelector = ({}: Props) => {
+const LanguageSelector = ({ value, onChange }: Props) => {
   const {
     state: { language },
     setLanguage,
@@ -29,8 +33,9 @@ const LanguageSelector = ({}: Props) => {
     <Select
       id="lang-select"
       className={selectClasses.select}
-      value={language}
+      value={value || language}
       onChange={(e) => {
+        onChange?.(e.target.value as Languages);
         changeLanguage(e.target.value as Languages);
         setLanguage(e.target.value as Languages);
         localStorage.setItem(userLanguage, e.target.value as string);

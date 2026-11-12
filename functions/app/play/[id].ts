@@ -2,24 +2,33 @@ declare const HTMLRewriter: any;
 // /app/play/<id>: still the React player, but the title, description, canonical
 // and link-preview tags are filled in at the edge, so crawlers and messengers
 // that don't run JavaScript (Telegram, Facebook, WhatsApp) see the song.
-import { PagesContext, esc, findSong, getSite, loadSongs, paramValue, songDescription, songPath, songTitle } from '../../../edge/songs';
+import { PagesContext, canonicalSongId, esc, findSong, getSite, loadSongs, paramValue, songDescription, songPath, songTitle } from '../../../edge/songs';
 
 export const onRequestGet = async ({ request, env, params, next }: PagesContext) => {
   const page = await next();
   if (!(page.headers.get('Content-Type') || '').includes('text/html')) return page;
 
   const site = getSite(request);
-  let song;
+  let songs;
   try {
-    song = findSong(await loadSongs(env, request), paramValue(params.id));
+    songs = await loadSongs(env, request);
   } catch (error) {
     console.error(error);
+    return page;
   }
-  if (!song) return page;
+  const song = findSong(songs, paramValue(params.id));
+  if (!song) {
+    // Unknown or removed song: the app shows "song not found", so answer 404
+    // instead of 200 (a soft 404 for Google). The app itself still loads.
+    const headers = new Headers(page.headers);
+    headers.set('X-Robots-Tag', 'noindex');
+    headers.set('Cache-Control', 'no-store');
+    return new Response(page.body, { status: 404, headers });
+  }
 
   const title = songTitle(song, site);
   const description = songDescription(song, site);
-  const canonical = `${site.url}${songPath(song.id)}`;
+  const canonical = `${site.url}${songPath(canonicalSongId(songs, song.id))}`;
   const content: Record<string, string> = {
     description,
     'og:title': title,

@@ -1,12 +1,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import { NoIndex } from "../SEO/MetaTags";
 
 export const NoSong: React.FC = () => {
   const { t } = useTranslation("translation");
 
   return (
     <Container>
+      <NoIndex />
       <h1>{t("noSong.title")}</h1>
       <Message>{t("noSong.text")}</Message>
       <Message>{t("noSong.tryChange")}</Message>

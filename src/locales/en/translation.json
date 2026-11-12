@@ -407,5 +407,11 @@
     "updated": "Songs were updated",
     "thisSong": "This song was updated",
     "refresh": "Refresh"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "There is no page at this address.",
+    "home": "Home",
+    "songs": "All songs"
   }
 }

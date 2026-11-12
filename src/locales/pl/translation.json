@@ -407,5 +407,11 @@
     "updated": "Utwory zostały zaktualizowane",
     "thisSong": "Ten utwór został zaktualizowany",
     "refresh": "Odśwież"
+  },
+  "notFound": {
+    "title": "Nie znaleziono strony",
+    "text": "Pod tym adresem nie ma strony.",
+    "home": "Strona główna",
+    "songs": "Wszystkie melodie"
   }
 }
