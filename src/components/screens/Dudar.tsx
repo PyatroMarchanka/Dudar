@@ -10,7 +10,10 @@ import { DynamicCanvas } from "../Canvas/DynamicCanvas";
 import { convertMidiPitchToNote } from "../../utils/midiUtils";
 import { MidiPlayerComponent } from "../MidiPlayerComponent";
 import { BackdropSpinner } from "../global/BackdropSpinner";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { useSongListShort } from "../../hooks/useSongLIst";
+import { getFirstSongFromList } from "../../dataset/songs/utils";
+import { isFluteBrand } from "../../brand";
 import { routes } from "../../router/routes";
 import { PlayPageHeader } from "../Dudar/PlayPage";
 import { AbcPlayPageHeader, UserMelodyPlayPageHeader, MelodyDraftPlayPageHeader } from "../Dudar/AbcPlayPage";
@@ -86,6 +89,9 @@ export const Dudar = () => {
       <PlaybackDebug />
       <BackdropSpinner isOpen={isSongLoading} />
       <Switch>
+        <Route exact path={path}>
+          <OpenLastSong />
+        </Route>
         <Route exact path={`${path}/${routes.play}/:id`}>
           <PlayPageHeader midiPlayer={midiPlayer} />
           {isSongUnavailable || !bagpipeType ? <NoSong /> : PlayerComponent}
@@ -105,6 +111,21 @@ export const Dudar = () => {
       </Switch>
     </Container>
   );
+};
+
+// /app on its own (the "Play" app shortcut, old links) showed an empty screen.
+// Open the last played song, or the first one, like the navbar's Play link.
+const OpenLastSong = () => {
+  const {
+    state: { activeSong, listsByBagpipe, userLastSongUrl },
+  } = useContext(store);
+  useSongListShort();
+  const songId =
+    (!isFluteBrand && userLastSongUrl) ||
+    activeSong?.id ||
+    (listsByBagpipe && getFirstSongFromList(listsByBagpipe)?.id) ||
+    "";
+  return songId ? <Redirect to={`${routes.app}/${routes.play}/${songId}`} /> : null;
 };
 
 const GlobalStyle = createGlobalStyle`

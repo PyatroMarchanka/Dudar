@@ -289,6 +289,15 @@ export const loadSongs = async (env: Env, request: Request): Promise<Song[]> => 
 
 export const findSong = (songs: Song[], id: string) => songs.find((song) => song.id === id);
 
+// Some songs exist in several bagpipe variants whose ids differ only by a `-bd`
+// suffix, with the same name, about text and lyrics. Their pages would be
+// duplicates, so they all point their canonical at the variant without the
+// suffix when that one is in the catalog (src/hooks/useFavoriteSongs.ts does the same).
+export const canonicalSongId = (songs: Song[], id: string) => {
+  const base = id.split('-bd').join('');
+  return base !== id && findSong(songs, base) ? base : id;
+};
+
 export const relatedSongs = (songs: Song[], song: Song, limit = 12): Song[] => {
   const labels = new Set(song.labels || []);
   const score = (other: Song) =>
@@ -430,7 +439,7 @@ ${jsonLd.map((data) => `<script type="application/ld+json">${ldJson(data)}</scri
 <main>
 ${body}
 </main>
-<footer>${esc(text.footer(site.name, nounText))} <a href="/about">${esc(text.about)}</a> · <a href="/contacts">${esc(text.contacts)}</a></footer>
+<footer>${esc(text.footer(site.name, nounText))} <a href="/">${esc(text.about)}</a> · <a href="/contacts">${esc(text.contacts)}</a></footer>
 </body>
 </html>`;
 };
@@ -460,7 +469,7 @@ export const renderSongPage = (song: Song, songs: Song[], site: Site, lang: Lang
   const text = pageText[lang];
   const nounText = text.noun[site.noun] || site.noun;
 
-  const path = songPath(song.id);
+  const path = songPath(canonicalSongId(songs, song.id));
   const title = songTitle(song, site);
   const description = songDescription(song, site);
   const type = typeLabel(song.type);
