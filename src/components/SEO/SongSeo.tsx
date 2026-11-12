@@ -1,9 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { store } from '../../context';
 import { getTranslationKeyByBagpipeType } from '../../interfaces/enumUtils';
 import { routes } from '../../router/routes';
 import { MetaTags } from './MetaTags';
+import { loadSongList } from '../../api/appData';
+import { normalizeSongId } from '../../hooks/useFavoriteSongs';
 import { StructuredData } from './StructuredData';
 
 interface Props {
@@ -32,6 +34,22 @@ export const SongSeo = ({ songId, title }: Props) => {
   const {
     state: { activeSong },
   } = useContext(store);
+  // Bagpipe variants (`-bd` ids) share the song page of the base id when it is in
+  // the catalog, as in edge/songs.ts (canonicalSongId)
+  const baseId = normalizeSongId(songId);
+  const [canonicalId, setCanonicalId] = useState(songId);
+  useEffect(() => {
+    let active = true;
+    setCanonicalId(songId);
+    if (baseId !== songId) {
+      loadSongList()
+        .then((songs) => active && songs?.some((song) => song.id === baseId) && setCanonicalId(baseId))
+        .catch(() => undefined);
+    }
+    return () => {
+      active = false;
+    };
+  }, [songId, baseId]);
 
   if (!activeSong || activeSong.id !== songId) return null;
 
@@ -47,7 +65,7 @@ export const SongSeo = ({ songId, title }: Props) => {
     bagpipeNames.length ? ` for ${bagpipeNames.join(', ')}` : ''
   }.`;
   const metaDescription = truncate(activeSong.about || fallbackDescription, DESCRIPTION_LIMIT);
-  const path = songPagePath(songId);
+  const path = songPagePath(canonicalId);
 
   return (
     <>

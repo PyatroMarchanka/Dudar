@@ -1,3 +1,4 @@
+import React from 'react';
 import { Typography } from '@material-ui/core';
 import { Icon } from '../../global/Icon';
 import { ModalButton } from '../../global/ModalButton';
@@ -6,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import LanguageIcon from '@material-ui/icons/Language';
 
-export const IconLanguageSelector = () => {
+export const IconLanguageSelector = (props: React.ComponentProps<typeof LanguageSelector>) => {
   const { t } = useTranslation();
   return (
     <ModalButton
@@ -16,7 +17,7 @@ export const IconLanguageSelector = () => {
           <ModalTitle>
             <Typography>{t('languages.lang')}</Typography>
           </ModalTitle>
-          <LanguageSelector />
+          <LanguageSelector {...props} />
         </div>
       }
     />

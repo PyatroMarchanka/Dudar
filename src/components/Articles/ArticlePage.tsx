@@ -1,5 +1,6 @@
 import { useParams, Link, useHistory } from 'react-router-dom';
 import type { Article as BlogPostType } from '../../interfaces/article';
+import { Languages } from '../../interfaces';
 import {
   Container,
   Typography,
@@ -18,7 +19,7 @@ import { useGoogleProfile } from '../../hooks/useGoogleProfile';
 import { store } from '../../context';
 import LanguageSelector from '../Controls/LanguageSelector';
 import { routes } from '../../router/routes';
-import { MetaTags } from '../SEO/MetaTags';
+import { MetaTags, NoIndex } from '../SEO/MetaTags';
 import { StructuredData } from '../SEO/StructuredData';
 import { useContext, useEffect, useState } from 'react';
 import { IconLanguageSelector } from '../Controls/LanguageSelector/IconLanguageSelector';
@@ -178,7 +179,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ArticlePage: React.FC = () => {
   const {
-    state: { userData, language: currentLanguage },
+    state: { userData },
   } = useContext(store);
   const history = useHistory();
   const classes = useStyles();
@@ -190,11 +191,12 @@ const ArticlePage: React.FC = () => {
 
   useGoogleProfile();
 
-  useEffect(() => {
-    if (currentLanguage !== lang) {
-      history.push(`${routes.article}/${currentLanguage}/${slug}`);
-    }
-  }, [currentLanguage, lang, slug, history]);
+  // The URL decides the article's language. Switching the language here opens that
+  // translation. (Redirecting to the reader's saved language on open sent every
+  // /article/be/... and /article/pl/... link, Googlebot included, to another URL.)
+  const openLanguage = (newLanguage: string) => {
+    if (newLanguage !== lang) history.push(`${routes.article}/${newLanguage}/${slug}`);
+  };
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -222,6 +224,7 @@ const ArticlePage: React.FC = () => {
   if (!post) {
     return (
       <Paper className={classes.notFound}>
+        <NoIndex />
         <Typography variant="h4" gutterBottom>
           {t('blog.page.notFound')}
         </Typography>
@@ -232,14 +235,23 @@ const ArticlePage: React.FC = () => {
     );
   }
 
-  const currentTranslation = post.translations[language] || post.translations[post.defaultLanguage];
+  const hasTranslation = (code: string) => Boolean(post.translations[code]?.title);
+  const translatedLanguages = ['en', 'be', 'pl'].filter(hasTranslation);
+  // Without a translation the page shows another language's text: point its
+  // canonical at that language's URL so it isn't indexed as a duplicate.
+  const shownLanguage = hasTranslation(language)
+    ? language
+    : hasTranslation(post.defaultLanguage)
+    ? post.defaultLanguage
+    : translatedLanguages[0] || language;
+  const currentTranslation = post.translations[shownLanguage] || post.translations[post.defaultLanguage];
 
   const metaDescription =
     currentTranslation.metaDescription ||
     currentTranslation.excerpt ||
     'Learn about bagpipes with Duda Hero - interactive bagpipe tutorial';
   const metaKeywords = currentTranslation.metaKeywords?.join(', ') || 'bagpipes, learn bagpipes, bagpipe tutorial';
-  const canonicalPath = `/article/${language}/${slug}`;
+  const canonicalPath = `/article/${shownLanguage}/${slug}`;
 
   return (
     <>
@@ -248,9 +260,10 @@ const ArticlePage: React.FC = () => {
         description={metaDescription}
         keywords={metaKeywords}
         image={post.featuredImage || '/android-chrome-192x192.png'}
-        language={language}
+        language={shownLanguage}
         canonicalPath={canonicalPath}
         hreflangPath={`/article/:lang/${slug}`}
+        hreflangLanguages={translatedLanguages}
         type="article"
       />
       <StructuredData
@@ -276,7 +289,10 @@ const ArticlePage: React.FC = () => {
               <ArrowBack color="primary" />
             </IconButton>
           </Link>
-          <IconLanguageSelector />
+          <IconLanguageSelector
+            value={(Object.values(Languages) as string[]).includes(lang) ? (lang as Languages) : undefined}
+            onChange={openLanguage}
+          />
           {userData?.isAdmin && (
             <Link to={`${routes.articleUpdate}/${post.slug}`} style={{ textDecoration: 'none' }}>
               <IconButton>
