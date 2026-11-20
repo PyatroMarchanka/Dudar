@@ -10,7 +10,8 @@ import { routes } from '../../router/routes';
 import { MAX_ROLL_BPM, MIN_ROLL_BPM, ROLL_TIME_SIGNATURES } from '../../utils/midiUtils/melodyRoll';
 import { createMetronomeRecorder, MetronomeRecording } from '../../utils/audioToMidi/recorder';
 import { Recognition, recognizeNotes } from '../../utils/audioToMidi/recognize';
-import { gridSeconds, quantizeNotes } from '../../utils/audioToMidi/quantize';
+import { noteSeconds, quantizeNotes } from '../../utils/audioToMidi/quantize';
+import { encodeWav } from '../../utils/audioToMidi/wav';
 import { loadDraft, NEW_DRAFT_KEY, saveDraft } from '../MelodyEditor/draft';
 
 const KEY_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -21,6 +22,7 @@ const GRIDS = [
   { ticks: 60, label: '1/32' },
 ];
 const DEFAULT_GRID = 120;
+const DEFAULT_BPM = 80;
 
 type Phase = 'idle' | 'starting' | 'recording' | 'recognizing' | 'done';
 
@@ -46,7 +48,9 @@ export const RecognizeMelody = () => {
   } = useContext(store);
 
   const [bagpipeType, setBagpipeType] = useState<BagpipeTypes>(settingsBagpipe);
-  const [bpm, setBpm] = useState(80);
+  // Kept as typed, so the field can be cleared and retyped
+  const [bpmText, setBpmText] = useState('80');
+  const bpm = Math.min(MAX_ROLL_BPM, Math.max(MIN_ROLL_BPM, Math.round(Number(bpmText)) || DEFAULT_BPM));
   const [timeSignature, setTimeSignature] = useState<TimeSignatures>('4/4');
   const [gridTicks, setGridTicks] = useState(DEFAULT_GRID);
   const [phase, setPhase] = useState<Phase>('idle');
@@ -83,6 +87,7 @@ export const RecognizeMelody = () => {
   const bagpipeName = (type: BagpipeTypes) => t(`dudas.${bagpipes[type]?.name}`);
 
   const record = async () => {
+    setBpmText(String(bpm));
     setResult(null);
     setMicError(undefined);
     setBeat(null);
@@ -115,11 +120,18 @@ export const RecognizeMelody = () => {
     const recognition = await recognizeNotes(recording.samples, recording.sampleRate, {
       bagpipeType,
       transpose,
-      // Shorter than about a third of the shortest note: an ornament
-      minNoteSeconds: Math.min(0.08, Math.max(0.035, gridSeconds(bpm, gridTicks) * 0.35)),
+      // Clearly shorter than a 1/32: an ornament, left out
+      minNoteSeconds: noteSeconds(bpm, 32) * 0.8,
       onProgress: setProgress,
     });
-    setResult({ recording, recognition, bpm, timeSignature, bagpipeType, ...judge(recognition, recording, bagpipeName(bagpipeType)) });
+    setResult({
+      recording,
+      recognition,
+      bpm,
+      timeSignature,
+      bagpipeType,
+      ...judge(recognition, recording, bagpipeName(bagpipeType)),
+    });
     setPhase('done');
   };
   stopRef.current = stop;
@@ -131,12 +143,22 @@ export const RecognizeMelody = () => {
             bagpipeType: result.bagpipeType,
             timeSignature: result.timeSignature,
             bpm: result.bpm,
-            firstBeatSeconds: result.recording.firstBeatSeconds,
             gridTicks,
             keyTranspose: result.recognition.keyTranspose,
           })
         : null,
     [result, gridTicks]
+  );
+
+  const recordingUrl = useMemo(
+    () => (result ? URL.createObjectURL(encodeWav(result.recording.samples, result.recording.sampleRate)) : null),
+    [result]
+  );
+  useEffect(
+    () => () => {
+      if (recordingUrl) URL.revokeObjectURL(recordingUrl);
+    },
+    [recordingUrl]
   );
 
   const existingDraft = useMemo(() => (phase === 'done' ? loadDraft(NEW_DRAFT_KEY) : null), [phase]);
@@ -155,65 +177,6 @@ export const RecognizeMelody = () => {
   return (
     <Page>
       <h1>Recognize melody</h1>
-      <p className="hint">
-        Press Record and play along with the metronome. The app finds the notes and opens them in the melody editor,
-        where you can fix them and save. Headphones keep the clicks out of the recording.
-      </p>
-
-      <Settings>
-        <label>
-          Bagpipe
-          <select
-            value={bagpipeType}
-            disabled={busy}
-            onChange={(event) => setBagpipeType(event.target.value as BagpipeTypes)}
-          >
-            {Object.values(BagpipeTypes).map((type) => (
-              <option key={type} value={type}>
-                {bagpipeName(type)}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Tempo (quarter notes per minute)
-          <input
-            type="number"
-            min={MIN_ROLL_BPM}
-            max={MAX_ROLL_BPM}
-            value={bpm}
-            disabled={busy}
-            onChange={(event) => setBpm(Number(event.target.value))}
-            onBlur={() => setBpm((value) => Math.min(MAX_ROLL_BPM, Math.max(MIN_ROLL_BPM, Math.round(value) || 80)))}
-          />
-        </label>
-        <label>
-          Time signature
-          <select
-            value={timeSignature}
-            disabled={busy}
-            onChange={(event) => setTimeSignature(event.target.value as TimeSignatures)}
-          >
-            {ROLL_TIME_SIGNATURES.map((value) => (
-              <option key={value}>{value}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Shortest note
-          <select
-            value={gridTicks}
-            disabled={phase === 'recognizing'}
-            onChange={(event) => setGridTicks(Number(event.target.value))}
-          >
-            {GRIDS.map((grid) => (
-              <option key={grid.ticks} value={grid.ticks}>
-                {grid.label}
-              </option>
-            ))}
-          </select>
-        </label>
-      </Settings>
 
       {phase === 'recording' || phase === 'starting' ? (
         <Recording>
@@ -252,6 +215,11 @@ export const RecognizeMelody = () => {
             <>
               <h2>Could not recognize the melody</h2>
               <p>{result.error}</p>
+              {recordingUrl && (
+                <a className="download" href={recordingUrl} download="recording.wav">
+                  Download the recording
+                </a>
+              )}
             </>
           ) : (
             roll && (
@@ -272,14 +240,79 @@ export const RecognizeMelody = () => {
                 {replacesDraft && (
                   <p className="warning">This replaces the unsaved new melody that is open in the editor.</p>
                 )}
-                <button className="open" onClick={openInEditor}>
-                  Open in editor
-                </button>
+                <div className="actions">
+                  <button className="open" onClick={openInEditor}>
+                    Open in editor
+                  </button>
+                  {recordingUrl && (
+                    <a className="download" href={recordingUrl} download="recording.wav">
+                      Download the recording
+                    </a>
+                  )}
+                </div>
               </>
             )
           )}
         </ResultBox>
       )}
+
+      <Settings>
+        <label>
+          Bagpipe
+          <select
+            value={bagpipeType}
+            disabled={busy}
+            onChange={(event) => setBagpipeType(event.target.value as BagpipeTypes)}
+          >
+            {Object.values(BagpipeTypes).map((type) => (
+              <option key={type} value={type}>
+                {bagpipeName(type)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Tempo (quarter notes per minute)
+          <input
+            type="text"
+            inputMode="numeric"
+            value={bpmText}
+            disabled={busy}
+            onChange={(event) => setBpmText(event.target.value.replace(/[^0-9]/g, '').slice(0, 3))}
+            onBlur={() => setBpmText(String(bpm))}
+          />
+        </label>
+        <label>
+          Time signature
+          <select
+            value={timeSignature}
+            disabled={busy}
+            onChange={(event) => setTimeSignature(event.target.value as TimeSignatures)}
+          >
+            {ROLL_TIME_SIGNATURES.map((value) => (
+              <option key={value}>{value}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Shortest note
+          <select
+            value={gridTicks}
+            disabled={phase === 'recognizing'}
+            onChange={(event) => setGridTicks(Number(event.target.value))}
+          >
+            {GRIDS.map((grid) => (
+              <option key={grid.ticks} value={grid.ticks}>
+                {grid.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </Settings>
+      <p className="hint">
+        Press Record and play along with the metronome. The app finds the notes and opens them in the melody editor,
+        where you can fix them and save. Headphones keep the clicks out of the recording.
+      </p>
     </Page>
   );
 };
@@ -322,6 +355,7 @@ const Page = styled.div`
   }
 
   .hint {
+    margin-top: 0;
     color: #555;
     line-height: 1.4;
   }
@@ -360,7 +394,7 @@ const Recording = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  margin: 12px 0;
+  margin: 0 0 16px;
 
   .status {
     font-size: 18px;
@@ -440,6 +474,17 @@ const ResultBox = styled.div`
 
   &.failed {
     background: #fdecea;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .download {
+    color: ${green};
   }
 
   .open {
