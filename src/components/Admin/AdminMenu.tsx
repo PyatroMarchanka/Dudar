@@ -13,6 +13,7 @@ const items = [
   { to: `${routes.adminReview}/approved`, label: 'Approved', exact: true, count: 'approved' as const },
   { to: `${routes.adminReview}/rejected`, label: 'Rejected', exact: true, count: 'rejected' as const },
   { to: routes.adminRecognize, label: 'Recognize melody', exact: true },
+  { to: routes.adminDataset, label: 'Record for dataset', exact: true },
 ];
 
 // Switches between the admin lists, with how many melodies each review list holds

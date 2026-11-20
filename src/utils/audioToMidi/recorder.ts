@@ -9,6 +9,26 @@ export interface MetronomeRecording {
   sampleRate: number;
   // Seconds into the recording where the player heard the first click
   firstBeatSeconds: number;
+  // The latency that was added to firstBeatSeconds (the click's way to the ears)
+  latencySeconds: number;
+}
+
+export interface StartOptions extends RecorderCallbacks {
+  // Clicks from this beat on (counted from the first click) are not played;
+  // onBeat still fires for them
+  muteClicksFromBeat?: number;
+  // Another AudioContext whose clock to relate to the recorder's (see StartedRecording.contextOffset)
+  syncWith?: BaseAudioContext;
+}
+
+export interface StartedRecording {
+  // The recorder's own AudioContext time of the first click
+  firstClickTime: number;
+  // Add this to a time of the recorder's context to get the same moment on the
+  // other context (the one Tone.js plays through)
+  contextOffset: number;
+  // Seconds between two clicks
+  clickSeconds: number;
 }
 
 export interface RecorderCallbacks {
@@ -21,6 +41,19 @@ export interface RecorderCallbacks {
 const BUFFER_SIZE = 4096;
 const LOOKAHEAD_SECONDS = 0.2;
 const START_DELAY_SECONDS = 0.3;
+
+const median = (values: number[]) => [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
+
+// Two AudioContexts on one output device run on the same clock but start at
+// different times: how much later, in seconds, `other`'s clock reads than `base`'s
+export const getContextOffset = async (base: BaseAudioContext, other: BaseAudioContext) => {
+  const samples: number[] = [];
+  for (let i = 0; i < 7; i++) {
+    samples.push(other.currentTime - base.currentTime);
+    await new Promise((resolve) => setTimeout(resolve, 12));
+  }
+  return median(samples);
+};
 
 export const createMetronomeRecorder = () => {
   let context: AudioContext | undefined;
@@ -46,7 +79,11 @@ export const createMetronomeRecorder = () => {
     oscillator.stop(time + 0.05);
   };
 
-  const start = async (bpm: number, timeSignature: TimeSignatures, { onBeat, onLevel }: RecorderCallbacks = {}) => {
+  const start = async (
+    bpm: number,
+    timeSignature: TimeSignatures,
+    { onBeat, onLevel, muteClicksFromBeat = Infinity, syncWith }: StartOptions = {}
+  ): Promise<StartedRecording> => {
     stream = await navigator.mediaDevices.getUserMedia({
       // A loud instrument: no processing meant for voices
       audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
@@ -78,6 +115,7 @@ export const createMetronomeRecorder = () => {
     source.connect(processor);
     processor.connect(mute).connect(ctx.destination);
 
+    const contextOffset = syncWith ? await getContextOffset(ctx, syncWith) : 0;
     const interval = getClickSeconds(bpm, timeSignature);
     const beatsPerBar = Number(timeSignature.split('/')[0]);
     firstClick = ctx.currentTime + START_DELAY_SECONDS;
@@ -87,7 +125,7 @@ export const createMetronomeRecorder = () => {
         const time = firstClick + next * interval;
         const beat = next % beatsPerBar;
         const bar = Math.floor(next / beatsPerBar);
-        click(time, beat === 0);
+        if (next < muteClicksFromBeat) click(time, beat === 0);
         if (onBeat) {
           beatTimers.push(setTimeout(() => onBeat(beat, bar), Math.max(0, (time - ctx.currentTime) * 1000)));
           if (beatTimers.length > 64) beatTimers.splice(0, 32);
@@ -97,6 +135,7 @@ export const createMetronomeRecorder = () => {
     };
     schedule();
     schedulerId = setInterval(schedule, 25);
+    return { firstClickTime: firstClick, clickSeconds: interval, contextOffset };
   };
 
   const cleanup = () => {
@@ -134,7 +173,7 @@ export const createMetronomeRecorder = () => {
     });
     chunks = [];
     const firstBeatSeconds = firstClick - (recordingStart ?? firstClick) + latency;
-    return { samples, sampleRate, firstBeatSeconds };
+    return { samples, sampleRate, firstBeatSeconds, latencySeconds: latency };
   };
 
   // Stops without keeping anything (leaving the page)

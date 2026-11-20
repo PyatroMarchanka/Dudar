@@ -7,6 +7,7 @@ import { AdminMenu } from './AdminMenu';
 import { ReviewList } from './ReviewList';
 import { ReviewMelody } from './ReviewMelody';
 import { RecognizeMelody } from './RecognizeMelody';
+import { RecordDataset } from './RecordDataset';
 import { Navbar } from '../global/Navbar';
 import { store } from '../../context';
 import { routes } from '../../router/routes';
@@ -49,6 +50,9 @@ const Admin = () => {
             </Route>
             <Route exact path={routes.adminRecognize}>
               <RecognizeMelody />
+            </Route>
+            <Route exact path={routes.adminDataset}>
+              <RecordDataset />
             </Route>
           </Switch>
         </>
