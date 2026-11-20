@@ -20,6 +20,15 @@ import {
   saveTakeToFolder,
   TakeInfo,
 } from '../../utils/audioToMidi/datasetTake';
+import {
+  countTakesInFolder,
+  folderPermission,
+  loadLocalCounts,
+  recallFolder,
+  rememberFolder,
+  saveLocalCounts,
+  TakeCounts,
+} from '../../utils/audioToMidi/datasetFolder';
 import { createMetronomeRecorder, MetronomeRecording } from '../../utils/audioToMidi/recorder';
 import { encodeWav } from '../../utils/audioToMidi/wav';
 import {
@@ -45,6 +54,9 @@ import { mainColors } from '../../utils/theme';
 
 const KEY_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const SETUP_KEY = 'datasetSetup';
+const NEEDED_KEY = 'datasetTakesNeeded';
+const HELP_CLOSED_KEY = 'datasetHelpClosed';
+const DEFAULT_TAKES_NEEDED = 2;
 const SCHEDULE_AHEAD_SECONDS = 0.3;
 // Recording goes on this long after the last note, for it to die away
 const TAIL_SECONDS = 1.5;
@@ -72,6 +84,23 @@ const loadRoll = async (song: Song, fallbackBagpipe: BagpipeTypes): Promise<Melo
     timeSignature: song.timeSignature,
     bpm: song.originalTempo ? Math.round(Number(song.originalTempo) / 2) : undefined,
   }).roll;
+};
+
+const readNeeded = () => {
+  try {
+    const value = Number(localStorage.getItem(NEEDED_KEY));
+    return value >= 1 && value <= 10 ? value : DEFAULT_TAKES_NEEDED;
+  } catch (error) {
+    return DEFAULT_TAKES_NEEDED;
+  }
+};
+
+const readHelpOpen = () => {
+  try {
+    return localStorage.getItem(HELP_CLOSED_KEY) !== '1';
+  } catch (error) {
+    return true;
+  }
 };
 
 const readSetup = () => {
@@ -125,7 +154,14 @@ export const RecordDataset = () => {
   const [take, setTake] = useState<Take | null>(null);
   const [error, setError] = useState<string>();
   const [folder, setFolder] = useState<any>(null);
+  // A folder from an earlier visit that the browser wants a click to open again
+  const [pendingFolder, setPendingFolder] = useState<any>(null);
   const [saved, setSaved] = useState<string[]>([]);
+  const [counts, setCounts] = useState<TakeCounts>(loadLocalCounts);
+  const [counting, setCounting] = useState(false);
+  const [takesNeeded, setTakesNeeded] = useState(readNeeded);
+  const [onlyNeeded, setOnlyNeeded] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(readHelpOpen);
 
   const recorderRef = useRef<ReturnType<typeof createMetronomeRecorder>>();
   const startedAtRef = useRef(0);
@@ -341,10 +377,25 @@ export const RecordDataset = () => {
   };
   stopRef.current = stop;
 
+  // Uses the folder from now on, and counts the takes already in it
+  const adoptFolder = async (handle: any) => {
+    setFolder(handle);
+    setPendingFolder(null);
+    setCounting(true);
+    try {
+      setCounts(await countTakesInFolder(handle));
+    } catch (err) {
+      console.log(err);
+      setError('Could not read the takes in the folder.');
+    }
+    setCounting(false);
+  };
+
   const pickFolder = async () => {
     try {
       const chosen = await chooseFolder();
-      setFolder(chosen);
+      rememberFolder(chosen);
+      await adoptFolder(chosen);
       return chosen;
     } catch (err: any) {
       // Closing the picker is not an error
@@ -352,6 +403,29 @@ export const RecordDataset = () => {
       return null;
     }
   };
+
+  const reconnectFolder = async () => {
+    if (pendingFolder && (await folderPermission(pendingFolder, true))) await adoptFolder(pendingFolder);
+  };
+
+  // The folder from the last visit, when the browser lets the page use it without asking
+  useEffect(() => {
+    if (!canWriteToFolder()) return;
+    let cancelled = false;
+    (async () => {
+      const handle = await recallFolder();
+      if (!handle || cancelled) return;
+      if (await folderPermission(handle, false)) {
+        if (!cancelled) adoptFolder(handle);
+      } else {
+        setPendingFolder(handle);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const save = async () => {
     if (!take) return;
@@ -366,6 +440,9 @@ export const RecordDataset = () => {
       setPhase('saving');
       const name = target ? await saveTakeToFolder(target, info) : await downloadTake(info);
       setSaved((list) => [name, ...list]);
+      const next = { ...counts, [info.songId]: (counts[info.songId] ?? 0) + 1 };
+      setCounts(next);
+      if (!target) saveLocalCounts(next);
       URL.revokeObjectURL(take.audioUrl);
       setTake(null);
       setPhase('idle');
@@ -382,12 +459,25 @@ export const RecordDataset = () => {
     setPhase('idle');
   };
 
+  const takesOf = (item: Song) => counts[item.id || item._id || ''] ?? 0;
+  // Takes that count towards the target: more than needed on a song don't make up for another song
+  const countedTakes = (item: Song) => Math.min(takesOf(item), takesNeeded);
+  const totalNeeded = songs.length * takesNeeded;
+  const totalDone = songs.reduce((sum, item) => sum + countedTakes(item), 0);
+  const songsDone = songs.filter((item) => takesOf(item) >= takesNeeded).length;
+
   // The catalog as in the player: by kind of song (country, origin), open the one you pick from
   const searching = search.trim() !== '';
   const groups = useMemo<SongListBySongType>(() => {
     const term = search.trim().toLowerCase();
-    return sortSongsBySongType(songs.filter((item) => !term || item.name.toLowerCase().includes(term)));
-  }, [songs, search]);
+    return sortSongsBySongType(
+      songs.filter(
+        (item) =>
+          (!term || item.name.toLowerCase().includes(term)) &&
+          (!onlyNeeded || (counts[item.id || item._id || ''] ?? 0) < takesNeeded)
+      )
+    );
+  }, [songs, search, onlyNeeded, counts, takesNeeded]);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
   const busy = phase === 'starting' || phase === 'recording' || phase === 'saving';
@@ -415,6 +505,10 @@ export const RecordDataset = () => {
                         · {roll.timeSignature} · {roll.notes.length} notes · about {formatTime(tuneSeconds)}
                       </>
                     )}
+                  </div>
+                  <div className="details">
+                    Takes: {takesOf(song)} of {takesNeeded}
+                    {takesOf(song) >= takesNeeded ? ' · done' : ''}
                   </div>
                 </>
               ) : (
@@ -486,75 +580,82 @@ export const RecordDataset = () => {
         </Review>
       )}
 
-      <Section>
-        <h2>Song</h2>
-        <input
-          type="search"
-          className="search"
-          placeholder="Search songs"
-          value={search}
-          disabled={busy}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-        {songsError && <p className="warning">{songsError}</p>}
-        {Object.keys(groups).map((type) => (
-          <Accordion
-            key={type}
-            expanded={searching || !!openGroups[type]}
-            onChange={(_, open) => setOpenGroups((value) => ({ ...value, [type]: open }))}
-            className="group"
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <strong>{t(`genres.${type}`, type)}</strong>
-              <span className="count">{groups[type].length}</span>
-            </AccordionSummary>
-            <AccordionDetails className="songs">
-              {groups[type].map((item) => (
-                <button
-                  key={item._id || item.id}
-                  className={song && (song._id || song.id) === (item._id || item.id) ? 'active' : undefined}
-                  disabled={busy}
-                  onClick={() => selectSong(item)}
-                >
-                  {item.name}
-                  <span>{item.timeSignature}</span>
-                </button>
-              ))}
-            </AccordionDetails>
-          </Accordion>
-        ))}
-        {!Object.keys(groups).length && !songsError && (
-          <p className="hint">{songs.length ? 'No songs found' : 'Loading…'}</p>
-        )}
-      </Section>
-
-      <Section>
-        <h2>Where takes are saved</h2>
-        {canWriteToFolder() ? (
-          <p>
-            {folder ? (
-              <>
-                Folder: <strong>{folder.name}</strong>{' '}
-              </>
-            ) : (
-              'Not chosen yet: the browser asks when you save the first take. '
-            )}
-            <button className="link" onClick={pickFolder} disabled={busy}>
-              {folder ? 'Change folder' : 'Choose folder'}
-            </button>
-          </p>
-        ) : (
-          <p>
-            This browser can’t write to a folder, so each take downloads as a zip file. Chrome or Edge can save to a
-            folder.
-          </p>
-        )}
-        {saved.length > 0 && (
-          <p className="hint">
-            Saved in this visit: {saved.length}. Last: {saved[0]}
-          </p>
-        )}
-      </Section>
+      <Accordion
+        expanded={helpOpen}
+        onChange={(_, open) => {
+          setHelpOpen(open);
+          try {
+            localStorage.setItem(HELP_CLOSED_KEY, open ? '0' : '1');
+          } catch (err) {}
+        }}
+        className="help"
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <strong>How to record</strong>
+        </AccordionSummary>
+        <AccordionDetails className="help-body">
+          <div>
+            <p>
+              These takes teach the app to recognize bagpipe notes. You play a catalog tune along with the app, and
+              because the app knows which notes it is, every take is labelled by itself.
+            </p>
+            <h4>One take, step by step</h4>
+            <ol>
+              <li>Put on headphones. If the app’s sound gets into the microphone, the take is spoiled.</li>
+              <li>
+                Check the settings: the bagpipe and the key of your pipe (the same as in the player’s settings), and the
+                tempo.
+              </li>
+              <li>Pick a song in the list. The page scrolls up and shows the song, with its takes done of needed.</li>
+              <li>
+                Press <strong>Record</strong>. You hear a count-in, then the melody and the metronome. The bagpipe on
+                screen shows what to play. Play along as written; it stops by itself after the last note.
+              </li>
+              <li>
+                Check the take: the green lines are where the notes were due, and the sound should follow them. Press{' '}
+                <strong>Save take</strong>, or <strong>Discard</strong> if you stopped, stumbled badly or there was a
+                loud noise. Small slips are fine.
+              </li>
+            </ol>
+            <h4>How many takes</h4>
+            <ul>
+              <li>
+                <strong>{takesNeeded} takes of every song</strong> (you can change the number in the settings). The
+                counter next to each song shows takes done / needed, and it turns green when the song is finished.
+              </li>
+              <li>
+                Take 1 at the song’s own tempo. Take 2 about 15% slower or faster: change the Tempo field before it.
+              </li>
+              <li>
+                About <strong>30 to 40 different songs</strong>, around 1.5 to 2 hours in total. More different songs is
+                better than many takes of one song.
+              </li>
+              <li>Pick songs from different groups, and some quick and some slow.</li>
+            </ul>
+            <h4>How to play</h4>
+            <ul>
+              <li>
+                Play with the drones on, as you normally do. For a few songs, record one take with the drones off.
+              </li>
+              <li>Play your usual ornaments and your usual style. Don’t try to play cleaner than normal.</li>
+              <li>
+                Play every note of the tune, as written. Don’t skip parts, and keep going when you make a small mistake.
+              </li>
+              <li>
+                Now and then change the microphone or the room (phone, laptop, another room), and write it in
+                “Microphone and place”.
+              </li>
+              <li>Play every bagpipe you have: change the bagpipe in the settings before you record it.</li>
+            </ul>
+            <h4>Where the takes go</h4>
+            <p>
+              Each take is saved in the folder you choose (Chrome or Edge), or downloaded as a zip in other browsers.
+              Nothing goes to the server. After the first 10 to 15 takes, tell Claude in the project chat so the labels
+              can be checked before you record the rest.
+            </p>
+          </div>
+        </AccordionDetails>
+      </Accordion>
 
       <Section>
         <h2>Settings</h2>
@@ -610,6 +711,26 @@ export const RecordDataset = () => {
             </select>
           </label>
           <label>
+            Takes needed per song
+            <select
+              value={takesNeeded}
+              disabled={busy}
+              onChange={(event) => {
+                const value = Number(event.target.value);
+                setTakesNeeded(value);
+                try {
+                  localStorage.setItem(NEEDED_KEY, String(value));
+                } catch (err) {}
+              }}
+            >
+              {[1, 2, 3, 4, 5].map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
             Microphone and place (saved with each take)
             <input
               type="text"
@@ -648,6 +769,101 @@ export const RecordDataset = () => {
           Wear headphones, so the app’s sound is not in the recording. Play the tune as written, in the key above (the
           notes are moved to your pipe’s key), with your usual ornaments.
         </p>
+
+        <h3>Where takes are saved</h3>
+        {canWriteToFolder() ? (
+          <p>
+            {folder ? (
+              <>
+                Folder: <strong>{folder.name}</strong>{' '}
+              </>
+            ) : pendingFolder ? (
+              <>
+                Your folder <strong>{pendingFolder.name}</strong> from the last visit:{' '}
+                <button className="link" onClick={reconnectFolder} disabled={busy}>
+                  open it again
+                </button>{' '}
+                (the takes in it are counted).{' '}
+              </>
+            ) : (
+              'Not chosen yet: the browser asks when you save the first take. '
+            )}
+            <button className="link" onClick={pickFolder} disabled={busy}>
+              {folder ? 'Change folder' : 'Choose folder'}
+            </button>
+          </p>
+        ) : (
+          <p>
+            This browser can’t write to a folder, so each take downloads as a zip file. Chrome or Edge can save to a
+            folder.
+          </p>
+        )}
+        {saved.length > 0 && (
+          <p className="hint">
+            Saved in this visit: {saved.length}. Last: {saved[0]}
+          </p>
+        )}
+      </Section>
+
+      <Section>
+        <h2>Song</h2>
+        <input
+          type="search"
+          className="search"
+          placeholder="Search songs"
+          value={search}
+          disabled={busy}
+          onChange={(event) => setSearch(event.target.value)}
+        />
+        <p className="hint">
+          {counting
+            ? 'Counting the takes in the folder…'
+            : `Takes done: ${totalDone} of ${totalNeeded}. Songs finished: ${songsDone} of ${songs.length}.`}
+        </p>
+        <label className="only">
+          <input type="checkbox" checked={onlyNeeded} onChange={(event) => setOnlyNeeded(event.target.checked)} /> Only
+          songs that still need takes
+        </label>
+        {songsError && <p className="warning">{songsError}</p>}
+        {Object.keys(groups).map((type) => (
+          <Accordion
+            key={type}
+            expanded={searching || !!openGroups[type]}
+            onChange={(_, open) => setOpenGroups((value) => ({ ...value, [type]: open }))}
+            className="group"
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <strong>{t(`genres.${type}`, type)}</strong>
+              <span className="count" title="Takes done of takes needed in this group">
+                {groups[type].reduce((sum, item) => sum + countedTakes(item), 0)} / {groups[type].length * takesNeeded}
+              </span>
+            </AccordionSummary>
+            <AccordionDetails className="songs">
+              {groups[type].map((item) => (
+                <button
+                  key={item._id || item.id}
+                  className={song && (song._id || song.id) === (item._id || item.id) ? 'active' : undefined}
+                  disabled={busy}
+                  onClick={() => selectSong(item)}
+                >
+                  {item.name}
+                  <span>
+                    {item.timeSignature}
+                    <b
+                      className={takesOf(item) >= takesNeeded ? 'takes done' : 'takes'}
+                      title="Takes done of takes needed"
+                    >
+                      {takesOf(item)} / {takesNeeded}
+                    </b>
+                  </span>
+                </button>
+              ))}
+            </AccordionDetails>
+          </Accordion>
+        ))}
+        {!Object.keys(groups).length && !songsError && (
+          <p className="hint">{songs.length ? 'No songs found' : 'Loading…'}</p>
+        )}
       </Section>
     </Page>
   );
@@ -763,6 +979,11 @@ const Page = styled.div`
     margin: 0 0 8px;
   }
 
+  h3 {
+    font-size: 15px;
+    margin: 16px 0 4px;
+  }
+
   .warning {
     color: #b45309;
   }
@@ -813,6 +1034,43 @@ const Top = styled.div`
 const Section = styled.section`
   margin: 12px 0 20px;
 
+  .help {
+    box-shadow: none;
+    border: 1px solid #cfe5df;
+    border-radius: 6px;
+    background: #f1f7f5;
+    margin-bottom: 8px;
+  }
+
+  .help::before {
+    display: none;
+  }
+
+  .help-body {
+    font-size: 14px;
+    line-height: 1.45;
+    color: #333;
+  }
+
+  .help-body p {
+    margin: 0 0 8px;
+  }
+
+  .help-body h4 {
+    margin: 12px 0 4px;
+    font-size: 15px;
+  }
+
+  .help-body ul,
+  .help-body ol {
+    margin: 0 0 8px;
+    padding-left: 20px;
+  }
+
+  .help-body li {
+    margin-bottom: 4px;
+  }
+
   .group {
     margin-top: 8px;
     box-shadow: none;
@@ -851,6 +1109,23 @@ const Section = styled.section`
   .songs button span {
     color: #777;
     font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .songs .takes {
+    margin-left: 10px;
+    font-weight: normal;
+    color: #b45309;
+  }
+
+  .songs .takes.done {
+    color: ${green};
+  }
+
+  .only {
+    display: block;
+    margin: 4px 0 8px;
+    font-size: 14px;
   }
 
   .songs button.active {
