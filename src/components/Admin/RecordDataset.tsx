@@ -1,13 +1,17 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import styled from 'styled-components';
 import * as Tone from 'tone';
 import { adminSongsApi } from '../../api/adminSongs';
 import { songApi } from '../../api/songClient';
 import { store } from '../../context';
 import { bagpipes } from '../../dataset/bagpipes';
-import { Song } from '../../dataset/songs/interfaces';
-import { BagpipeTypes } from '../../interfaces';
+import { Song, SongListBySongType } from '../../dataset/songs/interfaces';
+import { BagpipeTypes, SharpNotes } from '../../interfaces';
 import { prepareAudioForPlayback } from '../../utils/audioContext';
 import {
   canWriteToFolder,
@@ -29,13 +33,21 @@ import {
 import { midiToRoll } from '../../utils/midiUtils/midiToRoll';
 import { loadSampler, playNoteFor, stopAllNotes } from '../../utils/midiUtils/sampler';
 import { pitchToNoteName } from '../MelodyEditor/usePreview';
+import { MidiPlayer } from '../../utils/MidiPlayer';
+import { sortSongsBySongType } from '../../utils/songlistUtils';
+import { convertMidiPitchToNote } from '../../utils/midiUtils';
+import { useRollSong } from '../../hooks/useRollSong';
+import { useDimensions } from '../../hooks/useDimensions';
+import { BackCanvas } from '../Canvas/BackCanvas';
+import { DynamicCanvas } from '../Canvas/DynamicCanvas';
+import { StaticCanvas } from '../Canvas/StaticCanvas';
+import { mainColors } from '../../utils/theme';
 
 const KEY_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const SETUP_KEY = 'datasetSetup';
 const SCHEDULE_AHEAD_SECONDS = 0.3;
 // Recording goes on this long after the last note, for it to die away
 const TAIL_SECONDS = 1.5;
-const MAX_LISTED = 60;
 
 type Phase = 'idle' | 'starting' | 'recording' | 'review' | 'saving';
 
@@ -77,8 +89,19 @@ const readSetup = () => {
 export const RecordDataset = () => {
   const { t } = useTranslation('translation');
   const {
-    state: { bagpipeType: settingsBagpipe, transpose },
+    state: { bagpipeType, transpose, activeSong, midi, midiData, songLength, tempo, isSongUnavailable },
+    setBagpipeType,
+    setTranspose,
+    setIsPlaying,
+    setActiveSong,
+    setMidi,
+    setMidiData,
+    setSongLength,
+    setTempo,
+    setIsSongUnavailable,
   } = useContext(store);
+  const settingsBagpipe = bagpipeType;
+  useDimensions();
 
   const [songs, setSongs] = useState<Song[]>([]);
   const [songsError, setSongsError] = useState<string>();
@@ -88,8 +111,6 @@ export const RecordDataset = () => {
   const [rollState, setRollState] = useState<'none' | 'loading' | 'ready' | 'error'>('none');
   const [rollError, setRollError] = useState<string>();
 
-  const [bagpipeType, setBagpipeType] = useState<BagpipeTypes>(settingsBagpipe);
-  const [tonic, setTonic] = useState(transposeToKey(transpose));
   const [bpmText, setBpmText] = useState('80');
   const [countInBars, setCountInBars] = useState(1);
   const [guideMelody, setGuideMelody] = useState(true);
@@ -110,9 +131,22 @@ export const RecordDataset = () => {
   const startedAtRef = useRef(0);
   const cleanupRef = useRef<() => void>(() => {});
   const stopRef = useRef<() => void>(() => {});
+  const [activeNote, setActiveNote] = useState<{ note: SharpNotes; octave: number } | null>(null);
+  const ticksPerMsRef = useRef(0);
+  // The canvases of the play screen follow a player's clock; this one is driven by the recording's
+  const guidePlayer = useMemo(
+    () => ({ handleNotesMoving: undefined, getTicksPerMs: () => ticksPerMsRef.current, setTick: () => {} }),
+    []
+  );
 
   const bpm = Math.min(MAX_ROLL_BPM, Math.max(MIN_ROLL_BPM, Math.round(Number(bpmText)) || roll?.bpm || 80));
+  // The bagpipe and its key are the player's own settings, so the bricks and the notes' names match them
+  const tonic = transposeToKey(transpose);
   const keyTranspose = keyToTranspose(tonic, transpose);
+  ticksPerMsRef.current = roll ? (bpm * roll.ppq) / 60000 : 0;
+  // The melody at the tempo set here, as the play screen's bricks
+  const viewRoll = useMemo(() => (roll ? { ...roll, bpm } : undefined), [roll, bpm]);
+  useRollSong(viewRoll, song?.name);
   const beatsPerBar = roll ? Number(roll.timeSignature.split('/')[0]) : 4;
   const bagpipeName = (type: BagpipeTypes) => t(`dudas.${bagpipes[type]?.name}`);
 
@@ -136,8 +170,26 @@ export const RecordDataset = () => {
     []
   );
 
+  // The page borrows the player's state (song, notes) to draw the bagpipe; put it back when leaving
+  const previousRef = useRef({ activeSong, midi, midiData, songLength, tempo, isSongUnavailable });
+  useEffect(
+    () => () => {
+      const previous = previousRef.current;
+      setIsPlaying(false);
+      setActiveSong(previous.activeSong);
+      if (previous.midi) setMidi(previous.midi);
+      if (previous.midiData) setMidiData(previous.midiData);
+      if (previous.songLength !== undefined) setSongLength(previous.songLength);
+      if (previous.tempo !== undefined) setTempo(previous.tempo);
+      setIsSongUnavailable(!!previous.isSongUnavailable);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
   const selectSong = (selected: Song) => {
     setSong(selected);
+    setOpenGroups((value) => ({ ...value, [selected.type]: true }));
     setRoll(null);
     setRollError(undefined);
     setRollState('loading');
@@ -209,16 +261,37 @@ export const RecordDataset = () => {
         }
       };
       schedule();
+      // What the play screen shows: the bricks moving with the melody and the hole that sounds now
+      const ticksPerSecond = (bpm * roll.ppq) / 60;
+      let noteIndex = 0;
+      let shownNote: number | null = null;
+      const showPosition = () => {
+        // The picture is what the player hears, so the audio's output delay is taken off
+        const tick = (context.currentTime - (context.outputLatency || 0) - tuneStart) * ticksPerSecond;
+        (guidePlayer as any).handleNotesMoving?.(tick);
+        while (noteIndex + 1 < roll.notes.length && roll.notes[noteIndex + 1][1] <= tick) noteIndex++;
+        const current = roll.notes[noteIndex];
+        const sounding = current && tick >= current[1] && tick < current[1] + current[2] ? noteIndex : null;
+        if (sounding !== shownNote) {
+          shownNote = sounding;
+          setActiveNote(sounding === null ? null : convertMidiPitchToNote(roll.notes[sounding][0]));
+        }
+      };
       const timer = window.setInterval(() => {
         schedule();
+        showPosition();
         setElapsed((Date.now() - startedAtRef.current) / 1000);
         if (context.currentTime > tuneStart + tuneSeconds + TAIL_SECONDS) stopRef.current();
       }, 40);
       cleanupRef.current = () => {
         window.clearInterval(timer);
         stopAllNotes(bagpipeType);
+        (guidePlayer as any).handleNotesMoving?.(0);
+        setActiveNote(null);
+        setIsPlaying(false);
         cleanupRef.current = () => {};
       };
+      setIsPlaying(true);
       setPhase('recording');
     } catch (err: any) {
       console.log(err);
@@ -307,10 +380,13 @@ export const RecordDataset = () => {
     setPhase('idle');
   };
 
-  const filtered = useMemo(() => {
+  // The catalog as in the player: by kind of song (country, origin), open the one you pick from
+  const searching = search.trim() !== '';
+  const groups = useMemo<SongListBySongType>(() => {
     const term = search.trim().toLowerCase();
-    return songs.filter((item) => !term || item.name.toLowerCase().includes(term)).slice(0, MAX_LISTED);
+    return sortSongsBySongType(songs.filter((item) => !term || item.name.toLowerCase().includes(term)));
   }, [songs, search]);
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
   const busy = phase === 'starting' || phase === 'recording' || phase === 'saving';
   const countInBeats = countInBars * beatsPerBar;
@@ -322,24 +398,7 @@ export const RecordDataset = () => {
 
       <Top>
         {phase === 'recording' || phase === 'starting' ? (
-          <>
-            <Beats>
-              {Array.from({ length: beatsPerBar }, (_, i) => (
-                <span key={i} className={beat?.beat === i ? (i === 0 ? 'on accent' : 'on') : undefined} />
-              ))}
-            </Beats>
-            <div className="status">
-              {!beat ? 'Starting…' : inCountIn ? 'Count-in' : `Play · bar ${beat.bar + 1 - countInBars}`} ·{' '}
-              {formatTime(elapsed)}
-            </div>
-            <Level aria-label="Microphone level">
-              <span style={{ width: `${Math.min(100, level * 100)}%` }} className={level > 0.98 ? 'clip' : undefined} />
-            </Level>
-            {level > 0.98 && <p className="warning">Too loud: move the microphone further away.</p>}
-            <RoundButton className="stop" onClick={stop} disabled={phase !== 'recording'}>
-              Stop
-            </RoundButton>
-          </>
+          <div className="song">Recording…</div>
         ) : (
           <>
             <div className="song">
@@ -367,6 +426,38 @@ export const RecordDataset = () => {
         {error && <p className="warning">{error}</p>}
       </Top>
 
+      {(phase === 'recording' || phase === 'starting') && (
+        <Overlay>
+          <BackCanvas />
+          <DynamicCanvas player={guidePlayer as unknown as MidiPlayer} />
+          <StaticCanvas activeHole={activeNote} />
+          <Shield />
+          <Bar>
+            <Beats>
+              {Array.from({ length: beatsPerBar }, (_, i) => (
+                <span key={i} className={beat?.beat === i ? (i === 0 ? 'on accent' : 'on') : undefined} />
+              ))}
+            </Beats>
+            <div className="info">
+              <div className="status">
+                {!beat ? 'Starting…' : inCountIn ? 'Count-in' : `Play · bar ${beat.bar + 1 - countInBars}`} ·{' '}
+                {formatTime(elapsed)}
+              </div>
+              <Level aria-label="Microphone level">
+                <span
+                  style={{ width: `${Math.min(100, level * 100)}%` }}
+                  className={level > 0.98 ? 'clip' : undefined}
+                />
+              </Level>
+              {level > 0.98 && <div className="warning">Too loud: move the microphone further away.</div>}
+            </div>
+            <RoundButton className="stop small" onClick={stop} disabled={phase !== 'recording'}>
+              Stop
+            </RoundButton>
+          </Bar>
+        </Overlay>
+      )}
+
       {take && (phase === 'review' || phase === 'saving') && (
         <Review>
           <h2>Check the take</h2>
@@ -389,6 +480,48 @@ export const RecordDataset = () => {
           </p>
         </Review>
       )}
+
+      <Section>
+        <h2>Song</h2>
+        <input
+          type="search"
+          className="search"
+          placeholder="Search songs"
+          value={search}
+          disabled={busy}
+          onChange={(event) => setSearch(event.target.value)}
+        />
+        {songsError && <p className="warning">{songsError}</p>}
+        {Object.keys(groups).map((type) => (
+          <Accordion
+            key={type}
+            expanded={searching || !!openGroups[type]}
+            onChange={(_, open) => setOpenGroups((value) => ({ ...value, [type]: open }))}
+            className="group"
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <strong>{t(`genres.${type}`, type)}</strong>
+              <span className="count">{groups[type].length}</span>
+            </AccordionSummary>
+            <AccordionDetails className="songs">
+              {groups[type].map((item) => (
+                <button
+                  key={item._id || item.id}
+                  className={song && (song._id || song.id) === (item._id || item.id) ? 'active' : undefined}
+                  disabled={busy}
+                  onClick={() => selectSong(item)}
+                >
+                  {item.name}
+                  <span>{item.timeSignature}</span>
+                </button>
+              ))}
+            </AccordionDetails>
+          </Accordion>
+        ))}
+        {!Object.keys(groups).length && !songsError && (
+          <p className="hint">{songs.length ? 'No songs found' : 'Loading…'}</p>
+        )}
+      </Section>
 
       <Section>
         <h2>Where takes are saved</h2>
@@ -422,7 +555,7 @@ export const RecordDataset = () => {
         <h2>Settings</h2>
         <Settings>
           <label>
-            Bagpipe you play
+            Bagpipe you play (as in the player's settings)
             <select
               value={bagpipeType}
               disabled={busy}
@@ -437,7 +570,11 @@ export const RecordDataset = () => {
           </label>
           <label>
             Key of your pipe
-            <select value={tonic} disabled={busy} onChange={(event) => setTonic(Number(event.target.value))}>
+            <select
+              value={tonic}
+              disabled={busy}
+              onChange={(event) => setTranspose(keyToTranspose(Number(event.target.value), transpose))}
+            >
               {KEY_NAMES.map((name, value) => (
                 <option key={name} value={value}>
                   {name}
@@ -507,36 +644,6 @@ export const RecordDataset = () => {
           notes are moved to your pipe’s key), with your usual ornaments.
         </p>
       </Section>
-
-      <Section>
-        <h2>Song</h2>
-        <input
-          type="search"
-          className="search"
-          placeholder="Search songs"
-          value={search}
-          disabled={busy}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-        {songsError && <p className="warning">{songsError}</p>}
-        <List>
-          {filtered.map((item) => (
-            <li key={item._id || item.id}>
-              <button
-                className={song && (song._id || song.id) === (item._id || item.id) ? 'active' : undefined}
-                disabled={busy}
-                onClick={() => selectSong(item)}
-              >
-                {item.name}
-                <span>
-                  {item.type} · {item.timeSignature}
-                </span>
-              </button>
-            </li>
-          ))}
-          {!filtered.length && !songsError && <li className="empty">{songs.length ? 'No songs found' : 'Loading…'}</li>}
-        </List>
-      </Section>
     </Page>
   );
 };
@@ -589,6 +696,51 @@ const Waveform = ({ recording, info }: { recording: MetronomeRecording; info: Ta
 };
 
 const green = '#009879';
+
+// The play screen's bagpipe with its bricks, over the whole window while recording
+const Overlay = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background-color: ${mainColors.lightestGrey};
+`;
+
+// Keeps touches off the bricks (they can be dragged on the play screen)
+const Shield = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+`;
+
+const Bar = styled.div`
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 10px 16px 16px;
+  background: rgba(252, 247, 242, 0.92);
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 140px;
+  }
+
+  .status {
+    font-size: 16px;
+  }
+
+  .warning {
+    color: #b45309;
+    font-size: 13px;
+  }
+`;
 
 const Page = styled.div`
   width: 100%;
@@ -645,6 +797,51 @@ const Top = styled.div`
 
 const Section = styled.section`
   margin: 12px 0 20px;
+
+  .group {
+    margin-top: 8px;
+    box-shadow: none;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+  }
+
+  .group::before {
+    display: none;
+  }
+
+  .count {
+    margin-left: 8px;
+    color: #777;
+  }
+
+  .songs {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .songs button {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    border: none;
+    border-top: 1px solid #eee;
+    background: white;
+    font-size: 15px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .songs button span {
+    color: #777;
+    font-size: 13px;
+  }
+
+  .songs button.active {
+    background: #e7f6f2;
+    font-weight: bold;
+  }
 
   .search {
     width: 100%;
@@ -724,46 +921,6 @@ const Checks = styled.div`
   font-size: 15px;
 `;
 
-const List = styled.ul`
-  list-style: none;
-  margin: 8px 0 0;
-  padding: 0;
-  max-height: 320px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-
-  li button {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 10px 12px;
-    border: none;
-    border-bottom: 1px solid #eee;
-    background: white;
-    font-size: 15px;
-    text-align: left;
-    cursor: pointer;
-  }
-
-  li button span {
-    color: #777;
-    font-size: 13px;
-    white-space: nowrap;
-  }
-
-  li button.active {
-    background: #e7f6f2;
-    font-weight: bold;
-  }
-
-  .empty {
-    padding: 12px;
-    color: #777;
-  }
-`;
-
 const RoundButton = styled.button`
   width: 120px;
   height: 120px;
@@ -779,6 +936,12 @@ const RoundButton = styled.button`
 
   &.stop {
     background: #333;
+  }
+
+  &.small {
+    width: 72px;
+    height: 72px;
+    font-size: 16px;
   }
 
   &:disabled {
