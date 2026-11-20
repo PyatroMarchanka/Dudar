@@ -189,6 +189,8 @@ export const RecordDataset = () => {
 
   const selectSong = (selected: Song) => {
     setSong(selected);
+    // The selected song and the Record button are at the top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setOpenGroups((value) => ({ ...value, [selected.type]: true }));
     setRoll(null);
     setRollError(undefined);
@@ -404,13 +406,16 @@ export const RecordDataset = () => {
             <div className="song">
               {song ? (
                 <>
-                  <strong>{song.name}</strong>
-                  {roll && (
-                    <span>
-                      {' '}
-                      · {roll.timeSignature} · {roll.notes.length} notes · about {formatTime(tuneSeconds)}
-                    </span>
-                  )}
+                  <strong className="name">{song.name}</strong>
+                  <div className="details">
+                    {t(`genres.${song.type}`, song.type)}
+                    {roll && (
+                      <>
+                        {' '}
+                        · {roll.timeSignature} · {roll.notes.length} notes · about {formatTime(tuneSeconds)}
+                      </>
+                    )}
+                  </div>
                 </>
               ) : (
                 'Choose a song below'
@@ -792,6 +797,16 @@ const Top = styled.div`
 
   .song {
     text-align: center;
+  }
+
+  .song .name {
+    font-size: 22px;
+  }
+
+  .song .details {
+    margin-top: 4px;
+    color: #555;
+    font-size: 14px;
   }
 `;
 
