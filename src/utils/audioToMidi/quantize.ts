@@ -1,6 +1,14 @@
 import { TimeSignatures } from '../../dataset/songs/interfaces';
 import { BagpipeTypes } from '../../interfaces';
-import { getBarTicks, MAX_ROLL_BARS, MAX_ROLL_NOTES, MelodyRoll, ROLL_PPQ, RollNote, transposeToKey } from '../midiUtils/melodyRoll';
+import {
+  getBarTicks,
+  MAX_ROLL_BARS,
+  MAX_ROLL_NOTES,
+  MelodyRoll,
+  ROLL_PPQ,
+  RollNote,
+  transposeToKey,
+} from '../midiUtils/melodyRoll';
 import { RecognizedNote } from './recognize';
 
 export interface QuantizeOptions {
@@ -8,19 +16,18 @@ export interface QuantizeOptions {
   timeSignature: TimeSignatures;
   // Quarter notes per minute
   bpm: number;
-  // Seconds into the recording where the metronome's first click was heard
-  firstBeatSeconds: number;
-  // The shortest note length, in ticks (120 = 1/16 at 480 ticks per quarter)
+  // The shortest note length allowed, in ticks (120 = 1/16 at 480 ticks per quarter)
   gridTicks: number;
   // Semitones between the written notes and the pipe, from the recognition
   keyTranspose: number;
 }
 
-// A gap longer than this between two notes is a real rest
-const REST_SECONDS = 0.12;
-// Latency left over after the recorder's own estimate is found from the notes
-// themselves, but never more than this
-const MAX_TIME_SHIFT_SECONDS = 0.12;
+// How much worse a note start is for each step away from the beat (beat, 1/8,
+// 1/16, 1/32 of a beat...), in beats of timing error. Melodies mostly move on
+// the beat, so a note only goes off the beat when it was clearly played there.
+const LEVEL_PENALTY_BEATS = 0.06;
+// How far everything may be moved together to sit better on the beat
+const MAX_SHIFT_BEATS = 0.2;
 
 // Seconds per metronome click: quarters for x/4, eighths for x/8
 export const getClickSeconds = (bpm: number, timeSignature: TimeSignatures) => {
@@ -28,18 +35,17 @@ export const getClickSeconds = (bpm: number, timeSignature: TimeSignatures) => {
   return (60 / bpm) * (4 / unit);
 };
 
-// The shortest note in seconds for a grid, used to tell notes from ornaments
-export const gridSeconds = (bpm: number, gridTicks: number) => ((60 / bpm) * gridTicks) / ROLL_PPQ;
+// Seconds of a note value at a tempo: 1/32 is noteSeconds(bpm, 32)
+export const noteSeconds = (bpm: number, value: number) => (60 / bpm) * (4 / value);
 
-// Turns notes measured in seconds into a melody on the metronome's grid. The
-// first bar with a note becomes bar 1.
-export const quantizeNotes = (notes: RecognizedNote[], options: QuantizeOptions): MelodyRoll => {
-  const { bagpipeType, timeSignature, bpm, firstBeatSeconds, gridTicks, keyTranspose } = options;
-  const ticksPerSecond = (ROLL_PPQ * bpm) / 60;
-  const barTicks = getBarTicks({ timeSignature, ppq: ROLL_PPQ });
-  const toTicks = (seconds: number) => (seconds - firstBeatSeconds) * ticksPerSecond;
-  const snap = (ticks: number) => Math.round(ticks / gridTicks) * gridTicks;
-
+// Turns notes measured in seconds into a melody:
+// - the first clear note (at least a 1/16 long) starts bar 1 on beat 1, and
+//   anything before it is dropped;
+// - a bagpipe never stops, so every note lasts until the next one (no rests);
+// - note starts go to the nearest grid line, preferring beats, then eighths,
+//   then sixteenths, so a melody doesn't drift off the beat.
+export const quantizeNotes = (measured: RecognizedNote[], options: QuantizeOptions): MelodyRoll => {
+  const { bagpipeType, timeSignature, bpm, gridTicks, keyTranspose } = options;
   const roll: MelodyRoll = {
     version: 1,
     bagpipeType,
@@ -50,57 +56,86 @@ export const quantizeNotes = (notes: RecognizedNote[], options: QuantizeOptions)
     notes: [],
     tonic: transposeToKey(keyTranspose),
   };
-  if (!notes.length) return roll;
 
-  // Players are a little early or late against the click, and the recorder's
-  // latency is only estimated: shift everything by the amount that puts the
-  // note starts closest to the grid
-  const starts = notes.map((note) => toTicks(note.start));
-  const maxShift = Math.min(MAX_TIME_SHIFT_SECONDS * ticksPerSecond, gridTicks * 0.45);
+  const firstClear = measured.findIndex((note) => note.end - note.start >= noteSeconds(bpm, 16));
+  if (firstClear < 0) return roll;
+  const notes = measured.slice(firstClear);
+
+  const ticksPerSecond = (ROLL_PPQ * bpm) / 60;
+  const beatTicks = (ROLL_PPQ * 4) / Number(timeSignature.split('/')[1]);
+  const barTicks = getBarTicks({ timeSignature, ppq: ROLL_PPQ });
+  const origin = notes[0].start;
+  const starts = notes.map((note) => (note.start - origin) * ticksPerSecond);
+
+  // 0 on a beat, 1 on an eighth of it, 2 on a sixteenth...
+  const level = (tick: number) => {
+    let step = beatTicks;
+    for (let depth = 0; depth < 6; depth++, step /= 2) {
+      if (Math.abs(tick / step - Math.round(tick / step)) < 1e-6) return depth;
+    }
+    return 6;
+  };
+  // The best grid line for a start, and how bad it is
+  const place = (tick: number) => {
+    let best = Math.round(tick / gridTicks) * gridTicks;
+    let bestCost = Infinity;
+    for (let k = Math.floor(tick / gridTicks) - 4; k <= Math.ceil(tick / gridTicks) + 4; k++) {
+      const candidate = k * gridTicks;
+      const cost = Math.abs(tick - candidate) / beatTicks + LEVEL_PENALTY_BEATS * level(candidate);
+      if (cost < bestCost) {
+        bestCost = cost;
+        best = candidate;
+      }
+    }
+    return { tick: best, cost: bestCost };
+  };
+
+  // Players run a little early or late: move everything by the amount that
+  // puts the notes best on the beat
   let shift = 0;
-  let bestCost = Infinity;
+  let bestTotal = Infinity;
   const steps = 40;
   for (let i = -steps; i <= steps; i++) {
-    const candidate = (maxShift * i) / steps;
-    const cost =
-      starts.reduce((sum, start) => {
-        const distance = start + candidate - snap(start + candidate);
-        return sum + distance * distance;
-      }, 0) +
-      notes.length * 0.05 * candidate * candidate;
-    if (cost < bestCost) {
-      bestCost = cost;
+    const candidate = (MAX_SHIFT_BEATS * beatTicks * i) / steps;
+    const total = starts.reduce((sum, start) => sum + place(start + candidate).cost, 0);
+    if (total < bestTotal - 1e-9) {
+      bestTotal = total;
       shift = candidate;
     }
   }
 
-  const snapped = starts.map((start) => snap(start + shift));
-  for (let i = 1; i < snapped.length; i++) {
-    // Two notes on one grid line: the later one moves to the next line
-    if (snapped[i] <= snapped[i - 1]) snapped[i] = snapped[i - 1] + gridTicks;
-  }
-
-  const rollNotes: RollNote[] = notes.map((note, i) => {
-    const start = snapped[i];
-    const nextStart = snapped[i + 1];
-    const restAfter = notes[i + 1] ? notes[i + 1].start - note.end > REST_SECONDS : true;
-    let end = restAfter ? snap(toTicks(note.end) + shift) : nextStart;
-    if (nextStart !== undefined) end = Math.min(end, nextStart);
-    end = Math.max(end, start + gridTicks);
-    if (nextStart !== undefined) end = Math.min(end, nextStart);
-    return [note.pitch, start, end - start];
+  // Two notes on one grid line: the one that sounded shorter goes
+  const placed: { pitch: number; tick: number; seconds: number }[] = [];
+  notes.forEach((note, i) => {
+    const tick = place(starts[i] + shift).tick;
+    const seconds = note.end - note.start;
+    const last = placed[placed.length - 1];
+    if (last && tick <= last.tick) {
+      if (seconds > last.seconds) {
+        last.pitch = note.pitch;
+        last.seconds = seconds;
+      }
+      return;
+    }
+    placed.push({ pitch: note.pitch, tick, seconds });
   });
 
-  // The first bar with a note becomes bar 1 (also when the melody started
-  // before the first click)
-  const offset = Math.floor(rollNotes[0][1] / barTicks) * barTicks;
-  const moved = rollNotes
-    .map(([pitch, start, duration]): RollNote => [pitch, start - offset, duration])
-    .filter(([pitch, , duration]) => pitch >= 0 && pitch <= 127 && duration > 0)
+  // The first note starts bar 1
+  const offset = placed[0].tick;
+  const lastNote = notes[notes.length - 1];
+  const lastEnd = Math.max(
+    placed[placed.length - 1].tick + gridTicks,
+    place((lastNote.end - origin) * ticksPerSecond + shift).tick
+  );
+  const rollNotes: RollNote[] = placed
+    .map(({ pitch, tick }, i): RollNote => {
+      const end = i + 1 < placed.length ? placed[i + 1].tick : lastEnd;
+      return [pitch, tick - offset, end - tick];
+    })
+    .filter(([pitch]) => pitch >= 0 && pitch <= 127)
     .slice(0, MAX_ROLL_NOTES);
-  const lastEnd = Math.max(...moved.map(([, start, duration]) => start + duration));
-  const bars = Math.min(MAX_ROLL_BARS, Math.max(1, Math.ceil(lastEnd / barTicks)));
-  const barsEnd = bars * barTicks;
 
-  return { ...roll, bars, notes: moved.filter(([, start]) => start < barsEnd) };
+  const end = Math.max(...rollNotes.map(([, start, duration]) => start + duration));
+  const bars = Math.min(MAX_ROLL_BARS, Math.max(1, Math.ceil(end / barTicks)));
+  return { ...roll, bars, notes: rollNotes.filter(([, start]) => start < bars * barTicks) };
 };

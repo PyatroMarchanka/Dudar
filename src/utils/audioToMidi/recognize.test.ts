@@ -26,7 +26,9 @@ const render = (
     const f = hz(midi);
     for (let i = Math.round(start * RATE); i < Math.min(samples.length, Math.round(end * RATE)); i++) {
       const t = i / RATE;
-      [0.8, 1, 0.6, 0.4, 0.3, 0.2].forEach((amp, h) => (samples[i] += 0.4 * amp * Math.sin(2 * Math.PI * f * (h + 1) * t)));
+      [0.8, 1, 0.6, 0.4, 0.3, 0.2].forEach(
+        (amp, h) => (samples[i] += 0.4 * amp * Math.sin(2 * Math.PI * f * (h + 1) * t))
+      );
     }
   });
   return samples;
@@ -61,8 +63,16 @@ describe('recognizeNotes', () => {
     notes[4].end = graceAt - 0.03;
     notes.push({ midi: 76 + keyTranspose, start: graceAt - 0.03, end: graceAt });
 
-    const audio = render(notes, { length: first + 8 * quarter + 0.5, cents: 25, drone: 57 + keyTranspose, noise: 0.15 });
-    const result = await recognizeNotes(audio, RATE, { bagpipeType: BagpipeTypes.BelarusianTraditionalDuda, transpose: 0 });
+    const audio = render(notes, {
+      length: first + 8 * quarter + 0.5,
+      cents: 25,
+      drone: 57 + keyTranspose,
+      noise: 0.15,
+    });
+    const result = await recognizeNotes(audio, RATE, {
+      bagpipeType: BagpipeTypes.BelarusianTraditionalDuda,
+      transpose: 0,
+    });
 
     expect(result.keyTranspose).toBe(keyTranspose);
     expect(result.tuningOffset).toBeCloseTo(0.25, 1);
@@ -74,7 +84,6 @@ describe('recognizeNotes', () => {
       bagpipeType: BagpipeTypes.BelarusianTraditionalDuda,
       timeSignature: '4/4',
       bpm,
-      firstBeatSeconds: first,
       gridTicks: 240,
       keyTranspose: result.keyTranspose,
     });
@@ -137,5 +146,58 @@ describe('recognizeNotes on a Highland pipe', () => {
     const result = await recognizeNotes(audio, RATE, { bagpipeType: BagpipeTypes.Highlander, transpose: 0 });
     expect(result.keyTranspose).toBe(1);
     expect(result.notes.map((note) => note.pitch)).toEqual(melody);
+  });
+});
+
+describe('quantizeNotes', () => {
+  const options = {
+    bagpipeType: BagpipeTypes.BelarusianTraditionalDuda,
+    timeSignature: '4/4' as const,
+    bpm: 60,
+    gridTicks: 120,
+    keyTranspose: 0,
+  };
+
+  it('starts bar 1 with the first clear note, fills rests and keeps notes on the beat', () => {
+    // At 60 bpm a quarter is 1 s. A 0.05 s blip first, then the melody starts
+    // at 2.37 s (mid-bar for the metronome), with a rest after the second note
+    // and starts up to 0.09 s off.
+    const roll = quantizeNotes(
+      [
+        { pitch: 76, start: 2.2, end: 2.25 },
+        { pitch: 69, start: 2.37, end: 3.3 },
+        { pitch: 71, start: 3.4, end: 3.7 },
+        // a rest from 3.7 to 3.9
+        { pitch: 73, start: 3.9, end: 4.45 },
+        { pitch: 74, start: 4.46, end: 5.38 },
+        { pitch: 69, start: 5.36, end: 7.3 },
+      ],
+      options
+    );
+    expect(roll.notes).toEqual([
+      [69, 0, 480],
+      // The rest after it is filled
+      [71, 480, 240],
+      [73, 720, 240],
+      [74, 960, 480],
+      [69, 1440, 960],
+    ]);
+    expect(roll.bars).toBe(2);
+  });
+
+  it('keeps a clearly played sixteenth', () => {
+    const roll = quantizeNotes(
+      [
+        { pitch: 69, start: 0, end: 0.75 },
+        { pitch: 71, start: 0.75, end: 1 },
+        { pitch: 73, start: 1, end: 2 },
+      ],
+      options
+    );
+    expect(roll.notes).toEqual([
+      [69, 0, 360],
+      [71, 360, 120],
+      [73, 480, 480],
+    ]);
   });
 });
