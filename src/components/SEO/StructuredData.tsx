@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import { routes } from '../../router/routes';
 import { currentBrand } from '../../brand';
+import { absoluteUrl } from '../../utils/articleSeo';
 
 const { name: brandName, siteUrl, description: brandDescription, instrumentNoun } = currentBrand;
 
@@ -11,13 +12,16 @@ interface StructuredDataProps {
     title: string;
     description: string;
     image?: string;
-    author: {
-      name: string;
+    // The article endpoint returns the author as an id only; then the brand is the author
+    author?: {
+      name?: string;
       picture?: string;
-    };
+    } | string;
     publishedDate: string;
     modifiedDate?: string;
     tags: string[];
+    url?: string;
+    language?: string;
   };
   songData?: {
     name: string;
@@ -130,29 +134,41 @@ const routeSchemas = {
   }
 };
 
-const getArticleSchema = (articleData: StructuredDataProps['articleData']): Record<string, any> => ({
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": articleData!.title,
-  "description": articleData!.description,
-  "image": articleData!.image ? `${siteUrl}${articleData!.image}` : `${siteUrl}/android-chrome-192x192.png`,
-  "datePublished": articleData!.publishedDate,
-  "dateModified": articleData!.modifiedDate || articleData!.publishedDate,
-  "author": {
-    "@type": "Person",
-    "name": articleData!.author.name,
-    "image": articleData!.author.picture ? `${siteUrl}${articleData!.author.picture}` : undefined
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": brandName,
-    "logo": {
-      "@type": "ImageObject",
-      "url": `${siteUrl}/android-chrome-192x192.png`
-    }
-  },
-  "keywords": articleData!.tags?.join(", ") || "bagpipes, learning"
-});
+const getArticleSchema = (articleData: StructuredDataProps['articleData']): Record<string, any> => {
+  const article = articleData!;
+  const author = typeof article.author === 'object' && article.author?.name ? article.author : undefined;
+  const authorImage = absoluteUrl(siteUrl, author?.picture);
+  const url = article.url ? `${siteUrl}${article.url}` : undefined;
+  const schema: Record<string, any> = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": article.title.slice(0, 110),
+    "description": article.description,
+    "image": [absoluteUrl(siteUrl, article.image) || `${siteUrl}/android-chrome-512x512.png`],
+    "datePublished": article.publishedDate,
+    "dateModified": article.modifiedDate || article.publishedDate,
+    "author": author
+      ? { "@type": "Person", "name": author.name, ...(authorImage ? { "image": authorImage } : {}) }
+      : { "@type": "Organization", "name": brandName, "url": siteUrl },
+    "publisher": {
+      "@type": "Organization",
+      "name": brandName,
+      "url": siteUrl,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${siteUrl}/android-chrome-512x512.png`
+      }
+    },
+    "isAccessibleForFree": true,
+  };
+  if (url) {
+    schema.url = url;
+    schema.mainEntityOfPage = { "@type": "WebPage", "@id": url };
+  }
+  if (article.language) schema.inLanguage = article.language;
+  if (article.tags?.length) schema.keywords = article.tags.join(", ");
+  return schema;
+};
 
 const getBreadcrumbSchema = (breadcrumbs: StructuredDataProps['breadcrumbs']) => ({
   "@context": "https://schema.org",

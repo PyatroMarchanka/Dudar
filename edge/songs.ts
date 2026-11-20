@@ -320,7 +320,7 @@ export const esc = (text: unknown) =>
     .replace(/'/g, '&#39;');
 
 // JSON for a <script type="application/ld+json"> block (no "</script>" breakouts)
-const ldJson = (data: unknown) => JSON.stringify(data).replace(/</g, '\\u003c');
+export const ldJson = (data: unknown) => JSON.stringify(data).replace(/</g, '\\u003c');
 
 const cleanText = (text: string) => text.replace(/\s+/g, ' ').trim();
 

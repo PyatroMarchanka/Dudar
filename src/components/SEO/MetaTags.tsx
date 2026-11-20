@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import { routes } from '../../router/routes';
 import { currentBrand, isFluteBrand } from '../../brand';
+import { absoluteUrl } from '../../utils/articleSeo';
 
 const { siteUrl } = currentBrand;
 
@@ -86,8 +87,9 @@ const bagpipeRouteMeta: Record<string, { title: string; description: string; key
     keywords: 'bagpipe tutorial, learn bagpipe fingering, bagpipe techniques, bagpipe lessons, how to play bagpipes'
   },
   [routes.learningBook]: {
-    title: 'Bagpipe Learning Guide - Complete Tutorial & Resources',
-    description: 'Comprehensive learning resources for bagpipe players. Study guides, fingering charts, and traditional bagpipe techniques.',
+    // Keep in sync with renderLearningBook in edge/articles.ts
+    title: 'Bagpipe Learning Guide - Articles on the Duda and Bagpipes | Duda Hero',
+    description: 'Articles for bagpipe players: how to start on the Belarusian duda, bagpipe history, music theory, repertoire and caring for the instrument.',
     keywords: 'bagpipe guide, bagpipe learning, bagpipe fingering charts, traditional bagpipes, bagpipe education'
   }
 };
@@ -127,7 +129,7 @@ export const MetaTags: React.FC<MetaTagsProps> = ({
 
   const finalTitle = routeSpecificMeta.title || title;
   const finalDescription = routeSpecificMeta.description || description;
-  const finalImage = image;
+  const finalImage = absoluteUrl(siteUrl, image) || `${siteUrl}${defaultMeta.image}`;
   const canonicalUrl = normalizePath(canonicalPath || currentRoute);
   const robotsNoindex = noindex || isNoindexPath(currentRoute || '/');
 
@@ -148,7 +150,7 @@ export const MetaTags: React.FC<MetaTagsProps> = ({
       <meta property="og:url" content={`${siteUrl}${canonicalUrl}`} />
       <meta property="og:title" content={finalTitle} />
       <meta property="og:description" content={finalDescription} />
-      <meta property="og:image" content={`${siteUrl}${finalImage}`} />
+      <meta property="og:image" content={finalImage} />
       <meta property="og:locale" content={language === 'be' ? 'be_BY' : language === 'pl' ? 'pl_PL' : 'en_US'} />
       
       {/* Twitter */}
@@ -156,7 +158,7 @@ export const MetaTags: React.FC<MetaTagsProps> = ({
       <meta property="twitter:url" content={`${siteUrl}${canonicalUrl}`} />
       <meta property="twitter:title" content={finalTitle} />
       <meta property="twitter:description" content={finalDescription} />
-      <meta property="twitter:image" content={`${siteUrl}${finalImage}`} />
+      <meta property="twitter:image" content={finalImage} />
       
       {/* Canonical URL */}
       <link rel="canonical" href={`${siteUrl}${canonicalUrl}`} />
