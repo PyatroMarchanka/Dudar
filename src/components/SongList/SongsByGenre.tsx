@@ -5,7 +5,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import { Button, IconButton, List, ListItem } from "@material-ui/core";
-import { Close, Videocam } from "@material-ui/icons";
+import { Close, QueueMusic, Videocam } from "@material-ui/icons";
 import { Icon } from "../global/Icon";
 import styled from "styled-components";
 import { mediaQueries } from "../../constants/style";
@@ -98,6 +98,18 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "flex-start",
       // width: "100%",
     },
+    versionsBadge: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: "2px",
+      marginLeft: "6px",
+      fontSize: "12px",
+      color: mainColors.lightestGrey,
+      whiteSpace: "nowrap",
+      "& svg": {
+        fontSize: "16px",
+      },
+    },
     playsCount: {
       paddingRight: "10px",
     },
@@ -141,7 +153,7 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
   const renderSong = (song: Song) => (
     <div
       className={
-        activeSong?.pathName === song.pathName
+        activeSong?.id === song.id
           ? classes.activeSong
           : classes.listItem
       }
@@ -167,6 +179,15 @@ export const SongsByGenre = ({ setOpen, onStop }: Props) => {
             type="material"
             Icon={Videocam}
           />
+        )}
+        {!!song.versions?.length && (
+          <span
+            className={classes.versionsBadge}
+            title={String(t("versions.count", { count: song.versions.length + 1 }))}
+          >
+            <QueueMusic />
+            {song.versions.length + 1}
+          </span>
         )}
         {song.lyrycs && (
           <Icon

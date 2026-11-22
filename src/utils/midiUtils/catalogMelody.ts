@@ -17,11 +17,20 @@ export const isMelodySong = (song: Song) => song.source === 'melody';
 // the tune keeps its written key and is rearranged onto the instrument's fingering
 export const isAbcMelodySong = (song: Song) => isMelodySong(song) && song.melody?.format === 'abc';
 
+// The song list leaves notes out: they come with the whole song, for the
+// song's own notes or for the version being played
+const loadMelodyNotes = async (song: Song) => {
+  const fullSong = await songApi.getSongNotes(song);
+  return song.activeVersionId
+    ? fullSong.versions?.find((version) => version._id === song.activeVersionId)?.melody
+    : fullSong.melody;
+};
+
 // Builds the MIDI of a melody song in the browser, the same way /app/melody/:id
 // plays the melody it came from. `normalizeOctaves` is the matching
 // prepareSongMidi flag: off, since the notes already sit in the instrument's range.
 export const melodySongToMidi = async (song: Song, instrument: AbcInstrument) => {
-  const melody = song.melody?.roll || song.melody?.abc ? song.melody : (await songApi.getSongNotes(song)).melody;
+  const melody = song.melody?.roll || song.melody?.abc ? song.melody : await loadMelodyNotes(song);
   if (melody?.format === 'roll' && isMelodyRoll(melody.roll)) {
     return { buffer: rollToMidi(melody.roll, song.name).buffer, normalizeOctaves: false };
   }

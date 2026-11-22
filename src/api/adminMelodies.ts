@@ -15,6 +15,8 @@ export interface AdminMelody extends UserMelody {
   lastEditedBy?: string;
   lastEditedByName?: string;
   catalogSongId?: string;
+  // Set when it was approved as a version of the catalog song catalogSongId
+  catalogVersionId?: string;
 }
 
 export interface AdminMelodyPage {
@@ -35,6 +37,19 @@ export interface CatalogFields {
   originalTempo: number;
   labels: string[];
   about?: string;
+  transcribedBy?: string;
+}
+
+// Approving as a version of a song already in the catalog: only the version's own fields
+export interface VersionFields {
+  // _id of the catalog song
+  versionOf: string;
+  label: string;
+  author?: string;
+  level?: string;
+  timeSignature: string;
+  // Catalog convention: double the real BPM
+  originalTempo: number;
   transcribedBy?: string;
 }
 
@@ -84,7 +99,7 @@ export const adminMelodiesApi = {
     return res.data;
   },
 
-  approve: async (id: string, fields: CatalogFields & { comment?: string }) => {
+  approve: async (id: string, fields: (CatalogFields | VersionFields) & { comment?: string }) => {
     const res = await userClient.post<{ melody: AdminMelody; song: Song }>(url(id, '/approve'), fields, {
       ...withAuth(),
       timeout: APPROVE_TIMEOUT_MS,

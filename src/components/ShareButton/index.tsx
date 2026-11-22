@@ -8,6 +8,7 @@ import { routes } from '../../router/routes';
 import { useSongTitle } from '../../hooks/useSongTitle';
 import { mainColors, theme } from '../../utils/theme';
 import { Icon } from '../global/Icon';
+import { versionSearch } from '../../dataset/songs/versions';
 
 const COPIED_RESET_MS = 1500;
 
@@ -38,7 +39,7 @@ export const ShareButton = ({ url: customUrl, title: customTitle }: Props) => {
 
   if (!customUrl && !activeSong) return null;
 
-  const url = customUrl ?? `${window.location.origin}${routes.app}/${routes.play}/${activeSong?.id}`;
+  const url = customUrl ?? `${window.location.origin}${routes.app}/${routes.play}/${activeSong?.id}${versionSearch(activeSong?.activeVersionId)}`;
   const title = customTitle ?? songTitle ?? activeSong?.name ?? '';
   const canNativeShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
   const label = t('share.share');

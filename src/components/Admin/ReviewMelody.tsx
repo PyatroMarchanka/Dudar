@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { adminMelodiesApi, AdminMelody, CatalogFields, describeAdminError } from '../../api/adminMelodies';
 import { reviewStatusOf } from '../../api/melodies';
 import { songApi } from '../../api/songClient';
-import { Song, SongTags, SongTypes, TimeSignatures } from '../../dataset/songs/interfaces';
+import { Song, SongTags, SongTypes, TimeSignatures, versionLevels } from '../../dataset/songs/interfaces';
 import { getTranslationKeyByBagpipeType } from '../../interfaces/enumUtils';
 import { routes } from '../../router/routes';
 import { abcToMidi } from '../../utils/midiUtils';
@@ -18,7 +18,15 @@ const DEFAULT_BPM = 100;
 
 // The approve form, in real BPM; sent as the catalog's double tempo
 // Bagpipes aren't in it: they are found from the melody's notes
-type CatalogForm = Omit<CatalogFields, 'originalTempo' | 'bagpipesToPlay'> & { bpm: number };
+type CatalogForm = Omit<CatalogFields, 'originalTempo' | 'bagpipesToPlay'> & {
+  bpm: number;
+  // "version": add it as a version of the song `versionOf` instead of a song of its own
+  mode: 'song' | 'version';
+  versionOf: string;
+  versionLabel: string;
+  versionAuthor: string;
+  versionLevel: string;
+};
 
 const formatDate = (date?: string) => (date ? new Date(date).toLocaleString() : '');
 
@@ -40,8 +48,31 @@ const readMelody = (melody: AdminMelody): { timeSignature: string; bpm: number }
 
 // Prefilled from the catalog song of an earlier approval, otherwise from the melody
 const initialForm = (melody: AdminMelody, song: Song | null): CatalogForm => {
+  const version = melody.catalogVersionId
+    ? song?.versions?.find((item) => item._id === melody.catalogVersionId)
+    : undefined;
+  const versionFields = {
+    mode: (melody.catalogVersionId ? 'version' : 'song') as CatalogForm['mode'],
+    versionOf: melody.catalogVersionId && song?._id ? song._id : '',
+    versionLabel: version?.label ?? melody.title,
+    versionAuthor: version?.author ?? melody.ownerName ?? '',
+    versionLevel: version?.level ?? '',
+  };
+  if (song && version) {
+    return {
+      ...versionFields,
+      name: song.name,
+      type: song.type,
+      timeSignature: version.timeSignature,
+      bpm: version.originalTempo ? Math.round(Number(version.originalTempo) / 2) : DEFAULT_BPM,
+      labels: song.labels ?? [],
+      about: song.about ?? '',
+      transcribedBy: version.transcribedBy ?? melody.ownerName ?? '',
+    };
+  }
   if (song) {
     return {
+      ...versionFields,
       name: song.name,
       type: song.type,
       timeSignature: song.timeSignature,
@@ -53,6 +84,7 @@ const initialForm = (melody: AdminMelody, song: Song | null): CatalogForm => {
   }
   const { timeSignature, bpm } = readMelody(melody);
   return {
+    ...versionFields,
     name: melody.title,
     type: SongTypes.Other,
     timeSignature,
@@ -78,6 +110,8 @@ export const ReviewMelody = () => {
   const [abcText, setAbcText] = useState('');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string>();
+  // Catalog songs to pick from when approving as a version
+  const [catalog, setCatalog] = useState<Song[]>([]);
 
   const load = async () => {
     try {
@@ -96,6 +130,13 @@ export const ReviewMelody = () => {
       setLoadError(`Could not load the melody: ${describeAdminError(error)}`);
     }
   };
+
+  useEffect(() => {
+    songApi
+      .getSongList()
+      .then((songs) => setCatalog([...songs].sort((a, b) => a.name.localeCompare(b.name))))
+      .catch(() => undefined);
+  }, []);
 
   useEffect(() => {
     load();
@@ -156,19 +197,41 @@ export const ReviewMelody = () => {
       setMessage('No bagpipe can play all the notes of this melody');
       return;
     }
+    if (form.mode === 'version' && !form.versionOf) {
+      setMessage('Choose the song this is a version of');
+      return;
+    }
     run(
       async () => {
-        const { bpm, ...fields } = form;
-        const { melody: approved } = await adminMelodiesApi.approve(melody.id, {
-          ...fields,
-          bagpipesToPlay,
-          originalTempo: Math.round(bpm * 2),
-          comment: comment.trim() || undefined,
-        });
+        const { bpm, mode, versionOf, versionLabel, versionAuthor, versionLevel, ...fields } = form;
+        const { melody: approved } = await adminMelodiesApi.approve(
+          melody.id,
+          mode === 'version'
+            ? {
+                versionOf,
+                label: versionLabel.trim(),
+                author: versionAuthor.trim() || undefined,
+                level: versionLevel || undefined,
+                timeSignature: fields.timeSignature,
+                originalTempo: Math.round(bpm * 2),
+                transcribedBy: fields.transcribedBy?.trim() || undefined,
+                comment: comment.trim() || undefined,
+              }
+            : {
+                ...fields,
+                bagpipesToPlay,
+                originalTempo: Math.round(bpm * 2),
+                comment: comment.trim() || undefined,
+              }
+        );
         setMelody(approved);
         window.dispatchEvent(new Event(REVIEW_CHANGED_EVENT));
       },
-      melody.catalogSongId ? 'Catalog song updated' : 'Approved and added to the catalog'
+      form.mode === 'version'
+        ? 'Approved as a version of the song'
+        : melody.catalogSongId && !melody.catalogVersionId
+          ? 'Catalog song updated'
+          : 'Approved and added to the catalog'
     );
   };
 
@@ -225,7 +288,8 @@ export const ReviewMelody = () => {
           )}
           {melody.catalogSongId && (
             <li>
-              In the catalog: <Link to={`${routes.adminSong}/${melody.catalogSongId}`}>edit catalog song</Link>
+              In the catalog{melody.catalogVersionId ? ' as a version' : ''}:{' '}
+              <Link to={`${routes.adminSong}/${melody.catalogSongId}`}>edit catalog song</Link>
             </li>
           )}
         </Facts>
@@ -261,32 +325,90 @@ export const ReviewMelody = () => {
 
       <Section>
         <h2>{melody.catalogSongId ? 'Catalog song' : 'Add to the catalog'}</h2>
-        <Field>
-          <span>Name</span>
-          <input value={form.name} maxLength={200} onChange={(e) => setField('name', e.target.value)} />
-        </Field>
-        <Field>
-          <span>Type</span>
-          <select value={form.type} onChange={(e) => setField('type', e.target.value)}>
-            {Object.values(SongTypes).map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </Field>
-        <Field>
-          <span>Bagpipes to play (found from the notes)</span>
-          {bagpipesToPlay.length ? (
-            <BagpipeList>
-              {bagpipesToPlay.map((type) => (
-                <li key={type}>{t(`dudas.${getTranslationKeyByBagpipeType(type)}`)}</li>
-              ))}
-            </BagpipeList>
-          ) : (
-            <ErrorText>No bagpipe can play all the notes of this melody.</ErrorText>
-          )}
-        </Field>
+        <Checks>
+          <label>
+            <input type="radio" checked={form.mode === 'song'} onChange={() => setField('mode', 'song')} /> As a new
+            song
+          </label>
+          <label>
+            <input type="radio" checked={form.mode === 'version'} onChange={() => setField('mode', 'version')} /> As a
+            version of a song in the catalog
+          </label>
+        </Checks>
+        {form.mode === 'version' && (
+          <>
+            <Field>
+              <span>Version of</span>
+              <select value={form.versionOf} onChange={(e) => setField('versionOf', e.target.value)}>
+                <option value="">Choose a song…</option>
+                {catalog
+                  .filter((song) => song._id)
+                  .map((song) => (
+                    <option key={song._id} value={song._id}>
+                      {song.name} ({song.type})
+                    </option>
+                  ))}
+              </select>
+            </Field>
+            <Field>
+              <span>Version name</span>
+              <input
+                value={form.versionLabel}
+                maxLength={100}
+                onChange={(e) => setField('versionLabel', e.target.value)}
+              />
+            </Field>
+            <Field>
+              <span>Author (bagpiper)</span>
+              <input
+                value={form.versionAuthor}
+                maxLength={200}
+                onChange={(e) => setField('versionAuthor', e.target.value)}
+              />
+            </Field>
+            <Field>
+              <span>Level</span>
+              <select value={form.versionLevel} onChange={(e) => setField('versionLevel', e.target.value)}>
+                <option value="">Not set</option>
+                {versionLevels.map((level) => (
+                  <option key={level} value={level}>
+                    {level}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          </>
+        )}
+        {form.mode === 'song' && (
+          <>
+            <Field>
+              <span>Name</span>
+              <input value={form.name} maxLength={200} onChange={(e) => setField('name', e.target.value)} />
+            </Field>
+            <Field>
+              <span>Type</span>
+              <select value={form.type} onChange={(e) => setField('type', e.target.value)}>
+                {Object.values(SongTypes).map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field>
+              <span>Bagpipes to play (found from the notes)</span>
+              {bagpipesToPlay.length ? (
+                <BagpipeList>
+                  {bagpipesToPlay.map((type) => (
+                    <li key={type}>{t(`dudas.${getTranslationKeyByBagpipeType(type)}`)}</li>
+                  ))}
+                </BagpipeList>
+              ) : (
+                <ErrorText>No bagpipe can play all the notes of this melody.</ErrorText>
+              )}
+            </Field>
+          </>
+        )}
         <Field>
           <span>Time signature</span>
           <select value={form.timeSignature} onChange={(e) => setField('timeSignature', e.target.value)}>
@@ -307,21 +429,23 @@ export const ReviewMelody = () => {
             onChange={(e) => setField('bpm', Number(e.target.value))}
           />
         </Field>
-        <Field>
-          <span>Labels</span>
-          <Checks>
-            {Object.values(SongTags).map((label) => (
-              <label key={label}>
-                <input
-                  type="checkbox"
-                  checked={form.labels.includes(label)}
-                  onChange={() => setField('labels', toggle(form.labels, label))}
-                />
-                {label}
-              </label>
-            ))}
-          </Checks>
-        </Field>
+        {form.mode === 'song' && (
+          <Field>
+            <span>Labels</span>
+            <Checks>
+              {Object.values(SongTags).map((label) => (
+                <label key={label}>
+                  <input
+                    type="checkbox"
+                    checked={form.labels.includes(label)}
+                    onChange={() => setField('labels', toggle(form.labels, label))}
+                  />
+                  {label}
+                </label>
+              ))}
+            </Checks>
+          </Field>
+        )}
         <Field>
           <span>Transcribed by</span>
           <input
@@ -330,10 +454,12 @@ export const ReviewMelody = () => {
             onChange={(e) => setField('transcribedBy', e.target.value)}
           />
         </Field>
-        <Field>
-          <span>About</span>
-          <textarea rows={3} value={form.about} onChange={(e) => setField('about', e.target.value)} />
-        </Field>
+        {form.mode === 'song' && (
+          <Field>
+            <span>About</span>
+            <textarea rows={3} value={form.about} onChange={(e) => setField('about', e.target.value)} />
+          </Field>
+        )}
       </Section>
 
       <Section>
@@ -349,13 +475,21 @@ export const ReviewMelody = () => {
               checked={removeFromCatalog}
               onChange={(e) => setRemoveFromCatalog(e.target.checked)}
             />{' '}
-            When rejecting, also remove the song from the catalog
+            {melody.catalogVersionId
+              ? 'When rejecting, also remove this version from its song'
+              : 'When rejecting, also remove the song from the catalog'}
           </label>
         )}
         {status === 'draft' && <ErrorText>The author took this melody back, so it can't be reviewed now.</ErrorText>}
         <Row>
           <ApproveButton disabled={busy || status === 'draft' || abcChanged} onClick={onApprove}>
-            {melody.catalogSongId ? 'Approve and update the catalog song' : 'Approve and add to the catalog'}
+            {form.mode === 'version'
+              ? melody.catalogVersionId
+                ? 'Approve and update the version'
+                : 'Approve as a version'
+              : melody.catalogSongId && !melody.catalogVersionId
+                ? 'Approve and update the catalog song'
+                : 'Approve and add to the catalog'}
           </ApproveButton>
           <RejectButton disabled={busy || status === 'draft'} onClick={onReject}>
             Reject

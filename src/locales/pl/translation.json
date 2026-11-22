@@ -413,5 +413,20 @@
     "text": "Pod tym adresem nie ma strony.",
     "home": "Strona główna",
     "songs": "Wszystkie melodie"
+  },
+  "versions": {
+    "title": "Wersje",
+    "choose": "Wybierz wersję",
+    "basic": "Podstawowa",
+    "count_one": "{{count}} wersja",
+    "count_few": "{{count}} wersje",
+    "count_many": "{{count}} wersji",
+    "count_other": "{{count}} wersji",
+    "levels": {
+      "basic": "Dla początkujących",
+      "intermediate": "Średnio zaawansowana",
+      "advanced": "Zaawansowana"
+    },
+    "play": "Graj"
   }
 }

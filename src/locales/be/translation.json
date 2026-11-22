@@ -413,5 +413,20 @@
     "text": "Па гэтым адрасе няма старонкі.",
     "home": "Галоўная",
     "songs": "Усе мелодыі"
+  },
+  "versions": {
+    "title": "Версіі",
+    "choose": "Выбраць версію",
+    "basic": "Базавая",
+    "count_one": "{{count}} версія",
+    "count_few": "{{count}} версіі",
+    "count_many": "{{count}} версій",
+    "count_other": "{{count}} версіі",
+    "levels": {
+      "basic": "Для пачаткоўцаў",
+      "intermediate": "Сярэдні ўзровень",
+      "advanced": "Складаная"
+    },
+    "play": "Іграць"
   }
 }

@@ -17,4 +17,9 @@ export const Header = styled.div`
   min-width: 0;
   justify-content: center;
   padding: 5px 8px;
+
+  &.withVersions {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
