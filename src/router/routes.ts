@@ -21,8 +21,6 @@ export const routes = {
   adminSongNotes: "/admin/song-notes",
   adminReview: "/admin/review",
   adminMelody: "/admin/melody",
-  adminRecognize: "/admin/recognize",
-  adminDataset: "/admin/dataset",
   playlists: "/playlists",
   songs: "/songs",
   melodies: "/melodies",
