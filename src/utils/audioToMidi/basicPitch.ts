@@ -14,7 +14,7 @@ const MODEL_RATE = 22050;
 const ONSET_LAG_SECONDS = 0.08;
 const ONSET_THRESHOLD = 0.5;
 const FRAME_THRESHOLD = 0.3;
-const MIN_NOTE_FRAMES = 5;
+const MIN_NOTE_FRAMES = 3;
 // Notes starting this close together are one note
 const SAME_MOMENT_SECONDS = 0.08;
 // The same pitch with a gap this short is one note
@@ -108,6 +108,33 @@ export const recognizeNotes = async (
     (fraction) => onProgress?.(fraction)
   );
   const events = noteFramesToTime(outputToNotesPoly(frames, onsets, ONSET_THRESHOLD, FRAME_THRESHOLD, MIN_NOTE_FRAMES));
+  return buildRecognition(events, { bagpipeType, transpose, minNoteSeconds });
+};
+
+export interface RawNote {
+  pitchMidi: number;
+  startTimeSeconds: number;
+  durationSeconds: number;
+}
+
+// Cleans what Basic Pitch heard into the melody notes of one bagpipe
+export const buildRecognition = (
+  events: RawNote[],
+  {
+    bagpipeType,
+    transpose,
+    minNoteSeconds = DEFAULT_MIN_NOTE_SECONDS,
+  }: Pick<RecognizeOptions, 'bagpipeType' | 'transpose' | 'minNoteSeconds'>
+): Recognition => {
+  const empty: Recognition = {
+    notes: [],
+    ornaments: 0,
+    keyTranspose: transpose,
+    tuningOffset: 0,
+    soundingSeconds: 0,
+    fit: 0,
+  };
+  const written = new Set(getBagpipePitches(bagpipeType));
   const heard: HeardNote[] = events
     .filter((event) => event.durationSeconds <= MAX_MELODY_NOTE_SECONDS)
     .map((event) => ({

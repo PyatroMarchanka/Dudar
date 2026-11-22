@@ -11,7 +11,7 @@ import { MAX_ROLL_BPM, MIN_ROLL_BPM, ROLL_TIME_SIGNATURES } from '../../utils/mi
 import { createMetronomeRecorder, MetronomeRecording } from '../../utils/audioToMidi/recorder';
 import { decodeAudioFile, recognizeNotes } from '../../utils/audioToMidi/basicPitch';
 import { Recognition } from '../../utils/audioToMidi/recognize';
-import { noteSeconds, quantizeNotes } from '../../utils/audioToMidi/quantize';
+import { estimateTempo, quantizeNotes } from '../../utils/audioToMidi/quantize';
 import { encodeWav } from '../../utils/audioToMidi/wav';
 import { loadDraft, NEW_DRAFT_KEY, saveDraft } from '../MelodyEditor/draft';
 
@@ -24,6 +24,8 @@ const GRIDS = [
 ];
 const DEFAULT_GRID = 120;
 const DEFAULT_BPM = 80;
+// Shorter sounds are not notes at all
+const MIN_NOTE_SECONDS = 0.03;
 const MAX_FILE_BYTES = 100 * 1024 * 1024;
 
 type Phase = 'idle' | 'starting' | 'recording' | 'recognizing' | 'done';
@@ -33,6 +35,8 @@ interface Result {
   recognition: Recognition;
   // What it was recorded with
   bpm: number;
+  // The tempo was found from the notes, not set
+  tempoFound?: boolean;
   timeSignature: TimeSignatures;
   bagpipeType: BagpipeTypes;
   // Why it failed; absent when the melody was recognized
@@ -63,6 +67,7 @@ export const RecognizeMelody = () => {
   const [result, setResult] = useState<Result | null>(null);
   const [micError, setMicError] = useState<string>();
   const [fileError, setFileError] = useState<string>();
+  const [resultBpmText, setResultBpmText] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const recorderRef = useRef(createMetronomeRecorder());
@@ -139,7 +144,7 @@ export const RecognizeMelody = () => {
       if (samples.length / sampleRate > MAX_RECORDING_SECONDS * 2) {
         throw new Error('The audio is longer than 10 minutes.');
       }
-      await recognize({ samples, sampleRate, firstBeatSeconds: 0, latencySeconds: 0 });
+      await recognize({ samples, sampleRate, firstBeatSeconds: 0, latencySeconds: 0 }, true);
     } catch (error: any) {
       console.log(error);
       setFileError(error?.message?.includes('10 minutes') ? error.message : 'Could not read that audio file.');
@@ -147,18 +152,22 @@ export const RecognizeMelody = () => {
     }
   };
 
-  const recognize = async (recording: MetronomeRecording) => {
+  // findTempo: the recording has no metronome, so the tempo is found from the notes
+  const recognize = async (recording: MetronomeRecording, findTempo = false) => {
     const recognition = await recognizeNotes(recording.samples, recording.sampleRate, {
       bagpipeType,
       transpose,
-      // Clearly shorter than a 1/32: an ornament, left out
-      minNoteSeconds: noteSeconds(bpm, 32) * 0.8,
+      // Only blips are left out: grace notes stay and are written as 1/32 notes
+      minNoteSeconds: MIN_NOTE_SECONDS,
       onProgress: setProgress,
     });
+    const usedBpm = findTempo ? estimateTempo(recognition.notes, timeSignature) : bpm;
+    setResultBpmText(String(usedBpm));
     setResult({
       recording,
       recognition,
-      bpm,
+      bpm: usedBpm,
+      tempoFound: findTempo,
       timeSignature,
       bagpipeType,
       ...judge(recognition, recording, bagpipeName(bagpipeType)),
@@ -182,7 +191,8 @@ export const RecognizeMelody = () => {
 
   const recordingUrl = useMemo(
     () => (result ? URL.createObjectURL(encodeWav(result.recording.samples, result.recording.sampleRate)) : null),
-    [result]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [result?.recording]
   );
   useEffect(
     () => () => {
@@ -277,6 +287,20 @@ export const RecognizeMelody = () => {
                   {recognition.ornaments > 0 &&
                     ` ${recognition.ornaments} grace ${recognition.ornaments === 1 ? 'note was' : 'notes were'} left out.`}
                 </p>
+                <label className="tempo">
+                  {result.tempoFound ? 'Tempo found (change it if it is wrong)' : 'Tempo'}
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={resultBpmText}
+                    onChange={(event) => {
+                      const text = event.target.value.replace(/[^0-9]/g, '').slice(0, 3);
+                      setResultBpmText(text);
+                      const value = Number(text);
+                      if (value >= MIN_ROLL_BPM && value <= MAX_ROLL_BPM) setResult({ ...result, bpm: value });
+                    }}
+                  />
+                </label>
                 {result.warnings.map((warning) => (
                   <p key={warning} className="warning">
                     {warning}
@@ -317,7 +341,7 @@ export const RecognizeMelody = () => {
           </select>
         </label>
         <label>
-          Tempo (quarter notes per minute; for a file, its tempo)
+          Tempo for recording (quarter notes per minute)
           <input
             type="text"
             inputMode="numeric"
@@ -356,7 +380,7 @@ export const RecognizeMelody = () => {
       </Settings>
       <p className="hint">
         Press Record and play along with the metronome, or choose an audio file (mp3, wav, m4a...) of one bagpipe
-        playing. For a file, set the bagpipe and the tempo of the recording first. The app finds the notes and opens
+        playing. For a file, set the bagpipe first: the tempo is found from the notes, and you can correct it. The app finds the notes and opens
         them in the melody editor, where you can fix them and save. Headphones keep the clicks out of the recording.
       </p>
     </Page>
@@ -541,6 +565,23 @@ const ResultBox = styled.div`
 
   .download {
     color: ${green};
+  }
+
+  .tempo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 240px;
+    margin-bottom: 12px;
+    font-size: 14px;
+
+    input {
+      font-size: 16px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: white;
+    }
   }
 
   .open {
