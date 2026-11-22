@@ -90,8 +90,8 @@ export const recognizeNotes = async (
   if (!written.size || samples.length < sampleRate / 2) return empty;
 
   // Loaded only when needed: the library brings TensorFlow.js with it
-  const { BasicPitch, noteFramesToTime, outputToNotesPoly } = await import('@spotify/basic-pitch');
-  const tf = await import('@tensorflow/tfjs');
+  const { BasicPitch, noteFramesToTime, outputToNotesPoly } = await import(/* webpackChunkName: "audio-recognition" */ '@spotify/basic-pitch');
+  const tf = await import(/* webpackChunkName: "audio-recognition" */ '@tensorflow/tfjs');
   await tf.ready();
   onBackend?.(tf.getBackend());
   if (!model) model = new BasicPitch(modelUrl());
