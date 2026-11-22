@@ -19,6 +19,8 @@ export interface RecognizeOptions {
   // Shorter notes are taken as ornaments (grace notes, cuts) and left out
   minNoteSeconds?: number;
   onProgress?: (fraction: number) => void;
+  // Which TensorFlow.js backend does the work: 'webgl' is fast, 'cpu' is many times slower
+  onBackend?: (name: string) => void;
 }
 
 export interface Recognition {

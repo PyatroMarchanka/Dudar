@@ -64,10 +64,7 @@ const findKey = (heard: HeardNote[], written: Set<number>, preferred: number) =>
   };
   const fits: { key: number; fit: number }[] = [];
   for (let key = -12; key <= 12; key++) {
-    const fitting = heard.reduce(
-      (sum, note) => (written.has(note.pitch - key) ? sum + weight(note) : sum),
-      0
-    );
+    const fitting = heard.reduce((sum, note) => (written.has(note.pitch - key) ? sum + weight(note) : sum), 0);
     fits.push({ key, fit: fitting / total });
   }
   const top = Math.max(...fits.map(({ fit }) => fit));
@@ -79,7 +76,7 @@ const findKey = (heard: HeardNote[], written: Set<number>, preferred: number) =>
 export const recognizeNotes = async (
   samples: Float32Array,
   sampleRate: number,
-  { bagpipeType, transpose, minNoteSeconds = DEFAULT_MIN_NOTE_SECONDS, onProgress }: RecognizeOptions
+  { bagpipeType, transpose, minNoteSeconds = DEFAULT_MIN_NOTE_SECONDS, onProgress, onBackend }: RecognizeOptions
 ): Promise<Recognition> => {
   const empty: Recognition = {
     notes: [],
@@ -94,6 +91,9 @@ export const recognizeNotes = async (
 
   // Loaded only when needed: the library brings TensorFlow.js with it
   const { BasicPitch, noteFramesToTime, outputToNotesPoly } = await import('@spotify/basic-pitch');
+  const tf = await import('@tensorflow/tfjs');
+  await tf.ready();
+  onBackend?.(tf.getBackend());
   if (!model) model = new BasicPitch(modelUrl());
   const audio = await resample(samples, sampleRate);
 

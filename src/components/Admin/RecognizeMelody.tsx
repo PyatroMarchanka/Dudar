@@ -24,6 +24,7 @@ const GRIDS = [
 ];
 const DEFAULT_GRID = 120;
 const DEFAULT_BPM = 80;
+const TEMPO_KNOWN_KEY = 'recognizeTempoKnown';
 // Shorter sounds are not notes at all
 const MIN_NOTE_SECONDS = 0.03;
 const MAX_FILE_BYTES = 100 * 1024 * 1024;
@@ -55,6 +56,15 @@ export const RecognizeMelody = () => {
 
   const [bagpipeType, setBagpipeType] = useState<BagpipeTypes>(settingsBagpipe);
   // Kept as typed, so the field can be cleared and retyped
+  // With a known tempo the metronome plays and every note is rounded to it;
+  // without, the tempo is found from the notes
+  const [tempoKnown, setTempoKnown] = useState(() => {
+    try {
+      return window.localStorage.getItem(TEMPO_KNOWN_KEY) !== 'no';
+    } catch (error) {
+      return true;
+    }
+  });
   const [bpmText, setBpmText] = useState('80');
   const bpm = Math.min(MAX_ROLL_BPM, Math.max(MIN_ROLL_BPM, Math.round(Number(bpmText)) || DEFAULT_BPM));
   const [timeSignature, setTimeSignature] = useState<TimeSignatures>('4/4');
@@ -67,6 +77,11 @@ export const RecognizeMelody = () => {
   const [result, setResult] = useState<Result | null>(null);
   const [micError, setMicError] = useState<string>();
   const [fileError, setFileError] = useState<string>();
+  const [failure, setFailure] = useState<{ message: string; recording: MetronomeRecording }>();
+  const [recognizingSince, setRecognizingSince] = useState(0);
+  const [, setTick] = useState(0);
+  const [backend, setBackend] = useState('');
+  const runRef = useRef(0);
   const [resultBpmText, setResultBpmText] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -79,7 +94,10 @@ export const RecognizeMelody = () => {
   // Leaving the page stops the microphone and the metronome
   useEffect(() => {
     const recorder = recorderRef.current;
-    return () => recorder.cancel();
+    return () => {
+      recorder.cancel();
+      runRef.current++;
+    };
   }, []);
 
   useEffect(() => {
@@ -98,6 +116,7 @@ export const RecognizeMelody = () => {
   const record = async () => {
     setBpmText(String(bpm));
     setResult(null);
+    setFailure(undefined);
     setMicError(undefined);
     setBeat(null);
     setLevel(0);
@@ -105,6 +124,8 @@ export const RecognizeMelody = () => {
     setPhase('starting');
     try {
       await recorderRef.current.start(bpm, timeSignature, {
+        // Without a set tempo nothing clicks: the player keeps their own time
+        muteClicksFromBeat: tempoKnown ? undefined : 0,
         onBeat: (beatInBar, bar) => setBeat({ beat: beatInBar, bar }),
         onLevel: setLevel,
       });
@@ -125,7 +146,7 @@ export const RecognizeMelody = () => {
   const stop = async () => {
     setPhase('recognizing');
     setProgress(0);
-    await recognize(await recorderRef.current.stop());
+    await recognize(await recorderRef.current.stop(), !tempoKnown);
   };
   stopRef.current = stop;
 
@@ -144,7 +165,7 @@ export const RecognizeMelody = () => {
       if (samples.length / sampleRate > MAX_RECORDING_SECONDS * 2) {
         throw new Error('The audio is longer than 10 minutes.');
       }
-      await recognize({ samples, sampleRate, firstBeatSeconds: 0, latencySeconds: 0 }, true);
+      await recognize({ samples, sampleRate, firstBeatSeconds: 0, latencySeconds: 0 }, !tempoKnown);
     } catch (error: any) {
       console.log(error);
       setFileError(error?.message?.includes('10 minutes') ? error.message : 'Could not read that audio file.');
@@ -152,27 +173,55 @@ export const RecognizeMelody = () => {
     }
   };
 
-  // findTempo: the recording has no metronome, so the tempo is found from the notes
+  // findTempo: the tempo is not set, so it is found from the notes
   const recognize = async (recording: MetronomeRecording, findTempo = false) => {
-    const recognition = await recognizeNotes(recording.samples, recording.sampleRate, {
-      bagpipeType,
-      transpose,
-      // Only blips are left out: grace notes stay and are written as 1/32 notes
-      minNoteSeconds: MIN_NOTE_SECONDS,
-      onProgress: setProgress,
-    });
-    const usedBpm = findTempo ? estimateTempo(recognition.notes, timeSignature) : bpm;
-    setResultBpmText(String(usedBpm));
-    setResult({
-      recording,
-      recognition,
-      bpm: usedBpm,
-      tempoFound: findTempo,
-      timeSignature,
-      bagpipeType,
-      ...judge(recognition, recording, bagpipeName(bagpipeType)),
-    });
-    setPhase('done');
+    const run = ++runRef.current;
+    setFailure(undefined);
+    setPhase('recognizing');
+    setProgress(0);
+    setRecognizingSince(Date.now());
+    setBackend('');
+    try {
+      const recognition = await recognizeNotes(recording.samples, recording.sampleRate, {
+        bagpipeType,
+        transpose,
+        // Only blips are left out: grace notes stay and are written as 1/32 notes
+        minNoteSeconds: MIN_NOTE_SECONDS,
+        onBackend: (name) => {
+          if (run === runRef.current) setBackend(name);
+        },
+        onProgress: (fraction) => {
+          if (run === runRef.current) setProgress(fraction);
+        },
+      });
+      // Cancelled, or the page was left, meanwhile
+      if (run !== runRef.current) return;
+      const usedBpm = findTempo ? estimateTempo(recognition.notes, timeSignature) : bpm;
+      setResultBpmText(String(usedBpm));
+      setResult({
+        recording,
+        recognition,
+        bpm: usedBpm,
+        tempoFound: findTempo,
+        timeSignature,
+        bagpipeType,
+        ...judge(recognition, recording, bagpipeName(bagpipeType)),
+      });
+      setPhase('done');
+    } catch (error: any) {
+      console.log(error);
+      if (run !== runRef.current) return;
+      setFailure({
+        message: `Recognition failed${error?.message ? `: ${String(error.message).slice(0, 200)}` : ''}. Reload the page and try again.`,
+        recording,
+      });
+      setPhase('idle');
+    }
+  };
+
+  const cancelRecognition = () => {
+    runRef.current++;
+    setPhase('idle');
   };
 
   const roll = useMemo(
@@ -210,6 +259,24 @@ export const RecognizeMelody = () => {
     history.push(routes.melodyEditor);
   };
 
+  const failureUrl = useMemo(
+    () => (failure ? URL.createObjectURL(encodeWav(failure.recording.samples, failure.recording.sampleRate)) : null),
+    [failure]
+  );
+  useEffect(
+    () => () => {
+      if (failureUrl) URL.revokeObjectURL(failureUrl);
+    },
+    [failureUrl]
+  );
+
+  // While recognizing, the "takes a while" note appears by itself
+  useEffect(() => {
+    if (phase !== 'recognizing') return;
+    const id = setInterval(() => setTick((n) => n + 1), 5000);
+    return () => clearInterval(id);
+  }, [phase]);
+
   const busy = phase === 'starting' || phase === 'recording' || phase === 'recognizing';
   const recognition = result?.recognition;
   const cents = recognition ? Math.round(recognition.tuningOffset * 100) : 0;
@@ -220,13 +287,22 @@ export const RecognizeMelody = () => {
 
       {phase === 'recording' || phase === 'starting' ? (
         <Recording>
-          <Beats>
-            {Array.from({ length: beatsPerBar }, (_, i) => (
-              <span key={i} className={beat?.beat === i ? (i === 0 ? 'on accent' : 'on') : undefined} />
-            ))}
-          </Beats>
+          {tempoKnown && (
+            <Beats>
+              {Array.from({ length: beatsPerBar }, (_, i) => (
+                <span key={i} className={beat?.beat === i ? (i === 0 ? 'on accent' : 'on') : undefined} />
+              ))}
+            </Beats>
+          )}
           <div className="status">
-            {beat ? `Bar ${beat.bar + 1}` : 'Starting…'} · {formatTime(elapsed)}
+            {tempoKnown
+              ? beat
+                ? `Bar ${beat.bar + 1} · `
+                : 'Starting… · '
+              : phase === 'starting'
+                ? 'Starting… · '
+                : ''}
+            {formatTime(elapsed)}
           </div>
           <Level aria-label="Microphone level">
             <span style={{ width: `${Math.min(100, level * 100)}%` }} className={level > 0.98 ? 'clip' : undefined} />
@@ -239,6 +315,16 @@ export const RecognizeMelody = () => {
       ) : phase === 'recognizing' ? (
         <Recording>
           <div className="status">Recognizing… {Math.round(progress * 100)}%</div>
+          {Date.now() - recognizingSince > 30000 && (
+            <p className="hint">
+              A long recording takes a while.
+              {backend === 'cpu' &&
+                ' This browser is not using the graphics card for it, so it is slow: about as long as the recording. Chrome with hardware acceleration turned on is much faster.'}
+            </p>
+          )}
+          <button className="file" onClick={cancelRecognition}>
+            Cancel
+          </button>
         </Recording>
       ) : (
         <Recording>
@@ -261,6 +347,16 @@ export const RecognizeMelody = () => {
             Or choose an audio file
           </button>
           {fileError && <p className="warning">{fileError}</p>}
+          {failure && (
+            <>
+              <p className="warning">{failure.message}</p>
+              {failureUrl && (
+                <a className="download" href={failureUrl} download="recording.wav">
+                  Download the recording
+                </a>
+              )}
+            </>
+          )}
         </Recording>
       )}
 
@@ -340,17 +436,35 @@ export const RecognizeMelody = () => {
             ))}
           </select>
         </label>
-        <label>
-          Tempo for recording (quarter notes per minute)
+        <label className="check">
           <input
-            type="text"
-            inputMode="numeric"
-            value={bpmText}
+            type="checkbox"
+            checked={tempoKnown}
             disabled={busy}
-            onChange={(event) => setBpmText(event.target.value.replace(/[^0-9]/g, '').slice(0, 3))}
-            onBlur={() => setBpmText(String(bpm))}
+            onChange={(event) => {
+              setTempoKnown(event.target.checked);
+              try {
+                window.localStorage.setItem(TEMPO_KNOWN_KEY, event.target.checked ? 'yes' : 'no');
+              } catch (error) {
+                // the choice is just not remembered
+              }
+            }}
           />
+          I set the tempo
         </label>
+        {tempoKnown && (
+          <label>
+            Tempo (quarter notes per minute)
+            <input
+              type="text"
+              inputMode="numeric"
+              value={bpmText}
+              disabled={busy}
+              onChange={(event) => setBpmText(event.target.value.replace(/[^0-9]/g, '').slice(0, 3))}
+              onBlur={() => setBpmText(String(bpm))}
+            />
+          </label>
+        )}
         <label>
           Time signature
           <select
@@ -379,9 +493,10 @@ export const RecognizeMelody = () => {
         </label>
       </Settings>
       <p className="hint">
-        Press Record and play along with the metronome, or choose an audio file (mp3, wav, m4a...) of one bagpipe
-        playing. For a file, set the bagpipe first: the tempo is found from the notes, and you can correct it. The app finds the notes and opens
-        them in the melody editor, where you can fix them and save. Headphones keep the clicks out of the recording.
+        Press Record, or choose an audio file (mp3, wav, m4a...) of one bagpipe playing. If you set the tempo, the
+        metronome plays while you record and every note is rounded to that tempo. If not, nothing clicks and the app
+        finds the tempo from the notes (you can correct it after). The app finds the notes and opens them in the melody
+        editor, where you can fix them and save. Headphones keep the clicks out of the recording.
       </p>
     </Page>
   );
@@ -449,8 +564,21 @@ const Settings = styled.div`
     color: #333;
   }
 
+  .check {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+  }
+
+  .check input {
+    width: 18px;
+    height: 18px;
+    padding: 0;
+  }
+
   select,
-  input {
+  input:not([type='checkbox']) {
     font-size: 16px;
     padding: 8px;
     border: 1px solid #ccc;
