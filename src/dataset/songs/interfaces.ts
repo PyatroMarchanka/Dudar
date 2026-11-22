@@ -31,6 +31,31 @@ export type TimeSignatures =
   | "10/8"
   | "11/8";
 
+export type VersionLevel = 'basic' | 'intermediate' | 'advanced';
+export const versionLevels: VersionLevel[] = ['basic', 'intermediate', 'advanced'];
+
+// Another version of a song (by another bagpiper, or another level), with its
+// own notes. The song's name, about, lyrics and type are shared.
+export interface SongVersion {
+  _id: string;
+  // e.g. "With ornaments"
+  label: string;
+  // The bagpiper or arranger
+  author?: string;
+  level?: VersionLevel;
+  pathName: string;
+  source?: 'file' | 'melody';
+  sourceMelodyId?: string;
+  // Left out of the song list; loaded with the song's notes when played
+  melody?: SongMelody;
+  timeSignature: TimeSignatures;
+  originalTempo: number;
+  transcribedBy?: string;
+  links?: SongLink[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export interface Song {
   _id?: string;
   name: string;
@@ -50,6 +75,16 @@ export interface Song {
   source?: "file" | "melody";
   sourceMelodyId?: string;
   melody?: SongMelody;
+  // The song's own notes are its default version (shown first, normally the basic one).
+  // These describe it; no label means "Basic".
+  versionLabel?: string;
+  versionAuthor?: string;
+  versionLevel?: VersionLevel;
+  // The other versions. Absent: the song has only its default version.
+  versions?: SongVersion[];
+  // Set in the browser only: the version of `versions` whose notes this song object
+  // carries (see songWithVersion). Absent: the default version.
+  activeVersionId?: string;
   stats: IStats,
   createdAt?: Date,
   updatedAt?: Date,

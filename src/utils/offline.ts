@@ -56,14 +56,19 @@ export const saveForOffline = async (
   navigator.storage?.persist?.().catch(() => {});
 
   const songs = await fetchSongList();
+  // Every version of every song: the song's own notes, then its other versions
+  const tunes = songs.flatMap((song) => [song, ...(song.versions ?? [])]);
   const songUrls = Array.from(
     new Set(
-      songs.filter((song) => song.pathName && song.source !== 'melody').map((song) => resolveSongUrl(song.pathName))
+      tunes.filter((tune) => tune.pathName && tune.source !== 'melody').map((tune) => resolveSongUrl(tune.pathName))
     )
   );
 
-  // Songs stored in the database have no file: their notes are saved under the versioned URL the player asks for
-  const noteUrls = songs.filter((song) => song._id && song.source === 'melody').map((song) => getSongNotesUrl(song));
+  // Songs stored in the database have no file: their notes are saved under the versioned URL the player asks for.
+  // That URL returns the whole song, with the notes of all its versions.
+  const noteUrls = songs
+    .filter((song) => song._id && [song, ...(song.versions ?? [])].some((tune) => tune.source === 'melody'))
+    .map((song) => getSongNotesUrl(song));
 
   const downloads: Download[] = [
     ...getSampleUrls(bagpipeType).map((url) => ({ cacheName: offlineCaches.samples, url })),

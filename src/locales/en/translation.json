@@ -413,5 +413,18 @@
     "text": "There is no page at this address.",
     "home": "Home",
     "songs": "All songs"
+  },
+  "versions": {
+    "title": "Versions",
+    "choose": "Choose a version",
+    "basic": "Basic",
+    "count_one": "{{count}} version",
+    "count_other": "{{count}} versions",
+    "levels": {
+      "basic": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "play": "Play"
   }
 }

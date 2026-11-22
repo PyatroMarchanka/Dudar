@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import { FavoriteButton } from "../FavoriteButton";
 import { ShareButton } from "../ShareButton";
 import { SongSeo } from "../SEO/SongSeo";
+import { SongVersions } from "../SongVersions";
 
 interface Props {
   midiPlayer: MidiPlayer | null;
@@ -25,8 +26,9 @@ export const PlayPageHeader = ({ midiPlayer }: Props) => {
     <SettingsButtons className="settingsButtons">
       <SongSeo songId={id} title={songTitle} />
       <SongList player={midiPlayer} />
-      <Header>
+      <Header className="withVersions">
         <SongTitle title={songTitle ?? noSongsLabel} />
+        <SongVersions />
       </Header>
       <FavoriteButton />
       <ShareButton />

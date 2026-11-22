@@ -6,10 +6,11 @@ import { isAbcMelodySong, isMelodySong, melodySongToMidi } from '../utils/midiUt
 import { notesMaps } from '../dataset/bagpipesNotesMaps';
 import { SharpNotesEnum } from '../interfaces';
 import { songApi } from '../api/songClient';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { findSongInListById, getFirstSongFromList } from '../dataset/songs/utils';
 import { useSongList } from './useSongLIst';
 import { useSong } from './useSong';
+import { readVersionParam, songWithVersion } from '../dataset/songs/versions';
 
 export const useLoadSong = () => {
   const params: any = useParams();
@@ -35,13 +36,15 @@ export const useLoadSong = () => {
   const [lowestOctave, setLowestOctave] = useState(4);
   useSong();
   const songId = params.id;
+  const versionId = readVersionParam(useLocation().search);
   useEffect(() => {
     if (!(songId && listsByBagpipe)) return;
     const songFromParam = findSongInListById(songId, listsByBagpipe);
     if (songFromParam) {
-      setActiveSong(songFromParam);
+      setActiveSong(songWithVersion(songFromParam, versionId));
     }
-  }, [songId, listsByBagpipe]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [songId, listsByBagpipe, versionId]);
 
   const playableNotes = useMemo(
     () => Object.keys(notesMaps[bagpipeType] ?? {}).map((note) => convertNoteToMidiPitch(note as SharpNotesEnum)),
