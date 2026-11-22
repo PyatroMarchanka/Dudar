@@ -5,6 +5,7 @@ import { SongEditor } from './SongEditor';
 import { SongList } from './SongList';
 import { AdminMenu } from './AdminMenu';
 import { ReviewList } from './ReviewList';
+import { RecognizeMelody } from './RecognizeMelody';
 import { ReviewMelody } from './ReviewMelody';
 import { Navbar } from '../global/Navbar';
 import { store } from '../../context';
@@ -42,6 +43,9 @@ const Admin = () => {
             </Route>
             <Route exact path={[routes.adminReview, `${routes.adminReview}/:status`]}>
               <ReviewList />
+            </Route>
+            <Route exact path={routes.adminRecognize}>
+              <RecognizeMelody />
             </Route>
             <Route exact path={`${routes.adminMelody}/:id`}>
               <ReviewMelody />
