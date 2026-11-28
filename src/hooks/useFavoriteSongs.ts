@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { store } from '../context';
 import { favoritesApi } from '../api/favorites';
+import { track } from '../utils/gtm';
 
 // Some songs exist in several bagpipe variants that differ only by a `-bd`
 // suffix; treat them as the same favorite (same rule as useSongList)
@@ -31,9 +32,11 @@ export const useFavoriteSongs = () => {
           updated = await favoritesApi.removeFavoriteSong(id);
         }
         setFavoriteSongs(updated);
+        track('favorite_remove', { song_id: songId });
       } else {
         setFavoriteSongs([...previous, songId]);
         setFavoriteSongs(await favoritesApi.addFavoriteSong(songId));
+        track('favorite_add', { song_id: songId });
       }
     } catch (error) {
       console.log('error', error);

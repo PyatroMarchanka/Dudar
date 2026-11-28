@@ -2,6 +2,7 @@ import { links } from './links';
 import { userClient } from './user';
 import { withAuth } from './utils';
 import { MelodyRoll } from '../utils/midiUtils/melodyRoll';
+import { track } from '../utils/gtm';
 
 // draft: only the owner sees it. pending: sent for review. approved: in the
 // song catalog. rejected: sent back by an admin.
@@ -44,11 +45,13 @@ export const melodiesApi = {
 
   addMelody: async (melody: MelodyInput): Promise<UserMelody> => {
     const res = await userClient.post<UserMelody>(links.melodies, melody, withAuth());
+    track('melody_save', { is_new: true });
     return res.data;
   },
 
   updateMelody: async (id: string, melody: MelodyInput): Promise<UserMelody> => {
     const res = await userClient.put<UserMelody>(`${links.melodies}/${encodeURIComponent(id)}`, melody, withAuth());
+    track('melody_save', { is_new: false });
     return res.data;
   },
 
@@ -59,6 +62,7 @@ export const melodiesApi = {
   // Send a saved draft (or a rejected melody) to the admins
   submitMelody: async (id: string): Promise<UserMelody> => {
     const res = await userClient.post<UserMelody>(`${links.melodies}/${encodeURIComponent(id)}/submit`, {}, withAuth());
+    track('melody_submit');
     return res.data;
   },
 

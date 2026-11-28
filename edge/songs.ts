@@ -430,6 +430,18 @@ ul.songs a:hover{color:var(--accent);text-decoration:underline}
 footer{max-width:760px;margin:0 auto;padding:24px 16px;color:var(--muted);font-size:14px}
 `;
 
+// Google Tag Manager for the server-rendered pages (the SPA loads it from
+// public/index.html). Only on production, like the SPA. Also counts clicks on
+// the Play buttons, the step from a search landing page into the player.
+const GTM_ID = 'GTM-MR7KM4L';
+const analyticsHead = (site: Site) =>
+  site.isProduction
+    ? `<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');
+document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href^="/app/play/"]');if(a){window.dataLayer.push({event:'song_page_play_click',link_url:a.getAttribute('href'),page_type:location.pathname.indexOf('/songs/')===0?'song':'catalog'});}});
+</script>`
+    : '';
+
 interface PageOptions {
   site: Site;
   path: string;
@@ -451,6 +463,7 @@ export const renderPage = ({ site, path, title, description, ogType = 'website',
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+${analyticsHead(site)}
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
 <link rel="canonical" href="${esc(url)}">

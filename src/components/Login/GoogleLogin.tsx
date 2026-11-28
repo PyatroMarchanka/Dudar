@@ -5,6 +5,7 @@ import { resetUserProfile } from "../../api/appData";
 import { store } from "../../context";
 import { useHistory } from "react-router-dom";
 import { routes } from "../../router/routes";
+import { track } from "../../utils/gtm";
 
 const GoogleAuth = () => {
   const {
@@ -21,6 +22,7 @@ const GoogleAuth = () => {
     });
 
     setUserData(res.data);
+    track('login', { method: 'google' });
     // Load and apply the settings of the user who just logged in
     resetUserProfile();
     history.push(routes.main);
