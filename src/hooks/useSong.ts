@@ -1,9 +1,10 @@
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { store } from "../context";
 import { decodeSongId, findSongInListById, findSongVariantInList } from "../dataset/songs/utils";
 import { loadSongList } from "../api/appData";
 import { routes } from "../router/routes";
+import { readVersionParam, songWithVersion } from "../dataset/songs/versions";
 
 export const useSong = () => {
   const {
@@ -13,13 +14,14 @@ export const useSong = () => {
   } = useContext(store);
   const params: any = useParams();
   const history = useHistory();
+  const versionId = readVersionParam(useLocation().search);
 
   useEffect(() => {
     if (!listsByBagpipe) return;
 
     const songFromParam = findSongInListById(params.id, listsByBagpipe);
     if (songFromParam) {
-      setActiveSong(songFromParam);
+      setActiveSong(songWithVersion(songFromParam, versionId));
       setIsSongUnavailable(false);
       return;
     }
@@ -49,5 +51,5 @@ export const useSong = () => {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listsByBagpipe, params.id]);
+  }, [listsByBagpipe, params.id, versionId]);
 };

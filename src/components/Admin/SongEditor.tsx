@@ -10,6 +10,7 @@ import { IconButton, Input, Typography } from '@material-ui/core';
 import { Icon } from '../global/Icon';
 import { useTranslation } from 'react-i18next';
 import { getTranslationKeyByBagpipeType } from '../../interfaces/enumUtils';
+import { VersionsEditor } from './VersionsEditor';
 
 export const SongEditor: React.FC = () => {
   const [song, setSong] = useState<Song | null>(null);
@@ -64,7 +65,17 @@ export const SongEditor: React.FC = () => {
     return <div>No song found</div>;
   }
 
-  const fieldsInOrder = ['name', 'pathName', 'about', 'lyrycs', 'labels', 'timeSignature', 'transcribedBy'];
+  const fieldsInOrder = [
+    'name',
+    'pathName',
+    'about',
+    'lyrycs',
+    'labels',
+    'timeSignature',
+    'transcribedBy',
+    'versionLabel',
+    'versionAuthor',
+  ];
 
   const multiLineFields = ['about', 'lyrycs'];
 
@@ -136,12 +147,49 @@ export const SongEditor: React.FC = () => {
           </Typography>
         ))}
       </FormGroup>
+      <FormGroup>
+        <Label>versionLevel (of the default version):</Label>
+        <TypeSelect
+          name="versionLevel"
+          value={song.versionLevel ?? ''}
+          onChange={(e) => handleChange({ name: 'versionLevel', value: e.target.value || undefined })}
+        >
+          <option value="">Not set</option>
+          <option value="basic">basic</option>
+          <option value="intermediate">intermediate</option>
+          <option value="advanced">advanced</option>
+        </TypeSelect>
+      </FormGroup>
       <Button disabled={!isSaveDisabled()} onClick={handleSave}>
         Save
       </Button>
+      <VersionsEditor
+        song={song}
+        onChange={(updated) => {
+          // Versions are saved on their own: take them over, keep any unsaved edits of the song's fields
+          setSong((current) => (current ? { ...current, ...pickVersionFields(updated) } : updated));
+          setInitialSong((current) => (current ? { ...current, ...pickVersionFields(updated) } : updated));
+        }}
+      />
     </Container>
   );
 };
+// What a version action changes in the song (make default also swaps the song's own notes)
+const pickVersionFields = (song: Song): Partial<Song> => ({
+  versions: song.versions,
+  versionLabel: song.versionLabel,
+  versionAuthor: song.versionAuthor,
+  versionLevel: song.versionLevel,
+  pathName: song.pathName,
+  source: song.source,
+  sourceMelodyId: song.sourceMelodyId,
+  melody: song.melody,
+  timeSignature: song.timeSignature,
+  originalTempo: song.originalTempo,
+  transcribedBy: song.transcribedBy,
+  updatedAt: song.updatedAt,
+});
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;

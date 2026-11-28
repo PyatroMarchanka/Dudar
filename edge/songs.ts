@@ -33,8 +33,22 @@ export interface Song {
   lyrycs?: string;
   transcribedBy?: string;
   links?: SongLink[];
+  versionLabel?: string;
+  versionAuthor?: string;
+  versionLevel?: string;
+  // The song's other versions; the song's own notes are its default version
+  versions?: SongVersion[];
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface SongVersion {
+  _id: string;
+  label: string;
+  author?: string;
+  level?: string;
+  timeSignature?: string;
+  originalTempo?: number;
 }
 
 export interface Site {
@@ -120,6 +134,10 @@ interface PageText {
   lyrics: string;
   details: string;
   listen: string;
+  versions: (count: number) => string;
+  basicVersion: string;
+  play: string;
+  levels: Record<string, string>;
   moreOfType: (type: string) => string;
   allOfType: (type: string) => string;
   footer: (siteName: string, noun: string) => string;
@@ -146,6 +164,10 @@ export const pageText: Record<Lang, PageText> = {
     lyrics: 'Lyrics',
     details: 'Details',
     listen: 'Listen and watch',
+    versions: (count) => `Versions (${count})`,
+    basicVersion: 'Basic',
+    play: '▶ Play',
+    levels: { basic: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' },
     moreOfType: (type) => `More ${type} tunes`,
     allOfType: (type) => `All ${type} tunes`,
     footer: (siteName, noun) => `${siteName}: learn to play the ${noun} with fingering animation and sheet music.`,
@@ -176,6 +198,10 @@ export const pageText: Record<Lang, PageText> = {
     lyrics: 'Тэкст',
     details: 'Падрабязнасці',
     listen: 'Паслухаць і паглядзець',
+    versions: (count) => `Версіі (${count})`,
+    basicVersion: 'Базавая',
+    play: '▶ Іграць',
+    levels: { basic: 'Для пачаткоўцаў', intermediate: 'Сярэдні ўзровень', advanced: 'Складаная' },
     moreOfType: (type) => `Яшчэ ў раздзеле «${type}»`,
     allOfType: (type) => `Усё ў раздзеле «${type}»`,
     footer: (siteName, noun) => `${siteName}: вучыцеся іграць на ${noun} з аніміраванай аплікатурай і нотамі.`,
@@ -226,6 +252,10 @@ export const pageText: Record<Lang, PageText> = {
     lyrics: 'Tekst',
     details: 'Szczegóły',
     listen: 'Posłuchaj i obejrzyj',
+    versions: (count) => `Wersje (${count})`,
+    basicVersion: 'Podstawowa',
+    play: '▶ Graj',
+    levels: { basic: 'Dla początkujących', intermediate: 'Średnio zaawansowana', advanced: 'Zaawansowana' },
     moreOfType: (type) => `Więcej w dziale „${type}”`,
     allOfType: (type) => `Wszystko w dziale „${type}”`,
     footer: (siteName, noun) => `${siteName}: ucz się grać na ${noun} z animacją palcowania i nutami.`,
@@ -320,7 +350,7 @@ export const esc = (text: unknown) =>
     .replace(/'/g, '&#39;');
 
 // JSON for a <script type="application/ld+json"> block (no "</script>" breakouts)
-const ldJson = (data: unknown) => JSON.stringify(data).replace(/</g, '\\u003c');
+export const ldJson = (data: unknown) => JSON.stringify(data).replace(/</g, '\\u003c');
 
 const cleanText = (text: string) => text.replace(/\s+/g, ' ').trim();
 
@@ -387,6 +417,13 @@ h1{font-size:30px;line-height:1.25;margin:12px 0 4px}
 h2{font-size:21px;margin:32px 0 8px}
 .lyrics{white-space:pre-line;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
 ul.songs{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px 16px}
+details.versions{margin:16px 0;background:var(--card);border:1px solid var(--line);border-radius:12px}
+details.versions summary{cursor:pointer;padding:12px 16px;font-weight:700}
+details.versions ul{list-style:none;margin:0;padding:0 16px 8px}
+details.versions li{display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px solid var(--line)}
+details.versions .info{flex:1;min-width:0}
+details.versions .meta{display:block;color:var(--muted);font-size:14px}
+details.versions li a{white-space:nowrap;font-weight:700;text-decoration:none}
 ul.songs li{padding:4px 0;border-bottom:1px solid var(--line)}
 ul.songs a{color:var(--ink);text-decoration:none;font-weight:600}
 ul.songs a:hover{color:var(--accent);text-decoration:underline}
@@ -517,6 +554,30 @@ export const renderSongPage = (song: Song, songs: Song[], site: Site, lang: Lang
 
   const links = (song.links || []).filter((link) => /^https?:\/\//.test(link.url));
 
+  // Every version, the default (basic) one first; each opens the player on it
+  const versions = [
+    { id: '', label: song.versionLabel || text.basicVersion, author: song.versionAuthor, level: song.versionLevel },
+    ...(song.versions || []).map((version) => ({
+      id: version._id,
+      label: version.label,
+      author: version.author,
+      level: version.level,
+    })),
+  ];
+  const versionsHtml =
+    versions.length > 1
+      ? `<details class="versions">
+<summary>${esc(text.versions(versions.length))}</summary>
+<ul>${versions
+          .map((version) => {
+            const meta = [version.author, version.level && text.levels[version.level]].filter(Boolean).join(' · ');
+            const href = `${playerPath(song.id)}${version.id ? `?v=${encodeURIComponent(version.id)}` : ''}`;
+            return `<li><span class="info">${esc(version.label)}${meta ? `<span class="meta">${esc(meta)}</span>` : ''}</span><a href="${esc(href)}" rel="nofollow">${esc(text.play)}</a></li>`;
+          })
+          .join('')}</ul>
+</details>`
+      : '';
+
   const body = `
 <a class="back" id="back-to-player" href="${esc(playerPath(song.id))}">← ${esc(text.backToPlayer)}</a>
 <script>
@@ -536,6 +597,7 @@ ${breadcrumbHtml(crumbs.map((c, i) => (i === crumbs.length - 1 ? { name: c.name 
 <p class="subtitle">${latin ? `${esc(latin)} · ` : ''}${esc(text.subtitle(shownType, nounText))}</p>
 <p><a class="play" href="${esc(playerPath(song.id))}">${esc(text.playOn(nounText))}</a></p>
 <p>${esc(text.playIntro(song.name))}</p>
+${versionsHtml}
 ${song.about ? `<h2>${esc(text.aboutSong)}</h2>\n<p lang="${textLang(song.about)}">${esc(song.about.trim()).replace(/\n+/g, '</p><p>')}</p>` : ''}
 ${song.lyrycs ? `<h2>${esc(text.lyrics)}</h2>\n<div class="lyrics" lang="${textLang(song.lyrycs)}">${esc(song.lyrycs.trim())}</div>` : ''}
 <h2>${esc(text.details)}</h2>

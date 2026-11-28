@@ -22,6 +22,8 @@ import { routes } from '../../router/routes';
 import { MetaTags, NoIndex } from '../SEO/MetaTags';
 import { StructuredData } from '../SEO/StructuredData';
 import { useContext, useEffect, useState } from 'react';
+import { addMissingAlt, firstImage, htmlToText } from '../../utils/articleSeo';
+import { currentBrand } from '../../brand';
 import { IconLanguageSelector } from '../Controls/LanguageSelector/IconLanguageSelector';
 
 const useStyles = makeStyles((theme) => ({
@@ -246,10 +248,16 @@ const ArticlePage: React.FC = () => {
     : translatedLanguages[0] || language;
   const currentTranslation = post.translations[shownLanguage] || post.translations[post.defaultLanguage];
 
-  const metaDescription =
-    currentTranslation.metaDescription ||
-    currentTranslation.excerpt ||
+  const contentText = htmlToText(currentTranslation.content);
+  const contentHtml = addMissingAlt(currentTranslation.content || '', currentTranslation.title);
+  const fullDescription =
+    currentTranslation.metaDescription?.trim() ||
+    currentTranslation.excerpt?.trim() ||
+    contentText ||
     'Learn about bagpipes with Duda Hero - interactive bagpipe tutorial';
+  const metaDescription =
+    fullDescription.length > 160 ? `${fullDescription.slice(0, 157).replace(/\s+\S*$/, '')}…` : fullDescription;
+  const shareImage = post.featuredImage || firstImage(currentBrand.siteUrl, currentTranslation.content);
   const metaKeywords = currentTranslation.metaKeywords?.join(', ') || 'bagpipes, learn bagpipes, bagpipe tutorial';
   const canonicalPath = `/article/${shownLanguage}/${slug}`;
 
@@ -259,7 +267,7 @@ const ArticlePage: React.FC = () => {
         title={`${currentTranslation.title} | Duda Hero`}
         description={metaDescription}
         keywords={metaKeywords}
-        image={post.featuredImage || '/android-chrome-192x192.png'}
+        image={shareImage || '/android-chrome-512x512.png'}
         language={shownLanguage}
         canonicalPath={canonicalPath}
         hreflangPath={`/article/:lang/${slug}`}
@@ -270,11 +278,13 @@ const ArticlePage: React.FC = () => {
         articleData={{
           title: currentTranslation.title,
           description: metaDescription,
-          image: post.featuredImage,
+          image: shareImage,
           author: post.author,
           publishedDate: post.publishedAt || post.createdAt,
           modifiedDate: post.updatedAt,
-          tags: post.tags,
+          tags: currentTranslation.tags?.length ? currentTranslation.tags : post.tags,
+          url: canonicalPath,
+          language: shownLanguage,
         }}
         breadcrumbs={[
           { name: 'Home', url: '/' },
@@ -335,7 +345,7 @@ const ArticlePage: React.FC = () => {
         {post.featuredImage && (
           <img src={post.featuredImage} alt={currentTranslation.title} className={classes.featuredImage} />
         )}
-        <Box className={classes.content} dangerouslySetInnerHTML={{ __html: currentTranslation.content }} />
+        <Box className={classes.content} dangerouslySetInnerHTML={{ __html: contentHtml }} />
       </Container>
     </>
   );

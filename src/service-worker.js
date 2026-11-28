@@ -22,7 +22,11 @@ clientsClaim();
 // Their URLs are injected into the manifest variable below.
 // This variable must be present somewhere in your service worker file,
 // even if you decide not to use precaching. See https://cra.link/PWA
-precacheAndRoute(self.__WB_MANIFEST);
+// Lazy chunks (numbered by webpack, like the 1 MB TensorFlow.js behind the
+// admin page's note recognition) are not downloaded for every visitor: they are
+// cached when they are first used (see the route below).
+const lazyChunk = /\/static\/js\/(\d+|audio-recognition)\.[0-9a-f]+\.chunk\.js$/;
+precacheAndRoute(self.__WB_MANIFEST.filter((entry) => !lazyChunk.test(entry.url)));
 
 // Set up App Shell-style routing, so that all navigation requests
 // are fulfilled with your index.html shell. Learn more at
@@ -51,6 +55,15 @@ registerRoute(
     return true;
   },
   createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
+);
+
+// Lazy chunks: the file name has a hash, so the same URL is always the same file
+registerRoute(
+  ({ url }) => url.origin === self.location.origin && lazyChunk.test(url.pathname),
+  new CacheFirst({
+    cacheName: 'lazy-chunks',
+    plugins: [new CacheableResponsePlugin({ statuses: [200] }), new ExpirationPlugin({ maxEntries: 20 })],
+  })
 );
 
 // An example runtime caching route for requests that aren't handled by the
