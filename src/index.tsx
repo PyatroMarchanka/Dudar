@@ -6,6 +6,7 @@ import { register } from "./serviceWorkerRegistration";
 import { HelmetProvider } from 'react-helmet-async';
 import { preloadAppData } from "./api/appData";
 import { isEmbeddablePage } from "./components/AppDataLoader";
+import { track } from "./utils/gtm";
 
 // Start the backend requests before React renders anything
 if (!isEmbeddablePage()) {
@@ -24,6 +25,9 @@ ReactDOM.render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.dvdwvwvwvdwdvwv
 register();
+
+// Count installs of the app to the home screen or desktop
+window.addEventListener("appinstalled", () => track("pwa_install"));
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

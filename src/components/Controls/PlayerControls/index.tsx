@@ -13,7 +13,7 @@ import { TempoSlider } from "../TempoSlider";
 import { secondsToTime } from "../../../utils/textUtils";
 import { Preclick } from "../../Preclick";
 import { LoopBars } from "./LoopBars";
-import { gtmPush } from "../../../utils/gtm";
+import { songParams, track } from "../../../utils/gtm";
 import { songApi } from "../../../api/songClient";
 import { prepareAudioForPlayback } from "../../../utils/audioContext";
 
@@ -39,7 +39,7 @@ const muiTheme = createTheme({
 
 export const PlayerControls = ({ player }: Props) => {
   const {
-    state: { midi, progress, isPlaying, songLength, isPreclick, activeSong, metronome },
+    state: { midi, progress, isPlaying, songLength, isPreclick, activeSong, metronome, bagpipeType },
     setProgress,
     setIsPlaying,
   } = useContext(store);
@@ -72,7 +72,10 @@ export const PlayerControls = ({ player }: Props) => {
       if (isPreclick) {
         setPreclickStart((count) => count + 1);
       }
-      gtmPush({ song_name: activeSong!.name });
+      const params = songParams(activeSong, bagpipeType);
+      track('song_play', { ...params, from_start: !progress?.percent });
+      // Kept while the existing GTM trigger still listens for the old name
+      track('song_loaded', params);
       songApi.updateSongViewsCount(activeSong!);
     }
   };

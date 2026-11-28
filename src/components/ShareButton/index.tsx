@@ -9,6 +9,7 @@ import { useSongTitle } from '../../hooks/useSongTitle';
 import { mainColors, theme } from '../../utils/theme';
 import { Icon } from '../global/Icon';
 import { versionSearch } from '../../dataset/songs/versions';
+import { track } from '../../utils/gtm';
 
 const COPIED_RESET_MS = 1500;
 
@@ -45,11 +46,13 @@ export const ShareButton = ({ url: customUrl, title: customTitle }: Props) => {
   const label = t('share.share');
 
   const close = () => setAnchor(null);
+  const trackShare = (method: string) => track('share', { method, song_id: customUrl ? undefined : activeSong?.id, item_url: url });
 
   const handleNativeShare = async () => {
     close();
     try {
       await navigator.share({ title, url });
+      trackShare('native');
     } catch (e) {
       // The user closed the share sheet
     }
@@ -83,7 +86,10 @@ export const ShareButton = ({ url: customUrl, title: customTitle }: Props) => {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         PaperProps={{ style: { borderRadius: 8, minWidth: 220 } }}
       >
-        <CopyToClipboard text={url} onCopy={() => setCopied(true)}>
+        <CopyToClipboard text={url} onCopy={() => {
+          setCopied(true);
+          trackShare('copy_link');
+        }}>
           <MenuItem>
             <ListItemIcon>
               {copied ? <Check style={{ color: mainColors.orange }} /> : <LinkIcon />}
@@ -100,7 +106,10 @@ export const ShareButton = ({ url: customUrl, title: customTitle }: Props) => {
           </MenuItem>
         )}
         {externalLinks.map(({ name, Icon: LinkIconComponent, href }) => (
-          <MenuItem key={name} component="a" href={href} target="_blank" rel="noopener noreferrer" onClick={close}>
+          <MenuItem key={name} component="a" href={href} target="_blank" rel="noopener noreferrer" onClick={() => {
+          trackShare(name.toLowerCase());
+          close();
+        }}>
             <ListItemIcon>
               <LinkIconComponent />
             </ListItemIcon>
